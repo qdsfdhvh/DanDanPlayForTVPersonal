@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion buildVersions.targetSdk
+    buildToolsVersion buildVersions.buildTools
+    defaultConfig {
+        minSdkVersion buildVersions.minSdk
+        targetSdkVersion buildVersions.targetSdk
+    }
+    compileOptions {
+        sourceCompatibility buildVersions.sourceCompat
+        targetCompatibility buildVersions.targetCompat
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation project(':player')
+    implementation deps.kotlin.stdlib
+    implementation deps.support.annotation
+    implementation 'com.google.android.exoplayer:exoplayer:2.9.5'
+//    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.5'
+//    implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.5'
+}
+

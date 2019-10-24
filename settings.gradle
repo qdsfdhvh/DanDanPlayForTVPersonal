@@ -1,0 +1,8 @@
+include ':app-bl', ':app-tv', ':base',
+        ':domain',
+        ':data',
+        ':tvrecyclerview',
+        ':player',
+        ':player_explayer',
+        ':player_ijkplayer'
+rootProject.name='DanDanPlayForTV'

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="pstsIndicatorColor" format="color" />
+    <attr name="pstsShouldExpand" format="boolean" />
+    <attr name="pstsTabPaddingLeftRight" format="dimension" />
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorAccent">@color/theme_color_primary</item>
+        <item name="colorPrimary">@color/theme_color_primary</item>
+        <item name="colorPrimaryDark">@color/theme_color_primary_dark</item>
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+    </style>
+
+    <style name="SplashTheme" parent="@style/BaseTheme">
+        <item name="android:windowBackground">@drawable/background_splash_default</item>
+    </style>
+
+    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_activity_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>
+    </style>
+
+</resources>

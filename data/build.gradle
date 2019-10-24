@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion buildVersions.targetSdk
+    buildToolsVersion buildVersions.buildTools
+    defaultConfig {
+        minSdkVersion buildVersions.minSdk
+        targetSdkVersion buildVersions.targetSdk
+    }
+    compileOptions {
+        sourceCompatibility buildVersions.sourceCompat
+        targetCompatibility buildVersions.targetCompat
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    api project(path: ':domain')
+    // NetWork
+    implementation deps.network.retrofit2
+    implementation deps.network.retrofit2_gson
+    implementation deps.network.okhttp3_logging
+
+    // Prefs
+    api 'com.tencent:mmkv:1.0.23'
+
+    api deps.koin.viewmodel
+
+    // Utils
+    api ('com.blankj:utilcode:1.25.9') {
+        exclude group: 'com.google.code.gson'
+    }
+}

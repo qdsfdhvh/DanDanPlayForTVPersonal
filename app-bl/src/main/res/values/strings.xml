@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">DanDanPlayForTV</string>
+
+    <string name="bangumi_describe">番剧简介:</string>
+    <string name="bangumi_follow">追番</string>
+    <string name="bangumi_followed">已追</string>
+    <string name="bangumi_more">更多</string>
+    <string name="bangumi_play">播放</string>
+    <string name="bangumi_staff">STAFF:</string>
+    <string name="bangumi_subscribe_success">自己追的番就要好好看完哟\\^o^/</string>
+    <string name="bangumi_tag">TAG:</string>
+    <string name="bangumi_play_last_episode_fmt">上次看到第 %s 话</string>
+</resources>
