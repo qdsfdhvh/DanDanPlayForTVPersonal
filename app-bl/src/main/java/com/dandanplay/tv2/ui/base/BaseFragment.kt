@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import com.seiko.common.support.SupportFragment
 
 abstract class BaseFragment: SupportFragment() {
 

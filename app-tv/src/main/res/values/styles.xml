@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-        <item name="colorAccent">@color/theme_color_primary</item>
-        <item name="colorPrimary">@color/theme_color_primary</item>
-        <item name="colorPrimaryDark">@color/theme_color_primary_dark</item>
+    <style name="BaseTheme" parent="Theme.Leanback.Browse">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="defaultBrandColor">#424242</item>
+        <item name="defaultBrandColorDark">#1b1b1b</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="SplashTheme" parent="@style/BaseTheme">
@@ -18,6 +23,14 @@
         <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>
         <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>
+    </style>
+
+    <style name="DefaultDialogFragmentStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
 </resources>

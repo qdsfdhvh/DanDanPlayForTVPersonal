@@ -21,4 +21,8 @@ data class BangumiIntro(
     val isRestricted: Boolean,
     val rating: Int,
     val searchKeyword: String
-)
+) {
+    override fun toString(): String {
+        return "{'airDay':$airDay, 'animeId':$animeId, 'animeTitle':$animeTitle, 'imageUrl':$imageUrl}"
+    }
+}

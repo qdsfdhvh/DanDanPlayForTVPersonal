@@ -1,8 +1,8 @@
-include ':app-bl', ':app-tv', ':base',
+include ':app-bl', ':app-tv', ':common', ':player_danmaku',
         ':domain',
         ':data',
         ':tvrecyclerview',
-        ':player',
+        ':player_core',
         ':player_explayer',
         ':player_ijkplayer'
 rootProject.name='DanDanPlayForTV'

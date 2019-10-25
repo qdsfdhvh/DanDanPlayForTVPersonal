@@ -5,8 +5,8 @@ import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
 import com.dandanplay.tv2.R
 import com.dandanplay.tv2.ui.base.BaseActivity
-import com.seiko.common.support.findFragment
-import com.seiko.common.support.loadRootFragment
+import com.dandanplay.tv2.ui.base.findFragment
+import com.dandanplay.tv2.ui.base.loadRootFragment
 import com.dandanplay.tv2.ui.dialog.ExitDialogFragment
 import com.dandanplay.tv2.vm.MainViewModel
 import me.yokeyword.fragmentation.anim.FragmentAnimator
@@ -42,7 +42,7 @@ class MainActivity : BaseActivity() {
                 .setConfirmText("确认")
                 .setCancelText("取消")
                 .setConfirmClickListener(View.OnClickListener {
-                    ActivityUtils.finishActivity(this)
+                    ActivityUtils.finishActivity(this, true)
                 })
                 .build()
                 .show(supportFragmentManager)

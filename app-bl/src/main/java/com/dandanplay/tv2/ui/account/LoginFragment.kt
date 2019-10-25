@@ -6,7 +6,7 @@ import android.view.View
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv2.R
 import com.dandanplay.tv2.ui.base.BaseFragment
-import com.seiko.common.support.hideSoftInput
+import com.dandanplay.tv2.ui.base.hideSoftInput
 import com.dandanplay.tv2.vm.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.android.viewmodel.ext.android.viewModel

@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation project(':base')
+    implementation project(':common')
     implementation project(':tvrecyclerview')
 
     testImplementation 'junit:junit:4.12'

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">tv</string>
+    <string name="app_name">弹弹Play</string>
     <string name="browse_title"><![CDATA[Videos by Your Company]]></string>
     <string name="related_movies">Related Videos</string>
     <string name="grid_view">Grid View</string>
@@ -16,4 +16,5 @@
     <!-- Error messages -->
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
+    <string name="dialog_loading">加载中...</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.dandanplay.tv2.ui.dialog
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.dandanplay.tv2.R
@@ -92,6 +93,7 @@ class ExitDialogFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             return fragment
         }
     }
+
 
     companion object {
         const val TAG = "ExitDialogFragment"

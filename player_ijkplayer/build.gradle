@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion buildVersions.targetSdk
@@ -19,8 +19,7 @@ android {
 }
 
 dependencies {
-    implementation project(':player')
-    implementation deps.kotlin.stdlib
+    api project(':player_core')
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
 }

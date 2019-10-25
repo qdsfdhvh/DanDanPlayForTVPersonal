@@ -3,7 +3,7 @@ package com.dandanplay.tv2.ui.dialog
 import androidx.fragment.app.FragmentManager
 import com.dandanplay.tv2.R
 import com.seiko.common.dialog.BaseDialogFragment
-import com.seiko.common.support.SupportFragment
+import com.dandanplay.tv2.ui.base.SupportFragment
 
 class BaseLoadingDialogFragment: BaseDialogFragment() {
 

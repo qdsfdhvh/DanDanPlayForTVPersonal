@@ -14,17 +14,17 @@
 
 package com.dandanplay.tv.temp
 
-import android.app.Activity
-import android.os.Bundle
-import com.dandanplay.tv.R
-
-/**
- * Loads [MainTempFragment].
- */
-class MainTempActivity : Activity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_main)
-    }
-}
+//import android.app.Activity
+//import android.os.Bundle
+//import com.dandanplay.tv.R
+//
+///**
+// * Loads [MainTempFragment].
+// */
+//class MainTempActivity : Activity() {
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_test_main)
+//    }
+//}
