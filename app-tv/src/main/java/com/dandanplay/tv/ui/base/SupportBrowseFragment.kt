@@ -12,7 +12,7 @@ import com.seiko.common.lazyAndroid
 import me.yokeyword.fragmentation.*
 import me.yokeyword.fragmentation.anim.FragmentAnimator
 
-abstract class SupportBrowerFragment: BrowseSupportFragment(), ISupportFragment {
+abstract class SupportBrowseFragment: BrowseSupportFragment(), ISupportFragment {
 
     protected lateinit var mActivity: FragmentActivity
 

@@ -9,7 +9,7 @@ import androidx.leanback.widget.*
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.bean.MyBean
-import com.dandanplay.tv.ui.base.SupportBrowerFragment
+import com.dandanplay.tv.ui.base.SupportBrowseFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
@@ -21,7 +21,7 @@ import com.seiko.common.lazyAndroid
 import com.seiko.domain.entities.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainFragment : SupportBrowerFragment(), OnItemViewClickedListener, View.OnClickListener {
+class MainFragment : SupportBrowseFragment(), OnItemViewClickedListener, View.OnClickListener {
 
     private val viewModel by viewModel<BangumiAViewModel>()
 
@@ -46,7 +46,7 @@ class MainFragment : SupportBrowerFragment(), OnItemViewClickedListener, View.On
         brandColor = Color.parseColor("#424242")
 
         // About Search
-        searchAffordanceColor = ContextCompat.getColor(context!!, R.color.colorAccent)
+        searchAffordanceColor = ContextCompat.getColor(mActivity, R.color.colorAccent)
         setOnSearchClickedListener(this)
 
         // Create Rows Adapter
@@ -109,7 +109,10 @@ class MainFragment : SupportBrowerFragment(), OnItemViewClickedListener, View.On
         }
     }
 
-    override fun onItemClicked(holder: Presenter.ViewHolder?, item: Any?, rowViewHolder: RowPresenter.ViewHolder?, row: Row?) {
+    override fun onItemClicked(holder: Presenter.ViewHolder?,
+                               item: Any?,
+                               rowHolder: RowPresenter.ViewHolder?,
+                               row: Row?) {
         when(item) {
             is BangumiIntro -> {
                 ToastUtils.showShort(item.animeTitle)

@@ -1,4 +1,9 @@
 package com.dandanplay.tv.ui.bangumi
 
-class BangumiDetailsFragment {
+import androidx.leanback.app.DetailsSupportFragment
+
+class BangumiDetailsFragment : DetailsSupportFragment() {
+
+
+
 }

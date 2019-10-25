@@ -1,8 +1,7 @@
 def versions = [
         'android_plugin' : '3.5.1',
         'kotlin'         : '1.3.50',
-        'koin'           : '2.0.1',
-        'retrofit2'      : '2.6.2',
+//        'retrofit2'      : '2.6.2',
 ]
 
 def deps = [
@@ -18,14 +17,11 @@ def deps = [
                 'gradle_plugin'    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 'stdlib'           : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
         ],
-        koin       : [
-                'viewmodel'        : "org.koin:koin-android-viewmodel:${versions.koin}",
-        ],
-        network    : [
-                'retrofit2'        : "com.squareup.retrofit2:retrofit:${versions.retrofit2}",
-                'retrofit2_gson'   : "com.squareup.retrofit2:converter-gson:${versions.retrofit2}",
-                'okhttp3_logging'  : "com.squareup.okhttp3:logging-interceptor:3.12.1"
-        ],
+//        network    : [
+//                'retrofit2'        : "com.squareup.retrofit2:retrofit:${versions.retrofit2}",
+//                'retrofit2_gson'   : "com.squareup.retrofit2:converter-gson:${versions.retrofit2}",
+//                'okhttp3_logging'  : "com.squareup.okhttp3:logging-interceptor:3.12.1"
+//        ],
 
 ]
 ext.deps = deps
