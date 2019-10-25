@@ -1,8 +1,8 @@
 package com.dandanplay.tv.ui.player
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 
-class PlayerManagerActivity: AppCompatActivity() {
+class PlayerManagerActivity: FragmentActivity() {
 
 
 }

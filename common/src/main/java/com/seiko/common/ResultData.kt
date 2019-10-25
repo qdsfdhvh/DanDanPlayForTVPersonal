@@ -9,7 +9,14 @@ import androidx.lifecycle.MutableLiveData
 data class ResultData<T>(
     var responseType: Int,
     var data: T? = null,
-    var error: Exception? = null)
+    var error: Exception? = null) {
+    override fun toString(): String {
+        return "ResultData{" +
+                "responseType=$responseType" +
+                "error=$error" +
+                "}"
+    }
+}
 
 @IntDef(
     Status.SUCCESSFUL,

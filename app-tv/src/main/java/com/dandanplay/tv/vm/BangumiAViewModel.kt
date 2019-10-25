@@ -31,7 +31,7 @@ class BangumiAViewModel(private val bangumiRepository: BangumiRepository): BaseV
     }
 
     /**
-     * 将动漫 分成 周日~六7组
+     * 将动漫 分成 周日~周六7组
      */
     private suspend fun bangumiIntrosArray(intros: List<BangumiIntro>) = withContext(Dispatchers.Default) {
         val array = SparseArray<ArrayList<BangumiIntro>>(7)

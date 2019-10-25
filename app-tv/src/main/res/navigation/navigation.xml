@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/splashFragment">
+    <!--主界面-->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.dandanplay.tv.ui.HomeFragment"
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_bangumiDetailsFragment"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@+id/homeFragment" />
+    </fragment>
+    <!--番剧详细页-->
+    <fragment
+        android:id="@+id/bangumiDetailsFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.BangumiDetailsFragment"
+        android:label="BangumiDetailsFragment">
+        <argument
+            android:name="intro"
+            app:argType="com.seiko.domain.entities.BangumiIntro"/>
+        <action
+            android:id="@+id/action_bangumiDetailsFragment_related_videos"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@+id/bangumiDetailsFragment" />
+    </fragment>
+    <!--启动界面-->
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.dandanplay.tv.ui.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation"
+            app:popUpToInclusive="true"/>
+    </fragment>
+</navigation>

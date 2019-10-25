@@ -29,6 +29,7 @@ dependencies {
     // Prefs
     api 'com.tencent:mmkv:1.0.23'
 
+    // Koin
     api 'org.koin:koin-android-viewmodel:2.0.1'
 
     // Utils

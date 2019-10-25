@@ -1,6 +1,7 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
+import android.widget.ImageView
 import com.dandanplay.tv.R
 import com.seiko.common.utils.getBangumiStatus
 import com.seiko.domain.entities.BangumiIntro
@@ -16,6 +17,10 @@ class MainAreaCardView(context: Context) : AbsCardView<BangumiIntro>(context) {
         img.setImageURI(item.imageUrl)
         title?.text = item.animeTitle
         chapter.text = item.getBangumiStatus()
+    }
+
+    fun getMainImageView(): ImageView {
+        return img
     }
 
 }

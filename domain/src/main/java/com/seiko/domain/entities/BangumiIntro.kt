@@ -1,5 +1,7 @@
 package com.seiko.domain.entities
 
+import java.io.Serializable
+
 //BangumiIntro {
 //    animeId (integer): 作品编号 ,
 //    animeTitle (string, optional): 作品标题 ,
@@ -12,17 +14,27 @@ package com.seiko.domain.entities
 //    rating (number): 番剧综合评分（综合多个来源的评分求出的加权平均值，0-10分）
 //}
 data class BangumiIntro(
-    val airDay: Int,
-    val animeId: Int,
-    val animeTitle: String,
-    val imageUrl: String,
-    val isFavorited: Boolean,
-    val isOnAir: Boolean,
-    val isRestricted: Boolean,
-    val rating: Int,
-    val searchKeyword: String
-) {
+    var airDay: Int = 0,
+    var animeId: Int = 0,
+    var animeTitle: String = "",
+    var imageUrl: String = "",
+    var isFavorited: Boolean = false,
+    var isOnAir: Boolean = false,
+    var isRestricted: Boolean = false,
+    var rating: Int = 0,
+    var searchKeyword: String = ""
+) : Serializable {
     override fun toString(): String {
-        return "{'airDay':$airDay, 'animeId':$animeId, 'animeTitle':$animeTitle, 'imageUrl':$imageUrl}"
+        return "BangumiIntro{" +
+                "airDay=$airDay," +
+                "animeId=$animeId," +
+                "animeTitle=$animeTitle," +
+                "imageUrl=$imageUrl" +
+                "isFavorited=$isFavorited," +
+                "isOnAir=$isOnAir," +
+                "isRestricted=$isRestricted," +
+                "rating=$rating," +
+                "searchKeyword=$searchKeyword" +
+                "}"
     }
 }

@@ -35,7 +35,7 @@ fun Fragment.setLoadFragment(isLoad: Boolean?) {
             BaseLoadingDialogFragment.newInstance().show(childFragmentManager)
         }
     } else {
-        if (fragment is BaseLoadingDialogFragment) {
+        if (fragment != null && fragment is BaseLoadingDialogFragment ) {
             fragment.dismissDialog()
         }
     }
