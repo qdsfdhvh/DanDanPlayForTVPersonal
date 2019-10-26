@@ -1,4 +1,4 @@
-package com.seiko.domain.entities
+package com.seiko.domain.entity
 
 data class UserEntity(
     val appScope: String,

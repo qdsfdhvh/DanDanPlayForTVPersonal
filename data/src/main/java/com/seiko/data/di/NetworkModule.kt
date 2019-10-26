@@ -1,30 +1,36 @@
 package com.seiko.data.di
 
 import android.content.Context
-import com.blankj.utilcode.util.LogUtils
+import com.google.gson.Gson
 import com.seiko.data.net.*
+import com.seiko.data.net.api.DanDanApiService
+import com.seiko.data.net.api.ResDanDanApiService
 import com.seiko.data.net.cookie.CookiesManager
 import com.seiko.data.net.cookie.PersistentCookieStore
 import com.seiko.data.pref.PrefHelper
-import com.tencent.mmkv.MMKV
 import okhttp3.Cache
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 const val API_DEFAULT  = "API_DEFAULT"
-const val API_RES      = "API_RES"
 const val API_DOWNLOAD = "API_DOWNLOAD"
 //const val API_SUBTITLE = "API_SUBTITLE"
 
 private const val HTTP_DEFAULT = "HTTP_DEFAULT"
 private const val HTTP_SINGLE = "HTTP_SINGLE"
 //private const val HTTP_SUBTITLE = "HTTP_SUBTITLE"
+
+private const val API_BASE_URL = "https://api.acplay.net/"
+private const val RES_BASE_URL = "http://res.acplay.net/"
+private const val DOWNLOAD_BASE_URL = "https://m2t.chinacloudsites.cn/"
+private const val SUBTITLE_BASE_URL = "https://dandanplay.com/"
 
 val networkModel = module {
 
@@ -38,20 +44,14 @@ val networkModel = module {
 
 //    single(named(HTTP_SUBTITLE)) { createSubtitleHttpClient(get(), get()) }
 
-    single(named(API_DEFAULT)) {
-        ApiRequestGenerator(get(named(HTTP_DEFAULT)), get())
-            .createService(DanDanApiService::class.java)
-    }
+    single(named(API_DEFAULT)) { createApiService(get(named(HTTP_DEFAULT)), get()) }
 
-    single(named(API_RES)) {
-        ResRequestGenerator(get(named(HTTP_SINGLE)), get())
-            .createService(DanDanApiService::class.java)
-    }
+    single { createResApiService(get(named(HTTP_SINGLE)), get()) }
 
-    single(named(API_DOWNLOAD)) {
-        DownloadRequestGenerator(get(named(HTTP_SINGLE)), get())
-            .createService(DanDanApiService::class.java)
-    }
+//    single(named(API_DOWNLOAD)) {
+//        DownloadRequestGenerator(get(named(HTTP_SINGLE)), get())
+//            .createService(DanDanApiService::class.java)
+//    }
 
 //    single(named(API_SUBTITLE)) {
 //        SubtitleRequestGenerator(get(named(HTTP_SUBTITLE)), get())
@@ -72,9 +72,10 @@ private fun createCookieManager(cookieStore: PersistentCookieStore): CookiesMana
 private fun createSingleHttpClient(cache: Cache): OkHttpClient {
     return OkHttpClient.Builder()
         .cache(cache)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 }
 
@@ -100,6 +101,24 @@ private fun createDefaultHttpClient(cache: Cache,
             return@addInterceptor chain.proceed(chain.request())
         }
         .build()
+}
+
+private fun createApiService(okHttpClient: OkHttpClient, gson: Gson): DanDanApiService {
+    val retrofit = Retrofit.Builder()
+        .baseUrl(API_BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+    return retrofit.create(DanDanApiService::class.java)
+}
+
+private fun createResApiService(okHttpClient: OkHttpClient, gson: Gson): ResDanDanApiService {
+    val retrofit = Retrofit.Builder()
+        .baseUrl(RES_BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+    return retrofit.create(ResDanDanApiService::class.java)
 }
 
 //private fun createSubtitleHttpClient(cache: Cache,  cookiesManager: CookiesManager): OkHttpClient {

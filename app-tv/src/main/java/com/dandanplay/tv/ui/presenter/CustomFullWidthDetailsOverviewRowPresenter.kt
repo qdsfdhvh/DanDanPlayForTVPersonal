@@ -1,12 +1,14 @@
 package com.dandanplay.tv.ui.presenter
 
 import android.view.ViewGroup
+import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
 
 class CustomFullWidthDetailsOverviewRowPresenter(
-    detailsPresenter: Presenter
-) : FullWidthDetailsOverviewRowPresenter(detailsPresenter) {
+    detailsPresenter: Presenter,
+    logoPresenter: DetailsOverviewLogoPresenter
+) : FullWidthDetailsOverviewRowPresenter(detailsPresenter, logoPresenter) {
 
     private var mPreviousState = STATE_FULL
 
@@ -15,28 +17,29 @@ class CustomFullWidthDetailsOverviewRowPresenter(
     }
 
     override fun onLayoutLogo(viewHolder: ViewHolder, oldState: Int, logoChanged: Boolean) {
-        val v = viewHolder.logoViewHolder.view
-        val lp = v.layoutParams as ViewGroup.MarginLayoutParams
+        val imageView = viewHolder.logoViewHolder.view
+        val lp = imageView.layoutParams as ViewGroup.MarginLayoutParams
 
-        lp.marginStart = v.resources.getDimensionPixelSize(
+        lp.marginStart = imageView.resources.getDimensionPixelSize(
             androidx.leanback.R.dimen.lb_details_v2_logo_margin_start)
-        lp.topMargin = v.resources.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_blank_height) - lp.height / 2
+        lp.topMargin = imageView.resources.getDimensionPixelSize(
+            androidx.leanback.R.dimen.lb_details_v2_blank_height) - lp.height / 2
 
-        val offset = (v.resources.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height) + v
+        val offset = (imageView.resources.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_actions_height) + imageView
             .resources.getDimensionPixelSize(androidx.leanback.R.dimen.lb_details_v2_description_margin_top) + lp.height / 2).toFloat()
 
         when (viewHolder.state) {
             STATE_FULL -> if (mPreviousState == STATE_HALF) {
-                v.animate().translationYBy(-offset)
+                imageView.animate().translationYBy(-offset)
             }
             STATE_HALF -> if (mPreviousState == STATE_FULL) {
-                v.animate().translationYBy(offset)
+                imageView.animate().translationYBy(offset)
             }
             else -> if (mPreviousState == STATE_HALF) {
-                v.animate().translationYBy(-offset)
+                imageView.animate().translationYBy(-offset)
             }
         }
         mPreviousState = viewHolder.state
-        v.layoutParams = lp
+        imageView.layoutParams = lp
     }
 }

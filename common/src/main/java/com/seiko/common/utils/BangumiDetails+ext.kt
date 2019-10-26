@@ -1,6 +1,6 @@
 package com.seiko.common.utils
 
-import com.seiko.domain.entities.BangumiDetails
+import com.seiko.domain.entity.BangumiDetails
 
 
 /**

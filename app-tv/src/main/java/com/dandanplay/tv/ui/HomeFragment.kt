@@ -1,6 +1,5 @@
 package com.dandanplay.tv.ui
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
@@ -17,9 +16,6 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.bean.MyBean
-import com.dandanplay.tv.ui.bangumi.BangumiDetailsFragment
-import com.dandanplay.tv.ui.bangumi.BangumiDetailsFragmentDirections
-import com.dandanplay.tv.ui.card.MainAreaCardView
 import com.dandanplay.tv.ui.dialog.ExitDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
@@ -29,7 +25,7 @@ import com.dandanplay.tv.vm.BangumiAViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.lazyAndroid
-import com.seiko.domain.entities.BangumiIntro
+import com.seiko.domain.entity.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
@@ -45,6 +41,20 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             MyBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
             MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
         )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        LogUtils.d("onCreateView")
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        LogUtils.d("onDestroyView")
+        super.onDestroyView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,13 +92,12 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         // 绑定Adapter
         adapter = rowsAdapter
         onItemViewClickedListener = this
-        prepareEntranceTransition()
-
-        // 加载个人数据
-        adapterRows.get(ROW_MY)?.setList(leftItems)
 
         // 监听返回键
         requireActivity().onBackPressedDispatcher.addCallback(this) { launchExitDialog() }
+
+        // 加载个人数据
+        adapterRows.get(ROW_MY)?.setList(leftItems)
 
         // Navigation在退栈时,回重新调用onCreateView, onViewCreated
         if (viewModel.mainState.value == null) {
@@ -121,7 +130,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                 .setConfirmText("确认")
                 .setCancelText("取消")
                 .setConfirmClickListener {
-                    requireActivity().finish()
+                    ActivityUtils.finishActivity(requireActivity(), true)
                 }
                 .build()
                 .show(manager)
@@ -145,22 +154,30 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                                row: Row?) {
         when(item) {
             is BangumiIntro -> {
-
-//                (holder.view as MainAreaCardView).getMainImageView()
-
                 findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(item)
+                    HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(item.animeId)
                 )
             }
             is MyBean -> {
-                ToastUtils.showShort(item.name)
+                when(item.id) {
+                    ID_AREA -> {
+                        ToastUtils.showShort("番剧")
+                    }
+                    ID_FAVOURITE -> {
+                        ToastUtils.showShort("我的收藏")
+                    }
+                    ID_TIME -> {
+                        ToastUtils.showShort("放送表")
+                    }
+                    ID_INDEX -> {
+                        ToastUtils.showShort("索引")
+                    }
+                }
             }
         }
     }
 
     companion object {
-//        const val TAG = "HomeFragment"
-
         private const val ROW_AREA = 0
         private const val ROW_MY = 1
 
@@ -168,7 +185,5 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         private const val ID_FAVOURITE = 1
         private const val ID_TIME = 2
         private const val ID_INDEX = 3
-
-//        fun newInstance() = HomeFragment()
     }
 }

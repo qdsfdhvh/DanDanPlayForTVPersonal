@@ -1,4 +1,4 @@
-package com.seiko.domain.entities
+package com.seiko.domain.entity
 
 //BangumiSeason {
 //    year (integer): 年份 ,

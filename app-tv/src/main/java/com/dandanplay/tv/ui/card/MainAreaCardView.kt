@@ -1,10 +1,10 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
-import android.widget.ImageView
+import android.view.View
 import com.dandanplay.tv.R
 import com.seiko.common.utils.getBangumiStatus
-import com.seiko.domain.entities.BangumiIntro
+import com.seiko.domain.entity.BangumiIntro
 import kotlinx.android.synthetic.main.item_main_area.view.*
 
 class MainAreaCardView(context: Context) : AbsCardView<BangumiIntro>(context) {
@@ -19,7 +19,7 @@ class MainAreaCardView(context: Context) : AbsCardView<BangumiIntro>(context) {
         chapter.text = item.getBangumiStatus()
     }
 
-    fun getMainImageView(): ImageView {
+    fun getMainImageView(): View {
         return img
     }
 

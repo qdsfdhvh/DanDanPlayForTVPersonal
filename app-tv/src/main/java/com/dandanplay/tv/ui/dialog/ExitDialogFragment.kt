@@ -33,9 +33,9 @@ class ExitDialogFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             }
         }
 
-        btnExit.textSize = customTextSize(SMALL)
-        btnCancel.textSize = customTextSize(LARGE)
-        btnCancel.requestFocus()
+        btnExit.textSize = customTextSize(LARGE)
+        btnCancel.textSize = customTextSize(SMALL)
+        btnExit.requestFocus()
 
         btnExit.setOnClickListener { onConfirm?.invoke() }
         btnCancel.setOnClickListener { dismiss() }

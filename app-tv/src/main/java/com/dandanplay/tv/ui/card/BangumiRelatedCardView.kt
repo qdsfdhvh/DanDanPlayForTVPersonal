@@ -1,8 +1,10 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
+import android.widget.ImageView
 import com.dandanplay.tv.R
-import com.seiko.domain.entities.BangumiIntro
+import com.seiko.common.utils.getBangumiStatus
+import com.seiko.domain.entity.BangumiIntro
 import kotlinx.android.synthetic.main.item_bangumi_related.view.*
 
 class BangumiRelatedCardView(context: Context) : AbsCardView<BangumiIntro>(context) {
@@ -14,6 +16,10 @@ class BangumiRelatedCardView(context: Context) : AbsCardView<BangumiIntro>(conte
     override fun bind(item: BangumiIntro) {
         img.setImageURI(item.imageUrl)
         title.text = item.animeTitle
-        chapter.text = item.rating.toString()
+        chapter.text = item.getBangumiStatus()
+    }
+
+    fun getMainImageView(): ImageView {
+        return img
     }
 }

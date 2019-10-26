@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.RowPresenter
 
-class ChaptersListPresenter(private val position: Int) : ListRowPresenter() {
+class EpisodesListPresenter(private val position: Int) : ListRowPresenter() {
 
     override fun onBindRowViewHolder(holder: RowPresenter.ViewHolder, item: Any) {
         super.onBindRowViewHolder(holder, item)

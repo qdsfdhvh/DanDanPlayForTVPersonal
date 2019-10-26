@@ -1,10 +1,9 @@
-package com.seiko.data.net
+package com.seiko.data.net.api
 
 import com.seiko.data.response.*
-import com.seiko.domain.entities.UserEntity
 import retrofit2.http.*
 
-interface DanDanApiService {
+internal interface DanDanApiService {
 
     /**
      * 获取官方的新番列表
@@ -52,5 +51,14 @@ interface DanDanApiService {
      */
     @GET("api/v2/bangumi/queue/details")
     suspend fun getBangumiQueueDetails(): BangumiQueueDetailsResponse
+
+    /**
+     * 根据用户提供的关键词搜索到对应的作品信息，搜索结果中不包含剧集信息。
+     * @param keyword 关键字
+     * @param type 作品类型
+     */
+    @GET("/api/v2/search/anime")
+    suspend fun getBangumiListWithSearch(@Query("keyword") keyword: String,
+                                         @Query("type") type: String): SearchAnimeResponse
 
 }

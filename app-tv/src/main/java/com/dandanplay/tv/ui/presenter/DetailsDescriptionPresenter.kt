@@ -15,27 +15,32 @@
 package com.dandanplay.tv.ui.presenter
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.seiko.common.utils.getBangumiStatus
-import com.seiko.domain.entities.BangumiDetails
+import com.seiko.domain.entity.BangumiDetails
 
 class DetailsDescriptionPresenter(
-    private val titleColor: Int = 0,
-    private val bodyColor: Int = 0
+
 ) : AbstractDetailsDescriptionPresenter() {
 
+    private var titleColor: Int = 0
+    private var bodyColor: Int = 0
+
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
-//        val animeObject = itemData as AnimeObject
         val details= item as BangumiDetails
 
-
         viewHolder.title.text = details.animeTitle
-        viewHolder.subtitle.text = details.userRating.toString()
-        viewHolder.body.text = details.summary
+        viewHolder.subtitle.text = String.format("TAGS: %s\n", details.tags.joinToString { it.name })
+        viewHolder.body.text = String.format("简介: %s\n", details.summary)
+
         if (titleColor != 0)
             viewHolder.title.setTextColor(titleColor)
         if (bodyColor != 0) {
             viewHolder.subtitle.setTextColor(bodyColor)
             viewHolder.body.setTextColor(bodyColor)
         }
+    }
+
+    fun setColor(titleColor: Int, bodyColor: Int) {
+        this.titleColor = titleColor
+        this.bodyColor = bodyColor
     }
 }

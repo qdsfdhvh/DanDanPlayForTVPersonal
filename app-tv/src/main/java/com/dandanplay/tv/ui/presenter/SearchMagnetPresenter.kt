@@ -2,20 +2,20 @@ package com.dandanplay.tv.ui.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.dandanplay.tv.ui.card.MainAreaCardView
-import com.seiko.domain.entity.BangumiIntro
+import com.dandanplay.tv.ui.card.SearchMagnetCardView
+import com.seiko.domain.entity.ResMagnetItem
 
-class MainAreaPresenter : Presenter() {
+class SearchMagnetPresenter : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val view = MainAreaCardView(parent.context)
+        val view = SearchMagnetCardView(parent.context)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) {
-        val cardView = holder.view as MainAreaCardView
-        val intro = item as BangumiIntro
-        cardView.bind(intro)
+        val cardView = holder.view as SearchMagnetCardView
+        val bean = item as ResMagnetItem
+        cardView.bind(bean)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) {

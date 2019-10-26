@@ -1,9 +1,8 @@
 package com.seiko.domain.repository
 
-import com.seiko.domain.entities.BangumiDetails
-import com.seiko.domain.entities.BangumiIntro
-import com.seiko.domain.entities.BangumiQueueDetails
-import com.seiko.domain.entities.BangumiSeason
+import com.seiko.domain.entity.BangumiDetails
+import com.seiko.domain.entity.BangumiIntro
+import com.seiko.domain.entity.BangumiSeason
 import com.seiko.domain.utils.Result
 
 interface BangumiRepository {

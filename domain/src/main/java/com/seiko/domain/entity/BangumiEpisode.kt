@@ -1,4 +1,6 @@
-package com.seiko.domain.entities
+package com.seiko.domain.entity
+
+import java.io.Serializable
 
 //BangumiEpisode {
 //    episodeId (integer): 剧集ID（弹幕库编号） ,
@@ -7,8 +9,8 @@ package com.seiko.domain.entities
 //    airDate (string): 本集上映时间（当地时间）
 //}
 data class BangumiEpisode(
-    val episodeId: Int,
-    val episodeTitle: String,
-    val lastWatched: String,
-    val airDate: String
-)
+    var episodeId: Int = 0,
+    var episodeTitle: String = "",
+    var lastWatched: String = "",
+    var airDate: String = ""
+) : Serializable

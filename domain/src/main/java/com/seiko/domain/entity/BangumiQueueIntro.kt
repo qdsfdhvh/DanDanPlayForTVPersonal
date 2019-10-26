@@ -1,4 +1,4 @@
-package com.seiko.domain.entities
+package com.seiko.domain.entity
 
 //BangumiQueueIntroV2 {
 //    animeId (integer): 作品编号 ,

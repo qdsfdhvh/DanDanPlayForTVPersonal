@@ -1,6 +1,6 @@
 package com.seiko.data.response
 
-import com.seiko.domain.entities.BangumiQueueDetails
+import com.seiko.domain.entity.BangumiQueueDetails
 
 //BangumiQueueDetailsResponseV2 {
 //    bangumiList (Array[BangumiQueueDetailsV2], optional): 未看番剧剧集列表 ,

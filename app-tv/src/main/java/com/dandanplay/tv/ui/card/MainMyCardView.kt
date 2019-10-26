@@ -3,7 +3,6 @@ package com.dandanplay.tv.ui.card
 import android.content.Context
 import com.dandanplay.tv.R
 import com.dandanplay.tv.bean.MyBean
-import com.dandanplay.tv.utils.setDrawableRes
 import kotlinx.android.synthetic.main.item_main_my.view.*
 
 class MainMyCardView(context: Context) : AbsCardView<MyBean>(context) {

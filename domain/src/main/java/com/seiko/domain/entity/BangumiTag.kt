@@ -1,4 +1,4 @@
-package com.seiko.domain.entities
+package com.seiko.domain.entity
 
 //BangumiTag {
 //    id (integer): 标签编号 ,

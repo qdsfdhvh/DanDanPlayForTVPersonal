@@ -3,7 +3,7 @@ package com.dandanplay.tv.vm
 import android.util.SparseArray
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
-import com.seiko.domain.entities.BangumiIntro
+import com.seiko.domain.entity.BangumiIntro
 import com.seiko.domain.repository.BangumiRepository
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers

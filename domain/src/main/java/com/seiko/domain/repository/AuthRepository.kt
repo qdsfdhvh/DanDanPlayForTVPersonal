@@ -1,6 +1,6 @@
 package com.seiko.domain.repository
 
-import com.seiko.domain.entities.UserEntity
+import com.seiko.domain.entity.UserEntity
 
 interface AuthRepository {
 

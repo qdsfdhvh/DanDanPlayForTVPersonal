@@ -19,13 +19,31 @@
         android:id="@+id/bangumiDetailsFragment"
         android:name="com.dandanplay.tv.ui.bangumi.BangumiDetailsFragment"
         android:label="BangumiDetailsFragment">
+<!--        <argument-->
+<!--            android:name="intro"-->
+<!--            app:argType="com.seiko.domain.entities.BangumiIntro"/>-->
         <argument
-            android:name="intro"
-            app:argType="com.seiko.domain.entities.BangumiIntro"/>
+            android:name="animeId"
+            app:argType="integer"/>
+        <action android:id="@+id/action_bangumiDetailsFragment_to_episodesSearchFragment"
+            app:destination="@id/episodesSearchFragment"
+            app:popUpTo="@id/bangumiDetailsFragment"/>
         <action
             android:id="@+id/action_bangumiDetailsFragment_related_videos"
             app:destination="@id/bangumiDetailsFragment"
-            app:popUpTo="@+id/bangumiDetailsFragment" />
+            app:popUpTo="@+id/bangumiDetailsFragment"
+            app:enterAnim="@anim/anim_activity_enter"
+            app:exitAnim="@anim/anim_activity_exit"
+            app:popEnterAnim="@anim/anim_activity_enter"
+            app:popExitAnim="@anim/anim_activity_exit"/>
+    </fragment>
+    <fragment
+        android:id="@+id/episodesSearchFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.EpisodesSearchFragment"
+        android:label="EpisodesSearchFragment">
+        <argument
+            android:name="keyword"
+            app:argType="string"/>
     </fragment>
     <!--启动界面-->
     <fragment
@@ -33,6 +51,10 @@
         android:name="com.dandanplay.tv.ui.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
+        <!--
+        清空回退栈: app:popUpTo="@id/navigation"
+                   app:popUpToInclusive="true"
+         -->
         <action
             android:id="@+id/action_splashFragment_to_homeFragment"
             app:destination="@id/homeFragment"

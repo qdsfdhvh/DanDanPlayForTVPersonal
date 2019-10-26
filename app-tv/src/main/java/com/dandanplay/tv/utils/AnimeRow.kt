@@ -1,11 +1,13 @@
 package com.dandanplay.tv.utils
 
 import androidx.leanback.widget.ArrayObjectAdapter
+import androidx.leanback.widget.DetailsOverviewRow
 import androidx.leanback.widget.Presenter
 
 class AnimeRow(private val id: Int = 0) {
 
     private var adapter: ArrayObjectAdapter? = null
+    private var details: DetailsOverviewRow? = null
     private var title: String? = null
 
     fun getId(): Long {
@@ -39,6 +41,17 @@ class AnimeRow(private val id: Int = 0) {
         adapter?.run {
             clear()
             addAll(0, list)
+        }
+    }
+
+    fun setDetails(details: DetailsOverviewRow): AnimeRow {
+        this.details = details
+        return this
+    }
+
+    fun setDetailsItem(item: Any) {
+        details?.run {
+            setItem(item)
         }
     }
 
