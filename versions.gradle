@@ -29,7 +29,7 @@ ext.deps = deps
  *                          Build Version                          *
  *******************************************************************/
 def buildVersions = [
-        'minSdk'         : 18,
+        'minSdk'         : 19,
         'targetSdk'      : 29,
         'buildTools'     : "29.0.1",
 

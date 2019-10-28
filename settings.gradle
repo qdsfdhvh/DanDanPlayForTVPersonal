@@ -4,7 +4,7 @@ include ':app-tv',
         ':player_danmaku',
         ':domain',
         ':data',
-//        ':tvrecyclerview',
+        ':thunder',
         ':player_core',
         ':player_explayer',
         ':player_ijkplayer'

@@ -17,6 +17,7 @@ android {
         abortOnError false
     }
 }
+
 dependencies {
     implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
 }

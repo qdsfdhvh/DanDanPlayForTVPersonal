@@ -21,7 +21,8 @@ android {
 dependencies {
     api project(':player_core')
     implementation deps.support.annotation
-    implementation 'com.google.android.exoplayer:exoplayer:2.9.5'
+    api 'com.google.android.exoplayer:exoplayer:2.9.5'
+    api 'com.google.android.exoplayer:extension-leanback:2.9.5'
 //    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.5'
 //    implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.5'
 }

@@ -1,7 +1,7 @@
 package com.seiko.data.di
 
-import com.seiko.data.net.api.DanDanApiService
-import com.seiko.data.net.api.ResDanDanApiService
+import com.seiko.data.service.api.DanDanApiService
+import com.seiko.data.service.api.ResDanDanApiService
 import com.seiko.data.repository.BangumiRepositoryImpl
 import com.seiko.data.repository.SearchRepositoryImpl
 import com.seiko.domain.repository.BangumiRepository

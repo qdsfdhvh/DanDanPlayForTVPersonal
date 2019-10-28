@@ -93,29 +93,28 @@ open class MMKVProperty {
         }
     }
 
-    // 尽量不用
-    protected fun <T> MMKV.list(key: String, defValue: List<T>, gson: Gson): ReadWriteProperty<Any, List<T>> {
-        return object : ReadWriteProperty<Any, List<T>> {
-
-            private var cache: List<T>? = null
-
-            override fun getValue(thisRef: Any, property: KProperty<*>): List<T> {
-                cache?.let { return it }
-                val s = getString(key, "")!!
-                return if (s.isBlank()) {
-                    defValue
-                } else {
-                    val newValue = gson.fromJson<List<T>>(s, List::class.java)
-                    cache = newValue
-                    newValue
-                }
-            }
-
-            override fun setValue(thisRef: Any, property: KProperty<*>, value: List<T>) {
-                putString(key, gson.toJson(value))
-                cache = value
-            }
-        }
-    }
+//    protected fun <T> MMKV.list(key: String, defValue: List<T>, gson: Gson): ReadWriteProperty<Any, List<T>> {
+//        return object : ReadWriteProperty<Any, List<T>> {
+//
+//            private var cache: List<T>? = null
+//
+//            override fun getValue(thisRef: Any, property: KProperty<*>): List<T> {
+//                cache?.let { return it }
+//                val s = getString(key, "")!!
+//                return if (s.isBlank()) {
+//                    defValue
+//                } else {
+//                    val newValue = gson.fromJson<List<T>>(s, List::class.java)
+//                    cache = newValue
+//                    newValue
+//                }
+//            }
+//
+//            override fun setValue(thisRef: Any, property: KProperty<*>, value: List<T>) {
+//                putString(key, gson.toJson(value))
+//                cache = value
+//            }
+//        }
+//    }
 
 }

@@ -2,12 +2,12 @@ package com.seiko.data.di
 
 import android.content.Context
 import com.google.gson.Gson
-import com.seiko.data.net.*
-import com.seiko.data.net.api.DanDanApiService
-import com.seiko.data.net.api.ResDanDanApiService
-import com.seiko.data.net.cookie.CookiesManager
-import com.seiko.data.net.cookie.PersistentCookieStore
-import com.seiko.data.pref.PrefHelper
+import com.seiko.data.service.api.DanDanApiService
+import com.seiko.data.service.api.ResDanDanApiService
+import com.seiko.data.service.api.TorrentApiService
+import com.seiko.data.service.cookie.CookiesManager
+import com.seiko.data.service.cookie.PersistentCookieStore
+import com.seiko.domain.pref.PrefHelper
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -42,21 +42,11 @@ val networkModel = module {
 
     single(named(HTTP_DEFAULT)) { createDefaultHttpClient(get(), get(), get()) }
 
-//    single(named(HTTP_SUBTITLE)) { createSubtitleHttpClient(get(), get()) }
-
     single(named(API_DEFAULT)) { createApiService(get(named(HTTP_DEFAULT)), get()) }
 
     single { createResApiService(get(named(HTTP_SINGLE)), get()) }
 
-//    single(named(API_DOWNLOAD)) {
-//        DownloadRequestGenerator(get(named(HTTP_SINGLE)), get())
-//            .createService(DanDanApiService::class.java)
-//    }
-
-//    single(named(API_SUBTITLE)) {
-//        SubtitleRequestGenerator(get(named(HTTP_SUBTITLE)), get())
-//            .createService(DanDanApiService::class.java)
-//    }
+    single { createTorrentApiService(get(named(HTTP_SINGLE))) }
 
 }
 
@@ -75,13 +65,14 @@ private fun createSingleHttpClient(cache: Cache): OkHttpClient {
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+//        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 }
 
 private fun createDefaultHttpClient(cache: Cache,
                                     cookiesManager: CookiesManager,
-                                    prefHelper: PrefHelper): OkHttpClient {
+                                    prefHelper: PrefHelper
+): OkHttpClient {
     return OkHttpClient.Builder()
         .cache(cache)
         .cookieJar(cookiesManager)
@@ -89,7 +80,7 @@ private fun createDefaultHttpClient(cache: Cache,
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-        .addInterceptor(GzipInterceptor())
+//        .addInterceptor(GzipInterceptor())
         .addInterceptor { chain ->
             val token = prefHelper.token
             if (token.isNotEmpty()) {
@@ -119,6 +110,15 @@ private fun createResApiService(okHttpClient: OkHttpClient, gson: Gson): ResDanD
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
     return retrofit.create(ResDanDanApiService::class.java)
+}
+
+private fun createTorrentApiService(okHttpClient: OkHttpClient): TorrentApiService {
+    val retrofit = Retrofit.Builder()
+        .baseUrl(DOWNLOAD_BASE_URL)
+        .client(okHttpClient)
+//        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+    return retrofit.create(TorrentApiService::class.java)
 }
 
 //private fun createSubtitleHttpClient(cache: Cache,  cookiesManager: CookiesManager): OkHttpClient {

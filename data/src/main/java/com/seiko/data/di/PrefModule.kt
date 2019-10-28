@@ -1,14 +1,9 @@
 package com.seiko.data.di
 
-import android.app.Application
-import android.content.Context
-import android.util.Log
-import com.blankj.utilcode.util.LogUtils
-import com.seiko.data.net.cookie.PersistentCookieStore
+import com.seiko.data.service.cookie.PersistentCookieStore
 import com.seiko.data.pref.AppPrefHelper
-import com.seiko.data.pref.PrefHelper
+import com.seiko.domain.pref.PrefHelper
 import com.tencent.mmkv.MMKV
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val prefModule = module {

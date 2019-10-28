@@ -177,7 +177,7 @@ package com.dandanplay.tv.temp
 //
 //    private fun setupDetailsOverviewRowPresenter() {
 //        // Set detail background.
-//        val detailsPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter())
+//        val detailsPresenter = FullWidthDetailsOverviewRowPresenter(CustomDetailsDescriptionPresenter())
 //        detailsPresenter.backgroundColor =
 //            ContextCompat.getColor(activity, R.color.selected_background)
 //

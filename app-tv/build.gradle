@@ -21,6 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.ext.junit.runners.AndroidJUnit4'
+        multiDexEnabled true
         ndk {
             abiFilters 'armeabi-v7a', 'x86'
         }
@@ -58,8 +59,15 @@ android {
     }
 }
 
+repositories {
+    flatDir { dirs 'libs' }
+}
+
 dependencies {
     implementation project(':common')
+    implementation project(':player_explayer')
+//    implementation(name: 'thunder', ext: 'aar')
+    implementation project(':thunder')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -82,5 +90,10 @@ dependencies {
 
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
+
+    // 权限
+//    implementation 'com.sagar:livedatapermission:2.0.1'
+//    implementation 'com.sagar:dslpermission:2.0.0'
+//    implementation 'com.markodevcic.peko:peko:2.0.0'
 
 }

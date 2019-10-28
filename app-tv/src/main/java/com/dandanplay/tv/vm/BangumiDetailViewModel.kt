@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.palette.graphics.Palette
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
+import com.seiko.data.usecase.GetBangumiDetailsUseCase
 import com.seiko.domain.entity.BangumiDetails
 import com.seiko.domain.entity.BangumiEpisode
 import com.seiko.domain.repository.BangumiRepository
@@ -12,11 +13,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class BangumiDetailViewModel(private val bangumiRepository: BangumiRepository) : BaseViewModel() {
+class BangumiDetailViewModel(private val getBangumiDetails: GetBangumiDetailsUseCase) : BaseViewModel() {
 
     val mainState = ResultLiveData<BangumiDetails>()
 
     val palette = MutableLiveData<Palette>()
+
+    // 上一次提取颜色的图片
+    private var imageUrl = ""
 
     /**
      * 番剧的搜索关键字
@@ -27,13 +31,19 @@ class BangumiDetailViewModel(private val bangumiRepository: BangumiRepository) :
             return details.searchKeyword
         }
 
+    val animeTitle: String
+        get() {
+            val details = mainState.value?.data ?: return ""
+            return details.animeTitle
+        }
+
     fun getBangumiDetails(animeId: Int) = launch {
         mainState.showLoading()
         val result = withContext(Dispatchers.IO) {
-            bangumiRepository.getBangumiDetails(animeId)
+            getBangumiDetails.invoke(animeId)
         }
         when(result) {
-            is Result.Failure -> mainState.failed(result.exception)
+            is Result.Error -> mainState.failed(result.exception)
             is Result.Success -> mainState.success(result.data)
         }
     }
@@ -49,6 +59,15 @@ class BangumiDetailViewModel(private val bangumiRepository: BangumiRepository) :
             episode =  temp
         }
         return "$searchKeyword $episode"
+    }
+
+    fun equalImageUrl(imageUrl: String): Boolean {
+        return if (this.imageUrl == imageUrl) {
+            true
+        } else {
+            this.imageUrl = imageUrl
+            false
+        }
     }
 
 }

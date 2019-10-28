@@ -7,11 +7,9 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.dandanplay.tv.di.viewModelModule
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.seiko.data.di.gsonModule
-import com.seiko.data.di.networkModel
-import com.seiko.data.di.prefModule
-import com.seiko.data.di.repositoryModule
+import com.seiko.data.di.*
 import com.tencent.mmkv.MMKV
+import com.xunlei.downloadlib.XLTaskHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -28,6 +26,7 @@ class App : Application() {
         Utils.init(this)
         MMKV.initialize(this)
         Fresco.initialize(this)
+        XLTaskHelper.init(this, 2)
 
         //Logs
         LogUtils.getConfig()
@@ -39,8 +38,9 @@ class App : Application() {
             androidContext(this@App)
 
             modules(listOf(
-                gsonModule, prefModule, networkModel,
-                repositoryModule, viewModelModule
+                gsonModule, prefModule, networkModel, utilModule,
+                repositoryModule, useCaseModule,
+                viewModelModule
             ))
         }
     }

@@ -29,7 +29,6 @@ import com.seiko.common.Status
 import com.seiko.domain.entity.BangumiDetails
 import com.seiko.domain.entity.BangumiEpisode
 import com.seiko.domain.entity.BangumiIntro
-import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener,
@@ -110,7 +109,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
      */
     private fun setupDetailsOverviewRowPresenter() {
         val logoPresenter = CustomDetailsOverviewLogoPresenter()
-        val descriptionPresenter = DetailsDescriptionPresenter()
+        val descriptionPresenter = CustomDetailsDescriptionPresenter()
         val descriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
         descriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
         viewModel.palette.observe(this::getLifecycle) { palette ->
@@ -189,7 +188,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
             is BangumiEpisode -> {
                 val keyword = viewModel.getSearchKey(item)
                 findNavController().navigate(
-                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
+                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(
+                        keyword, viewModel.animeTitle)
                 )
             }
             is BangumiIntro -> {
@@ -207,6 +207,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
      * 使用Fresco配合Palette，对网络图片取色
      */
     private fun getImagePaletteSync(imageUrl: String) {
+        if (viewModel.equalImageUrl(imageUrl)) return
+
         val uri = Uri.parse(imageUrl)
         val imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
 //            .setProgressiveRenderingEnabled(true)

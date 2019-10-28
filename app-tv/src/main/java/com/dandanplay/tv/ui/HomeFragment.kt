@@ -21,7 +21,7 @@ import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
 import com.dandanplay.tv.utils.AnimeRow
-import com.dandanplay.tv.vm.BangumiAViewModel
+import com.dandanplay.tv.vm.BangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.lazyAndroid
@@ -30,7 +30,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
 
-    private val viewModel by viewModel<BangumiAViewModel>()
+    private val viewModel by viewModel<BangumiViewModel>()
 
     private lateinit var adapterRows: SparseArray<AnimeRow>
 
@@ -60,7 +60,6 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.mainState.observe(this::getLifecycle, this::updateUI)
-
         // 基本参数
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
@@ -143,7 +142,9 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.title_orb -> {
-                ToastUtils.showShort("搜索")
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToSearchBangumiFragment()
+                )
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.seiko.data.repository
 
-import com.seiko.data.net.api.DanDanApiService
-import com.seiko.data.response.BangumiDetailsResponse
-import com.seiko.data.response.BangumiListResponse
-import com.seiko.data.response.BangumiSeasonListResponse
+import com.seiko.data.service.api.DanDanApiService
+import com.seiko.data.service.response.BangumiDetailsResponse
+import com.seiko.data.service.response.BangumiListResponse
+import com.seiko.data.service.response.BangumiSeasonListResponse
 import com.seiko.domain.entity.BangumiDetails
 import com.seiko.domain.entity.BangumiIntro
 import com.seiko.domain.entity.BangumiSeason
@@ -18,12 +18,12 @@ internal class BangumiRepositoryImpl(private val api: DanDanApiService) : Bangum
         try  {
             response = api.getBangumiList()
         } catch (e: HttpException) {
-            return Result.Failure(e)
+            return Result.Error(e)
         }
         if (response.success) {
             return Result.Success(response.bangumiList)
         }
-        return Result.Failure(Exception(response.errorMessage))
+        return Result.Error(Exception(response.errorMessage))
     }
 
     override suspend fun getBangumiSeasons(): Result<List<BangumiSeason>> {
@@ -31,12 +31,12 @@ internal class BangumiRepositoryImpl(private val api: DanDanApiService) : Bangum
         try {
             response = api.getBangumiSeasons()
         } catch (e: HttpException) {
-            return Result.Failure(e)
+            return Result.Error(e)
         }
         if (response.success) {
             return Result.Success(response.seasons)
         }
-        return Result.Failure(Exception(response.errorMessage))
+        return Result.Error(Exception(response.errorMessage))
     }
 
     override suspend fun getBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntro>> {
@@ -44,12 +44,12 @@ internal class BangumiRepositoryImpl(private val api: DanDanApiService) : Bangum
         try  {
             response = api.getBangumiListWithSeason(season.year, season.month)
         } catch (e: HttpException) {
-            return Result.Failure(e)
+            return Result.Error(e)
         }
         if (response.success) {
             return Result.Success(response.bangumiList)
         }
-        return Result.Failure(Exception(response.errorMessage))
+        return Result.Error(Exception(response.errorMessage))
     }
 
     override suspend fun getBangumiDetails(animeId: Int): Result<BangumiDetails> {
@@ -57,12 +57,12 @@ internal class BangumiRepositoryImpl(private val api: DanDanApiService) : Bangum
         try  {
             response = api.getBangumiDetails(animeId)
         } catch (e: HttpException) {
-            return Result.Failure(e)
+            return Result.Error(e)
         }
         if (response.success) {
             return Result.Success(response.bangumi)
         }
-        return Result.Failure(Exception(response.errorMessage))
+        return Result.Error(Exception(response.errorMessage))
     }
 
 }

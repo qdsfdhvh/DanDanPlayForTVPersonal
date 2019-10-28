@@ -15,8 +15,7 @@ interface SearchRepository {
      * @param type 作品类型 ['', 'tvseries', 'tvspecial', 'ova', 'movie', 'musicvideo', 'web',
      *             'other', 'jpmovie', 'jpdrama', 'unknown']
      */
-    suspend fun getBangumiListWithSearch(keyword: String, type: String): Result<List<SearchAnimeDetails>>
-
+    suspend fun searchBangumiList(keyword: String, type: String): Result<List<SearchAnimeDetails>>
 
     /**
      * 搜索磁力连接
@@ -24,6 +23,8 @@ interface SearchRepository {
      * @param typeId 作品类型， 不需要输入-1
      * @param subGroupId 字幕组Id， 不需要输入-1
      */
-    suspend fun getMagnetListWithSearch(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItem>>
+    suspend fun searchMagnetList(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItem>>
+
+
 
 }

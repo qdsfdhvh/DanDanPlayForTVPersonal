@@ -26,9 +26,6 @@ class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
-//        val imageView = LayoutInflater.from(parent.context)
-//            .inflate(R.layout.lb_fullwidth_details_overview_logo, parent, false) as ImageView
-
         val imageView = LayoutInflater.from(parent.context).inflate(
             R.layout.fullwidth_detial_overview_logo, parent, false) as SimpleDraweeView
 
@@ -36,7 +33,6 @@ class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
         val width = res.getDimensionPixelSize(R.dimen.detailsFragment_thumbnail_width)
         val height = res.getDimensionPixelSize(R.dimen.detailsFragment_thumbnail_height)
         imageView.layoutParams = ViewGroup.MarginLayoutParams(width, height)
-//        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         return ViewHolder(imageView)
     }
 
