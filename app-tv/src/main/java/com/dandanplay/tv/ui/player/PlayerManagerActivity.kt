@@ -3,10 +3,13 @@ package com.dandanplay.tv.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.fragment.app.FragmentActivity
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
+import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.seiko.data.utils.DEFAULT_CACHE_FOLDER_PATH
 import com.xunlei.downloadlib.XLTaskHelper
 
@@ -15,7 +18,12 @@ class PlayerManagerActivity: FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player_manager)
+        initView()
         initIntent()
+    }
+
+    private fun initView() {
+        onBackPressedDispatcher.addCallback(this) { launchExitDialog() }
     }
 
     private fun initIntent() {
@@ -33,6 +41,20 @@ class PlayerManagerActivity: FragmentActivity() {
                     ExoPlayerFragment.newInstance(videoTitle, videoPath),
                     ExoPlayerFragment.TAG)
                 .commit()
+        }
+    }
+
+    private fun launchExitDialog() {
+        if (supportFragmentManager.findFragmentByTag(SelectDialogFragment.TAG) == null) {
+            SelectDialogFragment.Builder()
+                .setTitle("你真的确认退出播放吗？")
+                .setConfirmText("确认")
+                .setCancelText("取消")
+                .setConfirmClickListener {
+                    ActivityUtils.finishActivity(this, true)
+                }
+                .build()
+                .show(supportFragmentManager)
         }
     }
 

@@ -6,7 +6,7 @@
     android:background="@color/black_30"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.dandanplay.tv.ui.dialog.ExitDialogFragment">
+    tools:context="com.dandanplay.tv.ui.dialog.SelectDialogFragment">
 
     <TextView
         android:id="@+id/tvTitle"

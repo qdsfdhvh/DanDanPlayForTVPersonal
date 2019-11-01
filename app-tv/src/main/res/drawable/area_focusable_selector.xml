@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- pressed -->
+    <item android:state_pressed="true"
+        android:drawable="@drawable/button_selected_shape" />
+    <!-- selected -->
+    <item android:state_selected="true"
+        android:drawable="@drawable/button_focused_shape" />
+    <!-- focused -->
+    <item android:state_focused="true"
+        android:drawable="@drawable/button_focused_shape" />
+
+    <!-- unfocused -->
+    <item android:state_focused="false"
+        android:drawable="@drawable/button_unselected_shape" />
+
+    <!-- disabled --><!-- disabled -->
+    <item android:state_enabled="false"
+        android:drawable="@drawable/button_selected_shape" />
+
+    <!-- hovered -->
+    <item android:state_hovered="true"
+        android:drawable="@drawable/button_selected_shape" />
+    <!-- default -->
+    <item android:drawable="@drawable/button_focused_shape" />
+</selector>

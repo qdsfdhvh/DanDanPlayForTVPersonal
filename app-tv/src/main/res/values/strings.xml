@@ -17,4 +17,7 @@
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
     <string name="dialog_loading">加载中...</string>
+    <string name="txt_download">下载</string>
+    <string name="txt_play">播放</string>
+    <string name="txt_cancel">取消</string>
 </resources>

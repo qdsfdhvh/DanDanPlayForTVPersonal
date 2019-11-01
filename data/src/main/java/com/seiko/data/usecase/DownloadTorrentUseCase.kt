@@ -13,8 +13,6 @@ class DownloadTorrentUseCase : KoinComponent {
 
     private val api: TorrentApiService by inject()
 
-    private val getTorrentPath: GetTorrentPathUseCase by inject()
-
     suspend operator fun invoke(torrentPath: String, magnet: String): Result<Boolean> {
         val requestBody = RequestBody.create(MediaType.parse("text/plain"), magnet)
 

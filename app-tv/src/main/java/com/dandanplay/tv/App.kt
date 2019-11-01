@@ -6,6 +6,7 @@ import androidx.multidex.MultiDex
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.dandanplay.tv.di.viewModelModule
+import com.dandanplay.tv.work.WorkerService
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.seiko.data.di.*
 import com.tencent.mmkv.MMKV
@@ -38,11 +39,13 @@ class App : Application() {
             androidContext(this@App)
 
             modules(listOf(
-                gsonModule, prefModule, networkModel, utilModule,
+                gsonModule, prefModule, networkModel,
                 repositoryModule, useCaseModule,
                 viewModelModule
             ))
         }
+
+        WorkerService().scheduleDeleteCacheTorrent(this)
     }
 
 }

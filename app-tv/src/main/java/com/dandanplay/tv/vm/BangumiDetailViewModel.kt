@@ -19,9 +19,6 @@ class BangumiDetailViewModel(private val getBangumiDetails: GetBangumiDetailsUse
 
     val palette = MutableLiveData<Palette>()
 
-    // 上一次提取颜色的图片
-    private var imageUrl = ""
-
     /**
      * 番剧的搜索关键字
      */
@@ -31,11 +28,17 @@ class BangumiDetailViewModel(private val getBangumiDetails: GetBangumiDetailsUse
             return details.searchKeyword
         }
 
+    /**
+     * 番剧名称
+     */
     val animeTitle: String
         get() {
             val details = mainState.value?.data ?: return ""
             return details.animeTitle
         }
+
+    // 上一次提取颜色的图片
+    private var imageUrl = ""
 
     fun getBangumiDetails(animeId: Int) = launch {
         mainState.showLoading()

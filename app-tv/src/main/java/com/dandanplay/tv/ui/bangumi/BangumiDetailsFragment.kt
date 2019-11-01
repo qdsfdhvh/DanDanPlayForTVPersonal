@@ -11,6 +11,7 @@ import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.palette.graphics.Palette
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.ui.dialog.setLoadFragment
@@ -41,21 +42,36 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mPresenterSelector = ClassPresenterSelector()
-        mAdapter = ArrayObjectAdapter(mPresenterSelector)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.mainState.observe(this::getLifecycle, this::updateUI)
+        setupUI()
+        loadData()
+    }
+
+    /**
+     * 生成相关UI
+     */
+    private fun setupUI() {
+        if (adapter != null) return
+        mPresenterSelector = ClassPresenterSelector()
+        mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this
+        adapter = mAdapter
+    }
+
+    /**
+     * 开始加载数据
+     */
+    private fun loadData() {
+        viewModel.mainState.observe(this::getLifecycle, this::updateUI)
         if (viewModel.mainState.value == null) {
             viewModel.getBangumiDetails(args.animeId)
         }
     }
 
+    /**
+     * 加载'动漫详情'数据
+     */
     private fun updateUI(data: ResultData<BangumiDetails>) {
         when(data.responseType) {
             Status.LOADING -> {
@@ -66,21 +82,49 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
                 ToastUtils.showShort(data.error.toString())
             }
             Status.SUCCESSFUL -> {
+                updateDetails(data.data)
                 setLoadFragment(false)
-                updateDetails(data.data ?: return)
             }
         }
     }
 
-    private fun updateDetails(details: BangumiDetails) {
-        mAdapter.clear()
-        setupDetailsOverviewRow(details)
-        setupDetailsOverviewRowPresenter()
-        setupEpisodesRows(details.episodes)
-        setupRelatedsRows(details.relateds)
-        setupSimilarsRows(details.similars)
+    /**
+     * 更新动漫详情
+     */
+    private fun updateDetails(details: BangumiDetails?) {
+        if (details == null) return
+//        title = details.animeTitle
+        viewModel.palette.observe(this::getLifecycle) { palette ->
+            mAdapter.clear()
+            setupDetailsOverviewRowPresenter(palette)
+            setupDetailsOverviewRow(details)
+            setupEpisodesRows(details.episodes)
+            setupRelatedsRows(details.relateds)
+            setupSimilarsRows(details.similars)
+        }
         getImagePaletteSync(details.imageUrl)
-        adapter = mAdapter
+    }
+
+    /**
+     * 添加简介布局选择器
+     */
+    private fun setupDetailsOverviewRowPresenter(palette: Palette?) {
+        val logoPresenter = CustomDetailsOverviewLogoPresenter()
+        val descriptionPresenter = CustomDetailsDescriptionPresenter()
+        val descriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
+        descriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
+        val swatch = palette?.darkMutedSwatch
+        if (swatch != null) {
+            descriptionPresenter.setColor(swatch.titleTextColor, swatch.bodyTextColor)
+            descriptionRowPresenter.backgroundColor = swatch.rgb
+            val hsv = FloatArray(3)
+            val color = swatch.rgb
+            Color.colorToHSV(color, hsv)
+            hsv[2] *= 0.8f
+            descriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
+            mAdapter.notifyItemRangeChanged(0, 1)
+        }
+        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, descriptionRowPresenter)
     }
 
     /**
@@ -105,29 +149,6 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     }
 
     /**
-     * 添加简介布局选择器
-     */
-    private fun setupDetailsOverviewRowPresenter() {
-        val logoPresenter = CustomDetailsOverviewLogoPresenter()
-        val descriptionPresenter = CustomDetailsDescriptionPresenter()
-        val descriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
-        descriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
-        viewModel.palette.observe(this::getLifecycle) { palette ->
-            val swatch = palette?.darkMutedSwatch
-            if (swatch != null) {
-                descriptionPresenter.setColor(swatch.titleTextColor, swatch.bodyTextColor)
-                descriptionRowPresenter.backgroundColor = swatch.rgb
-                val hsv = FloatArray(3)
-                val color = swatch.rgb
-                Color.colorToHSV(color, hsv)
-                hsv[2] *= 0.8f
-                descriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
-            }
-        }
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, descriptionRowPresenter)
-    }
-
-    /**
      * 添加 分集
      */
     private fun setupEpisodesRows(episodes: List<BangumiEpisode>) {
@@ -136,7 +157,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
             episodesAdapter.addAll(0, episodes)
             val header = HeaderItem(0, "分集")
             mAdapter.add(EpisodesListRow(header, episodesAdapter))
-            mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, EpisodesListPresenter(0))
+            mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, EpisodesListRowPresenter(0))
         }
     }
 
@@ -180,10 +201,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 点击：集数、相关工作
      */
-    override fun onItemClicked(holder: Presenter.ViewHolder,
-                               item: Any?,
-                               rowHolder: RowPresenter.ViewHolder?,
-                               row: Row?) {
+    override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
+                               rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is BangumiEpisode -> {
                 val keyword = viewModel.getSearchKey(item)
@@ -197,9 +216,6 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
                     BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
                 )
             }
-//            is BangumiTag -> {
-//                ToastUtils.showShort(item.name)
-//            }
         }
     }
 
@@ -208,6 +224,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
      */
     private fun getImagePaletteSync(imageUrl: String) {
         if (viewModel.equalImageUrl(imageUrl)) return
+        LogUtils.d("加载图片：$imageUrl")
 
         val uri = Uri.parse(imageUrl)
         val imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)

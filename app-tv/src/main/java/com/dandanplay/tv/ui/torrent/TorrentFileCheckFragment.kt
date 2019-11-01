@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.dandanplay.tv.ui.dialog.SelectMagnetDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.player.PlayerManagerActivity
 import com.dandanplay.tv.ui.presenter.TorrentFileCheckPresenter
@@ -16,6 +17,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.data.utils.DEFAULT_CACHE_FOLDER_PATH
 import com.seiko.data.utils.TYPE_VIDEO
+import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import com.xunlei.downloadlib.XLDownloadManager
 import com.xunlei.downloadlib.XLTaskHelper
@@ -35,6 +37,7 @@ class TorrentFileCheckFragment : VerticalGridSupportFragment(), OnItemViewClicke
     private val atomicInteger = AtomicInteger(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel.thunderUrl.observe(this::getLifecycle, this::updateThunderUrl)
         super.onCreate(savedInstanceState)
         setupRowAdapter()
         onItemViewClickedListener = this
@@ -52,6 +55,7 @@ class TorrentFileCheckFragment : VerticalGridSupportFragment(), OnItemViewClicke
     private fun setupRowAdapter() {
         val gridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM)
         gridPresenter.numberOfColumns = 1
+
         setGridPresenter(gridPresenter)
     }
 
@@ -78,20 +82,49 @@ class TorrentFileCheckFragment : VerticalGridSupportFragment(), OnItemViewClicke
         adapter = mAdapter
     }
 
+    private fun updateThunderUrl(data: ResultData<ThunderLocalUrl>) {
+        when(data.responseType) {
+            Status.ERROR -> {
+                ToastUtils.showShort(data.error.toString())
+            }
+            Status.SUCCESSFUL -> {
+                launchPlayerOnline(data.data ?: return)
+            }
+        }
+    }
+
+    private fun launchPlayerOnline(thunderLocalUrl: ThunderLocalUrl) {
+        PlayerManagerActivity.launchPlayerOnline(
+            context = activity!!,
+            videoTitle = thunderLocalUrl.title,
+            videoPath = thunderLocalUrl.url,
+            thunderTaskId = thunderLocalUrl.taskId)
+    }
+
     override fun onItemClicked(holder: Presenter.ViewHolder?,
                                item: Any?,
                                rowHolder: RowPresenter.ViewHolder?,
                                row: Row?) {
         when(item) {
             is TorrentCheckBean -> {
-                if (item.type != TYPE_VIDEO) {
-                    ToastUtils.showShort("不是可播放的视频文件")
-                    return
+                if (childFragmentManager.findFragmentByTag(SelectMagnetDialogFragment.TAG) == null) {
+                    SelectMagnetDialogFragment.Builder()
+                        .isVideo(item.type == TYPE_VIDEO)
+                        .setOnDownloadClickListener {
+                            ToastUtils.showShort("下载种子")
+                        }
+                        .setOnPlayClickListener {
+                            playForThunder(item, args.torrentPath)
+                        }
+                        .build()
+                        .show(childFragmentManager)
                 }
-                atomicInteger.set(0)
-                playForThunder(item.index, item.size, args.torrentPath)
             }
         }
+    }
+
+    private fun playForThunder(item: TorrentCheckBean, torrentFilePath: String) {
+        playForThunder(item.index, item.size, torrentFilePath)
     }
 
     /**
@@ -123,8 +156,8 @@ class TorrentFileCheckFragment : VerticalGridSupportFragment(), OnItemViewClicke
         val taskParam = BtTaskParam()
         taskParam.setCreateMode(1)
         taskParam.setFilePath(cacheFolder.absolutePath)
-        taskParam.setMaxConcurrent(3)
-        taskParam.setSeqId(atomicInteger.incrementAndGet())
+        taskParam.setMaxConcurrent(atomicInteger.incrementAndGet())
+        taskParam.setSeqId(1)
         taskParam.setTorrentPath(torrentFilePath)
 
         // 选择的文件

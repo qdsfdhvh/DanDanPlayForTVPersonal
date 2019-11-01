@@ -21,7 +21,8 @@ android {
 
 dependencies {
     api project(path: ':domain')
-//    api project(path: ':thunder')
+    api project(path: ':thunder')
+    api project(path: ':torrent')
 
     // NetWork
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
@@ -42,7 +43,4 @@ dependencies {
     api ('com.blankj:utilcode:1.25.9') {
         exclude group: 'com.google.code.gson'
     }
-
-    api "com.frostwire:jlibtorrent:1.2.0.16"
-    api "com.frostwire:jlibtorrent-android-arm:1.2.0.16"
 }

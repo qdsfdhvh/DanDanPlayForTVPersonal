@@ -14,7 +14,7 @@ import com.dandanplay.tv.R
 class MainActivity : FragmentActivity() {
 
     /**
-     * PS: Navigation在返回时，Fragment的View会重新绘制，需要注意。
+     * PS: Navigation在返回时，Fragment的View会重新绘制。
      */
     private lateinit var navController: NavController
 

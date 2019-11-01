@@ -7,7 +7,7 @@
     <!--启动界面-->
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.dandanplay.tv.ui.SplashFragment"
+        android:name="com.dandanplay.tv.ui.splash.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <!--
@@ -24,8 +24,9 @@
     <!--主界面-->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.dandanplay.tv.ui.HomeFragment"
-        android:label="HomeFragment">
+        android:name="com.dandanplay.tv.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/lb_browse_fragment">
         <action
             android:id="@+id/action_homeFragment_to_bangumiDetailsFragment"
             app:destination="@id/bangumiDetailsFragment"
@@ -34,6 +35,34 @@
             android:id="@+id/action_homeFragment_to_searchBangumiFragment"
             app:destination="@id/searchBangumiFragment"
             app:popUpTo="@+id/homeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bangumiTimeLineFragment"
+            app:destination="@id/bangumiTimeLineFragment"
+            app:popUpTo="@+id/homeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bangumiAreaFragment"
+            app:destination="@id/bangumiAreaFragment"
+            app:popUpTo="@+id/homeFragment" />
+    </fragment>
+    <!--播放表-->
+    <fragment
+        android:id="@+id/bangumiTimeLineFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.BangumiTimeLineFragment"
+        android:label="BangumiTimeLineFragment">
+        <action
+            android:id="@+id/action_bangumiTimeLineFragment_to_bangumiDetailsFragment"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@+id/bangumiTimeLineFragment" />
+    </fragment>
+    <!--番剧-->
+    <fragment
+        android:id="@+id/bangumiAreaFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.BangumiAreaFragment"
+        tools:layout="BangumiAreaFragment">
+        <action
+            android:id="@+id/action_bangumiAreaFragment_to_bangumiDetailsFragment"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@+id/bangumiAreaFragment" />
     </fragment>
     <!--番剧搜索-->
     <fragment
@@ -68,7 +97,7 @@
     <!--磁力搜索-->
     <fragment
         android:id="@+id/episodesSearchFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.SearchEpisodesFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.SearchMagnetFragment"
         android:label="EpisodesSearchFragment">
         <argument
             android:name="keyword"
@@ -87,22 +116,5 @@
         <argument
             android:name="torrentPath"
             app:argType="string"/>
-<!--        <action-->
-<!--            android:id="@+id/action_torrentFileCheckFragment_to_playerManagerActivity"-->
-<!--            app:destination="@id/playerManagerActivity"-->
-<!--            app:popUpTo="@+id/torrentFileCheckFragment" />-->
     </fragment>
-<!--    <activity-->
-<!--        android:id="@+id/playerManagerActivity"-->
-<!--        android:name="com.dandanplay.tv.ui.player.PlayerManagerActivity"-->
-<!--        android:label="PlayerManagerActivity">-->
-<!--        <argument-->
-<!--            android:name="videoTitle"-->
-<!--            app:argType="string"-->
-<!--            android:defaultValue="''"/>-->
-<!--        <argument-->
-<!--            android:name="videoUrl"-->
-<!--            app:argType="string"-->
-<!--            android:defaultValue="''"/>-->
-<!--    </activity>-->
 </navigation>

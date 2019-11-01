@@ -7,7 +7,11 @@ val useCaseModule = module {
 
     single { GetBangumiListUseCase() }
 
-    single { GetWeekBangumiListUseCase() }
+    single { GetAirDayBangumiBeansUseCase() }
+
+    single { GetBangumiSeasonsUseCase() }
+
+    single { GetBangumiListWithSeasonUseCase() }
 
     single { GetBangumiDetailsUseCase() }
 
@@ -19,8 +23,9 @@ val useCaseModule = module {
 
     single { DownloadTorrentUseCase() }
 
-    single { GetThunderLocalUrlUseCase() }
-
     single { GetTorrentCheckBeanListUseCase() }
 
+    single { DeleteCacheTorrentUseCase() }
+
+    single { GetTorrentLocalPlayUrlUseCase() }
 }

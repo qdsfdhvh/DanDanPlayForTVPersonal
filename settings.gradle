@@ -1,4 +1,4 @@
-include ':app-tv',
+include ':app-tv', ':torrent',
 //        ':app-bl',
         ':common',
         ':player_danmaku',

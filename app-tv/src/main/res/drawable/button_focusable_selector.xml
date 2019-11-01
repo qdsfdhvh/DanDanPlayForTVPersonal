@@ -2,19 +2,19 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- pressed -->
     <item android:state_pressed="true"
-        android:drawable="@drawable/button_selected_shape" />
+        android:drawable="@android:color/transparent" />
     <!-- focused -->
     <item android:state_focused="true"
         android:drawable="@drawable/button_focused_shape" />
     <!-- unfocused -->
     <item android:state_focused="false"
-        android:drawable="@drawable/button_unselected_shape" />
+        android:drawable="@android:color/transparent" />
     <!-- disabled --><!-- disabled -->
     <item android:state_enabled="false"
-        android:drawable="@drawable/button_selected_shape" />
+        android:drawable="@android:color/transparent" />
     <!-- hovered -->
     <item android:state_hovered="true"
-        android:drawable="@drawable/button_selected_shape" />
+        android:drawable="@android:color/transparent" />
     <!-- default -->
     <item android:drawable="@drawable/button_focused_shape" />
 </selector>

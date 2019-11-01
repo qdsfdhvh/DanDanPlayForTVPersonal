@@ -1,7 +1,7 @@
 package com.seiko.data.di
 
 import com.seiko.data.service.cookie.PersistentCookieStore
-import com.seiko.data.pref.AppPrefHelper
+import com.seiko.data.pref.PrefHelperImpl
 import com.seiko.domain.pref.PrefHelper
 import com.tencent.mmkv.MMKV
 import org.koin.dsl.module
@@ -24,5 +24,5 @@ private fun createCookieStore(): PersistentCookieStore {
 }
 
 private fun createPrefHelper(prefs: MMKV): PrefHelper {
-    return AppPrefHelper(prefs)
+    return PrefHelperImpl(prefs)
 }

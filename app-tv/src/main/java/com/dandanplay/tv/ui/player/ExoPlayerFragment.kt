@@ -8,8 +8,11 @@ import androidx.leanback.media.MediaPlayerAdapter
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.PlaybackControlsRow
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.ffmpeg.ExoFFmpegPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -51,12 +54,17 @@ class ExoPlayerFragment : VideoSupportFragment() {
             ExoPlayerFactory.newSimpleInstance(activity, trackSelector)
         }
         val playerAdapter = LeanbackPlayerAdapter(activity, exoPlayer, UPDATE_DELAY)
-
         mPlaybackControlGlue = PlaybackControlsGlue(activity, playerAdapter)
         mPlaybackControlGlue.host = VideoSupportFragmentGlueHost(this)
         mPlaybackControlGlue.title = videoTitle
 //        transportControlGlue.subtitle = video.description
         mPlaybackControlGlue.playWhenPrepared()
+
+        exoPlayer.addListener(object : Player.EventListener {
+            override fun onPlayerError(error: ExoPlaybackException?) {
+                ToastUtils.showShort("播放失败")
+            }
+        })
     }
 
     private fun setVideoPath(videoPath: String) {
