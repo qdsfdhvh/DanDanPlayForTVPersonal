@@ -18,11 +18,12 @@ class Progress(
     val uploadRate: Int = 0,
     val progress: Float = 0f,
     val bytesDownloaded: Long = 0,
-    val bytesWanted: Long = 0
+    val bytesWanted: Long = 0,
+    val buffer: Buffer = Buffer()
 ) {
 
     companion object {
-        fun createInstance(torrentHandle: TorrentHandle): Progress {
+        fun createInstance(torrentHandle: TorrentHandle, buffer: Buffer): Progress {
             return Progress(
                 state = torrentHandle.status().state(),
                 seederCount = torrentHandle.getSeederCount(),
@@ -30,7 +31,8 @@ class Progress(
                 uploadRate = torrentHandle.getUploadRate(),
                 progress = torrentHandle.getProgress(),
                 bytesDownloaded = torrentHandle.getTotalDone(),
-                bytesWanted = torrentHandle.getTotalWanted()
+                bytesWanted = torrentHandle.getTotalWanted(),
+                buffer = buffer
             )
         }
     }

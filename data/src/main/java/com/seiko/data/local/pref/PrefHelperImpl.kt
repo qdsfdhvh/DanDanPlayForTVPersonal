@@ -1,4 +1,4 @@
-package com.seiko.data.pref
+package com.seiko.data.local.pref
 
 import com.seiko.data.utils.DEFAULT_DOWNLOAD_PATH
 import com.seiko.domain.pref.PrefHelper

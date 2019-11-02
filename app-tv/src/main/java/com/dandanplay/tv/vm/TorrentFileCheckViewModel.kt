@@ -10,6 +10,7 @@ import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -28,6 +29,7 @@ class TorrentFileCheckViewModel(
 
     fun getTorrentCheckBeanList(torrentPath: String) = launch {
         _mainState.showLoading()
+        delay(50) // 防止过快导致加载界面未被去除
         val result = withContext(Dispatchers.Default) {
             getTorrentCheckBeanList.invoke(torrentPath)
         }

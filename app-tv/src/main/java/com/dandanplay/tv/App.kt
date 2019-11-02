@@ -39,9 +39,9 @@ class App : Application() {
             androidContext(this@App)
 
             modules(listOf(
-                gsonModule, prefModule, networkModel,
-                repositoryModule, useCaseModule,
-                viewModelModule
+                gsonModule, prefModule, dbModule, networkModel,
+                repositoryModule, torrentModule,
+                useCaseModule, viewModelModule
             ))
         }
 

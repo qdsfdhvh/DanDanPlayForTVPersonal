@@ -5,7 +5,7 @@ import com.frostwire.jlibtorrent.swig.settings_pack
 import java.io.File
 
 
-data class TorrentSessionOptions constructor(
+data class TorrentEngineOptions constructor(
 
 
 //        val downloadLocation: File
@@ -20,6 +20,11 @@ data class TorrentSessionOptions constructor(
          * 种子下载恢复路径
          */
         val torrentResumeFile: File,
+
+        /**
+         * Session保存路径
+         */
+        val torrentSessionFile: File,
 
         /**
          * 是否为匿名模式
@@ -97,7 +102,8 @@ data class TorrentSessionOptions constructor(
          */
         val dhtNodeLimit: Int = 88
 ) {
-    val settingsPack: SettingsPack = SettingsPack()
+    val settingsPack: SettingsPack
+        get() = SettingsPack()
             .downloadRateLimit(downloadRateLimit)
             .uploadRateLimit(uploadRateLimit)
             .connectionsLimit(connectionsLimit)

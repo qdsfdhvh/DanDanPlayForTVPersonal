@@ -10,11 +10,13 @@ val viewModelModule = module {
 
     viewModel { BangumiDetailViewModel(get()) }
 
-    viewModel { SearchBangumiViewModel(get()) }
+    viewModel { SearchBangumiViewModel(get(), get(), get(), get()) }
 
     viewModel { SearchMagnetViewModel(get(), get(), get()) }
 
     viewModel { TorrentFileCheckViewModel(get(), get()) }
 
     viewModel { BangumiAreaViewModel(get(), get()) }
+
+    viewModel { DownloadListViewModel() }
 }

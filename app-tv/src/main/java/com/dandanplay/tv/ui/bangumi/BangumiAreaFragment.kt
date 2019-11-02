@@ -38,8 +38,7 @@ class BangumiAreaFragment : Fragment() {
             subposition: Int) {
             if (position < 0) return
 
-            val item = seasonAdapter.get(position)
-            when(item) {
+            when(val item = seasonAdapter.get(position)) {
                 is BangumiSeason -> {
                     viewModel.getBangumiListWithSeason(item)
                 }
@@ -66,20 +65,17 @@ class BangumiAreaFragment : Fragment() {
     }
 
     private fun setupUI() {
+        var bridgeAdapter = ItemBridgeAdapter(seasonAdapter)
         grid_season.setNumColumns(1)
         grid_season.setOnChildViewHolderSelectedListener(childViewHolderSelectedListener)
-        var bridgeAdapter = ItemBridgeAdapter(seasonAdapter)
         grid_season.setItemSpacing(20)
         grid_season.adapter = bridgeAdapter
         grid_season.requestFocus()
         FocusHighlightHelper.setupHeaderItemFocusHighlight(bridgeAdapter, true)
 
-        grid_bangumi.setNumColumns(4)
         bridgeAdapter = ItemBridgeAdapter(bangumiAdapter)
+        grid_bangumi.setNumColumns(4)
         grid_bangumi.setItemSpacing(40)
-//        grid_bangumi.verticalSpacing = 10
-//        grid_bangumi.horizontalSpacing = 40
-//        grid_bangumi.verticalSpacing = 40
         grid_bangumi.adapter = bridgeAdapter
         FocusHighlightHelper.setupHeaderItemFocusHighlight(bridgeAdapter, true)
     }

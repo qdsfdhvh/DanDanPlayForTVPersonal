@@ -4,22 +4,23 @@ import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
+import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
+import com.dandanplay.tv.utils.AnimeRow
 import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.permission.PermissionResult
 import com.seiko.common.permission.requestPermissions
+import com.seiko.domain.entity.ResMagnetItem
 import com.seiko.domain.entity.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -30,18 +31,58 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     private val viewModel by viewModel<SearchBangumiViewModel>()
 
-    private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+    private var rowsAdapter: ArrayObjectAdapter? = null // ArrayObjectAdapter(ListRowPresenter())
+
+    private lateinit var adapterRows: SparseArray<AnimeRow>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupUI()
+        // onCreate在onCreateView前，重建View时旧的数据不会往下传递
+        viewModel.downloadState.observe(this::getLifecycle, this::updateDownloadUI)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRows()
+        bindViewModel()
+    }
+
+    private fun setupUI() {
         setSearchResultProvider(this)
         setOnItemViewClickedListener(this)
         setSpeechRecognitionCallback(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setupRows() {
+        if (rowsAdapter != null) return
+
+        adapterRows = SparseArray(2)
+        adapterRows.put(
+            ROW_BANGUMI, AnimeRow(ROW_BANGUMI)
+                .setAdapter(SearchBangumiPresenter())
+                .setTitle("相关作品"))
+        adapterRows.put(
+            ROW_MAGNET, AnimeRow(ROW_MAGNET)
+                .setAdapter(SearchMagnetPresenter())
+                .setTitle("磁力链接"))
+
+        // 生成界面的Adapter
+        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        for (i in 0 until adapterRows.size()) {
+            val row = adapterRows.valueAt(i)
+            val headerItem = HeaderItem(row.getId(), row.getTitle())
+            val listRow = ListRow(headerItem, row.getAdapter())
+            rowsAdapter.add(listRow)
+        }
+        this.rowsAdapter = rowsAdapter
+    }
+
+    private fun bindViewModel() {
         viewModel.mainState.observe(this::getLifecycle, this::updateUI)
+        viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
+        viewModel.magnetList.observe(this::getLifecycle, this::updateMagnetList)
+
         if (viewModel.mainState.value == null) {
             requestPermissions(Manifest.permission.RECORD_AUDIO) {
                 requestCode = REQUEST_ID_AUDIO
@@ -62,7 +103,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         }
     }
 
-    private fun updateUI(data: ResultData<List<SearchAnimeDetails>>) {
+    private fun updateUI(data: ResultData<Boolean>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)
@@ -73,18 +114,35 @@ class SearchBangumiFragment : SearchSupportFragment(),
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
-                updateResults(data.data ?: return)
             }
         }
     }
 
-    private fun updateResults(results: List<SearchAnimeDetails>) {
-        val bangumiAdapter = ArrayObjectAdapter(SearchBangumiPresenter())
-        val headerItem = HeaderItem("搜索结果")
-        bangumiAdapter.addAll(0, results)
-        val row = ListRow(headerItem, bangumiAdapter)
-        rowsAdapter.clear()
-        rowsAdapter.add(row)
+    private fun updateBangumiList(results: List<SearchAnimeDetails>) {
+        adapterRows[ROW_BANGUMI]?.setList(results)
+    }
+
+    private fun updateMagnetList(results: List<ResMagnetItem>) {
+        adapterRows[ROW_MAGNET]?.setList(results)
+    }
+
+    /**
+     * 种子下载完成
+     */
+    private fun updateDownloadUI(data: ResultData<String>) {
+        when(data.responseType) {
+            Status.LOADING -> {
+                setLoadFragment(true)
+            }
+            Status.ERROR -> {
+                setLoadFragment(false)
+                ToastUtils.showShort(data.error.toString())
+            }
+            Status.SUCCESSFUL -> {
+                setLoadFragment(false)
+                downloadTorrentOver(data.data ?: return)
+            }
+        }
     }
 
     override fun recognizeSpeech() {
@@ -119,11 +177,11 @@ class SearchBangumiFragment : SearchSupportFragment(),
             return
         }
 
-        viewModel.getBangumiListWithSearch(query)
+        viewModel.getBangumiListAndMagnetList(query)
     }
 
     private fun clearSearchResults() {
-        rowsAdapter.clear()
+//        rowsAdapter.clear()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -149,11 +207,63 @@ class SearchBangumiFragment : SearchSupportFragment(),
                     SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(item.animeId)
                 )
             }
+            is ResMagnetItem -> {
+                requestPermissions(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) {
+                    requestCode = REQUEST_ID_DOWNLOAD
+                    resultCallback = {
+                        when(this) {
+                            is PermissionResult.PermissionGranted -> {
+                                downloadMagnet(item.magnet)
+                            }
+                            else -> {
+                                ToastUtils.showShort("没有存储权限。")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
+    /**
+     * 下载磁力
+     */
+    private fun downloadMagnet(magnet: String) {
+        val torrentPath = viewModel.isTorrentExist(magnet)
+        if (torrentPath.isNotEmpty()) {
+            downloadExisted(torrentPath)
+        } else {
+            viewModel.downloadTorrent(magnet)
+        }
+    }
+
+    /**
+     * 种子已下载
+     */
+    private fun downloadExisted(torrentPath: String) {
+        // 暂时直接跳转种子详情
+        downloadTorrentOver(torrentPath)
+    }
+
+    /**
+     * 下载种子完成，进入种子详情页
+     */
+    private fun downloadTorrentOver(torrentPath: String) {
+        findNavController().navigate(
+            SearchBangumiFragmentDirections.actionSearchBangumiFragmentToTorrentFileCheckFragment(torrentPath)
+        )
+    }
+
+
     companion object {
+        private const val ROW_BANGUMI = 100
+        private const val ROW_MAGNET = 200
+
         private const val REQUEST_ID_AUDIO = 1122
+        private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
     }

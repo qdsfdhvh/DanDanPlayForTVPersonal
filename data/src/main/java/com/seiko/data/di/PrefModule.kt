@@ -1,7 +1,9 @@
 package com.seiko.data.di
 
 import com.seiko.data.service.cookie.PersistentCookieStore
-import com.seiko.data.pref.PrefHelperImpl
+import com.seiko.data.local.pref.PrefHelperImpl
+import com.seiko.data.utils.PREFS_NAME_COOKIES
+import com.seiko.data.utils.PREFS_NAME_DEFAULT
 import com.seiko.domain.pref.PrefHelper
 import com.tencent.mmkv.MMKV
 import org.koin.dsl.module
@@ -16,11 +18,11 @@ val prefModule = module {
 }
 
 private fun createMMKV(): MMKV {
-    return MMKV.mmkvWithID("DanDanPlayForTV_Prefs", MMKV.SINGLE_PROCESS_MODE)
+    return MMKV.mmkvWithID(PREFS_NAME_DEFAULT, MMKV.SINGLE_PROCESS_MODE)
 }
 
 private fun createCookieStore(): PersistentCookieStore {
-    return PersistentCookieStore(MMKV.mmkvWithID("DanDanPlayForTV_Cookies_Prefs"))
+    return PersistentCookieStore(MMKV.mmkvWithID(PREFS_NAME_COOKIES))
 }
 
 private fun createPrefHelper(prefs: MMKV): PrefHelper {

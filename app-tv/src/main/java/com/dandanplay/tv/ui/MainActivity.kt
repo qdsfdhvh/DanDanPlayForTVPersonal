@@ -10,8 +10,23 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.R
+import com.seiko.common.activity.DispatchKeyEventDispatcher
+import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
 
-class MainActivity : FragmentActivity() {
+class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
+
+    private val dispatchKeyEventDispatcher =
+        DispatchKeyEventDispatcher { event ->
+            if (event?.action == KeyEvent.ACTION_DOWN
+                && event.keyCode == KeyEvent.KEYCODE_BACK
+            ) {
+                if (isSoftInputMethodShowing()) {
+                    hideSoftInput()
+                    return@DispatchKeyEventDispatcher true
+                }
+            }
+            return@DispatchKeyEventDispatcher super.dispatchKeyEvent(event)
+        }
 
     /**
      * PS: Navigation在返回时，Fragment的View会重新绘制。
@@ -28,14 +43,13 @@ class MainActivity : FragmentActivity() {
      * 当软键盘弹出时，关闭软键盘。
      */
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        if (event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isSoftInputMethodShowing()) {
-                hideSoftInput()
-                return true
-            }
-        }
-        return super.dispatchKeyEvent(event)
+        return getDispatchKeyEventDispatcher().dispatchKeyEvent(event)
     }
+
+    override fun getDispatchKeyEventDispatcher(): DispatchKeyEventDispatcher {
+        return dispatchKeyEventDispatcher
+    }
+
 }
 
 

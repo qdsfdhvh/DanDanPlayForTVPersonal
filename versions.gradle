@@ -2,6 +2,7 @@ def versions = [
         'android_plugin' : '3.5.1',
         'kotlin'         : '1.3.50',
         'navigation'     : '2.1.0',
+        'objectbox'      : '2.4.1',
 ]
 
 def deps = [
@@ -21,6 +22,11 @@ def deps = [
                 'gradle_plugin'    : "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}",
                 'fragment_ktx'     : "androidx.navigation:navigation-fragment-ktx:${versions.navigation}",
                 'ui_ktx'           : "androidx.navigation:navigation-ui-ktx:${versions.navigation}",
+        ],
+        objectbox  : [
+                'gradle_plugin'          : "io.objectbox:objectbox-gradle-plugin:${versions.objectbox}",
+                'objectbrowser'          : "io.objectbox:objectbox-android-objectbrowser:${versions.objectbox}",
+                'stdlib'                 : "io.objectbox:objectbox-android:${versions.objectbox}"
         ]
 ]
 ext.deps = deps

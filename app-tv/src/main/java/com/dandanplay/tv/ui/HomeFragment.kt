@@ -1,9 +1,10 @@
-package com.dandanplay.tv.ui.home
+package com.dandanplay.tv.ui
 
 import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
@@ -15,6 +16,7 @@ import com.dandanplay.tv.R
 import com.dandanplay.tv.bean.MyBean
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.dandanplay.tv.ui.download.DownloadManagerActivity
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
 import com.dandanplay.tv.utils.AnimeRow
@@ -37,15 +39,20 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 //            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
             MyBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
 //            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
+            MyBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
             MyBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
         )
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setupUI()
         setupRows()
-        loadData()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        bindViewModel()
     }
 
     /**
@@ -98,7 +105,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     /**
      * 开始加载数据
      */
-    private fun loadData() {
+    private fun bindViewModel() {
         viewModel.weekBangumiList.observe(this::getLifecycle, this::updateUI)
         // 加载个人数据
         adapterRows.get(ROW_MY)?.setList(leftItems)
@@ -176,7 +183,6 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             is MyBean -> {
                 when(item.id) {
                     ID_AREA -> {
-//                        ToastUtils.showShort("番剧")
                         findNavController().navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
                         )
@@ -195,6 +201,9 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                     ID_SETTING -> {
                         ToastUtils.showShort("设置")
                     }
+                    ID_DOWNLOAD -> {
+                        DownloadManagerActivity.launch(activity!!)
+                    }
                 }
             }
         }
@@ -209,5 +218,6 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         private const val ID_TIME = 2
         private const val ID_INDEX = 3
         private const val ID_SETTING = 4
+        private const val ID_DOWNLOAD = 5
     }
 }

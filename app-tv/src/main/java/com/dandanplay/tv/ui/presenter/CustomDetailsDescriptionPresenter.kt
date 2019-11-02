@@ -26,7 +26,6 @@ class CustomDetailsDescriptionPresenter(
 
     override fun onBindDescription(viewHolder: ViewHolder, item: Any) {
         val details= item as BangumiDetails
-
         viewHolder.title.text = details.animeTitle
         viewHolder.subtitle.text = String.format("Tags: %s", details.tags.joinToString { it.name })
         viewHolder.body.text = String.format("简介: \n%s", details.summary)

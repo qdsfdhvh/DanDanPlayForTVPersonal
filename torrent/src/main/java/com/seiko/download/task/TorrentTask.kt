@@ -1,14 +1,12 @@
 package com.seiko.download.task
 
-import com.frostwire.jlibtorrent.Priority
-
 open class TorrentTask(
-    val hash: String,
-    var title: String,
-    var torrentPath: String, // 种子路径
-    var saveDirPath: String, // 下载存储路径
-    var priorityList: Array<Priority>, // 下载种子里的哪些文件
-    val taskBuildTime: Long  // 任务建立时间
+    open val hash: String,
+    open var title: String,
+    open var torrentPath: String, // 种子路径
+    open var saveDirPath: String  // 下载存储路径
+//    open var priorityList: Array<Priority>, // 下载种子里的哪些文件
+//    open val taskBuildTime: Long  // 任务建立时间
 ) {
 
     open fun tag(): String {
@@ -30,7 +28,7 @@ open class TorrentTask(
     }
 
     open fun isEmpty(): Boolean {
-        return torrentPath.isEmpty() || saveDirPath.isEmpty() || priorityList.isEmpty()
+        return torrentPath.isEmpty() || saveDirPath.isEmpty()
     }
 
 }

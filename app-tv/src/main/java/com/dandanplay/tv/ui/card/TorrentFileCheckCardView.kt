@@ -2,13 +2,11 @@ package com.dandanplay.tv.ui.card
 
 import android.content.Context
 import com.dandanplay.tv.R
-import com.dandanplay.tv.utils.ext.formatSize
-import com.dandanplay.tv.utils.ext.setDrawableRes
+import com.dandanplay.tv.extensions.formatSize
 import com.seiko.data.utils.TYPE_AUDIO
 import com.seiko.data.utils.TYPE_PICTURE
 import com.seiko.data.utils.TYPE_SUBTITLE
 import com.seiko.data.utils.TYPE_VIDEO
-import com.seiko.domain.entity.ResMagnetItem
 import com.seiko.domain.entity.TorrentCheckBean
 import kotlinx.android.synthetic.main.item_torrent.view.*
 

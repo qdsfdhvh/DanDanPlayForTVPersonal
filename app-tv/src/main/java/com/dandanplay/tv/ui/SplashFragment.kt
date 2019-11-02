@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui.splash
+package com.dandanplay.tv.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dandanplay.tv.R
+import com.dandanplay.tv.ui.SplashFragmentDirections
 import kotlinx.coroutines.*
 
 class SplashFragment: Fragment() {

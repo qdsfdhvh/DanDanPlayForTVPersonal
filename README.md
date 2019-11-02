@@ -62,6 +62,9 @@ Fackbook开源的一个强大的图片加载组件
 9) [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
 种子下载
 
+10) [ObjectBox](https://github.com/objectbox/objectbox-java)
+一个高性能的符合ACID的NoSQL数据库
+
 ### 3.播放器相关
 1) [Exoplayer](https://github.com/google/ExoPlayer)
 Android系统的应用级媒体播放器

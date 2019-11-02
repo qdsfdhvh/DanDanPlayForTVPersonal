@@ -7,7 +7,7 @@
     <!--启动界面-->
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.dandanplay.tv.ui.splash.SplashFragment"
+        android:name="com.dandanplay.tv.ui.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <!--
@@ -24,7 +24,7 @@
     <!--主界面-->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.dandanplay.tv.ui.home.HomeFragment"
+        android:name="com.dandanplay.tv.ui.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/lb_browse_fragment">
         <action
@@ -73,6 +73,9 @@
             android:id="@+id/action_searchBangumiFragment_to_bangumiDetailsFragment"
             app:destination="@id/bangumiDetailsFragment"
             app:popUpTo="@+id/searchBangumiFragment" />
+        <action android:id="@+id/action_searchBangumiFragment_to_torrentFileCheckFragment"
+            app:destination="@id/torrentFileCheckFragment"
+            app:popUpTo="@id/searchBangumiFragment"/>
     </fragment>
     <!--番剧详情-->
     <fragment
@@ -111,7 +114,7 @@
     </fragment>
     <fragment
         android:id="@+id/torrentFileCheckFragment"
-        android:name="com.dandanplay.tv.ui.torrent.TorrentFileCheckFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.TorrentFileCheckFragment"
         android:label="TorrentFileCheckFragment">
         <argument
             android:name="torrentPath"

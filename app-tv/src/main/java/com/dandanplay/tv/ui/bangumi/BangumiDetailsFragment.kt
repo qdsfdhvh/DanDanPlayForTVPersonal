@@ -42,10 +42,14 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupUI()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
-        loadData()
+        bindViewModel()
     }
 
     /**
@@ -62,7 +66,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 开始加载数据
      */
-    private fun loadData() {
+    private fun bindViewModel() {
         viewModel.mainState.observe(this::getLifecycle, this::updateUI)
         if (viewModel.mainState.value == null) {
             viewModel.getBangumiDetails(args.animeId)
@@ -101,6 +105,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
             setupEpisodesRows(details.episodes)
             setupRelatedsRows(details.relateds)
             setupSimilarsRows(details.similars)
+            prepareEntranceTransition()
         }
         getImagePaletteSync(details.imageUrl)
     }
@@ -135,12 +140,15 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
         detailsOverviewRow.setImageBitmap(activity!!, null)
         detailsOverviewRow.isImageScaleUpAllowed = true
         val actionAdapter = SparseArrayObjectAdapter()
+        actionAdapter.set(1, Action(ID_RATING, "评分:${details.rating}", null,
+            ContextCompat.getDrawable(activity!!, R.drawable.ic_rating))
+        )
         if (details.isFavorited) {
-            actionAdapter.set(1, Action(ID_FAVOURITE, "已收藏", null,
+            actionAdapter.set(2, Action(ID_FAVOURITE, "已收藏", null,
                 ContextCompat.getDrawable(activity!!, R.drawable.ic_heart_full))
             )
         } else {
-            actionAdapter.set(1, Action(ID_FAVOURITE, "未收藏", null,
+            actionAdapter.set(2, Action(ID_FAVOURITE, "未收藏", null,
                 ContextCompat.getDrawable(activity!!, R.drawable.ic_heart_empty))
             )
         }
@@ -251,7 +259,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     }
 
     companion object {
-        private const val ID_FAVOURITE = 1L
+        private const val ID_RATING = 1L
+        private const val ID_FAVOURITE = 2L
     }
 
 }

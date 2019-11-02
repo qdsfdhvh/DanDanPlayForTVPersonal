@@ -1,4 +1,4 @@
-package com.dandanplay.tv.utils.ext
+package com.dandanplay.tv.extensions
 
 import android.net.Uri
 import androidx.annotation.DrawableRes

@@ -38,6 +38,10 @@ class SearchMagnetViewModel(
     // 上一次搜索的关键字
     private var query = ""
 
+    /**
+     * 搜索磁力链接
+     * @param keyword 关键字
+     */
     fun getMagnetListWithSearch(keyword: String) = launch {
         query = keyword
         _mainState.showLoading()

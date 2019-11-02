@@ -36,13 +36,13 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupUI()
         // onCreate在onCreateView前，重建View时旧的数据不会往下传递
         viewModel.downloadState.observe(this::getLifecycle, this::updateDownloadUI)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
         loadData()
     }
 
@@ -92,7 +92,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
     }
 
     /**
-     *
+     * 种子下载完成
      */
     private fun updateDownloadUI(data: ResultData<String>) {
         when(data.responseType) {

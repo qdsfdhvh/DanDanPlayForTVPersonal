@@ -22,10 +22,14 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupUI()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
-        loadData()
+        bindViewModel()
     }
 
     private fun setupUI() {
@@ -38,7 +42,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         onItemViewClickedListener = this
     }
 
-    private fun loadData() {
+    private fun bindViewModel() {
         viewModel.airDayBangumiList.observe(this::getLifecycle, this::updateUI)
         if (viewModel.airDayBangumiList.value == null) {
             viewModel.getBangumiList()

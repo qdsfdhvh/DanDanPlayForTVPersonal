@@ -1,6 +1,9 @@
 package com.seiko.download.status
 
 import com.frostwire.jlibtorrent.TorrentHandle
+import com.seiko.download.extensions.getEndPieceIndex
+import com.seiko.download.extensions.getLargestFileIndex
+import com.seiko.download.extensions.getStartPieceIndex
 import com.seiko.download.recorder.TaskRecorder
 import com.seiko.download.task.TorrentTask
 import com.seiko.download.utils.log
@@ -10,7 +13,7 @@ import com.seiko.download.utils.log
  */
 class StatusHandler(
     private val task: TorrentTask,
-    private val taskRecorder: TaskRecorder? = null,
+    private val taskRecorder: TaskRecorder?,
     private val logTag: String = "",
     callback: (Status) -> Unit = {}
 ) {
@@ -26,7 +29,8 @@ class StatusHandler(
 
     private val callbackMap = mutableMapOf<Any, (Status) -> Unit>()
 
-    private var currentProgress: Progress = Progress()
+    private var progressBuffer: Progress.Buffer = Progress.Buffer()
+    private var currentProgress: Progress = Progress(buffer = progressBuffer)
 
     init {
         callbackMap[Any()] = callback
@@ -45,8 +49,26 @@ class StatusHandler(
         callbackMap.remove(tag)
     }
 
+    fun setInitialTorrentState(torrentHandle: TorrentHandle) {
+        val largestFileIndex = torrentHandle.getLargestFileIndex()
+        progressBuffer = Progress.Buffer(
+            progressBuffer.bufferSize,
+            torrentHandle.getStartPieceIndex(largestFileIndex),
+            torrentHandle.getEndPieceIndex(largestFileIndex)
+        )
+    }
+
+    fun onPieceFinished(torrentHandle: TorrentHandle, pieceIndex: Int) {
+        if (pieceIndex < progressBuffer.startIndex || pieceIndex > progressBuffer.endIndex) {
+            "Out of range piece downloaded.".log()
+            return
+        }
+        progressBuffer.setPieceDownloaded(pieceIndex)
+    }
+
+
     fun onStarted(torrentHandle: TorrentHandle) {
-        currentProgress = Progress.createInstance(torrentHandle)
+        currentProgress = Progress.createInstance(torrentHandle, progressBuffer)
         currentStatus = started.updateProgress()
         dispatchCallback()
 
@@ -57,7 +79,7 @@ class StatusHandler(
     }
 
     fun onDownloading(torrentHandle: TorrentHandle) {
-        currentProgress = Progress.createInstance(torrentHandle)
+        currentProgress = Progress.createInstance(torrentHandle, progressBuffer)
         currentStatus = downloading.updateProgress()
         dispatchCallback()
 
@@ -66,7 +88,7 @@ class StatusHandler(
     }
 
     fun onCompleted(torrentHandle: TorrentHandle) {
-        currentProgress = Progress.createInstance(torrentHandle)
+        currentProgress = Progress.createInstance(torrentHandle, progressBuffer)
         currentStatus = completed.updateProgress()
         dispatchCallback()
 
@@ -87,18 +109,19 @@ class StatusHandler(
         "$logTag [${task.hash}] failed".log()
     }
 
-    fun onPaused() {
+    fun onPaused(torrentHandle: TorrentHandle) {
+        currentProgress = Progress.createInstance(torrentHandle, progressBuffer)
         currentStatus = paused.updateProgress()
         dispatchCallback()
 
         taskRecorder?.update(task, currentStatus)
-
         "$logTag [${task.hash}] paused".log()
     }
 
-    fun onDeleted() {
+    fun onDeleted(torrentHandle: TorrentHandle) {
         //reset current progress
-        currentProgress = Progress()
+        progressBuffer = Progress.Buffer()
+        currentProgress = Progress(buffer = progressBuffer)
         currentStatus = deleted.updateProgress()
         dispatchCallback()
 

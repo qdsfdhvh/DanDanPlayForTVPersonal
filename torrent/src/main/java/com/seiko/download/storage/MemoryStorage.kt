@@ -12,7 +12,7 @@ class MemoryStorage : Storage {
         val result = taskPool[task] ?: return
         task.torrentPath = result.torrentPath
         task.saveDirPath = result.saveDirPath
-        task.priorityList = result.priorityList
+//        task.priorityList = result.priorityList
     }
 
     @Synchronized

@@ -1,8 +1,6 @@
-package com.seiko.data.pref
+package com.seiko.data.local.pref
 
 import android.os.Parcelable
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.tencent.mmkv.MMKV
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty

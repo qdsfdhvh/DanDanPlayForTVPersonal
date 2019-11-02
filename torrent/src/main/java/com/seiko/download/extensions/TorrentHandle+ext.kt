@@ -1,6 +1,7 @@
 package com.seiko.download.extensions
 
 import android.net.Uri
+import com.frostwire.jlibtorrent.AnnounceEntry
 import com.frostwire.jlibtorrent.Priority
 import com.frostwire.jlibtorrent.TorrentHandle
 import java.io.File
@@ -86,24 +87,11 @@ internal fun TorrentHandle.getEndPieceIndex(fileIndex: Int): Int =
                 .mapFile(fileIndex, getFileSize(fileIndex) - 1, 1)
                 .piece()
 
-/**
- * Set the priorities of the pieces of the [TorrentHandle] so that pieces are downloaded
- * as close to in-order as possible. For example, let n equal some number less than or
- * equal to [bufferSize] where n represents the number of pieces set to the highest
- * download priority. Each of the n pieces will be a piece between the first non-downloaded,
- * non-ignored piece index + [bufferSize].
- */
-//internal fun TorrentHandle.setBufferPriorities(
-//        torrentSessionBuffer: TorrentSessionBuffer
-//) = setPiecePriorities(
-//        torrentSessionBuffer.bufferHeadIndex
-//        , torrentSessionBuffer.bufferTailIndex
-//)
+@Suppress("NOTHING_TO_INLINE") // Syntactic sugar.
+internal inline fun TorrentHandle.hash() = infoHash().toHex()
 
-internal fun TorrentHandle.setPiecePriorities(
-        startIndex: Int
-        , endIndex: Int
-) = (startIndex..endIndex).forEach {
-    piecePriority(it, Priority.SEVEN)
-    setPieceDeadline(it, 1000)
+internal fun TorrentHandle.addTrackers(trackers: List<String>) {
+    for (tracker in trackers) {
+        addTracker(AnnounceEntry(tracker))
+    }
 }
