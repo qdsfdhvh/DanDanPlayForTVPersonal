@@ -1,13 +1,15 @@
 package com.dandanplay.tv.ui.download
 
 import android.os.Bundle
+import androidx.leanback.app.AppVerticalGridFragment
+import androidx.leanback.app.AppVerticalGridPresenter
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.TitleViewAdapter.FULL_VIEW_VISIBLE
 import com.dandanplay.tv.vm.DownloadListViewModel
 import org.koin.android.ext.android.inject
 
-class DownloadListFragment : VerticalGridSupportFragment(), OnItemViewClickedListener {
+class DownloadListFragment : AppVerticalGridFragment(), OnItemViewClickedListener {
 
     private val viewModel by inject<DownloadListViewModel>()
 
@@ -23,9 +25,9 @@ class DownloadListFragment : VerticalGridSupportFragment(), OnItemViewClickedLis
 
     private fun setupGridPresenter() {
         if (gridPresenter != null) return
-        val presenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL)
+        val presenter = AppVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL)
         presenter.numberOfColumns = 1
-        gridPresenter = presenter
+        setGridPresenter(presenter)
     }
 
     private fun setupUI() {

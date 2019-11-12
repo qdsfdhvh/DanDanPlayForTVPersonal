@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.leanback.widget.BrowseFrameLayout;
 import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.OnChildLaidOutListener;
@@ -33,10 +34,7 @@ public class AppVerticalGridFragment extends BrandedSupportFragment {
     /**
      * Sets the grid presenter.
      */
-    public void setGridPresenter(AppVerticalGridPresenter gridPresenter) {
-        if (gridPresenter == null) {
-            throw new IllegalArgumentException("Grid presenter may not be null");
-        }
+    public void setGridPresenter(@NonNull AppVerticalGridPresenter gridPresenter) {
         mGridPresenter = gridPresenter;
         mGridPresenter.setOnItemViewSelectedListener(mViewSelectedListener);
         if (mOnItemViewClickedListener != null) {

@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs'
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = file('/Users/seiko/codes/android/seiko/DanDanPlayForTV/key.properties')
+def keystorePropertiesFile = file('../key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 } else {

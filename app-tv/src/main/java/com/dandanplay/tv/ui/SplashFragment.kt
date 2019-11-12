@@ -33,7 +33,6 @@ class SplashFragment: Fragment() {
 
     private fun launchMain() {
         findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
-
     }
 
 }

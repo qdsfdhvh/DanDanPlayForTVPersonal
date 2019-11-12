@@ -1,11 +1,12 @@
-include ':app-tv', ':torrent',
+include ':app-tv',
 //        ':app-bl',
         ':common',
-        ':player_danmaku',
-        ':domain',
         ':data',
+        ':domain',
         ':thunder',
+        ':torrent',
         ':player_core',
+        ':player_danmaku',
         ':player_explayer',
         ':player_ijkplayer'
 rootProject.name='DanDanPlayForTV'

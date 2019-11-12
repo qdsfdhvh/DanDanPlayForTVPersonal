@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.R
 import com.seiko.common.activity.DispatchKeyEventDispatcher

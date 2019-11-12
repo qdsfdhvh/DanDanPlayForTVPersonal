@@ -19,13 +19,13 @@ class GetTorrentLocalPlayUrlUseCase : KoinComponent {
     private val seq = AtomicInteger(0)
 
     /**
+     * @param torrentFilePath 种子路径
      * @param checkedFilePosition 所选文件位置
      * @param checkedFileSize 所选文件大小
-     * @param torrentFilePath 种子路径
      */
-    operator fun invoke(checkedFilePosition: Int,
-                        checkedFileSize: Long,
-                        torrentFilePath: String): Result<ThunderLocalUrl> {
+    operator fun invoke(torrentFilePath: String,
+                        checkedFilePosition: Int,
+                        checkedFileSize: Long): Result<ThunderLocalUrl> {
 
         val thunderTorrentInfo = XLTaskHelper.getInstance().getTorrentInfo(torrentFilePath)
             ?: return Result.Error(Exception("播放失败，无法解析播放内容"))

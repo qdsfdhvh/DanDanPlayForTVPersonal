@@ -14,12 +14,13 @@ class GetTorrentPathUseCase : KoinComponent {
     private val prefHelper: PrefHelper by inject()
 
     /**
+     * @param parentPathName
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      * 将'/'换成'\'
      */
-    operator fun invoke(animeTitle: String, magnet: String): String {
+    operator fun invoke(parentPathName: String, magnet: String): String {
         return prefHelper.downloadFolder +
-                animeTitle.replace('/', '\\') + File.separator +
+                parentPathName.replace('/', '\\') + File.separator +
                 DEFAULT_TORRENT_FOLDER + File.separator +
                 magnet.substring(20) + ".torrent"
     }

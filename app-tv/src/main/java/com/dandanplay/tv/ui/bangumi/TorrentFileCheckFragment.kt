@@ -20,6 +20,7 @@ import com.seiko.common.Status
 import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
 import com.seiko.common.activity.addCallback
 import com.seiko.data.utils.TYPE_VIDEO
+import com.seiko.data.utils.toSingletonList
 import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -56,10 +57,8 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
 
     private fun setupGridPresenter() {
         if (gridPresenter != null) return
-        val presenter =
-            AppVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
+        val presenter = AppVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL)
         presenter.numberOfColumns = 1
-//        gridPresenter = presenter
         setGridPresenter(presenter)
     }
 
@@ -105,10 +104,15 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
 
     private fun updateThunderUrl(data: ResultData<ThunderLocalUrl>) {
         when(data.responseType) {
+            Status.LOADING -> {
+                setLoadFragment(true)
+            }
             Status.ERROR -> {
+                setLoadFragment(false)
                 ToastUtils.showShort(data.error.toString())
             }
             Status.SUCCESSFUL -> {
+                setLoadFragment(false)
                 launchPlayerOnline(data.data ?: return)
             }
         }
@@ -132,10 +136,10 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
                     SelectMagnetDialogFragment.Builder()
                         .isVideo(item.type == TYPE_VIDEO)
                         .setOnDownloadClickListener {
-                            ToastUtils.showShort("下载种子")
+                            getTorrentTask(item)
                         }
                         .setOnPlayClickListener {
-                            playForThunder(item, args.torrentPath)
+                            playForThunder(item)
                         }
                         .build()
                         .show(childFragmentManager)
@@ -144,9 +148,13 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
         }
     }
 
-    private fun playForThunder(item: TorrentCheckBean, torrentFilePath: String) {
-//        playForThunder(item.index, item.size, torrentFilePath)
-        viewModel.playForThunder(item, torrentFilePath)
+    private fun getTorrentTask(item: TorrentCheckBean) {
+        item.isChecked = true
+        viewModel.getTorrentTask(args.torrentPath, item.toSingletonList())
+    }
+
+    private fun playForThunder(item: TorrentCheckBean) {
+        viewModel.playForThunder(args.torrentPath, item)
     }
 
     private fun dispatchKeyEvent(event: KeyEvent?): Boolean {

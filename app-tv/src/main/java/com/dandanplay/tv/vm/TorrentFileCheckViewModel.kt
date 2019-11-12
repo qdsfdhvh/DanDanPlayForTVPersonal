@@ -6,6 +6,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
 import com.seiko.data.usecase.GetTorrentCheckBeanListUseCase
 import com.seiko.data.usecase.GetTorrentLocalPlayUrlUseCase
+import com.seiko.data.usecase.GetTorrentTaskUseCase
 import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import com.seiko.domain.utils.Result
@@ -16,7 +17,8 @@ import kotlinx.coroutines.withContext
 
 class TorrentFileCheckViewModel(
     private val getTorrentCheckBeanList: GetTorrentCheckBeanListUseCase,
-    private val getTorrentLocalPlayUrl: GetTorrentLocalPlayUrlUseCase
+    private val getTorrentLocalPlayUrl: GetTorrentLocalPlayUrlUseCase,
+    private val getTorrentTaskUseCase: GetTorrentTaskUseCase
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<List<TorrentCheckBean>>()
@@ -39,12 +41,20 @@ class TorrentFileCheckViewModel(
         }
     }
 
-    fun playForThunder(item: TorrentCheckBean, torrentPath: String) {
-//        _thunderUrl.showLoading()
-        val result = getTorrentLocalPlayUrl.invoke(item.index, item.size, torrentPath)
+    fun playForThunder(torrentPath: String, item: TorrentCheckBean) = launch {
+        _thunderUrl.showLoading()
+        delay(10) // 防止过快..
+        val result = withContext(Dispatchers.Default) {
+            getTorrentLocalPlayUrl.invoke(torrentPath, item.index, item.size)
+        }
         when(result) {
             is Result.Success -> _thunderUrl.success(result.data)
             is Result.Error -> _thunderUrl.failed(result.exception)
         }
     }
+
+    fun getTorrentTask(torrentPath: String, items: List<TorrentCheckBean>) {
+
+    }
+
 }
