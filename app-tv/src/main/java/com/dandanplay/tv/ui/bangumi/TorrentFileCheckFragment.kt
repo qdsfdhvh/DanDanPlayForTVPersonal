@@ -19,8 +19,8 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
 import com.seiko.common.activity.addCallback
-import com.seiko.data.utils.TYPE_VIDEO
-import com.seiko.data.utils.toSingletonList
+import com.seiko.data.extensions.TYPE_VIDEO
+import com.seiko.data.extensions.toSingletonList
 import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import org.koin.android.viewmodel.ext.android.viewModel

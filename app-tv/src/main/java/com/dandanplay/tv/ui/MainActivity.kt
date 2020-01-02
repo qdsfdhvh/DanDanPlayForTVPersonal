@@ -26,7 +26,7 @@ class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
                     return@DispatchKeyEventDispatcher true
                 }
             }
-            return@DispatchKeyEventDispatcher super.dispatchKeyEvent(event)
+            return@DispatchKeyEventDispatcher this@MainActivity.dispatchKeyEvent(event)
         }
 
     /**

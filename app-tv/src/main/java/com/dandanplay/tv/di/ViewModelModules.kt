@@ -14,7 +14,7 @@ val viewModelModule = module {
 
     viewModel { SearchMagnetViewModel(get(), get(), get()) }
 
-    viewModel { TorrentFileCheckViewModel(get(), get()) }
+    viewModel { TorrentFileCheckViewModel(get(), get(), get()) }
 
     viewModel { BangumiAreaViewModel(get(), get()) }
 

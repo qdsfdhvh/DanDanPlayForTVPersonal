@@ -26,7 +26,9 @@ class App : Application() {
         super.onCreate()
         Utils.init(this)
         MMKV.initialize(this)
+        // 图片
         Fresco.initialize(this)
+        // Thunder
         XLTaskHelper.init(this, 2)
 
         //Logs

@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
@@ -13,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.dandanplay.tv.bean.MyBean
+import com.dandanplay.tv.bean.HomeBean
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.download.DownloadManagerActivity
@@ -35,12 +34,12 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 
     private val leftItems by lazyAndroid {
         listOf(
-            MyBean(ID_AREA, "番剧区", R.drawable.ic_bangumi_area),
+            HomeBean(ID_AREA, "番剧区", R.drawable.ic_bangumi_area),
 //            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
-            MyBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
+            HomeBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
 //            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
-            MyBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
-            MyBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
+            HomeBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
+            HomeBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
         )
     }
 
@@ -180,7 +179,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                     )
                 )
             }
-            is MyBean -> {
+            is HomeBean -> {
                 when(item.id) {
                     ID_AREA -> {
                         findNavController().navigate(

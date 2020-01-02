@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs'
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = file('../key.properties')
+def keystorePropertiesFile = file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 } else {
@@ -60,8 +60,8 @@ android {
 }
 
 dependencies {
-    implementation project(':common')
-    implementation project(':player_explayer')
+    implementation project(':libs:common')
+    implementation project(':libs:player_explayer')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

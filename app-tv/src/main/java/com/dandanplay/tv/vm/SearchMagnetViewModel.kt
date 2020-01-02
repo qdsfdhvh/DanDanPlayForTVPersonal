@@ -1,22 +1,15 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.LogUtils
-import com.frostwire.jlibtorrent.TorrentInfo
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.data.usecase.DownloadTorrentUseCase
 import com.seiko.data.usecase.GetTorrentPathUseCase
 import com.seiko.data.usecase.SearchMagnetListUseCase
-import com.seiko.domain.pref.PrefHelper
-import com.seiko.data.utils.DEFAULT_TORRENT_FOLDER
 import com.seiko.domain.entity.ResMagnetItem
-import com.seiko.domain.repository.SearchRepository
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File

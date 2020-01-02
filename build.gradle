@@ -1,11 +1,17 @@
 buildscript {
     apply from: 'versions.gradle'
+    ext {
+        kotlin_version = '1.3.61'
+    }
     addRepos(repositories)
     dependencies {
         classpath deps.android.gradle_plugin
         classpath deps.kotlin.gradle_plugin
         classpath deps.navigation.gradle_plugin
         classpath deps.objectbox.gradle_plugin
+    }
+    repositories {
+        google()
     }
 }
 

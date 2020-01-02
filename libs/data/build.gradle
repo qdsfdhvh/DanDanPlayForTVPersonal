@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion buildVersions.targetSdk
+    buildToolsVersion buildVersions.buildTools
+    defaultConfig {
+        minSdkVersion buildVersions.minSdk
+        targetSdkVersion buildVersions.targetSdk
+    }
+    compileOptions {
+        sourceCompatibility buildVersions.sourceCompat
+        targetCompatibility buildVersions.targetCompat
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    api project(path: ':libs:domain')
+    api project(path: ':libs:thunder')
+    api project(path: ':libs:torrent')
+
+    // 协程
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+
+    // Koin
+    api 'org.koin:koin-android-viewmodel:2.0.1'
+
+    // NetWork
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.0'
+
+    // Prefs
+    api 'com.tencent:mmkv:1.0.23'
+
+    // Database
+    debugImplementation deps.objectbox.objectbrowser
+    releaseImplementation deps.objectbox.stdlib
+
+    //
+}
+
+apply plugin: 'io.objectbox'

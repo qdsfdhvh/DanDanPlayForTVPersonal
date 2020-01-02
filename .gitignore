@@ -1,6 +1,6 @@
 *.iml
 .gradle
-/build
+
 /local.properties
 /.idea
 /.idea/caches
@@ -13,3 +13,7 @@
 /captures
 .externalNativeBuild
 .cxx
+
+
+/build
+/app-tv/key.properties

@@ -32,7 +32,7 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 安卓端最火热的轻量级HTTP网络请求框架
 
 03) [retrofit](https://github.com/square/retrofi)
-一个RESTful的HTTP网络请求框架的封装
+一个Restful的HTTP网络请求框架的封装
 
 ### 2.工具
 01) [Koin](https://github.com/InsertKoinIO/koin)
@@ -59,9 +59,6 @@ Facebook开源的一个强大的图片加载组件
 08) [Eazy Runtime Permission](https://github.com/sagar-viradiya/eazypermissions)
 一个轻量的Android权限库
 
-09) [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
-种子下载
-
 10) [ObjectBox](https://github.com/objectbox/objectbox-java)
 一个高性能的符合ACID的NoSQL数据库
 
@@ -77,3 +74,13 @@ Bilibili开源弹幕引擎
 
 04) [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
 识别字幕文件编码格式
+
+### 4.Torrent相关
+01) [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
+种子下载
+
+02) [simple-torrent-android](https://github.com/masterwok/simple-torrent-android)
+基于jlibtorrent二次封装的kotlin库
+
+03) [libretorrent](https://github.com/proninyaroslav/libretorrent)
+基于jlibtorrent开发的开源BT下载应用

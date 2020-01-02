@@ -49,7 +49,7 @@
             android:banner="@mipmap/ic_launcher"
             android:icon="@mipmap/ic_launcher"
             android:logo="@mipmap/ic_launcher"
-            android:screenOrientation="landscape">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -62,12 +62,12 @@
 
         <!--下载管理-->
         <activity android:name=".ui.download.DownloadManagerActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="fullSensor"/>
 
         <!--播放器中介-->
         <activity android:name=".ui.player.PlayerManagerActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="landscape">
+            android:screenOrientation="fullSensor">
 
             <!-- http -->
             <intent-filter>

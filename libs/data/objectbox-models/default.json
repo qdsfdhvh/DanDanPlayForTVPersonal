@@ -1,0 +1,96 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1234044001576040922",
+      "lastPropertyId": "15:4307290480138675639",
+      "name": "TorrentEntity",
+      "properties": [
+        {
+          "id": "1:8877627671616180534",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9060427795417254702",
+          "name": "hash",
+          "type": 9
+        },
+        {
+          "id": "6:15141742994121942",
+          "name": "priorityList",
+          "type": 9
+        },
+        {
+          "id": "7:619286755542687611",
+          "name": "source",
+          "type": 9
+        },
+        {
+          "id": "8:8301056400612157182",
+          "name": "downloadPath",
+          "type": 9
+        },
+        {
+          "id": "9:4613390669607051461",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "10:4324535604177265193",
+          "name": "sequentialDownload",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "11:1129227749862914500",
+          "name": "paused",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "12:4317805452979219847",
+          "name": "finished",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "13:6517476747070098338",
+          "name": "downloadingMetadata",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "14:6128136017239489434",
+          "name": "addedDate",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "15:4307290480138675639",
+          "name": "error",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:1234044001576040922",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    8386321781975092783,
+    2275975482240761085,
+    6181040096153417692
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.download.TorrentEngine
+import com.seiko.torrent.TorrentEngine
 import org.koin.android.ext.android.inject
 
 class TorrentService : Service() {
