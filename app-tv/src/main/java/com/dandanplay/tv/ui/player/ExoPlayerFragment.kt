@@ -13,7 +13,6 @@ import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ext.ffmpeg.ExoFFmpegPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -30,7 +29,7 @@ class ExoPlayerFragment : VideoSupportFragment() {
     private lateinit var mPlaybackControlGlue: PlaybackControlsGlue<LeanbackPlayerAdapter>
     private lateinit var exoPlayer: ExoPlayer
 
-    private var isUseSurfaceView = true
+//    private var isUseSurfaceView = true
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -48,11 +47,7 @@ class ExoPlayerFragment : VideoSupportFragment() {
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-        exoPlayer = if (isUseSurfaceView) {
-            ExoFFmpegPlayer(activity, trackSelector)
-        } else {
-            ExoPlayerFactory.newSimpleInstance(activity, trackSelector)
-        }
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(activity, trackSelector)
         val playerAdapter = LeanbackPlayerAdapter(activity, exoPlayer, UPDATE_DELAY)
         mPlaybackControlGlue = PlaybackControlsGlue(activity, playerAdapter)
         mPlaybackControlGlue.host = VideoSupportFragmentGlueHost(this)

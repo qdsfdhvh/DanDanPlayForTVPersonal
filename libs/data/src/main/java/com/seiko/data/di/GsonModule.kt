@@ -4,7 +4,7 @@ import com.google.gson.*
 import org.koin.dsl.module
 import java.lang.reflect.Type
 
-val gsonModule = module {
+internal val gsonModule = module {
 
     single { createGson() }
 

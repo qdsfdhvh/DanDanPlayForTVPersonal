@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
-import com.seiko.data.usecase.GetBangumiListWithSeasonUseCase
-import com.seiko.data.usecase.GetBangumiSeasonsUseCase
+import com.seiko.data.usecase.bangumi.GetBangumiListWithSeasonUseCase
+import com.seiko.data.usecase.bangumi.GetBangumiSeasonsUseCase
 import com.seiko.domain.entity.BangumiIntro
 import com.seiko.domain.entity.BangumiSeason
 import com.seiko.domain.utils.Result

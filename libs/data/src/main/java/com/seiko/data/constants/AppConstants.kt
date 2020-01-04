@@ -36,3 +36,10 @@ const val DEFAULT_SUBTITLE_FOLDER = "_subtitle"
 internal const val PREFS_NAME_DEFAULT = "DanDanPlayForTV_Prefs"
 internal const val PREFS_NAME_COOKIES = "DanDanPlayForTV_Cookies_Prefs"
 internal const val DB_NAME_DEFAULT = "DanDanPlayForTV_Database"
+
+
+/**
+ * Torrent
+ */
+const val TORRENT_DOWNOLAD_DIR = "TORRENT_DOWNLOAD_DIR"
+const val TORRENT_TEMP_DIR = "TORRENT_TEMP_DIR"

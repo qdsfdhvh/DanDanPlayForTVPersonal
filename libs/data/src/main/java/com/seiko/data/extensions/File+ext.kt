@@ -71,7 +71,9 @@ fun File.writeByteArray(bytes: ByteArray) {
 }
 
 //@Throws(IOException::class)
-fun File.writeInputStream(inputStream: InputStream) {
+fun File.writeInputStream(inputStream: InputStream?) {
+    if (inputStream == null) return
+
     val sink = this.sink().buffer()
     val source = inputStream.source().buffer()
     sink.writeAll(source)

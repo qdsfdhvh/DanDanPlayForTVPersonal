@@ -1,6 +1,7 @@
 package com.seiko.torrent.models
 
 import com.seiko.torrent.utils.getFileList
+import org.libtorrent4j.AddTorrentParams
 import org.libtorrent4j.TorrentInfo
 import java.io.File
 
@@ -16,6 +17,7 @@ data class TorrentMetaInfo(
     var numPieces: Int = 0,
     var fileList: List<BencodeFileItem> = emptyList()
 ) {
+
     constructor(torrentPath: String): this(TorrentInfo(File(torrentPath)))
 
     constructor(data: ByteArray): this(TorrentInfo.bdecode(data))
@@ -29,6 +31,18 @@ data class TorrentMetaInfo(
         torrentSize = info.totalSize(),
         fileCount = info.numFiles(),
         fileList =  info.origFiles().getFileList()
+    )
+
+    constructor(params: MagnetInfo): this(
+        torrentName = params.name,
+        sha1Hash = params.sha1hash,
+        fileList = params.filePriorities.toList().mapIndexed { i, item ->
+            BencodeFileItem(
+                path = item.name,
+                index = i,
+                size = item.ordinal.toLong()
+            )
+        }
     )
 
     override fun hashCode(): Int {

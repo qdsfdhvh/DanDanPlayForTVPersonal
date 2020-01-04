@@ -50,7 +50,7 @@ interface TorrentEngineCallback {
     /**
      * 加载磁力信息
      */
-    fun onMagnetLoaded(hash: String, bencode: ByteArray?)
+    fun onMagnetLoaded(hash: String, bencode: ByteArray)
 
     /**
      * 种子已加载元数据

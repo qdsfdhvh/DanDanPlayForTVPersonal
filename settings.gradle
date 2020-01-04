@@ -1,12 +1,8 @@
-include ':app-tv',
-        ':modules:app-torrent',
+include ':app-tv', ':module-torrent',
+//        ':module_torrent',
         ':libs:common',
         ':libs:data',
         ':libs:domain',
         ':libs:thunder',
-        ':libs:torrent',
-        ':libs:player_core',
-        ':libs:player_danmaku',
-        ':libs:player_explayer',
-        ':libs:player_ijkplayer'
+        ':libs:torrent'
 rootProject.name='DanDanPlayForTV'

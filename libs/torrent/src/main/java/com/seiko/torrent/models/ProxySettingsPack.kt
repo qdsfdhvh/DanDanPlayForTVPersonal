@@ -18,7 +18,7 @@
  */
 package com.seiko.torrent.models
 
-import com.seiko.torrent.DEFAULT_PROXY_PORT
+import com.seiko.torrent.constants.DEFAULT_PROXY_PORT
 
 /*
  * The class encapsulates the proxy settings passed in TorrentEngine.

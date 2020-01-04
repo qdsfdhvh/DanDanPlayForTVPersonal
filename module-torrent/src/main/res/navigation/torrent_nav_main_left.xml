@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/mainLeftFragment">
+    <keep_state_fragment
+        android:id="@+id/mainLeftFragment"
+        android:name="com.seiko.module.torrent.ui.fragments.MainLeftFragment"
+        android:label="MainLeftFragment"/>
+</navigation>

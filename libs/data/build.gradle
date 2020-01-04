@@ -17,6 +17,9 @@ android {
     lintOptions {
         abortOnError false
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -34,16 +37,19 @@ dependencies {
     // NetWork
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
 
     // Prefs
     api 'com.tencent:mmkv:1.0.23'
 
     // Database
-    debugImplementation deps.objectbox.objectbrowser
-    releaseImplementation deps.objectbox.stdlib
+    def room_version = "2.2.3"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // Database Debug 8080
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     //
 }
-
-apply plugin: 'io.objectbox'

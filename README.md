@@ -3,6 +3,7 @@
 > 通过弹弹Play的开源API所开发的android tv端个人用app。
 
 ## 架构相关
+
 CleanArchitecture
 Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)。  
 
@@ -13,28 +14,30 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 视频观看:
 [Bilibili - Kotlin 语言帮助开发者更好的构建应用](https://www.bilibili.com/video/av70762038)
 
-
 ## 项目截图
-<img src="./screen/device-2019-10-28-193951.png" width="250">
 
+![SCREEN](./screen/device-2019-10-28-193951.png)
 
 ## 第三方库
 
-### TOP
+### 参考
+
 01) [DanDanPlayForAndroid](https://github.com/xyoye/DanDanPlayForAndroid)
 弹弹play 概念版，弹弹play系列应用安卓平台上的实现
 
-### 1.网络请求
-01) [okio](https://github.com/square/okio)
-一个非常优秀的Java IO/NIO封装库
+02) [KotlinAndroid](https://github.com/guofudong/KotlinAndroid)
+组件化 + MVP + Retrofit + RxKotlin + Dagger2实现的一款用Kotlin语言编写的多媒体类应用。
 
-02) [okhttp](https://github.com/square/okhttp)
+### 1.网络请求
+
+01) [okhttp](https://github.com/square/okhttp)
 安卓端最火热的轻量级HTTP网络请求框架
 
-03) [retrofit](https://github.com/square/retrofi)
+02) [retrofit](https://github.com/square/retrofi)
 一个Restful的HTTP网络请求框架的封装
 
 ### 2.工具
+
 01) [Koin](https://github.com/InsertKoinIO/koin)
 一款轻量级的依赖注入框架
 
@@ -59,10 +62,17 @@ Facebook开源的一个强大的图片加载组件
 08) [Eazy Runtime Permission](https://github.com/sagar-viradiya/eazypermissions)
 一个轻量的Android权限库
 
-10) [ObjectBox](https://github.com/objectbox/objectbox-java)
+09) [ObjectBox](https://github.com/objectbox/objectbox-java)
 一个高性能的符合ACID的NoSQL数据库
 
+10) [Navigator](https://github.com/florent37/Navigator)
+Android Multi-module navigator, trying to find a way to navigate into a modularized android project
+
+11) [okio](https://github.com/square/okio)
+一个非常优秀的Java IO/NIO封装库
+
 ### 3.播放器相关
+
 01) [Exoplayer](https://github.com/google/ExoPlayer)
 Android系统的应用级媒体播放器
 
@@ -76,6 +86,7 @@ Bilibili开源弹幕引擎
 识别字幕文件编码格式
 
 ### 4.Torrent相关
+
 01) [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
 种子下载
 

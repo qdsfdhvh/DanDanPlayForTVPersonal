@@ -12,17 +12,17 @@ import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.dandanplay.tv.bean.HomeBean
+import com.dandanplay.tv.models.HomeBean
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.download.DownloadManagerActivity
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
-import com.dandanplay.tv.utils.AnimeRow
+import com.dandanplay.tv.models.AnimeRow
 import com.dandanplay.tv.vm.BangumiTimeLineViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.common.lazyAndroid
+import com.seiko.common.extensions.lazyAndroid
 import com.seiko.domain.entity.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 

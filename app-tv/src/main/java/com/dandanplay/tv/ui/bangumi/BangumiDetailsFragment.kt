@@ -16,7 +16,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
-import com.dandanplay.tv.utils.EpisodesListRow
+import com.dandanplay.tv.models.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel
 import com.facebook.common.executors.CallerThreadExecutor
 import com.facebook.common.references.CloseableReference

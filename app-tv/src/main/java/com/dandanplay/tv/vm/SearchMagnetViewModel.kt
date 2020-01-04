@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.data.usecase.DownloadTorrentUseCase
-import com.seiko.data.usecase.GetTorrentPathUseCase
-import com.seiko.data.usecase.SearchMagnetListUseCase
+import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
+import com.seiko.data.usecase.torrent.GetTorrentPathUseCase
+import com.seiko.data.usecase.search.SearchMagnetListUseCase
 import com.seiko.domain.entity.ResMagnetItem
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers

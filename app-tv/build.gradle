@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 
 def keystoreProperties = new Properties()
@@ -22,9 +24,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.ext.junit.runners.AndroidJUnit4'
         multiDexEnabled true
-        ndk {
-            abiFilters 'armeabi-v7a'
-        }
+//        ndk {
+//            abiFilters 'armeabi-v7a'
+//        }
+    }
+//    resourcePrefix "app_"
+    compileOptions {
+        sourceCompatibility buildVersions.sourceCompat
+        targetCompatibility buildVersions.targetCompat
     }
     signingConfigs {
         release {
@@ -36,17 +43,15 @@ android {
     }
     buildTypes {
         debug {
+            minifyEnabled false
             signingConfig signingConfigs.release
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             zipAlignEnabled true
             signingConfig signingConfigs.release
         }
-    }
-    compileOptions {
-        sourceCompatibility buildVersions.sourceCompat
-        targetCompatibility buildVersions.targetCompat
     }
     androidExtensions {
         experimental = true
@@ -60,21 +65,20 @@ android {
 }
 
 dependencies {
-    implementation project(':libs:common')
-    implementation project(':libs:player_explayer')
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    implementation project(':libs:common')
+//    implementation project(':libs:player_explayer')
+
+    if (!isModule) {
+        implementation project(':module_torrent')
+    }
+
     // TV UI
     implementation 'androidx.leanback:leanback:1.0.0'
 //    implementation 'androidx.leanback:leanback-preference:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
-    // navigation
-    implementation deps.navigation.fragment_ktx
-    implementation deps.navigation.ui_ktx
 
     // Image
     implementation 'com.facebook.fresco:fresco:2.0.0'
@@ -87,4 +91,8 @@ dependencies {
 
     // WorkManger
     implementation "androidx.work:work-runtime-ktx:2.2.0"
+
+    // ExoPlayer
+    api 'com.google.android.exoplayer:exoplayer:2.10.4'
+    api 'com.google.android.exoplayer:extension-leanback:2.9.5'
 }

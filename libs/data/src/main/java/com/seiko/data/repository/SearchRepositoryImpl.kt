@@ -1,9 +1,9 @@
 package com.seiko.data.repository
 
-import com.seiko.data.service.api.DanDanApiService
-import com.seiko.data.service.api.ResDanDanApiService
-import com.seiko.data.service.response.ResMagnetSearchResponse
-import com.seiko.data.service.response.SearchAnimeResponse
+import com.seiko.data.http.api.DanDanApiService
+import com.seiko.data.http.api.ResDanDanApiService
+import com.seiko.data.http.response.ResMagnetSearchResponse
+import com.seiko.data.http.response.SearchAnimeResponse
 import com.seiko.domain.entity.ResMagnetItem
 import com.seiko.domain.entity.SearchAnimeDetails
 import com.seiko.domain.repository.SearchRepository

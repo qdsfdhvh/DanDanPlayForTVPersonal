@@ -1,33 +1,26 @@
 package com.seiko.data.local.db
 
-import io.objectbox.BoxStore
+import com.seiko.data.models.TorrentEntity
 
-class DbHelperImpl(boxStore: BoxStore) : DbHelper {
+class DbHelperImpl(private val database: AppDatabase) : DbHelper {
 
-    private val torrentBox = boxStore.boxFor(TorrentEntity::class.java)
-
-    override suspend fun getTorrentEntities(): List<TorrentEntity> {
-        return torrentBox.all
+    override suspend fun getTorrents(): List<TorrentEntity> {
+        return database.torrentDao().all()
     }
 
-    override suspend fun insertTorrentEntity(entity: TorrentEntity) {
-        torrentBox.put(entity)
+    override suspend fun insertTorrent(entity: TorrentEntity) {
+        database.torrentDao().put(entity)
     }
 
-    override suspend fun updateTorrentEntity(entity: TorrentEntity) {
-        if (entity.id == 0L) {
-            torrentBox.query()
-                .equal(TorrentEntity_.hash, entity.hash)
-                .build()
-                .findFirst()?.let {
-                    entity.id = it.id
-                }
-        }
-        torrentBox.put(entity)
+    override suspend fun deleteTorrent(hash: String) {
+        database.torrentDao().delete(hash)
     }
 
-    override suspend fun deleteTorrentEntity(entity: TorrentEntity) {
-        torrentBox.remove(entity.id)
+    override suspend fun exitTorrent(hash: String): Boolean {
+        return database.torrentDao().count(hash) > 0
     }
 
+    override suspend fun getTorrent(hash: String): TorrentEntity? {
+        return database.torrentDao().get(hash)
+    }
 }

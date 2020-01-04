@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
-import com.seiko.data.usecase.GetTorrentCheckBeanListUseCase
-import com.seiko.data.usecase.GetTorrentLocalPlayUrlUseCase
-import com.seiko.data.usecase.GetTorrentTaskUseCase
+import com.seiko.data.usecase.torrent.GetTorrentCheckBeanListUseCase
+import com.seiko.data.usecase.torrent.GetTorrentLocalPlayUrlUseCase
+import com.seiko.data.usecase.torrent.GetTorrentTaskUseCase
 import com.seiko.domain.entity.ThunderLocalUrl
 import com.seiko.domain.entity.TorrentCheckBean
 import com.seiko.domain.utils.Result

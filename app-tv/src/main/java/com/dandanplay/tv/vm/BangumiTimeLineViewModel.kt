@@ -6,7 +6,7 @@ import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.data.usecase.GetAirDayBangumiBeansUseCase
+import com.seiko.data.usecase.bangumi.GetAirDayBangumiBeansUseCase
 import com.seiko.domain.entity.AirDayBangumiBean
 import com.seiko.domain.entity.BangumiIntro
 import com.seiko.domain.utils.Result

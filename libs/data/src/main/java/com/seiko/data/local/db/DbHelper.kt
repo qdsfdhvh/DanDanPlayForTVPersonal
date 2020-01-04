@@ -1,13 +1,16 @@
 package com.seiko.data.local.db
 
+import com.seiko.data.models.TorrentEntity
+
 interface DbHelper {
 
-    suspend fun getTorrentEntities(): List<TorrentEntity>
+    suspend fun getTorrents(): List<TorrentEntity>
 
-    suspend fun insertTorrentEntity(entity: TorrentEntity)
+    suspend fun insertTorrent(entity: TorrentEntity)
 
-    suspend fun updateTorrentEntity(entity: TorrentEntity)
+    suspend fun deleteTorrent(hash: String)
 
-    suspend fun deleteTorrentEntity(entity: TorrentEntity)
+    suspend fun exitTorrent(hash: String): Boolean
 
+    suspend fun getTorrent(hash: String): TorrentEntity?
 }

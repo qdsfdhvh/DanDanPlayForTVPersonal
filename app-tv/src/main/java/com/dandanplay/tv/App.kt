@@ -29,7 +29,7 @@ class App : Application() {
         // 图片
         Fresco.initialize(this)
         // Thunder
-        XLTaskHelper.init(this, 2)
+//        XLTaskHelper.init(this, 2)
 
         //Logs
         LogUtils.getConfig()
@@ -40,10 +40,8 @@ class App : Application() {
             androidLogger()
             androidContext(this@App)
 
-            modules(listOf(
-                gsonModule, prefModule, dbModule, networkModel,
-                repositoryModule, torrentModule,
-                useCaseModule, viewModelModule
+            modules(commonModule + listOf(
+                viewModelModule
             ))
         }
 

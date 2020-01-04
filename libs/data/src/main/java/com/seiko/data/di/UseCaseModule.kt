@@ -1,9 +1,13 @@
 package com.seiko.data.di
 
 import com.seiko.data.usecase.*
+import com.seiko.data.usecase.bangumi.*
+import com.seiko.data.usecase.search.SearchBangumiListUseCase
+import com.seiko.data.usecase.search.SearchMagnetListUseCase
+import com.seiko.data.usecase.torrent.*
 import org.koin.dsl.module
 
-val useCaseModule = module {
+internal val useCaseModule = module {
 
     single { GetBangumiListUseCase() }
 
@@ -28,4 +32,8 @@ val useCaseModule = module {
     single { DeleteCacheTorrentUseCase() }
 
     single { GetTorrentLocalPlayUrlUseCase() }
+
+    single { GetTorrentTempWithContentUseCase() }
+
+    single { GetTorrentTempWithNetUseCase() }
 }

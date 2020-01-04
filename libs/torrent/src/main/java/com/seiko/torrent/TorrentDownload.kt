@@ -2,6 +2,7 @@ package com.seiko.torrent
 
 import android.content.Context
 import android.util.Log
+import com.seiko.torrent.constants.META_DATA_MAX_SIZE
 import com.seiko.torrent.exception.FreeSpaceException
 import com.seiko.torrent.extensions.*
 import com.seiko.torrent.models.MagnetInfo
@@ -17,7 +18,6 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
-import kotlin.math.min
 
 private const val DOWNLOAD_TASK_TAG = "TorrentDownload"
 
@@ -25,9 +25,7 @@ private const val DOWNLOAD_TASK_TAG = "TorrentDownload"
  * ms
  */
 private const val SAVE_RESUME_SYNC_TIME = 10000
-
 private const val PRELOAD_PIECES_COUNT = 5
-
 private const val DEFAULT_PIECE_DEADLINE = 1000
 
 class TorrentDownload(
@@ -313,10 +311,7 @@ class TorrentDownload(
 
         var err: Exception? = null
         try {
-            val torrentDir = findTorrentDataDir(engine.getDownloadDir(), hash)
-                ?: throw FileNotFoundException("Data dir not found")
-
-            val torrentFile = createTorrentFile(torrentDir, DATA_TORRENT_FILE_NAME, bencode)
+            val torrentFile = engine.createTorrentFile(hash, bencode)
             if (torrentFile == null || !torrentFile.exists()) {
                 throw FileNotFoundException("Torrent file not found")
             }

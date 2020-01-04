@@ -1,0 +1,57 @@
+<resources>
+    <string name="torrent_app_name">module-torrent</string>
+
+    <!-- downloaded/total (percent) -->
+    <string name="torrent_download_counter_template" formatted="false">%1$s/%2$s （%3$d%%）</string>
+    <!-- ↓ download speed | ↑ upload speed -->
+    <string name="torrent_download_upload_speed_template" formatted="false">\u2193 %1$s/s | \u2191 %2$s/s</string>
+    <!-- downloaded/total • percent • ETA -->
+    <string name="torrent_download_counter_ETA_template" formatted="false">%1$s/%2$s \u2022 %3$d%% %4$s</string>
+    <!-- connected/total -->
+    <string name="torrent_peers_template" formatted="false">%1$d/%2$d</string>
+    <string name="torrent_status_downloading">下载中</string>
+    <string name="torrent_status_seeding">播种中</string>
+    <string name="torrent_status_paused">已暂停</string>
+    <string name="torrent_status_stopped">已停止</string>
+    <string name="torrent_status_checking">检查中</string>
+    <string name="torrent_status_finished">已完成</string>
+    <string name="torrent_status_downloading_metadata">下载元数据</string>
+    <!-- Error notification -->
+    <string name="torrent_error_template">Error: %1$s</string>
+    <!-- torrent info -->
+    <string name="torrent_info">详情</string>
+    <string name="torrent_files">文件</string>
+    <string name="torrent_name">名称</string>
+    <string name="torrent_upload_torrent_into">下载至</string>
+    <string name="torrent_size">文件大小</string>
+    <string name="torrent_file_count">文件数量</string>
+    <string name="torrent_hash_sum">Hash 特征值</string>
+    <string name="torrent_comment">注释</string>
+    <string name="torrent_create_date">文件创建日期</string>
+    <string name="torrent_created_in_program">文件创建工具</string>
+    <string name="torrent_sequential_download">顺序下载</string>
+    <string name="torrent_enable_sequential_download">启用顺序下载</string>
+    <string name="torrent_start_torrent">开始 torrent</string>
+
+    <!-- Add torrent dialog -->
+    <string name="torrent_decode_torrent_progress_title">加载中</string>
+    <string name="torrent_decode_torrent_default_message">请稍等&#8230;</string>
+    <string name="torrent_decode_torrent_fetch_magnet_message">正在从磁链中获取数据。请稍等&#8230;</string>
+    <string name="torrent_decode_torrent_downloading_torrent_message">正在下载 torrent 文件。请稍等&#8230;</string>
+    <string name="torrent_free_space" formatted="false">剩余空间 %1$s</string>
+
+    <string name="torrent_spinner_all_torrents">全部</string>
+    <string name="torrent_spinner_downloading_torrents">正在下载</string>
+    <string name="torrent_spinner_downloaded_torrents">已下载</string>
+    <string name="torrent_spinner_downloading_metadata_torrents">正下载元数据</string>
+
+    <string name="torrent_dialog_add_link_title">输入磁力或 HTTP/HTTPS 链接</string>
+    <string name="torrent_error_empty_link">请输入链接地址</string>
+
+    <string name="torrent_add_link">添加链接</string>
+    <string name="torrent_open_file">打开文件</string>
+    <string name="torrent_create_torrent">创建 torrent</string>
+
+    <string name="torrent_list_empty">没有 torrent 任务</string>
+    <string name="torrent_add_torrent_title">添加 torrent</string>
+</resources>

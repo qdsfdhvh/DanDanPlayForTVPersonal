@@ -2,11 +2,11 @@ package com.seiko.data.di
 
 import android.content.Context
 import com.google.gson.Gson
-import com.seiko.data.service.api.DanDanApiService
-import com.seiko.data.service.api.ResDanDanApiService
-import com.seiko.data.service.api.TorrentApiService
-import com.seiko.data.service.cookie.CookiesManager
-import com.seiko.data.service.cookie.PersistentCookieStore
+import com.seiko.data.http.api.DanDanApiService
+import com.seiko.data.http.api.ResDanDanApiService
+import com.seiko.data.http.api.TorrentApiService
+import com.seiko.data.http.cookie.CookiesManager
+import com.seiko.data.http.cookie.PersistentCookieStore
 import com.seiko.domain.pref.PrefHelper
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -32,7 +32,7 @@ private const val RES_BASE_URL = "http://res.acplay.net/"
 private const val DOWNLOAD_BASE_URL = "https://m2t.chinacloudsites.cn/"
 private const val SUBTITLE_BASE_URL = "https://dandanplay.com/"
 
-val networkModel = module {
+internal val networkModel = module {
 
     single { createCache(androidContext()) }
 

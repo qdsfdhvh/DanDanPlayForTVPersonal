@@ -3,6 +3,11 @@ package com.seiko.torrent
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
+import com.seiko.torrent.constants.DATA_TORRENT_FILE_NAME
+import com.seiko.torrent.constants.DATA_TORRENT_SESSION_FILE
+import com.seiko.torrent.constants.META_DATA_MAX_SIZE
+import com.seiko.torrent.constants.PEER_FINGERPRINT
+import com.seiko.torrent.constants.USER_AGENT
 import com.seiko.torrent.models.ProxySettingsPack
 import com.seiko.torrent.models.ProxyType
 import com.seiko.torrent.models.TorrentTask
@@ -124,7 +129,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     /**
      * 删除已经获得的磁力数据
      */
-    fun removeLoadedManget(hash: String) {
+    fun removeLoadedMagnet(hash: String) {
         loadedMagnets.remove(hash)
     }
 
@@ -199,11 +204,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         }
     }
 
-    fun mergeTorrent(task: TorrentTask?, bencode: ByteArray? = null) {
-        if (task == null) {
-            return
-        }
-
+    fun mergeTorrent(task: TorrentTask, bencode: ByteArray? = null) {
         val downloadTask = torrentTasks[task.hash] ?: return
 
         val info: TorrentInfo
@@ -229,7 +230,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         }
     }
 
-    fun pasueAll() {
+    fun pauseAll() {
         for (downloadTask in torrentTasks.values) {
             downloadTask.pause()
         }
@@ -485,11 +486,60 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     }
 
     /****************************************************************
-     *                         For DownloadTask                     *
+     *                         TorrentDir                           *
      ****************************************************************/
 
-    fun getDownloadDir(): File = options.downloadDir
+    fun makeTorrentDataDir(hash: String): File? {
+        if (!isStorageReadable()) {
+            return null
+        }
+        val dataDir = File(options.downloadDir, hash)
+        if (dataDir.mkdir()) {
+            return dataDir
+        }
+        return null
+    }
 
+    fun findTorrentDataDir(hash: String): File? {
+        if (!isStorageReadable()) {
+            return null
+        }
+        val dataDir = File(options.downloadDir, hash)
+        if (dataDir.exists()) {
+            return dataDir
+        }
+        return null
+    }
+
+    fun createTorrentFile(hash: String, bencode: ByteArray): File? {
+        val dataDir = File(options.downloadDir, hash)
+        if (!dataDir.exists()) {
+            return null
+        }
+
+        val torrentFile = File(dataDir, DATA_TORRENT_FILE_NAME)
+        if (torrentFile.exists() && !torrentFile.delete()) {
+            return null
+        }
+
+        writeByteArrayToFile(bencode, torrentFile)
+        return torrentFile
+    }
+
+    fun torrentDataExists(hash: String): Boolean {
+        return isStorageReadable() && File(options.downloadDir, hash).exists()
+    }
+
+    fun torrentFileExists(hash: String): Boolean {
+        if (!isStorageReadable()) {
+            return false
+        }
+        val dataDir = File(options.downloadDir, hash)
+        if (dataDir.exists()) {
+            return File(dataDir, DATA_TORRENT_FILE_NAME).exists()
+        }
+        return false
+    }
 
     /****************************************************************
      *                            Status                            *
@@ -530,7 +580,8 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
                 val setting = params.settings().swig()
 
                 val version = getVersionComponents(versionName)
-                val fingerprint = libtorrent.generate_fingerprint(PEER_FINGERPRINT,
+                val fingerprint = libtorrent.generate_fingerprint(
+                    PEER_FINGERPRINT,
                     version[0], version[1], version[2], 0)
                 setting.set_str(settings_pack.string_types.peer_fingerprint.swigValue(), fingerprint)
 
@@ -619,9 +670,11 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         }
         if (bencode != null) {
             loadedMagnets[hash] = bencode
+
+            remove(handle, SessionHandle.DELETE_FILES)
+
+            callback?.onMagnetLoaded(hash, bencode)
         }
-        remove(handle, SessionHandle.DELETE_FILES)
-        callback?.onMagnetLoaded(hash, bencode)
     }
 
     internal fun torrentRemoved(torrentRemovedAlert: TorrentRemovedAlert) {
