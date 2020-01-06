@@ -4,22 +4,20 @@ import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.dandanplay.tv.ui.dialog.SelectMagnetDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.common.permission.PermissionResult
-import com.seiko.common.permission.requestPermissions
+import com.seiko.common.extensions.checkPermissions
 import com.seiko.domain.entity.ResMagnetItem
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -55,18 +53,8 @@ class SearchMagnetFragment : SearchSupportFragment(),
     private fun loadData() {
         viewModel.mainState.observe(this::getLifecycle, this::updateUI)
         if (viewModel.mainState.value == null) {
-            requestPermissions(Manifest.permission.RECORD_AUDIO) {
-                requestCode = REQUEST_ID_AUDIO
-                resultCallback = {
-                    when(this) {
-                        is PermissionResult.PermissionGranted -> {
-
-                        }
-                        else -> {
-                            ToastUtils.showShort("没有语音权限。")
-                        }
-                    }
-                }
+            if (!checkPermissions(PERMISSIONS_AUDIO)) {
+                requestPermissions(PERMISSIONS_AUDIO, REQUEST_ID_AUDIO)
             }
             setSearchQuery(args.keyword, false)
         }
@@ -182,21 +170,10 @@ class SearchMagnetFragment : SearchSupportFragment(),
                                row: Row?) {
         when(item) {
             is ResMagnetItem -> {
-                requestPermissions(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) {
-                    requestCode = REQUEST_ID_DOWNLOAD
-                    resultCallback = {
-                        when(this) {
-                            is PermissionResult.PermissionGranted -> {
-                                downloadMagnet(item.magnet)
-                            }
-                            else -> {
-                                ToastUtils.showShort("没有存储权限。")
-                            }
-                        }
-                    }
+                if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
+                    downloadMagnet(item.magnet)
+                } else {
+                    requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
                 }
             }
         }
@@ -232,10 +209,35 @@ class SearchMagnetFragment : SearchSupportFragment(),
         )
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_ID_AUDIO -> {
+                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    ToastUtils.showShort("没有语音权限。")
+                }
+            }
+            REQUEST_ID_DOWNLOAD -> {
+                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    ToastUtils.showShort("没有存储权限。")
+                }
+            }
+        }
+    }
+
     companion object {
         private const val REQUEST_ID_AUDIO = 1122
         private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
+
+        private val PERMISSIONS_AUDIO = arrayOf(
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        private val PERMISSIONS_DOWNLOAD = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
     }
 }

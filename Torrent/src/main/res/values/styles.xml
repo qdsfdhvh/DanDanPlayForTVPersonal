@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="torrent_BaseTheme.Toolbar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">@null</item>
+        <item name="android:divider">@null</item>
+    </style>
+    <style name="torrent_BaseTheme.EmptyView" parent="@style/TextAppearance.AppCompat.Display1">
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="torrent_BaseTheme.HeaderText" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:textColor">@color/torrent_accent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="torrent_BaseTheme.TorrentInfoText" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+</resources>

@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.seiko.module.torrent">
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:label="@string/torrent_app_name"
+        android:supportsRtl="true"
+        android:theme="@style/torrent_BaseTheme">
+
+        <activity android:name=".ui.TorrentMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".services.TorrentTaskService"/>
+
+    </application>
+</manifest>

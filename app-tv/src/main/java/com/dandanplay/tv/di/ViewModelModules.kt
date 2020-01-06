@@ -4,7 +4,7 @@ import com.dandanplay.tv.vm.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
+internal val viewModelModule = module {
 
     viewModel { BangumiTimeLineViewModel(get()) }
 

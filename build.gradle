@@ -1,17 +1,30 @@
 buildscript {
-    apply from: 'versions.gradle'
-    addRepos(repositories)
+    apply from: 'config.gradle'
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            //本地maven仓库地址
+            url uri('./repo')
+        }
+    }
     dependencies {
         classpath deps.android.gradle_plugin
         classpath deps.kotlin.gradle_plugin
         classpath deps.navigation.gradle_plugin
+        classpath 'com.gfd.plugin:PluginSwitch:1.0.0'
     }
 }
 
 allprojects {
-    addRepos(repositories)
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}

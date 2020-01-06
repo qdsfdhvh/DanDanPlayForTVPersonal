@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
@@ -18,8 +19,7 @@ import com.dandanplay.tv.models.AnimeRow
 import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.common.permission.PermissionResult
-import com.seiko.common.permission.requestPermissions
+import com.seiko.common.extensions.checkPermissions
 import com.seiko.domain.entity.ResMagnetItem
 import com.seiko.domain.entity.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -84,18 +84,8 @@ class SearchBangumiFragment : SearchSupportFragment(),
         viewModel.magnetList.observe(this::getLifecycle, this::updateMagnetList)
 
         if (viewModel.mainState.value == null) {
-            requestPermissions(Manifest.permission.RECORD_AUDIO) {
-                requestCode = REQUEST_ID_AUDIO
-                resultCallback = {
-                    when(this) {
-                        is PermissionResult.PermissionGranted -> {
-
-                        }
-                        else -> {
-                            ToastUtils.showShort("没有语音权限。")
-                        }
-                    }
-                }
+            if (!checkPermissions(PERMISSIONS_AUDIO)) {
+                requestPermissions(PERMISSIONS_AUDIO, REQUEST_ID_AUDIO)
             }
             // 测试
             setSearchQuery("勇者", false)
@@ -208,21 +198,10 @@ class SearchBangumiFragment : SearchSupportFragment(),
                 )
             }
             is ResMagnetItem -> {
-                requestPermissions(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) {
-                    requestCode = REQUEST_ID_DOWNLOAD
-                    resultCallback = {
-                        when(this) {
-                            is PermissionResult.PermissionGranted -> {
-                                downloadMagnet(item.magnet)
-                            }
-                            else -> {
-                                ToastUtils.showShort("没有存储权限。")
-                            }
-                        }
-                    }
+                if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
+                    downloadMagnet(item.magnet)
+                } else {
+                    requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
                 }
             }
         }
@@ -257,6 +236,22 @@ class SearchBangumiFragment : SearchSupportFragment(),
         )
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_ID_AUDIO -> {
+                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    ToastUtils.showShort("没有语音权限。")
+                }
+            }
+            REQUEST_ID_DOWNLOAD -> {
+                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    ToastUtils.showShort("没有存储权限。")
+                }
+            }
+        }
+    }
+
 
     companion object {
         private const val ROW_BANGUMI = 100
@@ -266,6 +261,15 @@ class SearchBangumiFragment : SearchSupportFragment(),
         private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
+
+        private val PERMISSIONS_AUDIO = arrayOf(
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        private val PERMISSIONS_DOWNLOAD = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
     }
 
 }

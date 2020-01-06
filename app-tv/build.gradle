@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.gfd.comswitch'
 apply plugin: 'androidx.navigation.safeargs'
+
+apply from: rootProject.file('releaseinfo.gradle')
+apply from: rootProject.file('libbase.gradle')
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = file('key.properties')
@@ -14,25 +14,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion buildVersions.targetSdk
-    buildToolsVersion buildVersions.buildTools
-    defaultConfig {
-        applicationId "com.dandanplay.tv"
-        minSdkVersion buildVersions.minSdk
-        targetSdkVersion buildVersions.targetSdk
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner 'androidx.test.ext.junit.runners.AndroidJUnit4'
-        multiDexEnabled true
-//        ndk {
-//            abiFilters 'armeabi-v7a'
-//        }
-    }
 //    resourcePrefix "app_"
-    compileOptions {
-        sourceCompatibility buildVersions.sourceCompat
-        targetCompatibility buildVersions.targetCompat
-    }
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -41,40 +23,43 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+    }
     buildTypes {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.release
         }
         release {
-            minifyEnabled true
-            shrinkResources true
-            zipAlignEnabled true
+            minifyEnabled true  // 混淆编译
+            shrinkResources true // 混淆编译
+            zipAlignEnabled true // zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }
-    androidExtensions {
-        experimental = true
-    }
-    packagingOptions {
-        exclude 'META-INF/atomicfu.kotlin_module'
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+//    packagingOptions {
+//        exclude 'META-INF/atomicfu.kotlin_module'
+//    }
+    //自定义输出apk名字
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                if (variant.getBuildType().getName() == 'release') {
+                    outputFileName = new File("app_v" + variant.versionName + "_" +
+                            new Date().format("yyyy-MM-dd_HH", TimeZone.getTimeZone("UTC")) + "_" +
+                            variant.getBuildType().getName() + ".apk")
+                }
+            }
     }
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    implementation project(':libs:common')
-//    implementation project(':libs:player_explayer')
-
-    if (!isModule) {
-        implementation project(':module_torrent')
-    }
+    implementation project(':Common')
 
     // TV UI
     implementation 'androidx.leanback:leanback:1.0.0'
@@ -93,6 +78,6 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.2.0"
 
     // ExoPlayer
-    api 'com.google.android.exoplayer:exoplayer:2.10.4'
-    api 'com.google.android.exoplayer:extension-leanback:2.9.5'
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
+    implementation 'com.google.android.exoplayer:extension-leanback:2.9.5'
 }

@@ -25,27 +25,23 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Utils.init(this)
+
+        LogUtils.getConfig()
+            .setLogHeadSwitch(false)
+            .setBorderSwitch(false)
+
         MMKV.initialize(this)
         // 图片
         Fresco.initialize(this)
         // Thunder
 //        XLTaskHelper.init(this, 2)
 
-        //Logs
-        LogUtils.getConfig()
-            .setLogHeadSwitch(false)
-            .setBorderSwitch(false)
+//        WorkerService().scheduleDeleteCacheTorrent(this)
 
         startKoin {
             androidLogger()
             androidContext(this@App)
-
-            modules(commonModule + listOf(
-                viewModelModule
-            ))
         }
-
-        WorkerService().scheduleDeleteCacheTorrent(this)
     }
 
 }
