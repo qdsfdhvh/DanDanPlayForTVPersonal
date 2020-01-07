@@ -2,7 +2,7 @@ package com.dandanplay.tv.ui.card
 
 import android.content.Context
 import com.dandanplay.tv.R
-import com.seiko.domain.entity.ResMagnetItem
+import com.seiko.domain.model.ResMagnetItem
 import kotlinx.android.synthetic.main.item_search_magnet.view.*
 
 class SearchMagnetCardView(context: Context) : AbsCardView<ResMagnetItem>(context) {

@@ -23,7 +23,7 @@ internal val useCaseModule = module {
 
     single { SearchMagnetListUseCase() }
 
-    single { GetTorrentPathUseCase() }
+    single { GetTorrentInfoFileUseCase() }
 
     single { DownloadTorrentUseCase() }
 

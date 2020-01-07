@@ -1,6 +1,6 @@
 package com.seiko.torrent.extensions
 
-import com.seiko.torrent.models.AdvancedPeerInfo
+import com.seiko.torrent.model.AdvancedPeerInfo
 import org.libtorrent4j.*
 import org.libtorrent4j.swig.peer_info_vector
 import kotlin.math.min

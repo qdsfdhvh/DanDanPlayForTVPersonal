@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/torrent_statusbar_kitkat" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="?attr/torrent_background">
+
+        <fragment
+            android:id="@+id/main_fragmentContainer"
+            android:name="com.seiko.module.torrent.ui.fragments.MainLeftFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+        </fragment>
+
+<!--            <fragment-->
+<!--                android:id="@+id/main_fragmentContainer"-->
+<!--                android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="2"-->
+<!--                app:defaultNavHost="true"/>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/toolbar_divider"
+                android:layout_width="1dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark" />
+
+            <View
+                android:id="@+id/content_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/torrent_divider" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/detail_torrent_fragmentContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4">
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

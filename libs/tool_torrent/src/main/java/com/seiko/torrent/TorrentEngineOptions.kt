@@ -38,6 +38,7 @@ data class TorrentEngineOptions(
     val downloadRateLimit: Int = 0,
     val uploadRateLimit: Int = 0,
 
+    val trackers: HashSet<String> = HashSet(),
 
     var connectionsLimitPerTorrent: Int = 40,
     var uploadsLimitPerTorrent: Int = 4,

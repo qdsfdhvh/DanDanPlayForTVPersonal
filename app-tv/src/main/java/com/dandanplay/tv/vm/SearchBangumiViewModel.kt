@@ -6,11 +6,11 @@ import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
-import com.seiko.data.usecase.torrent.GetTorrentPathUseCase
+import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
 import com.seiko.data.usecase.search.SearchBangumiListUseCase
 import com.seiko.data.usecase.search.SearchMagnetListUseCase
-import com.seiko.domain.entity.ResMagnetItem
-import com.seiko.domain.entity.SearchAnimeDetails
+import com.seiko.domain.model.ResMagnetItem
+import com.seiko.domain.model.SearchAnimeDetails
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -21,7 +21,7 @@ import java.io.File
 class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,
     private val searchMagnetList: SearchMagnetListUseCase,
-    private val getTorrentPath: GetTorrentPathUseCase,
+    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase,
     private val downloadTorrent: DownloadTorrentUseCase
 ) : BaseViewModel() {
 
@@ -86,9 +86,12 @@ class SearchBangumiViewModel(
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      */
     fun isTorrentExist(magnet: String): String {
-        val torrentFile = File(getTorrentPath.invoke(SEARCH_TITLE, magnet))
-        if (torrentFile.exists()) {
-            return torrentFile.absolutePath ?: ""
+        val result = getTorrentInfoFileUseCase.invoke(SEARCH_TITLE, magnet)
+        if (result is Result.Success) {
+            val torrentFile = result.data
+            if (torrentFile.exists()) {
+                return torrentFile.absolutePath
+            }
         }
         return ""
     }
@@ -99,13 +102,12 @@ class SearchBangumiViewModel(
      */
     fun downloadTorrent(magnet: String) = launch {
         _downloadState.showLoading()
-        val torrentPath = getTorrentPath.invoke(SEARCH_TITLE, magnet)
         val result = withContext(Dispatchers.IO) {
-            downloadTorrent.invoke(torrentPath, magnet)
+            downloadTorrent.invoke(SEARCH_TITLE, magnet)
         }
         when(result) {
             is Result.Error -> _downloadState.failed(result.exception)
-            is Result.Success -> _downloadState.success(torrentPath)
+            is Result.Success -> _downloadState.success(result.data)
         }
     }
 

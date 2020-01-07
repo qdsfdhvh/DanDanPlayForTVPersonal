@@ -1,6 +1,6 @@
 package com.seiko.data.usecase.bangumi
 
-import com.seiko.domain.repository.BangumiRepository
+import com.seiko.domain.repo.BangumiRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

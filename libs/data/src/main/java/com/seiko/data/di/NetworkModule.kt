@@ -7,7 +7,7 @@ import com.seiko.data.http.api.ResDanDanApiService
 import com.seiko.data.http.api.TorrentApiService
 import com.seiko.data.http.cookie.CookiesManager
 import com.seiko.data.http.cookie.PersistentCookieStore
-import com.seiko.domain.pref.PrefHelper
+import com.seiko.domain.local.PrefDataSource
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -71,7 +71,7 @@ private fun createSingleHttpClient(cache: Cache): OkHttpClient {
 
 private fun createDefaultHttpClient(cache: Cache,
                                     cookiesManager: CookiesManager,
-                                    prefHelper: PrefHelper
+                                    prefHelper: PrefDataSource
 ): OkHttpClient {
     return OkHttpClient.Builder()
         .cache(cache)

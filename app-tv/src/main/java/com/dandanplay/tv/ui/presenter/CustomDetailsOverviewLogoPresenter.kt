@@ -3,14 +3,13 @@ package com.dandanplay.tv.ui.presenter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.DetailsOverviewRow
 import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.R
 import com.facebook.drawee.view.SimpleDraweeView
-import com.seiko.domain.entity.BangumiDetails
+import com.seiko.domain.model.BangumiDetails
 
 class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
 

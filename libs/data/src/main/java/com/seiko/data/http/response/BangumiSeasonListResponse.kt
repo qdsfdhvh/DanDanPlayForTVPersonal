@@ -1,6 +1,6 @@
 package com.seiko.data.http.response
 
-import com.seiko.domain.entity.BangumiSeason
+import com.seiko.domain.model.BangumiSeason
 
 //BangumiSeasonListResponse {
 //    seasons (Array[BangumiSeason], optional): 番剧季度列表 ,

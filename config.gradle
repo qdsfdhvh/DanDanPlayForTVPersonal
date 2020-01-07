@@ -1,7 +1,7 @@
 def versions = [
-        'android_plugin' : '3.5.3',
-        'kotlin'         : '1.3.61',
-        'navigation'     : '2.1.0',
+        'android_plugin': '3.6.0-rc01',
+        'kotlin'        : '1.3.61',
+        'navigation'    : '2.1.0',
 ]
 
 def deps = [
@@ -22,9 +22,6 @@ def deps = [
             'fragment_ktx'     : "androidx.navigation:navigation-fragment-ktx:${versions.navigation}",
             'ui_ktx'           : "androidx.navigation:navigation-ui-ktx:${versions.navigation}",
         ],
-        router    :[
-            'application_provider': 'com.github.florent37:applicationprovider:1.0.4',
-        ],
 ]
 ext.deps = deps
 
@@ -32,32 +29,12 @@ ext.deps = deps
  *                          Build Version                          *
  *******************************************************************/
 ext {
-        android = [compileSdkVersion: 29,
-                   buildToolsVersion: '29.0.2',
-                   applicationId    : 'com.dandanplay.tv',
-                   minSdkVersion    : 21,
-                   targetSdkVersion : 28,
-                   versionCode      : 1,
-                   versionName      : '1.0.0',
-                   multiDexEnabled  : true]
+    android = [compileSdkVersion: 29,
+               buildToolsVersion: '29.0.2',
+               applicationId    : 'com.dandanplay.tv',
+               minSdkVersion    : 21,
+               targetSdkVersion : 29,
+               versionCode      : 1,
+               versionName      : '1.0.0',
+               multiDexEnabled  : true]
 }
-//def buildVersions = [
-//        'minSdk'         : 21,
-//        'targetSdk'      : 29,
-//        'buildTools'     : "29.0.2",
-//
-//        'sourceCompat'   : JavaVersion.VERSION_1_8,
-//        'targetCompat'   : JavaVersion.VERSION_1_8
-//]
-//ext.buildVersions = buildVersions
-
-///*******************************************************************
-// *                          Repositories                           *
-// *******************************************************************/
-//static def addRepos(RepositoryHandler handler) {
-//    handler.google()
-//    handler.jcenter()
-//    handler.mavenCentral()
-//    handler.maven { url "https://jitpack.io" }
-//}
-//ext.addRepos = this.&addRepos

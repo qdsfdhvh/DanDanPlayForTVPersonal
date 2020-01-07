@@ -1,7 +1,7 @@
 package com.seiko.data.usecase.bangumi
 
-import com.seiko.domain.entity.AirDayBangumiBean
-import com.seiko.domain.entity.BangumiIntro
+import com.seiko.domain.model.AirDayBangumiBean
+import com.seiko.domain.model.BangumiIntro
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

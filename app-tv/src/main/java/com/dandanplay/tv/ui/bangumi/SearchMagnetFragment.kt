@@ -11,6 +11,7 @@ import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
@@ -18,7 +19,7 @@ import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
-import com.seiko.domain.entity.ResMagnetItem
+import com.seiko.domain.model.ResMagnetItem
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchMagnetFragment : SearchSupportFragment(),
@@ -70,6 +71,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
             }
             Status.ERROR -> {
                 setLoadFragment(false)
+                LogUtils.d(data.error)
                 ToastUtils.showShort(data.error.toString())
             }
             Status.SUCCESSFUL -> {
@@ -89,6 +91,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
             }
             Status.ERROR -> {
                 setLoadFragment(false)
+                LogUtils.e(data.error)
                 ToastUtils.showShort(data.error.toString())
             }
             Status.SUCCESSFUL -> {

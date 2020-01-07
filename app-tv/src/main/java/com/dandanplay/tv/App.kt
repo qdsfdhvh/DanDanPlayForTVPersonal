@@ -5,12 +5,8 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
-import com.dandanplay.tv.di.viewModelModule
-import com.dandanplay.tv.work.WorkerService
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.seiko.data.di.*
 import com.tencent.mmkv.MMKV
-import com.xunlei.downloadlib.XLTaskHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

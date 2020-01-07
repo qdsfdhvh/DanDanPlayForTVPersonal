@@ -6,8 +6,8 @@ import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
 import com.seiko.data.usecase.bangumi.GetBangumiListWithSeasonUseCase
 import com.seiko.data.usecase.bangumi.GetBangumiSeasonsUseCase
-import com.seiko.domain.entity.BangumiIntro
-import com.seiko.domain.entity.BangumiSeason
+import com.seiko.domain.model.BangumiIntro
+import com.seiko.domain.model.BangumiSeason
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.launch
 

@@ -1,7 +1,7 @@
 package com.seiko.data.usecase.torrent
 
 import com.seiko.data.extensions.getFileType
-import com.seiko.domain.entity.TorrentCheckBean
+import com.seiko.domain.model.TorrentCheckBean
 import com.seiko.domain.utils.Result
 import org.libtorrent4j.TorrentInfo
 import java.io.File

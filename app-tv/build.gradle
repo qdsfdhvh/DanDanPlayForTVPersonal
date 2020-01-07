@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.gfd.comswitch'
 apply plugin: 'androidx.navigation.safeargs'
 
-apply from: rootProject.file('releaseinfo.gradle')
+//apply from: rootProject.file('releaseinfo.gradle')
 apply from: rootProject.file('libbase.gradle')
 
 def keystoreProperties = new Properties()
@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation project(':Common')
+    implementation project(':common')
 
     // TV UI
     implementation 'androidx.leanback:leanback:1.0.0'

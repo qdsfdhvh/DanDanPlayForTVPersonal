@@ -2,10 +2,10 @@ package com.seiko.data.di
 
 import com.seiko.data.http.api.DanDanApiService
 import com.seiko.data.http.api.ResDanDanApiService
-import com.seiko.data.repository.BangumiRepositoryImpl
-import com.seiko.data.repository.SearchRepositoryImpl
-import com.seiko.domain.repository.BangumiRepository
-import com.seiko.domain.repository.SearchRepository
+import com.seiko.data.repo.BangumiRepositoryImpl
+import com.seiko.data.repo.SearchRepositoryImpl
+import com.seiko.domain.repo.BangumiRepository
+import com.seiko.domain.repo.SearchRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

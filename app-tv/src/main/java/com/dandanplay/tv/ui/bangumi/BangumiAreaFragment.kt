@@ -18,8 +18,8 @@ import com.dandanplay.tv.ui.presenter.BangumiSeasonPresenter
 import com.dandanplay.tv.vm.BangumiAreaViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.domain.entity.BangumiIntro
-import com.seiko.domain.entity.BangumiSeason
+import com.seiko.domain.model.BangumiIntro
+import com.seiko.domain.model.BangumiSeason
 import kotlinx.android.synthetic.main.fragment_area.*
 import org.koin.android.ext.android.inject
 

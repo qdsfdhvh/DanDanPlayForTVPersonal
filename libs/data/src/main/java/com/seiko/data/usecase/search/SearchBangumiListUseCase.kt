@@ -1,6 +1,6 @@
 package com.seiko.data.usecase.search
 
-import com.seiko.domain.repository.SearchRepository
+import com.seiko.domain.repo.SearchRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

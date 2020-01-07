@@ -8,9 +8,11 @@ import com.seiko.torrent.constants.DATA_TORRENT_SESSION_FILE
 import com.seiko.torrent.constants.META_DATA_MAX_SIZE
 import com.seiko.torrent.constants.PEER_FINGERPRINT
 import com.seiko.torrent.constants.USER_AGENT
-import com.seiko.torrent.models.ProxySettingsPack
-import com.seiko.torrent.models.ProxyType
-import com.seiko.torrent.models.TorrentTask
+import com.seiko.torrent.model.ProxySettingsPack
+import com.seiko.torrent.model.ProxyType
+import com.seiko.torrent.model.TorrentTask
+import com.seiko.torrent.parser.IPFilterParser
+import com.seiko.torrent.parser.TrackerParser
 import com.seiko.torrent.utils.*
 import org.libtorrent4j.*
 import org.libtorrent4j.alerts.*
@@ -330,17 +332,47 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         val trackers = params._trackers
         val tiers = params._tracker_tiers
         size = trackers.size().toInt()
-        for (i in 0 until size) ct.add_tracker(trackers[i], tiers[i])
+        for (i in 0 until size) {
+            ct.add_tracker(trackers[i], tiers[i])
+        }
+
+        // 添加公共Tracker
+        for (tracker in options.trackers) {
+            val entry = AnnounceEntry(tracker)
+            ct.add_tracker(entry.url(), entry.tier())
+        }
 
         val e: entry = ct.generate()
         return Vectors.byte_vector2bytes(e.bencode())
     }
 
     /****************************************************************
+     *                          Tracker                             *
+     ****************************************************************/
+
+    fun addTrackers(path: String?) {
+        if (path == null) {
+            return
+        }
+
+        val parser = TrackerParser(path)
+        parser.setOnParsedListener(object : TrackerParser.OnParsedListener {
+            override fun onParsed(trackers: Set<String>) {
+                options.trackers.addAll(trackers)
+            }
+        })
+        parser.parse()
+    }
+
+    fun clearTrackers() {
+        options.trackers.clear()
+    }
+
+    /****************************************************************
      *                          IpFilter                            *
      ****************************************************************/
 
-    fun enableIpFileter(path: String?) {
+    fun enableIpFilter(path: String?) {
         if (path == null) {
             return
         }
@@ -632,6 +664,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         downloadTask.setMaxUploads(options.uploadsLimitPerTorrent)
         downloadTask.setSequentialDownload(task.sequentialDownload)
         downloadTask.setAutoManaged(options.autoManaged)
+        downloadTask.addTrackers(options.trackers)
         if (task.paused) {
             downloadTask.pause()
         } else {

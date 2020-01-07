@@ -2,10 +2,8 @@ package com.dandanplay.tv.ui.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.dandanplay.tv.ui.card.BangumiRelatedCardView
 import com.dandanplay.tv.ui.card.SearchBangumiCardView
-import com.seiko.domain.entity.BangumiIntro
-import com.seiko.domain.entity.SearchAnimeDetails
+import com.seiko.domain.model.SearchAnimeDetails
 
 class SearchBangumiPresenter : Presenter() {
 

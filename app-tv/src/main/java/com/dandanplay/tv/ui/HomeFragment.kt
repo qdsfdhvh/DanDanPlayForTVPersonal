@@ -23,7 +23,7 @@ import com.dandanplay.tv.vm.BangumiTimeLineViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
-import com.seiko.domain.entity.BangumiIntro
+import com.seiko.domain.model.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {

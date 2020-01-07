@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="torrent_BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/torrent_primary</item>
+        <item name="colorPrimaryDark">@color/torrent_primary_dark</item>
+        <item name="colorAccent">@color/torrent_accent</item>
+        <item name="torrent_background">@color/torrent_background</item>
+        <item name="torrent_backgroundBlank">@color/torrent_background_blank</item>
+        <item name="torrent_divider">@drawable/torrent_table_mode_divider</item>
+        <item name="torrent_defaultRoundRipple">@drawable/torrent_default_round_ripple</item>
+        <item name="torrent_defaultRectRipple">@drawable/torrent_default_rect_ripple</item>
+    </style>
+</resources>

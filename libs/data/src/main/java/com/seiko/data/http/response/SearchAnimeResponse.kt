@@ -1,6 +1,6 @@
 package com.seiko.data.http.response
 
-import com.seiko.domain.entity.SearchAnimeDetails
+import com.seiko.domain.model.SearchAnimeDetails
 
 //SearchAnimeResponse {
 //    animes (Array[SearchAnimeDetails], optional): 作品列表 ,

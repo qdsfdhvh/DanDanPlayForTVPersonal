@@ -2,7 +2,7 @@ package com.seiko.torrent.utils
 
 import android.content.Context
 import com.seiko.torrent.constants.DATA_TORRENT_SESSION_FILE
-import com.seiko.torrent.models.BencodeFileItem
+import com.seiko.torrent.model.BencodeFileItem
 import okio.IOException
 import org.libtorrent4j.ErrorCode
 import org.libtorrent4j.FileStorage

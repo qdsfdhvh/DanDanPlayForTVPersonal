@@ -5,9 +5,9 @@ import android.util.Log
 import com.seiko.torrent.constants.META_DATA_MAX_SIZE
 import com.seiko.torrent.exception.FreeSpaceException
 import com.seiko.torrent.extensions.*
-import com.seiko.torrent.models.MagnetInfo
-import com.seiko.torrent.models.TorrentMetaInfo
-import com.seiko.torrent.models.TorrentTask
+import com.seiko.torrent.model.MagnetInfo
+import com.seiko.torrent.model.TorrentMetaInfo
+import com.seiko.torrent.model.TorrentTask
 import com.seiko.torrent.utils.*
 import org.libtorrent4j.*
 import org.libtorrent4j.alerts.*

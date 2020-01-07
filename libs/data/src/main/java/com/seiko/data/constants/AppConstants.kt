@@ -41,5 +41,6 @@ internal const val DB_NAME_DEFAULT = "DanDanPlayForTV_Database"
 /**
  * Torrent
  */
-const val TORRENT_DOWNOLAD_DIR = "TORRENT_DOWNLOAD_DIR"
+const val TORRENT_DOWNLOAD_DIR = "TORRENT_DOWNLOAD_DIR"
 const val TORRENT_TEMP_DIR = "TORRENT_TEMP_DIR"
+const val TORRENT_CONFIG_DIR = "TORRENT_CONFIG_DIR"

@@ -7,8 +7,8 @@ import com.seiko.common.ResultLiveData
 import com.seiko.data.usecase.torrent.GetTorrentCheckBeanListUseCase
 import com.seiko.data.usecase.torrent.GetTorrentLocalPlayUrlUseCase
 import com.seiko.data.usecase.torrent.GetTorrentTaskUseCase
-import com.seiko.domain.entity.ThunderLocalUrl
-import com.seiko.domain.entity.TorrentCheckBean
+import com.seiko.domain.model.ThunderLocalUrl
+import com.seiko.domain.model.TorrentCheckBean
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,17 +17,14 @@ import kotlinx.coroutines.withContext
 
 class TorrentFileCheckViewModel(
     private val getTorrentCheckBeanList: GetTorrentCheckBeanListUseCase,
-    private val getTorrentLocalPlayUrl: GetTorrentLocalPlayUrlUseCase,
-    private val getTorrentTaskUseCase: GetTorrentTaskUseCase
+    private val getTorrentLocalPlayUrl: GetTorrentLocalPlayUrlUseCase
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<List<TorrentCheckBean>>()
-    val mainState: LiveData<ResultData<List<TorrentCheckBean>>>
-        get() = _mainState
+    val mainState: LiveData<ResultData<List<TorrentCheckBean>>> = _mainState
 
     private val _thunderUrl = ResultLiveData<ThunderLocalUrl>()
-    val thunderUrl: LiveData<ResultData<ThunderLocalUrl>>
-        get() = _thunderUrl
+    val thunderUrl: LiveData<ResultData<ThunderLocalUrl>> = _thunderUrl
 
     fun getTorrentCheckBeanList(torrentPath: String) = launch {
         _mainState.showLoading()

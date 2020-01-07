@@ -1,0 +1,21 @@
+apply plugin: 'com.gfd.comswitch'
+apply plugin: 'androidx.navigation.safeargs'
+
+apply from:rootProject.file('libbase.gradle')
+
+android {
+    resourcePrefix "torrent_"
+}
+
+this.beforeEvaluate {
+    println 'Torrent开始执行了'
+    delete buildDir
+}
+
+dependencies {
+    implementation project(':common')
+
+    // UI
+    implementation 'com.google.android.material:material:1.2.0-alpha03'
+    implementation 'com.github.clans:fab:1.6.4'
+}

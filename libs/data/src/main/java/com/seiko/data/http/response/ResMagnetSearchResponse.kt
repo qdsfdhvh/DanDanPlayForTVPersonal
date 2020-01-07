@@ -1,7 +1,7 @@
 package com.seiko.data.http.response
 
 import com.google.gson.annotations.SerializedName
-import com.seiko.domain.entity.ResMagnetItem
+import com.seiko.domain.model.ResMagnetItem
 
 /**
  * HasMore : true

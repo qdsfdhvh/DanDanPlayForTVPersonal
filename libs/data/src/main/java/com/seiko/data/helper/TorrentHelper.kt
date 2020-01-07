@@ -1,16 +1,15 @@
 package com.seiko.data.helper
 
-import com.seiko.data.local.db.DbHelper
-import com.seiko.data.models.TorrentEntity
+import com.seiko.data.local.db.DbDataSource
+import com.seiko.data.model.TorrentEntity
 import com.seiko.torrent.TorrentEngine
-import com.seiko.torrent.models.MagnetInfo
-import com.seiko.torrent.models.TorrentMetaInfo
-import com.seiko.torrent.models.TorrentTask
+import com.seiko.torrent.model.MagnetInfo
+import com.seiko.torrent.model.TorrentTask
 import java.io.File
 
 class TorrentHelper(
     private val torrentEngine: TorrentEngine,
-    private val dbHelper: DbHelper
+    private val dbHelper: DbDataSource
 ) {
 
     fun fetchMagnet(uri: String): MagnetInfo {
@@ -19,7 +18,7 @@ class TorrentHelper(
             uri = uri,
             sha1hash = params.infoHash().toHex(),
             name = params.name(),
-            filePriorities = params.filePriorities()?.toList() ?: emptyList()
+            filePriorities = params.filePriorities().toList()
         )
     }
 

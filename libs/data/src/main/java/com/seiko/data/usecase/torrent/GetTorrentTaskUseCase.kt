@@ -1,6 +1,6 @@
 package com.seiko.data.usecase.torrent
 
-import com.seiko.domain.entity.TorrentCheckBean
+import com.seiko.domain.model.TorrentCheckBean
 import org.koin.core.KoinComponent
 
 class GetTorrentTaskUseCase : KoinComponent {

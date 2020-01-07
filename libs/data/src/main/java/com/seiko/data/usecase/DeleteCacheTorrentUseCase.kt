@@ -1,13 +1,13 @@
 package com.seiko.data.usecase
 
-import com.seiko.domain.pref.PrefHelper
+import com.seiko.domain.local.PrefDataSource
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.io.File
 
 class DeleteCacheTorrentUseCase : KoinComponent {
 
-    private val prefHelper: PrefHelper by inject()
+    private val prefHelper: PrefDataSource by inject()
 
     operator fun invoke() {
         val dir = File(prefHelper.downloadFolder)

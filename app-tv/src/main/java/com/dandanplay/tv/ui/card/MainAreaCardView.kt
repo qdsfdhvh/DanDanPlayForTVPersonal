@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.dandanplay.tv.R
 import com.seiko.common.utils.getBangumiStatus
-import com.seiko.domain.entity.BangumiIntro
+import com.seiko.domain.model.BangumiIntro
 import kotlinx.android.synthetic.main.item_main_area.view.*
 
 class MainAreaCardView(context: Context) : AbsCardView<BangumiIntro>(context) {

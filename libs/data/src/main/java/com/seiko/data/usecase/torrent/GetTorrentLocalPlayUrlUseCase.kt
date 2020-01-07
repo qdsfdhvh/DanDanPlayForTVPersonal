@@ -1,7 +1,7 @@
 package com.seiko.data.usecase.torrent
 
 import com.seiko.data.constants.DEFAULT_CACHE_FOLDER_PATH
-import com.seiko.domain.entity.ThunderLocalUrl
+import com.seiko.domain.model.ThunderLocalUrl
 import com.seiko.domain.utils.Result
 import com.xunlei.downloadlib.XLDownloadManager
 import com.xunlei.downloadlib.XLTaskHelper

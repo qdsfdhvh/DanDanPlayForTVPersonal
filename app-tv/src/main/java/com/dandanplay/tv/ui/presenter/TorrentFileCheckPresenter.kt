@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.TorrentFileCheckCardView
-import com.seiko.domain.entity.TorrentCheckBean
+import com.seiko.domain.model.TorrentCheckBean
 
 class TorrentFileCheckPresenter : Presenter() {
 

@@ -1,6 +1,6 @@
 package com.seiko.data.http.response
 
-import com.seiko.domain.entity.BangumiQueueIntro
+import com.seiko.domain.model.BangumiQueueIntro
 
 //BangumiQueueIntroResponseV2 {
 //    hasMore (boolean): 是否有更多数据可以展示（显示界面上的“更多”按钮） ,

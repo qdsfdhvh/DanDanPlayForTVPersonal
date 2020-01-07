@@ -86,7 +86,7 @@
             android:name="animeId"
             app:argType="integer"/>
         <action android:id="@+id/action_bangumiDetailsFragment_to_episodesSearchFragment"
-            app:destination="@id/episodesSearchFragment"
+            app:destination="@id/searchMagnetFragment"
             app:popUpTo="@id/bangumiDetailsFragment"/>
         <action
             android:id="@+id/action_bangumiDetailsFragment_related_videos"
@@ -99,9 +99,9 @@
     </fragment>
     <!--磁力搜索-->
     <fragment
-        android:id="@+id/episodesSearchFragment"
+        android:id="@+id/searchMagnetFragment"
         android:name="com.dandanplay.tv.ui.bangumi.SearchMagnetFragment"
-        android:label="EpisodesSearchFragment">
+        android:label="SearchMagnetFragment">
         <argument
             android:name="keyword"
             app:argType="string"/>
@@ -110,7 +110,7 @@
             app:argType="string"/>
         <action android:id="@+id/action_episodesSearchFragment_to_torrentFileCheckFragment"
             app:destination="@id/torrentFileCheckFragment"
-            app:popUpTo="@id/episodesSearchFragment"/>
+            app:popUpTo="@id/searchMagnetFragment"/>
     </fragment>
     <fragment
         android:id="@+id/torrentFileCheckFragment"

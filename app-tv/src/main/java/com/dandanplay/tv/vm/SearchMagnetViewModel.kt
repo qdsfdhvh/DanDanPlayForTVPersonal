@@ -5,9 +5,9 @@ import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
-import com.seiko.data.usecase.torrent.GetTorrentPathUseCase
+import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
 import com.seiko.data.usecase.search.SearchMagnetListUseCase
-import com.seiko.domain.entity.ResMagnetItem
+import com.seiko.domain.model.ResMagnetItem
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import java.io.File
 
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,
-    private val getTorrentPath: GetTorrentPathUseCase,
+    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase,
     private val downloadTorrent: DownloadTorrentUseCase
 ) : BaseViewModel() {
 
@@ -60,9 +60,12 @@ class SearchMagnetViewModel(
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      */
     fun isTorrentExist(animeTitle: String, magnet: String): String {
-        val torrentFile = File(getTorrentPath.invoke(animeTitle, magnet))
-        if (torrentFile.exists()) {
-            return torrentFile.absolutePath ?: ""
+        val result = getTorrentInfoFileUseCase.invoke(animeTitle, magnet)
+        if (result is Result.Success) {
+            val torrentFile = result.data
+            if (torrentFile.exists()) {
+                return torrentFile.absolutePath
+            }
         }
         return ""
     }
@@ -73,13 +76,12 @@ class SearchMagnetViewModel(
      */
     fun downloadTorrent(animeTitle: String, magnet: String) = launch {
         _downloadState.showLoading()
-        val torrentPath = getTorrentPath.invoke(animeTitle, magnet)
         val result = withContext(Dispatchers.IO) {
-            downloadTorrent.invoke(torrentPath, magnet)
+            downloadTorrent.invoke(animeTitle, magnet)
         }
         when(result) {
             is Result.Error -> _downloadState.failed(result.exception)
-            is Result.Success -> _downloadState.success(torrentPath)
+            is Result.Success -> _downloadState.success(result.data)
         }
     }
 
