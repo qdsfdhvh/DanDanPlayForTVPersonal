@@ -27,9 +27,9 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.domain.model.BangumiDetails
-import com.seiko.domain.model.BangumiEpisode
-import com.seiko.domain.model.BangumiIntro
+import com.seiko.domain.model.api.BangumiDetails
+import com.seiko.domain.model.api.BangumiEpisode
+import com.seiko.domain.model.api.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener,

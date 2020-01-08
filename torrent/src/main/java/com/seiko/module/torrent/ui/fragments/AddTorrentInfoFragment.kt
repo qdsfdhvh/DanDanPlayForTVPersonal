@@ -20,9 +20,7 @@ class AddTorrentInfoFragment : BaseFragment() {
         }
     }
 
-    private var customName = ""
-
-    private val viewModel by sharedViewModel<AddTorrentViewModel>(from = {
+    private val viewModel: AddTorrentViewModel by sharedViewModel(from = {
         parentFragment as ViewModelStoreOwner
     })
 
@@ -32,17 +30,29 @@ class AddTorrentInfoFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        setupUI()
+        bindViewModel()
     }
 
-    private fun initViewModel() {
+    private fun setupUI() {
+        start_torrent.isChecked = viewModel.autoStart
+        start_torrent.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.autoStart = isChecked
+        }
+        sequential_download.isChecked = viewModel.isSequentialDownload
+        sequential_download.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.isSequentialDownload = isChecked
+        }
+    }
+
+    private fun bindViewModel() {
         viewModel.downloadDir.observe(this::getLifecycle) { downloadDir ->
             upload_torrent_into.text = downloadDir.absolutePath
         }
         // 磁力信息
         viewModel.magnetInfo.observe(this::getLifecycle) { info ->
             if (info == null) return@observe
-            torrent_name.setText(if (customName.isEmpty()) info.name else customName)
+            torrent_name.setText(if (viewModel.customName.isEmpty()) info.name else viewModel.customName)
             torrent_hash_sum.text = info.sha1hash
 
             layout_torrent_size_and_count.visibility = View.GONE
@@ -52,7 +62,7 @@ class AddTorrentInfoFragment : BaseFragment() {
         }
         // 种子信息
         viewModel.torrentMetaInfo.observe(this::getLifecycle) { info ->
-            torrent_name.setText(if (customName.isEmpty()) info.torrentName else customName)
+            torrent_name.setText(if (viewModel.customName.isEmpty()) info.torrentName else viewModel.customName)
             torrent_hash_sum.text = info.sha1Hash
 
             if (info.comment.isEmpty()) {

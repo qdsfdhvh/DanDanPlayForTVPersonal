@@ -5,18 +5,14 @@ dependencies {
     api project(':libs:data')
 
     api 'androidx.multidex:multidex:2.0.1'
-    api 'androidx.appcompat:appcompat:1.1.0'
 
     // UI
-    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api dependence.libAppCompat
+    api dependence.libConstraintlayout
 
     // navigation
-    api deps.navigation.fragment_ktx
-    api deps.navigation.ui_ktx
-
-//    // Arch
-//    api 'androidx.lifecycle:lifecycle-viewmodel:2.1.0'
-//    api 'androidx.lifecycle:lifecycle-livedata:2.1.0'
+    api dependence.libNavigationFragmentKtx
+    api dependence.libNavigationUiKtx
 
     // EventBus
     api 'org.greenrobot:eventbus:3.1.1'
@@ -28,5 +24,5 @@ dependencies {
 
     // 路由
     api "com.github.florent37:navigator:1.0.0"
-//    api deps.router.application_provider // 待废弃
+
 }

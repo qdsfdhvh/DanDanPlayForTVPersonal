@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //BangumiQueueDetailsV2 {
 //    animeId (integer): 作品编号 ,

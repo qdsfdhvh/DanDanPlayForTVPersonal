@@ -9,14 +9,13 @@ import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
 import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
 import com.seiko.data.usecase.search.SearchBangumiListUseCase
 import com.seiko.data.usecase.search.SearchMagnetListUseCase
-import com.seiko.domain.model.ResMagnetItem
-import com.seiko.domain.model.SearchAnimeDetails
+import com.seiko.domain.model.api.ResMagnetItem
+import com.seiko.domain.model.api.SearchAnimeDetails
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,

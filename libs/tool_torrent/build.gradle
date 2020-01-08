@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply from:rootProject.file('libbase.gradle')
 
 dependencies {
-    implementation deps.support.annotation
+    implementation dependence.libAnnotation
 
     // Torrent
     def torrent_version='1.2.0.22'

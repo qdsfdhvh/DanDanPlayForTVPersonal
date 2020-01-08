@@ -29,48 +29,49 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.ActionMode
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.seiko.common.eventbus.EventBusScope
 import com.seiko.module.torrent.R
 import com.seiko.module.torrent.constants.*
 import com.seiko.module.torrent.extensions.getClipboard
 import com.seiko.module.torrent.extensions.isHash
 import com.seiko.module.torrent.extensions.isMagnet
-import com.seiko.module.torrent.model.AddTorrentParams
+import com.seiko.module.torrent.model.PostEvent
 import com.seiko.module.torrent.model.sort.BaseSorting
 import com.seiko.module.torrent.model.sort.TorrentSorting
 import com.seiko.module.torrent.model.sort.TorrentSortingComparator
-import com.seiko.module.torrent.service.TorrentTaskService
 import com.seiko.module.torrent.ui.adapters.ToolbarSpinnerAdapter
 import com.seiko.module.torrent.ui.adapters.TorrentListAdapter
-import com.seiko.module.torrent.ui.adapters.TorrentListItem
+import com.seiko.module.torrent.model.TorrentListItem
 import com.seiko.module.torrent.ui.dialogs.BaseAlertDialog
 import com.seiko.module.torrent.ui.widgets.RecyclerViewDividerDecoration
-import com.seiko.torrent.constants.TorrentStateCode
+import com.seiko.module.torrent.vm.MainViewModel
 import kotlinx.android.synthetic.main.torrent_fragment_main_left.*
-import kotlinx.android.synthetic.main.torrent_toolbar_spinner.view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 /*
  * The list of torrents.
  */
 
-class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
-    BaseAlertDialog.OnDialogShowListener {
+class MainLeftFragment : BaseFragment(),
+    BaseAlertDialog.OnClickListener,
+    BaseAlertDialog.OnDialogShowListener,
+    TorrentListAdapter.ClickListener {
 
     /* Save state scrolling */
     private var torrentsListState: Parcelable? = null
@@ -84,9 +85,6 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
     private lateinit var spinnerAdapter: ToolbarSpinnerAdapter
     private lateinit var adapter: TorrentListAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
-    /* Prevents re-adding the torrent, obtained through implicit intent */
-    private var prevImplIntent: Intent? = null
 
     /*
      * A RecyclerView by default creates another copy of the ViewHolder in order to
@@ -102,43 +100,7 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
             }
         }
 
-    /*
-     * Returns a list of torrents sorting categories for spinner.
-     */
-    private val spinnerList: List<String>
-        get() {
-            val categories = ArrayList<String>()
-            categories.add(getString(R.string.torrent_spinner_all_torrents))
-            categories.add(getString(R.string.torrent_spinner_downloading_torrents))
-            categories.add(getString(R.string.torrent_spinner_downloaded_torrents))
-            categories.add(getString(R.string.torrent_spinner_downloading_metadata_torrents))
-            return categories
-        }
-
-    private var torrentListListener: TorrentListAdapter.ViewHolder.ClickListener =
-        object : TorrentListAdapter.ViewHolder.ClickListener {
-            override fun onItemClicked(position: Int, item: TorrentListItem) {
-                if (actionMode == null) {
-                    /* Mark this torrent as open in the list */
-                    adapter.markAsOpen(item)
-//                    showDetailTorrent(item.torrentId)
-                } else {
-//                    onItemSelected(item.torrentId, position)
-                }
-            }
-
-            override fun onItemLongClicked(position: Int, item: TorrentListItem): Boolean {
-                if (actionMode == null)
-                    actionMode = activity!!.startActionMode(actionModeCallback)
-//                onItemSelected(item.torrentId, position)
-
-                return true
-            }
-
-            override fun onPauseButtonClicked(position: Int, item: TorrentListItem) {
-                //            TorrentHelper.pauseResumeTorrent(item.torrentId);
-            }
-        }
+    private val viewModel: MainViewModel by viewModel()
 
     override fun getLayoutId(): Int {
         return R.layout.torrent_fragment_main_left
@@ -151,9 +113,23 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBusScope.register(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBusScope.unRegister(this)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI(view)
+        bindViewModel()
+    }
 
+    private fun setupUI(view: View) {
         toolbar.setTitle(R.string.app_name)
 
         val a = mActivity.obtainStyledAttributes(TypedValue().data, intArrayOf(R.attr.torrent_divider))
@@ -163,34 +139,13 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         a.recycle()
 
         adapter = TorrentListAdapter(mActivity,
-            R.layout.torrent_item_torrent_list,
-            torrentListListener,
+            this,
             TorrentSortingComparator( TorrentSorting(
                 TorrentSorting.SortingColumns.name,
                 BaseSorting.Direction.ASC)
             )
         )
         torrent_list.adapter = adapter
-
-        val spinnerContainer = LayoutInflater.from(view.context).inflate(R.layout.torrent_toolbar_spinner, toolbar, false)
-        toolbar.addView(spinnerContainer, ActionBar.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT))
-
-        spinnerAdapter = ToolbarSpinnerAdapter(activity)
-        spinnerAdapter.addItems(spinnerList)
-
-        spinnerContainer.toolbar_spinner.adapter = spinnerAdapter
-        spinnerContainer.toolbar_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                setTorrentListFilter(spinnerAdapter.getItem(position))
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-        }
-        setTorrentListFilter(spinnerContainer.toolbar_spinner.selectedItem.toString())
 
         mActivity.setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
@@ -205,15 +160,6 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         add_link_button.setOnClickListener {
             add_torrent_button.close(true)
             addLinkDialog()
-        }
-
-        create_torrent_button.setOnClickListener {
-            add_torrent_button.close(true)
-//            createTorrentDialog()
-        }
-
-        if (savedInstanceState != null) {
-            prevImplIntent = savedInstanceState.getParcelable(TAG_PREV_IMPL_INTENT)
         }
 
         layoutManager = LinearLayoutManager(mActivity)
@@ -233,16 +179,16 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
                 unregisterForContextMenu(v)
             }
         }
+    }
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(TAG_SELECTED_TORRENTS)) {
-                selectedTorrents = savedInstanceState.getStringArrayList(TAG_SELECTED_TORRENTS)!!
-            }
-            if (savedInstanceState.getBoolean(TAG_IN_ACTION_MODE, false)) {
-                actionMode = activity!!.startActionMode(actionModeCallback)
-                adapter.selectedItems = savedInstanceState.getIntegerArrayList(TAG_SELECTABLE_ADAPTER)!!
-                actionMode!!.title = adapter.selectedItemCount.toString()
-            }
+    private fun bindViewModel() {
+        viewModel.torrentItems.observe(this::getLifecycle, adapter::addItems)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (viewModel.torrentItems.value == null) {
+            viewModel.loadData()
         }
     }
 
@@ -254,13 +200,7 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(TAG_PREV_IMPL_INTENT, prevImplIntent)
-        outState.putIntegerArrayList(TAG_SELECTABLE_ADAPTER, adapter.selectedItems)
-        outState.putBoolean(TAG_IN_ACTION_MODE, inActionMode)
-        outState.putStringArrayList(TAG_SELECTED_TORRENTS, selectedTorrents)
         torrentsListState = layoutManager.onSaveInstanceState()
-        outState.putParcelable(TAG_TORRENTS_LIST_STATE, torrentsListState)
-
         super.onSaveInstanceState(outState)
     }
 
@@ -269,6 +209,29 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         if (savedInstanceState != null) {
             torrentsListState = savedInstanceState.getParcelable(TAG_TORRENTS_LIST_STATE)
         }
+    }
+
+    override fun onItemClicked(position: Int, item: TorrentListItem) {
+        if (actionMode == null) {
+            /* Mark this torrent as open in the list */
+            adapter.markAsOpen(item)
+//                    showDetailTorrent(item.torrentId)
+        } else {
+//                    onItemSelected(item.torrentId, position)
+        }
+    }
+
+    override fun onItemLongClicked(position: Int, item: TorrentListItem): Boolean {
+        if (actionMode == null)
+            actionMode = activity!!.startActionMode(actionModeCallback)
+//                onItemSelected(item.torrentId, position)
+
+        return true
+    }
+
+    override fun onPauseButtonClicked(position: Int, item: TorrentListItem) {
+        EventBusScope.getDefault().post(PostEvent.PauseResumeTorrent(item.hash))
+        //            TorrentHelper.pauseResumeTorrent(item.torrentId);
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {
@@ -323,23 +286,6 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         layout.error = null
 
         return true
-    }
-
-    private fun setTorrentListFilter(filter: String?) {
-        if (filter == null) {
-            return
-        }
-
-        when (filter) {
-            getString(R.string.torrent_spinner_downloading_torrents) ->
-                adapter.setDisplayFilter(TorrentListAdapter.DisplayFilter(TorrentStateCode.DOWNLOADING))
-            getString(R.string.torrent_spinner_downloaded_torrents) ->
-                adapter.setDisplayFilter(TorrentListAdapter.DisplayFilter(TorrentStateCode.SEEDING))
-            getString(R.string.torrent_spinner_downloading_metadata_torrents) ->
-                adapter.setDisplayFilter(TorrentListAdapter.DisplayFilter(TorrentStateCode.DOWNLOADING_METADATA))
-            else ->
-                adapter.setDisplayFilter(TorrentListAdapter.DisplayFilter())
-        }
     }
 
 //    private fun onItemSelected(id: String, position: Int) {
@@ -458,25 +404,35 @@ class MainLeftFragment : BaseFragment(), BaseAlertDialog.OnClickListener,
         findNavController().navigate(MainFragmentDirections.actionMainFragmentToAddTorrentFragment(uri))
     }
 
-    private fun addTorrent(params: AddTorrentParams) {
-        TorrentTaskService.addTorrent(requireActivity(), params)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onReceive(event: PostEvent) {
+        when(event) {
+            is PostEvent.TorrentAdded -> {
+                val item  = TorrentListItem(event.torrent)
+                adapter.addItem(item)
+            }
+            is PostEvent.UpdateTorrent -> {
+                adapter.updateItem(event.progress)
+            }
+        }
     }
 
+
     companion object {
-        private const val TAG_PREV_IMPL_INTENT = "prev_impl_intent"
-        private const val TAG_SELECTABLE_ADAPTER = "selectable_adapter"
-        private const val TAG_SELECTED_TORRENTS = "selected_torrents"
-        private const val TAG_IN_ACTION_MODE = "in_action_mode"
+//        private const val TAG_PREV_IMPL_INTENT = "prev_impl_intent"
+//        private const val TAG_SELECTABLE_ADAPTER = "selectable_adapter"
+//        private const val TAG_SELECTED_TORRENTS = "selected_torrents"
+//        private const val TAG_IN_ACTION_MODE = "in_action_mode"
         private const val TAG_DELETE_TORRENT_DIALOG = "delete_torrent_dialog"
         private const val TAG_ADD_LINK_DIALOG = "add_link_dialog"
-        private const val TAG_ERROR_OPEN_TORRENT_FILE_DIALOG = "error_open_torrent_file_dialog"
-        private const val TAG_SAVE_ERROR_DIALOG = "save_error_dialog"
+//        private const val TAG_ERROR_OPEN_TORRENT_FILE_DIALOG = "error_open_torrent_file_dialog"
+//        private const val TAG_SAVE_ERROR_DIALOG = "save_error_dialog"
         private const val TAG_TORRENTS_LIST_STATE = "torrents_list_state"
-        private const val TAG_ABOUT_DIALOG = "about_dialog"
-        private const val TAG_TORRENT_SORTING = "torrent_sorting"
+//        private const val TAG_ABOUT_DIALOG = "about_dialog"
+//        private const val TAG_TORRENT_SORTING = "torrent_sorting"
 
-        private const val ADD_TORRENT_REQUEST = 1
-        private const val TORRENT_FILE_CHOOSE_REQUEST = 2
-        private const val CREATE_TORRENT_REQUEST = 3
+//        private const val ADD_TORRENT_REQUEST = 1
+//        private const val TORRENT_FILE_CHOOSE_REQUEST = 2
+//        private const val CREATE_TORRENT_REQUEST = 3
     }
 }

@@ -19,7 +19,7 @@ import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
-import com.seiko.domain.model.ResMagnetItem
+import com.seiko.domain.model.api.ResMagnetItem
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchMagnetFragment : SearchSupportFragment(),

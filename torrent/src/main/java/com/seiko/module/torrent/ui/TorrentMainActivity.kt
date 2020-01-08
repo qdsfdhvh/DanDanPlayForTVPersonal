@@ -1,60 +1,99 @@
 package com.seiko.module.torrent.ui
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.seiko.data.constants.TORRENT_CONFIG_DIR
-import com.seiko.data.extensions.writeInputStream
+import com.blankj.utilcode.util.LogUtils
+import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.extensions.lazyAndroid
 import com.seiko.module.torrent.R
+import com.seiko.module.torrent.model.PostEvent
 import com.seiko.module.torrent.service.TorrentTaskService
-import com.seiko.torrent.TorrentEngine
-import kotlinx.coroutines.*
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
-import java.io.File
-import java.io.IOException
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
-class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main), CoroutineScope by MainScope() {
+class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
 
     /**
      * PS: Navigation在返回时，Fragment的View会重新绘制。
      */
     private lateinit var navController: NavController
 
+    private var serviceBound = false
+    private lateinit var torrentTaskService: TorrentTaskService
+
+    private val connection: ServiceConnection by lazyAndroid {
+        object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, ibinder: IBinder?) {
+                torrentTaskService = (ibinder as TorrentTaskService.TorrentTaskBinder).getService()
+                serviceBound = true
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                serviceBound = false
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navController = findNavController(R.id.myNavHostFragment)
-
-        startService(Intent(this, TorrentTaskService::class.java))
-        checkTorrentConfig()
+        EventBusScope.register(this)
     }
 
-    // 临时
-    private fun checkTorrentConfig() = launch(Dispatchers.Default) {
+    override fun onStart() {
+        super.onStart()
+        startTorrentService()
+    }
 
-        val configDir: File by inject(named(TORRENT_CONFIG_DIR))
-        if (!configDir.exists() && !configDir.mkdirs()) {
-            return@launch
+    override fun onStop() {
+        super.onStop()
+        if (serviceBound) {
+            unbindService(connection)
         }
+    }
 
-        val configPath = File(configDir, "config.txt")
-        if (!configPath.exists()) {
-            try {
-                configPath.writeInputStream(assets.open("tracker.txt"))
-            } catch (e: IOException) {
-                e.printStackTrace()
-                return@launch
+    private fun startTorrentService() {
+        val serviceIntent = Intent(this, TorrentTaskService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+        /*
+         * Bind the service to get updates and keep the service running
+         * when the app goes in background
+         */
+        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onReceive(event: PostEvent) {
+        when(event) {
+            is PostEvent.AddTorrent -> {
+                while(!serviceBound) {
+                    LogUtils.d("Waiting for the service to bind.")
+                }
+
+                val addParams = event.params
+                torrentTaskService.addTorrent(addParams, true)
+            }
+            is PostEvent.PauseResumeTorrent -> {
+                val hash = event.hash
+                torrentTaskService.pauseResumeTorrent(hash)
             }
         }
-
-        val engine: TorrentEngine by inject()
-        engine.addTrackers(configPath.absolutePath)
     }
 
     override fun onDestroy() {
-        cancel()
+        EventBusScope.unRegister(this)
         super.onDestroy()
     }
 }

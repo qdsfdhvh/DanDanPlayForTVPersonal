@@ -32,7 +32,9 @@ const val DEFAULT_DANMU_FOLDER  = "_danmuku"
 // 默认字幕下载文件夹名
 const val DEFAULT_SUBTITLE_FOLDER = "_subtitle"
 
-//
+/**
+ * 本地配置文件名
+ */
 internal const val PREFS_NAME_DEFAULT = "DanDanPlayForTV_Prefs"
 internal const val PREFS_NAME_COOKIES = "DanDanPlayForTV_Cookies_Prefs"
 internal const val DB_NAME_DEFAULT = "DanDanPlayForTV_Database"
@@ -42,5 +44,8 @@ internal const val DB_NAME_DEFAULT = "DanDanPlayForTV_Database"
  * Torrent
  */
 const val TORRENT_DOWNLOAD_DIR = "TORRENT_DOWNLOAD_DIR"
+const val TORRENT_DATA_DIR = "TORRENT_DATA_DIR"
 const val TORRENT_TEMP_DIR = "TORRENT_TEMP_DIR"
 const val TORRENT_CONFIG_DIR = "TORRENT_CONFIG_DIR"
+
+const val DATA_TORRENT_INFO_FILE_NAME = "torrent"

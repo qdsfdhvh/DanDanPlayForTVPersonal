@@ -22,7 +22,7 @@ class DownloadTorrentUseCase : KoinComponent {
         try {
             response = api.downloadTorrent(requestBody)
 
-            val result = getTorrentInfoFileUseCase(name, magnet)
+            val result = getTorrentInfoFileUseCase(magnet)
             if (result is Result.Error) {
                 return Result.Error(result.exception)
             }

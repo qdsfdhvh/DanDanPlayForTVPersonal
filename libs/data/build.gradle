@@ -7,28 +7,25 @@ dependencies {
     api project(path: ':libs:tool_torrent')
 
     // 协程
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+    api dependence.libCoroutinesCore
+    api dependence.libCoroutinesAndroid
 
-    // Koin
-    api 'org.koin:koin-android-viewmodel:2.0.1'
+    // 注入
+    api dependence.libKoinViewModel
+
+    // Prefs
+    api 'com.tencent:mmkv:1.0.23'
 
     // NetWork
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
 
-    // Prefs
-    api 'com.tencent:mmkv:1.0.23'
-
     // Database
-    def room_version = "2.2.3"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
+    implementation dependence.libRoomRuntime
+    kapt dependence.libRoomCompiler
+    implementation dependence.libRoomKtx
 
     // Database Debug 8080
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
-
-    //
 }

@@ -1,7 +1,7 @@
 package com.seiko.domain.repo
 
-import com.seiko.domain.model.ResMagnetItem
-import com.seiko.domain.model.SearchAnimeDetails
+import com.seiko.domain.model.api.ResMagnetItem
+import com.seiko.domain.model.api.SearchAnimeDetails
 import com.seiko.domain.utils.Result
 
 interface SearchRepository {

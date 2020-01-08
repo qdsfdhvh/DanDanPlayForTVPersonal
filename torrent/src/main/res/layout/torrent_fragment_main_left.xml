@@ -104,16 +104,16 @@
                 fab:fab_size="mini"
                 fab:fab_label="@string/torrent_open_file" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/create_torrent_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_mode_edit_white_18dp"
-                app:fab_colorNormal="@color/torrent_accent"
-                app:fab_colorPressed="@color/torrent_accent_dark"
-                app:fab_colorRipple="@color/torrent_accent_light"
-                fab:fab_size="mini"
-                fab:fab_label="@string/torrent_create_torrent" />
+<!--            <com.github.clans.fab.FloatingActionButton-->
+<!--                android:id="@+id/create_torrent_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_mode_edit_white_18dp"-->
+<!--                app:fab_colorNormal="@color/torrent_accent"-->
+<!--                app:fab_colorPressed="@color/torrent_accent_dark"-->
+<!--                app:fab_colorRipple="@color/torrent_accent_light"-->
+<!--                fab:fab_size="mini"-->
+<!--                fab:fab_label="@string/torrent_create_torrent" />-->
         </com.github.clans.fab.FloatingActionMenu>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

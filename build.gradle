@@ -10,9 +10,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath deps.android.gradle_plugin
-        classpath deps.kotlin.gradle_plugin
-        classpath deps.navigation.gradle_plugin
+        classpath dependence.libGradlePlugin
+        classpath dependence.libKotlinGradlePlugin
+        classpath dependence.libNavigationGradlePlugin
         classpath 'com.gfd.plugin:PluginSwitch:1.0.0'
     }
 }

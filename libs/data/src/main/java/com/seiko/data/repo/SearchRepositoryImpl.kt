@@ -4,8 +4,8 @@ import com.seiko.data.http.api.DanDanApiService
 import com.seiko.data.http.api.ResDanDanApiService
 import com.seiko.data.http.response.ResMagnetSearchResponse
 import com.seiko.data.http.response.SearchAnimeResponse
-import com.seiko.domain.model.ResMagnetItem
-import com.seiko.domain.model.SearchAnimeDetails
+import com.seiko.domain.model.api.ResMagnetItem
+import com.seiko.domain.model.api.SearchAnimeDetails
 import com.seiko.domain.repo.SearchRepository
 import com.seiko.domain.utils.Result
 

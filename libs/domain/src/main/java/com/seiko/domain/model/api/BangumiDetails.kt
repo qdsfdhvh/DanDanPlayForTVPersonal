@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //BangumiDetails {
 //    type (string): 作品类型 = ['tvseries', 'tvspecial', 'ova', 'movie', 'musicvideo', 'web', 'other', 'jpmovie', 'jpdrama', 'unknown'],

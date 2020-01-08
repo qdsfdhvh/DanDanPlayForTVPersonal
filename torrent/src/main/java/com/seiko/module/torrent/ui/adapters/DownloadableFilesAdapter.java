@@ -67,7 +67,6 @@ public class DownloadableFilesAdapter
         }
         files.addAll(list);
         Collections.sort(files);
-        LogUtils.d("file size = " + files.size());
         notifyDataSetChanged();
     }
 

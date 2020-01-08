@@ -31,7 +31,7 @@ interface TorrentDao {
     @Query("SELECT COUNT(_id) FROM Torrent WHERE hash=:hash")
     suspend fun count(hash: String): Int
 
-    @Query("SELECT * FROM Torrent WHERE hash=:hash LIMIT 1")
+    @Query("SELECT * FROM Torrent WHERE hash=:hash LIMIT 0, 1")
     suspend fun get(hash: String): TorrentEntity?
 
 //    @Query("SELECT COUNT(_id) FROM Torrent")

@@ -1,6 +1,6 @@
 package com.seiko.data.http.response
 
-import com.seiko.domain.model.BangumiDetails
+import com.seiko.domain.model.api.BangumiDetails
 
 //BangumiDetailsResponse {
 //    bangumi (BangumiDetails, optional): 番剧详情 ,

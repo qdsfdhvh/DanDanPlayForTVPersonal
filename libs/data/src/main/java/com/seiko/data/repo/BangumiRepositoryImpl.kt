@@ -4,9 +4,9 @@ import com.seiko.data.http.api.DanDanApiService
 import com.seiko.data.http.response.BangumiDetailsResponse
 import com.seiko.data.http.response.BangumiListResponse
 import com.seiko.data.http.response.BangumiSeasonListResponse
-import com.seiko.domain.model.BangumiDetails
-import com.seiko.domain.model.BangumiIntro
-import com.seiko.domain.model.BangumiSeason
+import com.seiko.domain.model.api.BangumiDetails
+import com.seiko.domain.model.api.BangumiIntro
+import com.seiko.domain.model.api.BangumiSeason
 import com.seiko.domain.repo.BangumiRepository
 import com.seiko.domain.utils.Result
 import retrofit2.HttpException

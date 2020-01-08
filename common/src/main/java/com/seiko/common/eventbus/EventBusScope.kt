@@ -71,6 +71,18 @@ object EventBusScope {
         return lazyEventBusInstance.getInstance()
     }
 
+    fun register(subscriber: Any) {
+        if (!getDefault().isRegistered(subscriber)) {
+            getDefault().register(subscriber)
+        }
+    }
+
+    fun unRegister(subscriber: Any) {
+        if (getDefault().isRegistered(subscriber)) {
+            getDefault().unregister(subscriber)
+        }
+    }
+
     /**
      * 全局
      */

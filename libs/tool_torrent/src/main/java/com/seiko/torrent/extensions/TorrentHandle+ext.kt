@@ -1,16 +1,55 @@
 package com.seiko.torrent.extensions
 
+import com.seiko.torrent.constants.TorrentStateCode
 import com.seiko.torrent.model.AdvancedPeerInfo
+import com.seiko.torrent.utils.log
 import org.libtorrent4j.*
 import org.libtorrent4j.swig.peer_info_vector
+import kotlin.math.log
 import kotlin.math.min
+
+private fun TorrentStatus.isPaused(): Boolean {
+    return flags().and_(TorrentFlags.PAUSED).nonZero()
+}
+
+//@TorrentStateCode
+fun TorrentHandle.getStateCode(): Int {
+    if (isPaused()) {
+        return TorrentStateCode.PAUSED
+    }
+
+    if (!isValid) {
+        return TorrentStateCode.ERROR
+    }
+
+
+    val isPaused = status().isPaused()
+
+    when {
+        isPaused && status().isFinished -> return TorrentStateCode.FINISHED
+        isPaused && !status().isFinished -> return TorrentStateCode.PAUSED
+        !isPaused && status().isFinished -> return TorrentStateCode.SEEDING
+    }
+
+    return when(status().state()) {
+        TorrentStatus.State.CHECKING_FILES -> TorrentStateCode.CHECKING
+        TorrentStatus.State.DOWNLOADING_METADATA -> TorrentStateCode.DOWNLOADING_METADATA
+        TorrentStatus.State.DOWNLOADING -> TorrentStateCode.DOWNLOADING
+        TorrentStatus.State.FINISHED -> TorrentStateCode.FINISHED
+        TorrentStatus.State.SEEDING -> TorrentStateCode.SEEDING
+        TorrentStatus.State.ALLOCATING -> TorrentStateCode.ALLOCATING
+        TorrentStatus.State.CHECKING_RESUME_DATA -> TorrentStateCode.CHECKING
+        else -> TorrentStateCode.UNKNOWN
+    }
+}
+
 
 fun TorrentHandle.isSequentialDownload(): Boolean {
     return isValid && status().flags().and_(TorrentFlags.SEQUENTIAL_DOWNLOAD).nonZero()
 }
 
 fun TorrentHandle.isPaused(): Boolean {
-    return isValid && status(true).flags().and_(TorrentFlags.PAUSED).nonZero()
+    return isValid && status(true).isPaused()
 }
 
 fun TorrentHandle.isSeeding(): Boolean {
@@ -33,6 +72,25 @@ fun TorrentHandle.getUploadSpeed(): Long {
         return 0
     }
     return status().uploadPayloadRate().toLong()
+}
+
+fun TorrentHandle.getETA(): Long {
+    if (!isValid) {
+        return 0
+    }
+
+    if (getStateCode() != TorrentStateCode.DOWNLOADING) {
+        return 0
+    }
+
+    val files = torrentFile() ?: return 0
+
+    val status = status()
+    val left = files.totalSize() - status.totalDone()
+    if (left <= 0) return 0
+    val rate = status.downloadPayloadRate()
+    if (rate <= 0) return -1
+    return left / rate
 }
 
 fun TorrentHandle.getActiveTime(): Long {
@@ -71,6 +129,13 @@ fun TorrentHandle.getTotalSeeds(): Int {
     return if (isValid) status().listSeeds() else 0
 }
 
+fun TorrentHandle.getTotalWanted(): Long {
+    if (!isValid) {
+        return 0
+    }
+    return status().totalWanted()
+}
+
 fun TorrentHandle.getTotalSize(): Long {
     if (!isValid) {
         return 0
@@ -90,7 +155,7 @@ fun TorrentHandle.getTotalPeers(): Int {
 }
 
 fun TorrentHandle.getProgress(): Int {
-    if (!isValid) {
+    if (!isValid || status() == null) {
         return 0
     }
 

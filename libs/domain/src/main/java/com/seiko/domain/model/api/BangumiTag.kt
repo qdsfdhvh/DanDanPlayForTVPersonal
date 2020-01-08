@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //BangumiTag {
 //    id (integer): 标签编号 ,

@@ -9,7 +9,7 @@ import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.R
 import com.facebook.drawee.view.SimpleDraweeView
-import com.seiko.domain.model.BangumiDetails
+import com.seiko.domain.model.api.BangumiDetails
 
 class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
 

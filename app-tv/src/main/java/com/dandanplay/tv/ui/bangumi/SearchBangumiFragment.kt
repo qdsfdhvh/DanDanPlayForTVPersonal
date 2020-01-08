@@ -20,8 +20,8 @@ import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
-import com.seiko.domain.model.ResMagnetItem
-import com.seiko.domain.model.SearchAnimeDetails
+import com.seiko.domain.model.api.ResMagnetItem
+import com.seiko.domain.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchBangumiFragment : SearchSupportFragment(),

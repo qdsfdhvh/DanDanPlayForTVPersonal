@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.module.torrent.R
+import com.seiko.module.torrent.extensions.find
 
 import com.seiko.module.torrent.model.filetree.BencodeFileTree
 import com.seiko.module.torrent.model.filetree.FileNode
@@ -36,8 +37,6 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         parentFragment as ViewModelStoreOwner
     })
 
-    private lateinit var layoutManager: LinearLayoutManager
-
     private val adapter by lazyAndroid {
         DownloadableFilesAdapter(requireActivity(),
             R.layout.torrent_item_torrent_downloadable_file,
@@ -50,7 +49,8 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         }
     }
 
-    private var files: List<BencodeFileItem>? = null
+    private lateinit var layoutManager: LinearLayoutManager
+
     private var priorities: List<Priority>? = null
     private var fileTree: BencodeFileTree? = null
 
@@ -68,16 +68,16 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
 
     private fun initViewModel() {
         // 磁力信息
-        viewModel.torrentMetaInfo.observe(this::getLifecycle) { info ->
-            if (files == null || files != info.fileList) {
-                files = info.fileList
+        viewModel.magnetInfo.observe(this::getLifecycle) { info ->
+            if (priorities == null || priorities != info?.filePriorities) {
+                priorities = info?.filePriorities
                 makeFileTree()
             }
         }
         // 磁力信息
-        viewModel.magnetInfo.observe(this::getLifecycle) { info ->
-            if (priorities == null || priorities != info?.filePriorities) {
-                priorities = info?.filePriorities
+        viewModel.fileTree.observe(this::getLifecycle) { tree ->
+            if (fileTree == null || fileTree != tree) {
+                fileTree = tree
                 makeFileTree()
             }
         }
@@ -88,18 +88,17 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         file_list.layoutManager = layoutManager
         file_list.itemAnimator = animator
         file_list.adapter = adapter
+        setFileSize(0, 0)
     }
 
     private fun makeFileTree() {
-        val files = files ?: return
-
-        val fileTree = files.toFileTree()
+        val fileTree = fileTree ?: return
 
         val priorities = priorities
         if (priorities.isNullOrEmpty()) {
             fileTree.select(true)
         } else {
-            val size = priorities.size.coerceAtMost(files.size)
+            val size = priorities.size  //.coerceAtMost(files.size)
             for (i in 0 until size) {
                 if (priorities[i] == Priority.IGNORE) {
                     continue
@@ -109,18 +108,21 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
             }
         }
 
-        this.fileTree = fileTree
         currentDir = fileTree
         adapter.setFiles(getChildren(currentDir))
         updateFileSize()
     }
 
+    private fun setFileSize(selectedSize: Long, totalSize: Long) {
+        files_size.text = getString(R.string.torrent_files_size).format(
+            Formatter.formatFileSize(requireActivity().applicationContext, selectedSize),
+            Formatter.formatFileSize(requireActivity().applicationContext, totalSize)
+        )
+    }
+
     private fun updateFileSize() {
         val fileTree = fileTree ?: return
-        files_size.text = getString(R.string.torrent_files_size).format(
-            Formatter.formatFileSize(requireActivity().applicationContext, fileTree.selectedFileSize()),
-            Formatter.formatFileSize(requireActivity().applicationContext, fileTree.size())
-        )
+        setFileSize(fileTree.selectedFileSize(), fileTree.size())
     }
 
     private fun chooseDir(node: BencodeFileTree) {
@@ -142,7 +144,7 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         val currentDir = currentDir ?: return emptyList()
 
         val children = ArrayList<BencodeFileTree>()
-        if (currentDir != fileTree && currentDir.parent != null) {
+        if (currentDir != viewModel.fileTree && currentDir.parent != null) {
             children.add(0, BencodeFileTree(
                 BencodeFileTree.PARENT_DIR, 0L,
                 FileNode.Type.DIR, currentDir.parent)
@@ -164,119 +166,5 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         node.select(selected)
         updateFileSize()
     }
-}
 
-
-private fun List<BencodeFileItem>.toFileTree(): BencodeFileTree {
-    val root = BencodeFileTree(FileTree.ROOT, 0L, FileNode.Type.DIR)
-    var parentTree = root
-    /* It allows reduce the number of iterations on the paths with equal beginnings */
-    var prevPath = ""
-    val filesCopy = ArrayList(this)
-    /* Sort reduces the returns number to root */
-    filesCopy.sort()
-
-    for (file in filesCopy) {
-        val path: String
-        /*
-         * Compare previous path with new path.
-         * Example:
-         * prev = dir1/dir2/
-         * cur  = dir1/dir2/file1
-         *        |________|
-         *          equal
-         *
-         * prev = dir1/dir2/
-         * cur  = dir3/file2
-         *        |________|
-         *         not equal
-         */
-        if (prevPath.isNotEmpty()
-            && file.path.regionMatches(
-                0, prevPath,
-                0, prevPath.length,
-                true)) {
-            /*
-             * If beginning paths are equal, remove previous path from the new path.
-             * Example:
-             * prev = dir1/dir2/
-             * cur  = dir1/dir2/file1
-             * new  = file1
-             */
-            path = file.path.substring(prevPath.length)
-        } else {
-            /* If beginning paths are not equal, return to root */
-            path = file.path
-            parentTree = root
-        }
-
-        val nodes = path.parsePath()
-        /*
-         * Remove last node (file) from previous path.
-         * Example:
-         * cur = dir1/dir2/file1
-         * new = dir1/dir2/
-         */
-        prevPath = file.path.substring(0,
-            file.path.length - nodes[nodes.size - 1].length)
-
-        /* Iterates path nodes */
-        nodes.forEachIndexed { i, node ->
-            if (!parentTree.contains(node)) {
-                parentTree.addChild(makeObject(
-                    index = file.index,
-                    name = node,
-                    size = file.size,
-                    parent = parentTree,
-                    isFile = i == nodes.size - 1
-                ))
-            }
-
-            val nextParent = parentTree.getChild(node)
-            /* Skipping leaf nodes */
-            if (!nextParent.isFile) {
-                parentTree = nextParent
-            }
-        }
-    }
-    return root
-}
-
-private fun makeObject(index: Int,
-                       name: String,
-                       size: Long,
-                       parent: BencodeFileTree,
-                       isFile: Boolean): BencodeFileTree {
-    return if (isFile) {
-        BencodeFileTree(index, name, size, FileNode.Type.FILE, parent)
-    } else {
-        BencodeFileTree(name, 0L, FileNode.Type.DIR, parent)
-    }
-}
-
-private fun String.parsePath(): List<String> {
-    if (isNullOrEmpty()) return emptyList()
-    return split(File.separator)
-}
-
-/*
- * Not recommended for use with a large number of nodes
- * due to deterioration of performance, use getLeaves() method
- */
-private fun <F : FileTree<F>> F.find(index: Int): F? {
-    val stack = Stack<F>()
-    stack.push(this)
-    while (stack.isNotEmpty()) {
-        val node = stack.pop() ?: continue
-        if (node.index == index) {
-            return node
-        } else {
-            for (n in node.childrenName) {
-                if (!node.isFile) {
-                    stack.push(node.getChild(n))
-                }
-            }
-        }
-    }
-    return null
 }

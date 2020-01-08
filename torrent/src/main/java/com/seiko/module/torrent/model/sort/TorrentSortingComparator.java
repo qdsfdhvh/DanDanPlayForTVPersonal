@@ -20,7 +20,7 @@
 package com.seiko.module.torrent.model.sort;
 
 
-import com.seiko.module.torrent.ui.adapters.TorrentListItem;
+import com.seiko.module.torrent.model.TorrentListItem;
 
 import java.util.Comparator;
 

@@ -8,7 +8,7 @@ import org.libtorrent4j.Priority
 @Parcelize
 data class AddTorrentParams(
     val source: String,
-    val isFromMagnet: Boolean,
+    val fromMagnet: Boolean,
     val sha1hash: String,
     val name: String,
     val filePriorities: List<Priority>,
@@ -32,7 +32,7 @@ data class AddTorrentParams(
             return false
         }
         return source == other.source
-                && isFromMagnet == other.isFromMagnet
+                && fromMagnet == other.fromMagnet
                 && sha1hash == other.sha1hash
                 && name == other.name
                 && filePriorities == other.filePriorities
@@ -44,7 +44,7 @@ data class AddTorrentParams(
     override fun toString(): String {
         return "AddTorrentParams{" +
                 "source='" + source + '\''.toString() +
-                ", isFromMagnet=" + isFromMagnet +
+                ", isFromMagnet=" + fromMagnet +
                 ", sha1hash='" + sha1hash + '\''.toString() +
                 ", name='" + name + '\''.toString() +
                 ", filePriorities=" + filePriorities +

@@ -1,7 +1,7 @@
 package com.seiko.data.usecase.bangumi
 
-import com.seiko.domain.model.AirDayBangumiBean
-import com.seiko.domain.model.BangumiIntro
+import com.seiko.domain.model.api.AirDayBangumiBean
+import com.seiko.domain.model.api.BangumiIntro
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -46,7 +46,8 @@ class GetAirDayBangumiBeansUseCase : KoinComponent {
                 AirDayBangumiBean(3),
                 AirDayBangumiBean(4),
                 AirDayBangumiBean(5),
-                AirDayBangumiBean(6))
+                AirDayBangumiBean(6)
+            )
 
             // 导入动漫信息
             for (intro in intros) {

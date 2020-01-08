@@ -3,10 +3,20 @@ package com.seiko.torrent.constants
 import androidx.annotation.IntDef
 
 
-@IntDef(TorrentStateCode.UNKNOWN, TorrentStateCode.ERROR, TorrentStateCode.SEEDING,
-    TorrentStateCode.DOWNLOADING, TorrentStateCode.PAUSED, TorrentStateCode.STOPPED,
-    TorrentStateCode.CHECKING, TorrentStateCode.DOWNLOADING_METADATA,
-    TorrentStateCode.FINISHED, TorrentStateCode.ALLOCATING)
+@IntDef(
+   value = [
+       TorrentStateCode.UNKNOWN,
+       TorrentStateCode.ERROR,
+       TorrentStateCode.SEEDING,
+       TorrentStateCode.DOWNLOADING,
+       TorrentStateCode.PAUSED,
+       TorrentStateCode.STOPPED,
+       TorrentStateCode.CHECKING,
+       TorrentStateCode.DOWNLOADING_METADATA,
+       TorrentStateCode.FINISHED,
+       TorrentStateCode.ALLOCATING
+   ]
+)
 @Retention(AnnotationRetention.SOURCE)
 annotation class TorrentStateCode {
     companion object {

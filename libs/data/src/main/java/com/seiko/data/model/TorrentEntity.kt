@@ -40,38 +40,3 @@ data class TorrentEntity(
     var error: String = ""
 
 )
-//    : TorrentTask(
-//    hash, source, downloadPath,
-//    name, priorityList,
-//    sequentialDownload, paused, finished, downloadingMetadata,
-//    addedDate, error
-//)
-{
-    //
-}
-
-internal class PriorityListConverter {
-
-    @TypeConverter
-    fun reverPriorityList(databaseValue: String?): List<Priority> {
-        if (databaseValue.isNullOrEmpty()) return emptyList()
-        return if (databaseValue.contains(SEP)) {
-            val strArray = databaseValue.split(SEP)
-            List(strArray.size) { Priority.fromSwig(strArray[it].toInt()) }
-        } else {
-            val value = databaseValue.toInt()
-            listOf(Priority.fromSwig(value))
-        }
-    }
-
-    @TypeConverter
-    fun converterPriorityList(entityProperty: List<Priority>?): String {
-        if (entityProperty.isNullOrEmpty()) return ""
-        return entityProperty.joinToString(separator = SEP) { it.swig().toString() }
-    }
-
-    companion object {
-        private const val SEP = ";"
-    }
-
-}

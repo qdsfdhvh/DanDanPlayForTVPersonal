@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //BangumiQueueEpisodeV2 {
 //    episodeId (integer): 剧集编号（弹幕库编号） ,

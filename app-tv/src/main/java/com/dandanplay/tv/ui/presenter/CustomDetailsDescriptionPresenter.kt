@@ -15,7 +15,7 @@
 package com.dandanplay.tv.ui.presenter
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter
-import com.seiko.domain.model.BangumiDetails
+import com.seiko.domain.model.api.BangumiDetails
 
 class CustomDetailsDescriptionPresenter(
 

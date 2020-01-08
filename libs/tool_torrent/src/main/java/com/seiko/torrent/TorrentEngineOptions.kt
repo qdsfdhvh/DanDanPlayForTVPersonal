@@ -4,12 +4,16 @@ import org.libtorrent4j.SettingsPack
 import org.libtorrent4j.swig.settings_pack
 import java.io.File
 
+private const val DATA_TORRENT_SESSION_FILE_NAME = "session"
+private const val DATA_TORRENT_RESUME_FILE_NAME = "resume"
+
+private const val META_DATA_MAX_SIZE = 2 * 1024 * 1024
 
 data class TorrentEngineOptions(
     /**
-     * The root directory to download the torrent into.
+     * Torrent引擎文件路径
      */
-    val downloadDir: File,
+    val dataDir: File,
 
     val cachedSize: Int = 256,
 
@@ -42,7 +46,11 @@ data class TorrentEngineOptions(
 
     var connectionsLimitPerTorrent: Int = 40,
     var uploadsLimitPerTorrent: Int = 4,
-    var autoManaged: Boolean = false
+    var autoManaged: Boolean = false,
+
+    val metadataMaxSize: Int = META_DATA_MAX_SIZE,
+    val sessionName: String = DATA_TORRENT_SESSION_FILE_NAME,
+    val resumeName: String = DATA_TORRENT_RESUME_FILE_NAME
 ) {
     val settingsPack: SettingsPack = createSettingPack()
         .cacheSize(cachedSize)

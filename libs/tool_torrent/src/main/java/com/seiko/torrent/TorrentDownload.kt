@@ -2,7 +2,7 @@ package com.seiko.torrent
 
 import android.content.Context
 import android.util.Log
-import com.seiko.torrent.constants.META_DATA_MAX_SIZE
+import com.seiko.torrent.constants.TorrentStateCode
 import com.seiko.torrent.exception.FreeSpaceException
 import com.seiko.torrent.extensions.*
 import com.seiko.torrent.model.MagnetInfo
@@ -173,19 +173,37 @@ class TorrentDownload(
      *                            Status                            *
      ****************************************************************/
 
-    val isPaused: Boolean get() = torrentHandle.isPaused()
+    val isPaused: Boolean = torrentHandle.isPaused()
 
     val isSeeding: Boolean get() = torrentHandle.isSeeding()
 
     val isFinished: Boolean get() = torrentHandle.isFinished()
 
+    @TorrentStateCode
+    val stateCode: Int get() = torrentHandle.getStateCode()
+
+    val progress: Int get() = torrentHandle.getProgress()
+
+    val receivedBytes: Long get() = torrentHandle.getReceivedBytes()
+
+    val uploadedBytes: Long get() = torrentHandle.getTotalSendBytes()
+
+    val totalBytes: Long get() = torrentHandle.getTotalWanted()
+
     val downloadSpeed: Long get() = torrentHandle.getDownloadSpeed()
 
     val uploadSpeed: Long get() = torrentHandle.getUploadSpeed()
 
+    val eta: Long get() = torrentHandle.getETA()
+
+    val totalPeers: Int get() = torrentHandle.getTotalPeers()
+
+    val connectedPeers: Int get() = torrentHandle.getConnectedPeers()
+
     val isDownloading: Boolean get() = downloadSpeed > 0
 
     val isSequentialDownload: Boolean get() = torrentHandle.isSequentialDownload()
+
 
     /**
      * 获取种子目录下的无用文件
@@ -288,7 +306,9 @@ class TorrentDownload(
             val bytes = add_torrent_params.write_resume_data(
                 saveResumeDataAlert.params().swig()).bencode()
             val data = Vectors.byte_vector2bytes(bytes)
-            saveTorrentResumeData(context, task.hash, data)
+
+            // 保存种子恢复文件
+            engine.getResumeFile(task.hash)?.writeBytes(data)
         } catch (e: Exception) {
             log(DOWNLOAD_TASK_TAG, "Error saving resume data of $task:")
             log(DOWNLOAD_TASK_TAG, Log.getStackTraceString(e))
@@ -304,15 +324,28 @@ class TorrentDownload(
         saveResumeData(false)
     }
 
-    internal fun handleMetadata(hash: String, newName: String, bencode: ByteArray?) {
+    internal fun onMetadataReceived(alert: Alert<*>?) {
+        val metadataReceivedAlert = alert as? MetadataReceivedAlert ?: return
+        val hash = metadataReceivedAlert.handle().infoHash().toHex()
+        val size = metadataReceivedAlert.metadataSize()
+        if (size in 0..engine.metadataMaxSize) {
+            handleMetadata(hash,
+                newName = metadataReceivedAlert.torrentName(),
+                bencode = metadataReceivedAlert.torrentData(true)
+            )
+        }
+    }
+
+    private fun handleMetadata(hash: String, newName: String, bencode: ByteArray?) {
         if (bencode == null) {
             return
         }
 
         var err: Exception? = null
         try {
-            val torrentFile = engine.createTorrentFile(hash, bencode)
-            if (torrentFile == null || !torrentFile.exists()) {
+//            val torrentFile = engine.createTorrentFile(hash, bencode)
+            val torrentFile = File(task.downloadPath, "$hash.torrent")
+            if (!torrentFile.exists()) {
                 throw FileNotFoundException("Torrent file not found")
             }
             val torrentPath = torrentFile.absolutePath
@@ -462,15 +495,7 @@ private class TorrentInnerListener(torrent: TorrentDownload) : AlertListener {
             AlertType.STORAGE_MOVED -> downloadTask.get()?.onTorrentMoved(true)
             AlertType.STORAGE_MOVED_FAILED -> downloadTask.get()?.onTorrentMoved(false)
             AlertType.PIECE_FINISHED -> downloadTask.get()?.onPieceFinished()
-            AlertType.METADATA_RECEIVED -> {
-                val metadataReceivedAlert = alert as? MetadataReceivedAlert ?: return
-                val hash = metadataReceivedAlert.handle().infoHash().toHex()
-                val size = metadataReceivedAlert.metadataSize()
-                val bencode = if (size in 0..META_DATA_MAX_SIZE) {
-                    metadataReceivedAlert.torrentData(true)
-                } else null
-                downloadTask.get()?.handleMetadata(hash, metadataReceivedAlert.torrentName(), bencode)
-            }
+            AlertType.METADATA_RECEIVED -> downloadTask.get()?.onMetadataReceived(alert)
             else -> downloadTask.get()?.checkError(alert)
         }
 

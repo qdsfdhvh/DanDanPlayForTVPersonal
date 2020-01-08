@@ -7,12 +7,11 @@ import com.seiko.common.ResultData
 import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
 import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
 import com.seiko.data.usecase.search.SearchMagnetListUseCase
-import com.seiko.domain.model.ResMagnetItem
+import com.seiko.domain.model.api.ResMagnetItem
 import com.seiko.domain.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,

@@ -1,6 +1,6 @@
 package com.seiko.common.utils
 
-import com.seiko.domain.model.SearchAnimeDetails
+import com.seiko.domain.model.api.SearchAnimeDetails
 
 //['tvseries', 'tvspecial', 'ova', 'movie', 'musicvideo', 'web', 'other', 'jpmovie', 'jpdrama', 'unknown'],
 fun SearchAnimeDetails.getTypeName(): String {

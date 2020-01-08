@@ -3,11 +3,12 @@ package com.seiko.torrent
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
-import com.seiko.torrent.constants.DATA_TORRENT_FILE_NAME
-import com.seiko.torrent.constants.DATA_TORRENT_SESSION_FILE
-import com.seiko.torrent.constants.META_DATA_MAX_SIZE
 import com.seiko.torrent.constants.PEER_FINGERPRINT
 import com.seiko.torrent.constants.USER_AGENT
+import com.seiko.torrent.extensions.*
+import com.seiko.torrent.extensions.getBoolean
+import com.seiko.torrent.extensions.getInteger
+import com.seiko.torrent.extensions.getString
 import com.seiko.torrent.model.ProxySettingsPack
 import com.seiko.torrent.model.ProxyType
 import com.seiko.torrent.model.TorrentTask
@@ -19,6 +20,7 @@ import org.libtorrent4j.alerts.*
 import org.libtorrent4j.swig.*
 import org.libtorrent4j.swig.settings_pack.proxy_type_t
 import java.io.File
+import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.*
@@ -29,10 +31,6 @@ import kotlin.collections.HashMap
 
 
 class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager() {
-
-    companion object {
-        private const val TAG = "TorrentEngine"
-    }
 
     private var context: Context? = null
     private var callback: TorrentEngineCallback? = null
@@ -47,31 +45,15 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
      * Wait list for non added magnets
      */
     private val magnets = ArrayList<String>()
-    private val loadedMagnets = ConcurrentHashMap<String, ByteArray>()
     private val addTorrentsQueue = HashMap<String, TorrentTask>()
+    private val loadedMagnets = ConcurrentHashMap<String, ByteArray>()
+    private val loadTorrentsQueue: Queue<LoadTorrentTask> = LinkedList()
     private val syncMagnet = ReentrantLock()
-
-
-    private val loadTorrentsQueue :Queue<LoadTorrentTask> = LinkedList()
 
     /**
      * Torrent ThreadPool
      */
-    private val torrentExecutor: ExecutorService
-
-    init {
-        val threadFactory = object : ThreadFactory {
-            private val count = AtomicInteger(1)
-            override fun newThread(r: Runnable): Thread {
-                return Thread(r, "Torrent-Thread-${count.getAndIncrement()}")
-            }
-        }
-        torrentExecutor = ThreadPoolExecutor(
-            0, Int.MAX_VALUE,
-            60L, TimeUnit.SECONDS,
-            SynchronousQueue<Runnable>(),
-            threadFactory)
-    }
+    private val torrentExecutor = createTorrentExecutorService()
 
     /**
      * 设置上下例
@@ -125,6 +107,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
      * 获得已经读取的磁力数据
      */
     fun getLoadedMagnet(hash: String): ByteArray? {
+        log("getLoadedMagnet: $hash")
         return loadedMagnets[hash]
     }
 
@@ -132,20 +115,21 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
      * 删除已经获得的磁力数据
      */
     fun removeLoadedMagnet(hash: String) {
+        log("removeLoadedMagnet: $hash")
         loadedMagnets.remove(hash)
     }
 
     /**
      * 重启下载任务
      */
-    fun restoreDownloads(torrentTasks: Collection<TorrentTask>?) {
-        // missing isNullOrEmpty
-        if (torrentTasks == null || torrentTasks.isEmpty()) {
+    fun restoreDownloads(torrentTasks: Collection<TorrentTask>) {
+        if (torrentTasks.isEmpty()) {
             return
         }
 
         for (task in torrentTasks) {
             val loadTask = LoadTorrentTask(task.hash)
+
             if (task.downloadingMetadata) {
                 loadTask.putMagnet(task.source, File(task.source))
             } else {
@@ -156,16 +140,17 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
                     continue
                 }
 
-                val saveDir = File(task.downloadPath)
-                val dataDir = File(options.downloadDir, task.hash)
-                val file = File(dataDir, DATA_TORRENT_SESSION_FILE)
-                val resumeFile = if (file.exists()) file else null
-                loadTask.putTorrentFile(File(task.source), saveDir, resumeFile,
+                val downloadDir = File(task.downloadPath)
+                val resumeFile = getResumeFile(task.hash)
+                loadTask.putTorrentFile(File(task.source), downloadDir, resumeFile,
                     priorityList.toTypedArray())
             }
+
             addTorrentsQueue[task.hash] = task
             loadTorrentsQueue.add(loadTask)
         }
+
+        runNextLoadTorrentTask()
     }
 
     fun download(task: TorrentTask) {
@@ -188,10 +173,9 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
 
         torrentTasks[task.hash]?.remove(false)
 
-        val dataDir = File(options.downloadDir, task.hash)
-        val file = File(dataDir, DATA_TORRENT_SESSION_FILE)
-        val resumeFile = if (!file.exists() && ! file.mkdirs()) null else file
         addTorrentsQueue[info.infoHash().toHex()] = task
+
+        val resumeFile = getResumeFile(task.hash)
         download(info, saveDir, resumeFile, priorityList.toTypedArray(), null)
     }
 
@@ -200,8 +184,9 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
             return
         }
         magnets.remove(hash)
+
         val handle = find(Sha1Hash(hash))
-        if (handle.isValid) {
+        if (handle != null && handle.isValid) {
             remove(handle, SessionHandle.DELETE_FILES)
         }
     }
@@ -266,6 +251,8 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     }
 
     fun fetchMagnet(uri: String): AddTorrentParams {
+        log("fetchMagnet: $uri")
+
         val ec = error_code()
         val p = add_torrent_params.parse_magnet_uri(uri, ec)
 
@@ -289,6 +276,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
                 } else {
                     add = true
                 }
+
                 if (add) {
                     if (p.name.isEmpty()) {
                         p.name = strHash
@@ -364,6 +352,10 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         parser.parse()
     }
 
+    fun addTrackers(trackers: Set<String>) {
+        options.trackers.addAll(trackers)
+    }
+
     fun clearTrackers() {
         options.trackers.clear()
     }
@@ -423,13 +415,12 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
                 proxy_type_t.none
             }
         }
-        sp.setInteger(settings_pack.int_types.proxy_type.swigValue(), type.swigValue())
-        sp.setInteger(settings_pack.int_types.proxy_port.swigValue(), proxy.port)
-        sp.setString(settings_pack.string_types.proxy_hostname.swigValue(), proxy.address)
-        sp.setString(settings_pack.string_types.proxy_username.swigValue(), proxy.login)
-        sp.setString(settings_pack.string_types.proxy_password.swigValue(), proxy.password)
-        sp.setBoolean(settings_pack.bool_types.proxy_peer_connections.swigValue(), proxy.isProxyPeersToo)
-
+        sp.setInteger(settings_pack.int_types.proxy_type, type.swigValue())
+        sp.setInteger(settings_pack.int_types.proxy_port, proxy.port)
+        sp.setString(settings_pack.string_types.proxy_hostname, proxy.address)
+        sp.setString(settings_pack.string_types.proxy_username, proxy.login)
+        sp.setString(settings_pack.string_types.proxy_password, proxy.password)
+        sp.setBoolean(settings_pack.bool_types.proxy_peer_connections, proxy.isProxyPeersToo)
         applySettings(sp)
     }
 
@@ -437,8 +428,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         val proxy = ProxySettingsPack()
         val sp = settings()
 
-        val swigType = sp.getString(settings_pack.int_types.proxy_type.swigValue())
-        val type = when (swigType) {
+        val type = when (sp.getString(settings_pack.int_types.proxy_type.swigValue())) {
             proxy_type_t.socks4.toString() -> {
                 ProxyType.SOCKS4
             }
@@ -453,11 +443,11 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
             }
         }
         proxy.type = type
-        proxy.port = sp.getInteger(settings_pack.int_types.proxy_port.swigValue())
-        proxy.address = sp.getString(settings_pack.string_types.proxy_hostname.swigValue())
-        proxy.login = sp.getString(settings_pack.string_types.proxy_username.swigValue())
-        proxy.password = sp.getString(settings_pack.string_types.proxy_password.swigValue())
-        proxy.isProxyPeersToo = sp.getBoolean(settings_pack.bool_types.proxy_peer_connections.swigValue())
+        proxy.port = sp.getInteger(settings_pack.int_types.proxy_port)
+        proxy.address = sp.getString(settings_pack.string_types.proxy_hostname)
+        proxy.login = sp.getString(settings_pack.string_types.proxy_username)
+        proxy.password = sp.getString(settings_pack.string_types.proxy_password)
+        proxy.isProxyPeersToo = sp.getBoolean(settings_pack.bool_types.proxy_peer_connections)
         return proxy
     }
 
@@ -479,7 +469,8 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         }
 
         try {
-            saveSession(context, saveState())
+            val sessionFile = getSessionFile()
+            sessionFile?.writeBytes(saveState())
         } catch (e: Exception) {
             log("Error saving session state: ")
             log(Log.getStackTraceString(e))
@@ -488,7 +479,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
 
     private fun loadSettings(): SessionParams {
         try {
-            val data = readSession(context)
+            val data = getSessionFile()?.readBytes()
             if (data != null) {
                 val buffer = Vectors.bytes2byte_vector(data)
                 val n = bdecode_node()
@@ -518,62 +509,6 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     }
 
     /****************************************************************
-     *                         TorrentDir                           *
-     ****************************************************************/
-
-    fun makeTorrentDataDir(hash: String): File? {
-        if (!isStorageReadable()) {
-            return null
-        }
-        val dataDir = File(options.downloadDir, hash)
-        if (dataDir.mkdir()) {
-            return dataDir
-        }
-        return null
-    }
-
-    fun findTorrentDataDir(hash: String): File? {
-        if (!isStorageReadable()) {
-            return null
-        }
-        val dataDir = File(options.downloadDir, hash)
-        if (dataDir.exists()) {
-            return dataDir
-        }
-        return null
-    }
-
-    fun createTorrentFile(hash: String, bencode: ByteArray): File? {
-        val dataDir = File(options.downloadDir, hash)
-        if (!dataDir.exists()) {
-            return null
-        }
-
-        val torrentFile = File(dataDir, DATA_TORRENT_FILE_NAME)
-        if (torrentFile.exists() && !torrentFile.delete()) {
-            return null
-        }
-
-        writeByteArrayToFile(bencode, torrentFile)
-        return torrentFile
-    }
-
-    fun torrentDataExists(hash: String): Boolean {
-        return isStorageReadable() && File(options.downloadDir, hash).exists()
-    }
-
-    fun torrentFileExists(hash: String): Boolean {
-        if (!isStorageReadable()) {
-            return false
-        }
-        val dataDir = File(options.downloadDir, hash)
-        if (dataDir.exists()) {
-            return File(dataDir, DATA_TORRENT_FILE_NAME).exists()
-        }
-        return false
-    }
-
-    /****************************************************************
      *                            Status                            *
      ****************************************************************/
 
@@ -600,8 +535,38 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
 
     val autoManaged: Boolean get() = options.autoManaged
 
+    internal val metadataMaxSize: Int get() = options.metadataMaxSize
+
     /****************************************************************
-     *                           Session                            *
+     *                          DataDir                            *
+     ****************************************************************/
+
+    /**
+     * 获取种子的恢复路径，如果恢复文件不存在，返回null
+     */
+    internal fun getResumeFile(hash: String): File? {
+        val resumeDir = File(options.dataDir, hash)
+        if (!resumeDir.exists() && !resumeDir.mkdirs()) {
+            return null
+        }
+        val file = File(resumeDir, options.resumeName)
+        return if (file.exists()) file else null
+    }
+
+    /**
+     * 获取种子会话路径
+     */
+    private fun getSessionFile(): File? {
+        val dataDir = options.dataDir
+        if (!dataDir.exists() && !dataDir.mkdirs()) {
+            return null
+        }
+        val file = File(dataDir, options.sessionName)
+        return if (file.exists()) file else null
+    }
+
+    /****************************************************************
+     *                           Engine                             *
      ****************************************************************/
 
     override fun start() {
@@ -698,7 +663,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         val size = metadataAlert.metadataSize()
 
         var bencode: ByteArray? = null
-        if (size in 1..META_DATA_MAX_SIZE) {
+        if (size in 1..metadataMaxSize) {
             bencode = metadataAlert.torrentData(true)
         }
         if (bencode != null) {
@@ -818,7 +783,23 @@ private class InnerListener(engine: TorrentEngine) : AlertListener {
                 val torrentRemovedAlert = alert as? TorrentRemovedAlert ?: return
                 torrentEngine.get()?.torrentRemoved(torrentRemovedAlert)
             }
-            else -> torrentEngine.get()?.checkError(alert)
+            else -> {
+                torrentEngine.get()?.checkError(alert)
+            }
         }
     }
+}
+
+private fun createTorrentExecutorService(): ExecutorService {
+    val threadFactory = object : ThreadFactory {
+        private val count = AtomicInteger(1)
+        override fun newThread(r: Runnable): Thread {
+            return Thread(r, "Torrent-Thread-${count.getAndIncrement()}")
+        }
+    }
+    return ThreadPoolExecutor(
+        0, Int.MAX_VALUE,
+        60L, TimeUnit.SECONDS,
+        SynchronousQueue<Runnable>(),
+        threadFactory)
 }

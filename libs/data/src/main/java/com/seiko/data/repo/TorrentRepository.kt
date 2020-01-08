@@ -1,8 +1,8 @@
-package com.seiko.data.local.db
+package com.seiko.data.repo
 
 import com.seiko.data.model.TorrentEntity
 
-interface DbDataSource {
+interface TorrentRepository {
 
     suspend fun getTorrents(): List<TorrentEntity>
 

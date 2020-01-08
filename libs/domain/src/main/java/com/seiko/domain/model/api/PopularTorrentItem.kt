@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //PopularTorrentItem {
 //    name (string, optional): 种子资源名称 ,

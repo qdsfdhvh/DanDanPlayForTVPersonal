@@ -20,7 +20,7 @@
 package com.seiko.module.torrent.model.sort;
 
 
-import com.seiko.module.torrent.ui.adapters.TorrentListItem;
+import com.seiko.module.torrent.model.TorrentListItem;
 
 public class TorrentSorting extends BaseSorting
 {
@@ -40,9 +40,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return item1.name.compareTo(item2.name);
+                    return item1.getName().compareTo(item2.getName());
                 else
-                    return item2.name.compareTo(item1.name);
+                    return item2.getName().compareTo(item1.getName());
             }
         },
         size {
@@ -51,9 +51,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return Long.compare(item2.totalBytes, item1.totalBytes);
+                    return Long.compare(item2.getTotalBytes(), item1.getTotalBytes());
                 else
-                    return Long.compare(item1.totalBytes, item2.totalBytes);
+                    return Long.compare(item1.getTotalBytes(), item2.getTotalBytes());
             }
         },
         progress {
@@ -62,9 +62,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return Integer.compare(item2.progress, item1.progress);
+                    return Integer.compare(item2.getProgress(), item1.getProgress());
                 else
-                    return Integer.compare(item1.progress, item2.progress);
+                    return Integer.compare(item1.getProgress(), item2.getProgress());
             }
         },
         ETA {
@@ -73,9 +73,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return Long.compare(item2.ETA, item1.ETA);
+                    return Long.compare(item2.getETA(), item1.getETA());
                 else
-                    return Long.compare(item1.ETA, item2.ETA);
+                    return Long.compare(item1.getETA(), item2.getETA());
             }
         },
         peers {
@@ -84,9 +84,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return Integer.compare(item2.peers, item1.peers);
+                    return Integer.compare(item2.getPeers(), item1.getPeers());
                 else
-                    return Integer.compare(item1.peers, item2.peers);
+                    return Integer.compare(item1.getPeers(), item2.getPeers());
             }
         },
         dateAdded {
@@ -95,9 +95,9 @@ public class TorrentSorting extends BaseSorting
                                Direction direction)
             {
                 if (direction == Direction.ASC)
-                    return Long.compare(item2.dateAdded, item1.dateAdded);
+                    return Long.compare(item2.getDateAdded(), item1.getDateAdded());
                 else
-                    return Long.compare(item1.dateAdded, item2.dateAdded);
+                    return Long.compare(item1.getDateAdded(), item2.getDateAdded());
             }
         };
 
@@ -129,6 +129,6 @@ public class TorrentSorting extends BaseSorting
 
     public TorrentSorting()
     {
-        this(SortingColumns.name , Direction.DESC);
+        this(SortingColumns.name, Direction.DESC);
     }
 }

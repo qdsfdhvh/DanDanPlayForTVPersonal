@@ -1,4 +1,4 @@
-package com.seiko.domain.model
+package com.seiko.domain.model.api
 
 //BangumiSeason {
 //    year (integer): 年份 ,
