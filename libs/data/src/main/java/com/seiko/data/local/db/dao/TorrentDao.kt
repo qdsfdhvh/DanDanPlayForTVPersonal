@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
-import com.seiko.data.model.TorrentEntity
+import com.seiko.data.model.db.TorrentEntity
 
 @Dao
 interface TorrentDao {

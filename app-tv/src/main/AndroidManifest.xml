@@ -36,10 +36,6 @@
             android:name="design_height_in_dp"
             android:value="720"/>
 
-        <!--种子下载服务-->
-        <service android:name=".service.TorrentService"
-            android:exported="false"/>
-
         <!--主界面-->
         <activity android:name=".ui.MainActivity"
             android:label="@string/app_name"

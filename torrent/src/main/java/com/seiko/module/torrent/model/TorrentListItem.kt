@@ -18,7 +18,7 @@
  */
 package com.seiko.module.torrent.model
 
-import com.seiko.data.model.TorrentEntity
+import com.seiko.data.model.db.TorrentEntity
 import com.seiko.torrent.constants.TorrentStateCode
 import com.seiko.torrent.model.TorrentTask
 

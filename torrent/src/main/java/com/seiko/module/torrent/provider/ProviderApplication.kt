@@ -6,6 +6,7 @@ import android.content.Intent
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.provider.IProviderApplication
 import com.seiko.common.router.Routes
+import com.seiko.module.torrent.di.downloadModule
 import com.seiko.module.torrent.di.viewModelModule
 import com.seiko.module.torrent.ui.TorrentMainActivity
 import org.koin.core.context.loadKoinModules
@@ -18,7 +19,7 @@ class ProviderApplication : IProviderApplication {
     override fun registered(application: Application) {
         LogUtils.dTag("Provider", "start register torrent.")
 
-        loadKoinModules(viewModelModule)
+        loadKoinModules(listOf(downloadModule, viewModelModule))
 
         Routes.Torrent.register { context ->
             Intent(context, TorrentMainActivity::class.java)

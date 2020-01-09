@@ -53,4 +53,5 @@
 
     <string name="torrent_list_empty">没有 torrent 任务</string>
     <string name="torrent_add_torrent_title">添加 torrent</string>
+    <string name="torrent_title">种子下载</string>
 </resources>

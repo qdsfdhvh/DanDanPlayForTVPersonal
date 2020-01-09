@@ -42,10 +42,10 @@ interface TorrentEngineCallback {
      */
     fun onTorrentMoved(hash: String, success: Boolean)
 
-    /**
-     * ip过滤已解析完成
-     */
-    fun onIpFilterParsed(success: Boolean)
+//    /**
+//     * ip过滤已解析完成
+//     */
+//    fun onIpFilterParsed(success: Boolean)
 
     /**
      * 加载磁力信息
@@ -58,7 +58,7 @@ interface TorrentEngineCallback {
     fun onTorrentMetadataLoaded(hash: String, error: Exception?)
 
     /**
-     * 重启异常
+     * 种子重启异常
      */
     fun onRestoreSessionError(hash: String)
 
@@ -67,8 +67,14 @@ interface TorrentEngineCallback {
      */
     fun onTorrentError(hash: String, errorMsg: String)
 
+    /**
+     * 会话异常
+     */
     fun onSessionError(errorMsg: String)
 
+    /**
+     * Nat异常
+     */
     fun onNatError(errorMsg: String)
 
 }

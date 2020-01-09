@@ -12,3 +12,6 @@ const val TRACKER_URL_PATTERN = "^(https?|udp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-
 const val HASH_PATTERN = "\\b[0-9a-fA-F]{5,40}\\b"
 const val MAX_HTTP_REDIRECTION = 10
 const val MIME_TORRENT = "application/x-bittorrent"
+
+internal const val ASSETS_TRACKER_NAME = "tracker.txt"
+internal const val TORRENT_CONFIG_FILE_NAME = "config.txt"

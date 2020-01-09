@@ -64,9 +64,6 @@ class AddTorrentFragment : BaseFragment() {
 
         // ViewPager2
         add_torrent_viewpager.adapter = viewPagerAdapter
-        add_torrent_viewpager.post {
-            LogUtils.d("ViewPager2 Post")
-        }
         TabLayoutMediator(add_torrent_tabs, add_torrent_viewpager) { tab, position ->
             tab.text = when(position) {
                 INFO_FRAG_POS -> getString(R.string.torrent_info)

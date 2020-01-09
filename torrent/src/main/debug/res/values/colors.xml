@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="torrent_primary">#424242</color>
+    <color name="torrent_primary_dark">#1b1b1b</color>
+    <color name="torrent_primary_light">@color/red_50</color>
+
+</resources>

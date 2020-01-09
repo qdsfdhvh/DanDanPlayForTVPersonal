@@ -28,7 +28,7 @@
                 android:focusable="true" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.seiko.module.torrent.ui.widgets.EmptyRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/torrent_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

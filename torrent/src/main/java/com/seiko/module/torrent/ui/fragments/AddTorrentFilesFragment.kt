@@ -51,9 +51,6 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
 
     private lateinit var layoutManager: LinearLayoutManager
 
-    private var priorities: List<Priority>? = null
-    private var fileTree: BencodeFileTree? = null
-
     private var currentDir: BencodeFileTree? = null
 
     override fun getLayoutId(): Int {
@@ -68,18 +65,10 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
 
     private fun initViewModel() {
         // 磁力信息
-        viewModel.magnetInfo.observe(this::getLifecycle) { info ->
-            if (priorities == null || priorities != info?.filePriorities) {
-                priorities = info?.filePriorities
-                makeFileTree()
-            }
-        }
-        // 磁力信息
-        viewModel.fileTree.observe(this::getLifecycle) { tree ->
-            if (fileTree == null || fileTree != tree) {
-                fileTree = tree
-                makeFileTree()
-            }
+        viewModel.fileTree.observe(this::getLifecycle) { fileTree ->
+            currentDir = fileTree
+            adapter.setFiles(getChildren(currentDir))
+            updateFileSize()
         }
     }
 
@@ -91,28 +80,6 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         setFileSize(0, 0)
     }
 
-    private fun makeFileTree() {
-        val fileTree = fileTree ?: return
-
-        val priorities = priorities
-        if (priorities.isNullOrEmpty()) {
-            fileTree.select(true)
-        } else {
-            val size = priorities.size  //.coerceAtMost(files.size)
-            for (i in 0 until size) {
-                if (priorities[i] == Priority.IGNORE) {
-                    continue
-                }
-                val file = fileTree.find(i) ?: continue
-                file.select(true)
-            }
-        }
-
-        currentDir = fileTree
-        adapter.setFiles(getChildren(currentDir))
-        updateFileSize()
-    }
-
     private fun setFileSize(selectedSize: Long, totalSize: Long) {
         files_size.text = getString(R.string.torrent_files_size).format(
             Formatter.formatFileSize(requireActivity().applicationContext, selectedSize),
@@ -121,11 +88,12 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
     }
 
     private fun updateFileSize() {
-        val fileTree = fileTree ?: return
+        val fileTree = viewModel.fileTree.value ?: return
         setFileSize(fileTree.selectedFileSize(), fileTree.size())
     }
 
     private fun chooseDir(node: BencodeFileTree) {
+        val fileTree = viewModel.fileTree.value ?: return
         currentDir = if (node.isFile) fileTree else node
         adapter.setFiles(getChildren(currentDir))
     }

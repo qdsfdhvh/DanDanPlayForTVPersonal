@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.format.Formatter
 import android.view.View
 import androidx.lifecycle.ViewModelStoreOwner
+import com.blankj.utilcode.util.LogUtils
 import com.seiko.module.torrent.R
 import com.seiko.module.torrent.vm.AddTorrentViewModel
 import kotlinx.android.synthetic.main.torrent_add_torrent_info.*

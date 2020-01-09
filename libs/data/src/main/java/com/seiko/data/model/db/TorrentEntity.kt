@@ -1,4 +1,4 @@
-package com.seiko.data.model
+package com.seiko.data.model.db
 
 import androidx.room.*
 import org.libtorrent4j.Priority

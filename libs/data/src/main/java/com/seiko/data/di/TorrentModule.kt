@@ -8,10 +8,6 @@ import com.seiko.data.constants.TORRENT_CONFIG_DIR
 import com.seiko.data.constants.TORRENT_DATA_DIR
 import com.seiko.data.constants.TORRENT_DOWNLOAD_DIR
 import com.seiko.data.constants.TORRENT_TEMP_DIR
-import com.seiko.data.helper.TorrentHelper
-import com.seiko.data.repo.TorrentRepository
-import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
-import com.seiko.torrent.TorrentEngine
 import com.seiko.torrent.TorrentEngineOptions
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -32,9 +28,9 @@ internal val torrentModule = module {
 
     single { createTorrentSessionOptions(get(named(TORRENT_DATA_DIR))) }
 
-    single { createTorrentEngine(get()) }
+//    single { createTorrentEngine(get()) }
 
-    single { createTorrentHelper(get(), get(), get()) }
+//    single { createTorrentHelper(get(), get(), get()) }
 }
 
 /**
@@ -75,12 +71,12 @@ private fun createTorrentSessionOptions(dataDir: File): TorrentEngineOptions {
     )
 }
 
-private fun createTorrentEngine(options: TorrentEngineOptions): TorrentEngine {
-    return TorrentEngine(options)
-}
+//private fun createTorrentEngine(options: TorrentEngineOptions): TorrentEngine {
+//    return TorrentEngine(options)
+//}
 
-private fun createTorrentHelper(torrentEngine: TorrentEngine,
-                                torrentRepository: TorrentRepository,
-                                getTorrentInfo: GetTorrentInfoFileUseCase): TorrentHelper {
-    return TorrentHelper(torrentEngine, torrentRepository, getTorrentInfo)
-}
+//private fun createTorrentHelper(torrentEngine: TorrentEngine,
+//                                torrentRepository: TorrentRepository,
+//                                getTorrentInfo: GetTorrentInfoFileUseCase): TorrentHelper {
+//    return TorrentHelper(torrentEngine, torrentRepository, getTorrentInfo)
+//}

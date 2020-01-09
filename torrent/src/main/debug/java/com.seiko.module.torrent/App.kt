@@ -4,6 +4,7 @@ import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.seiko.data.di.*
+import com.seiko.module.torrent.di.downloadModule
 import com.seiko.module.torrent.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -24,7 +25,7 @@ class App : Application() {
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module
-            modules(dataModule + listOf(viewModelModule))
+            modules(dataModule + listOf(downloadModule, viewModelModule))
         }
     }
 

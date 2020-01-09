@@ -1,4 +1,4 @@
-package com.seiko.data.http.response
+package com.seiko.data.model.response
 
 import com.google.gson.annotations.SerializedName
 import com.seiko.domain.model.api.ResMagnetItem

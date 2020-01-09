@@ -7,27 +7,25 @@ import androidx.lifecycle.Transformations
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.BaseViewModel
 import com.seiko.common.eventbus.EventBusScope
-import com.seiko.data.helper.TorrentHelper
 import com.seiko.data.usecase.torrent.GetTorrentTempWithContentUseCase
 import com.seiko.data.usecase.torrent.GetTorrentTempWithNetUseCase
 import com.seiko.domain.utils.Result
 import com.seiko.module.torrent.constants.*
+import com.seiko.module.torrent.extensions.find
 import com.seiko.module.torrent.extensions.getLeaves
 import com.seiko.module.torrent.extensions.toFileTree
 import com.seiko.module.torrent.model.AddTorrentParams
-import com.seiko.module.torrent.model.PostEvent
 import com.seiko.module.torrent.model.filetree.BencodeFileTree
+import com.seiko.module.torrent.service.Downloader
 import com.seiko.module.torrent.ui.fragments.State
 import com.seiko.torrent.model.MagnetInfo
 import com.seiko.torrent.model.TorrentMetaInfo
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.libtorrent4j.Priority
 import java.io.File
 
 class AddTorrentViewModel(
-    private val torrentHelper: TorrentHelper,
+    private val downloader: Downloader,
     private val torrentDownloadDir: File,
     private val getTorrentTempWithContentUseCase: GetTorrentTempWithContentUseCase,
     private val getTorrentTempWithNetUseCase: GetTorrentTempWithNetUseCase
@@ -50,9 +48,12 @@ class AddTorrentViewModel(
      */
     private val _torrentMetaInfo = MutableLiveData<TorrentMetaInfo>()
     val torrentMetaInfo: LiveData<TorrentMetaInfo> = _torrentMetaInfo
-    val fileTree: LiveData<BencodeFileTree> = Transformations.map(torrentMetaInfo) { info ->
-        info.fileList.toFileTree()
-    } // TODO 只有界面加载时fileTree才会处理，待解决
+
+    /**
+     * 文件树
+     */
+    private val _fileTree = MutableLiveData<BencodeFileTree>()
+    val fileTree: LiveData<BencodeFileTree> = _fileTree
 
     /**
      * 种子下载路径
@@ -72,7 +73,7 @@ class AddTorrentViewModel(
 
     fun loadData() {
         _downloadDir.value = torrentDownloadDir
-        EventBusScope.register(this)
+//        EventBusScope.register(this)
     }
 
     fun decodeUri(uri: Uri) = launch {
@@ -80,7 +81,7 @@ class AddTorrentViewModel(
             FILE_PREFIX -> {
                 updateState(State.DECODE_TORRENT_FILE)
                 source = uri.path!!
-                _torrentMetaInfo.value = TorrentMetaInfo(source)
+                updateTorrentInfo(TorrentMetaInfo(source))
                 updateState(State.DECODE_TORRENT_COMPLETED)
             }
             CONTENT_PREFIX -> {
@@ -88,7 +89,7 @@ class AddTorrentViewModel(
                 when(val result = getTorrentTempWithContentUseCase.invoke(uri)) {
                     is Result.Success -> {
                         source = result.data
-                        _torrentMetaInfo.value = TorrentMetaInfo(source)
+                        updateTorrentInfo(TorrentMetaInfo(source))
                     }
                     is Result.Error -> Result.Error(result.exception)
                 }
@@ -97,8 +98,10 @@ class AddTorrentViewModel(
             MAGNET_PREFIX -> {
                 fromMagnet = true
                 source = uri.toString()
-                _magnetInfo.value = torrentHelper.fetchMagnet(source)
-
+                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
+                    updateState(State.FETCHING_MAGNET_COMPLETED)
+                    updateTorrentInfo(info)
+                }
                 updateState(State.FETCHING_MAGNET)
             }
             HTTP_PREFIX, HTTPS_PREFIX -> {
@@ -106,7 +109,7 @@ class AddTorrentViewModel(
                 when(val result = getTorrentTempWithNetUseCase.invoke(source)) {
                     is Result.Success -> {
                         source = result.data
-                        _torrentMetaInfo.value = TorrentMetaInfo(source)
+                        updateTorrentInfo(TorrentMetaInfo(source))
                     }
                     is Result.Error -> Result.Error(result.exception)
                 }
@@ -121,6 +124,27 @@ class AddTorrentViewModel(
 
     private fun updateState(state: Int) {
         _state.value = Result.Success(state)
+    }
+
+    private fun updateTorrentInfo(info: TorrentMetaInfo) {
+        _torrentMetaInfo.value = info
+
+        val fileTree = info.fileList.toFileTree()
+
+        val priorities = magnetInfo.value?.filePriorities
+        if (priorities.isNullOrEmpty()) {
+            fileTree.select(true)
+        } else {
+            val size = priorities.size.coerceAtMost(info.fileCount)
+            for (i in 0 until size) {
+                if (priorities[i] == Priority.IGNORE) {
+                    continue
+                }
+                val file = fileTree.find(i) ?: continue
+                file.select(true)
+            }
+        }
+        _fileTree.value = fileTree
     }
 
     /**
@@ -173,20 +197,20 @@ class AddTorrentViewModel(
         return Result.Success(params)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceive(event: PostEvent) {
-        when(event) {
-            is PostEvent.MetaInfo -> {
-               updateState(State.FETCHING_MAGNET_COMPLETED)
-                val info = event.info
-                LogUtils.d("接收TorrentMetaInfo：${info.torrentName}")
-                _torrentMetaInfo.value = info
-            }
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun onReceive(event: PostEvent) {
+//        when(event) {
+//            is PostEvent.MetaInfo -> {
+//               updateState(State.FETCHING_MAGNET_COMPLETED)
+//                val info = event.info
+//                LogUtils.d("接收TorrentMetaInfo：${info.torrentName}")
+//                _torrentMetaInfo.value = info
+//            }
+//        }
+//    }
 
     override fun onCleared() {
-        EventBusScope.unRegister(this)
+//        EventBusScope.unRegister(this)
         super.onCleared()
     }
 

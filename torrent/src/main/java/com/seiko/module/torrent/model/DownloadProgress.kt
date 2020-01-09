@@ -1,6 +1,6 @@
 package com.seiko.module.torrent.model
 
-import com.seiko.torrent.TorrentDownload
+import com.seiko.torrent.TorrentDownloadTask
 import com.seiko.torrent.constants.TorrentStateCode
 
 data class DownloadProgress(
@@ -14,17 +14,38 @@ data class DownloadProgress(
     var uploadedBytes: Long = 0,
     var totalBytes: Long = 0,
 
+    /**
+     * 下载数据
+     */
     var downloadSpeed: Long = 0,
+    /**
+     * 上传数据
+     */
     var uploadSpeed: Long = 0,
 
     var eta: Long = -1,
 
+    /**
+     * 添加日期
+     */
     var addedDate: Long = 0,
+
+    /**
+     * 总连接用户
+     */
     var totalPeers: Int = 0,
+
+    /**
+     * 活跃用户
+     */
     var peers: Int = 0,
+
+    /**
+     * 异常
+     */
     var error: String = ""
 ) {
-    constructor(downloadTask: TorrentDownload) : this(
+    constructor(downloadTask: TorrentDownloadTask) : this(
         hash = downloadTask.task.hash,
         name = downloadTask.task.name,
         state = downloadTask.stateCode,

@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
-import com.dandanplay.tv.models.AnimeRow
+import com.dandanplay.tv.model.AnimeRow
 import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status

@@ -1,6 +1,6 @@
 package com.seiko.data.repo
 
-import com.seiko.data.model.TorrentEntity
+import com.seiko.data.model.db.TorrentEntity
 
 interface TorrentRepository {
 

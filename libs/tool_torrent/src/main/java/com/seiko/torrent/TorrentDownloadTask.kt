@@ -1,6 +1,5 @@
 package com.seiko.torrent
 
-import android.content.Context
 import android.util.Log
 import com.seiko.torrent.constants.TorrentStateCode
 import com.seiko.torrent.exception.FreeSpaceException
@@ -28,8 +27,7 @@ private const val SAVE_RESUME_SYNC_TIME = 10000
 private const val PRELOAD_PIECES_COUNT = 5
 private const val DEFAULT_PIECE_DEADLINE = 1000
 
-class TorrentDownload(
-    private val context: Context?,
+class TorrentDownloadTask(
     private val torrentHandle: TorrentHandle,
     var task: TorrentTask,
     private val engine: TorrentEngine
@@ -50,6 +48,9 @@ class TorrentDownload(
         engine.addListener(listener)
     }
 
+    /**
+     * 暂停任务
+     */
     fun pause() {
         if (!torrentHandle.isValid) {
             return
@@ -57,9 +58,13 @@ class TorrentDownload(
 
         torrentHandle.unsetFlags(TorrentFlags.AUTO_MANAGED)
         torrentHandle.pause()
+
         saveResumeData(true)
     }
 
+    /**
+     * 重启任务
+     */
     fun resume() {
         if (!torrentHandle.isValid) {
             return
@@ -71,6 +76,7 @@ class TorrentDownload(
             torrentHandle.unsetFlags(TorrentFlags.AUTO_MANAGED)
         }
         torrentHandle.resume()
+
         saveResumeData(true)
     }
 
@@ -130,7 +136,7 @@ class TorrentDownload(
     }
 
 
-    fun setDownloadPath(path: String) {
+    private fun setDownloadPath(path: String) {
         try {
             torrentHandle.moveStorage(path, MoveFlags.ALWAYS_REPLACE_FILES)
         } catch (e: Exception) {
@@ -173,7 +179,7 @@ class TorrentDownload(
      *                            Status                            *
      ****************************************************************/
 
-    val isPaused: Boolean = torrentHandle.isPaused()
+    val isPaused: Boolean get() = torrentHandle.isPaused()
 
     val isSeeding: Boolean get() = torrentHandle.isSeeding()
 
@@ -203,7 +209,6 @@ class TorrentDownload(
     val isDownloading: Boolean get() = downloadSpeed > 0
 
     val isSequentialDownload: Boolean get() = torrentHandle.isSequentialDownload()
-
 
     /**
      * 获取种子目录下的无用文件
@@ -468,7 +473,7 @@ private val TORRENT_INNER_LISTENER_TYPES = intArrayOf(
     AlertType.FILE_ERROR.swig()
 )
 
-private class TorrentInnerListener(torrent: TorrentDownload) : AlertListener {
+private class TorrentInnerListener(torrent: TorrentDownloadTask) : AlertListener {
 
     private val downloadTask = WeakReference(torrent)
 

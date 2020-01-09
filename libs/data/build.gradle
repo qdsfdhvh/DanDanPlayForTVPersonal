@@ -1,6 +1,12 @@
 apply plugin: 'com.android.library'
 apply from:rootProject.file('libbase.gradle')
 
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+}
+
 dependencies {
     api project(path: ':libs:domain')
     api project(path: ':libs:thunder')

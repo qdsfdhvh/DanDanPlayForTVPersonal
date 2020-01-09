@@ -3,8 +3,6 @@ package com.seiko.torrent
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
-import com.seiko.torrent.constants.PEER_FINGERPRINT
-import com.seiko.torrent.constants.USER_AGENT
 import com.seiko.torrent.extensions.*
 import com.seiko.torrent.extensions.getBoolean
 import com.seiko.torrent.extensions.getInteger
@@ -20,7 +18,6 @@ import org.libtorrent4j.alerts.*
 import org.libtorrent4j.swig.*
 import org.libtorrent4j.swig.settings_pack.proxy_type_t
 import java.io.File
-import java.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.*
@@ -32,14 +29,13 @@ import kotlin.collections.HashMap
 
 class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager() {
 
-    private var context: Context? = null
     private var callback: TorrentEngineCallback? = null
     private val innerListener = InnerListener(this)
 
     /**
      * TorrentTasks List
      */
-    private val torrentTasks = ConcurrentHashMap<String, TorrentDownload>()
+    private val torrentTasks = ConcurrentHashMap<String, TorrentDownloadTask>()
 
     /**
      * Wait list for non added magnets
@@ -56,14 +52,6 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     private val torrentExecutor = createTorrentExecutorService()
 
     /**
-     * 设置上下例
-     * @param context 上下例
-     */
-    fun setContext(context: Context?) {
-        this.context = context
-    }
-
-    /**
      * 设置回调
      * @param callback 回调
      */
@@ -78,14 +66,14 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
     /**
      * 获得此种子的下载任务
      */
-    fun getDownloadTask(hash: String): TorrentDownload? {
+    fun getDownloadTask(hash: String): TorrentDownloadTask? {
         return torrentTasks[hash]
     }
 
     /**
      * 获得所有下载任务
      */
-    fun getTasks(): Collection<TorrentDownload> {
+    fun getTasks(): Collection<TorrentDownloadTask> {
         return torrentTasks.values
     }
 
@@ -364,7 +352,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
      *                          IpFilter                            *
      ****************************************************************/
 
-    fun enableIpFilter(path: String?) {
+    fun enableIpFilter(path: String?, callback: ((Boolean) -> Unit)?) {
         if (path == null) {
             return
         }
@@ -375,7 +363,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
                 if (success && swig() != null) {
                     swig()._ip_filter = filter
                 }
-                callback?.onIpFilterParsed(success)
+                callback?.invoke(success)
             }
         })
         parser.parse()
@@ -565,32 +553,39 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         return if (file.exists()) file else null
     }
 
+    /**
+     * 引擎相关文件路径
+     */
+    fun getDataDir(): File {
+        return options.dataDir
+    }
+
     /****************************************************************
      *                           Engine                             *
      ****************************************************************/
 
-    override fun start() {
-        val params = loadSettings()
-        if (context != null) {
-            val versionName = getAppVersionName(context)
-            if (versionName != null) {
-                val setting = params.settings().swig()
-
-                val version = getVersionComponents(versionName)
-                val fingerprint = libtorrent.generate_fingerprint(
-                    PEER_FINGERPRINT,
-                    version[0], version[1], version[2], 0)
-                setting.set_str(settings_pack.string_types.peer_fingerprint.swigValue(), fingerprint)
-
-                val userAgent = USER_AGENT.format(getAppVersionNumber(versionName))
-                setting.set_str(settings_pack.string_types.user_agent.swigValue(), userAgent)
-
-                log("Peer fingerprint: ${setting.get_str(settings_pack.string_types.peer_fingerprint.swigValue())}")
-                log("User agent: ${setting.get_str(settings_pack.string_types.user_agent.swigValue())}")
-            }
-        }
-        super.start()
-    }
+//    override fun start() {
+//        val params = loadSettings()
+//        if (context != null) {
+//            val versionName = getAppVersionName(context)
+//            if (versionName != null) {
+//                val setting = params.settings().swig()
+//
+//                val version = getVersionComponents(versionName)
+//                val fingerprint = libtorrent.generate_fingerprint(
+//                    PEER_FINGERPRINT,
+//                    version[0], version[1], version[2], 0)
+//                setting.set_str(settings_pack.string_types.peer_fingerprint.swigValue(), fingerprint)
+//
+//                val userAgent = USER_AGENT.format(getAppVersionNumber(versionName))
+//                setting.set_str(settings_pack.string_types.user_agent.swigValue(), userAgent)
+//
+//                log("Peer fingerprint: ${setting.get_str(settings_pack.string_types.peer_fingerprint.swigValue())}")
+//                log("User agent: ${setting.get_str(settings_pack.string_types.user_agent.swigValue())}")
+//            }
+//        }
+//        super.start()
+//    }
 
     override fun onBeforeStart() {
         addListener(innerListener)
@@ -623,8 +618,8 @@ class TorrentEngine(private val options: TorrentEngineOptions) : SessionManager(
         runNextLoadTorrentTask()
     }
 
-    private fun newDownloadTask(handle: TorrentHandle, task: TorrentTask): TorrentDownload {
-        val downloadTask = TorrentDownload(context, handle, task, this)
+    private fun newDownloadTask(handle: TorrentHandle, task: TorrentTask): TorrentDownloadTask {
+        val downloadTask = TorrentDownloadTask(handle, task, this)
         downloadTask.setMaxConnections(options.connectionsLimitPerTorrent)
         downloadTask.setMaxUploads(options.uploadsLimitPerTorrent)
         downloadTask.setSequentialDownload(task.sequentialDownload)

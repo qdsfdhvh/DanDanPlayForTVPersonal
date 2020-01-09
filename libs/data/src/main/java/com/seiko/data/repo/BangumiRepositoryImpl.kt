@@ -1,9 +1,9 @@
 package com.seiko.data.repo
 
 import com.seiko.data.http.api.DanDanApiService
-import com.seiko.data.http.response.BangumiDetailsResponse
-import com.seiko.data.http.response.BangumiListResponse
-import com.seiko.data.http.response.BangumiSeasonListResponse
+import com.seiko.data.model.response.BangumiDetailsResponse
+import com.seiko.data.model.response.BangumiListResponse
+import com.seiko.data.model.response.BangumiSeasonListResponse
 import com.seiko.domain.model.api.BangumiDetails
 import com.seiko.domain.model.api.BangumiIntro
 import com.seiko.domain.model.api.BangumiSeason

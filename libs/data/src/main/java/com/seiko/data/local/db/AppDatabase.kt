@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.seiko.data.local.db.dao.TorrentDao
-import com.seiko.data.model.TorrentEntity
+import com.seiko.data.model.db.TorrentEntity
 
 @Database(entities = [TorrentEntity::class], version = 1)
 @TypeConverters(PriorityListConverter::class)

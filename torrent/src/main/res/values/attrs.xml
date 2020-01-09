@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="torrent_dynamic_style_attrs">
         <attr name="torrent_smallText" format="reference" />
-        <attr name="torrent_background" format="reference" />
         <attr name="torrent_backgroundBlank" format="reference" />
         <attr name="torrent_popupTheme" format="reference" />
         <attr name="torrent_divider" format="reference" />

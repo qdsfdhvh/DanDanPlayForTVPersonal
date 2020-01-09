@@ -33,6 +33,7 @@ import com.seiko.module.torrent.constants.INFINITY_SYMBOL
 import com.seiko.module.torrent.model.DownloadProgress
 import com.seiko.module.torrent.model.TorrentListItem
 import com.seiko.module.torrent.model.sort.TorrentSortingComparator
+import com.seiko.module.torrent.service.Downloader
 import com.seiko.torrent.constants.TorrentStateCode
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -41,8 +42,8 @@ import kotlin.collections.HashMap
 
 class TorrentListAdapter(
     private val context: Context,
-    private val clickListener: ClickListener,
-    private var sorting: TorrentSortingComparator
+    private val downloader: Downloader,
+    private val clickListener: ClickListener
 ) : SelectableAdapter<TorrentListAdapter.ItemViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
@@ -52,21 +53,18 @@ class TorrentListAdapter(
 
     private val currentOpenTorrent = AtomicReference<TorrentListItem>()
 
-    private val displayFilter = DisplayFiler()
-    private val searchFilter = SearchFilter()
-
-    override fun getItemCount(): Int {
-        return currentItems.size
-    }
+    override fun getItemCount(): Int = currentItems.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = inflater.inflate(R.layout.torrent_item_torrent_list, parent, false)
         return ItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(position)
-    }
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(position)
+
+    override fun onViewAttachedToWindow(holder: ItemViewHolder) = holder.attach()
+
+    override fun onViewDetachedFromWindow(holder: ItemViewHolder) = holder.detach()
 
     interface ClickListener {
         fun onItemClicked(position: Int, item: TorrentListItem)
@@ -74,77 +72,28 @@ class TorrentListAdapter(
         fun onPauseButtonClicked(position: Int, item: TorrentListItem)
     }
 
-    fun setSorting(sorting: TorrentSortingComparator) {
-        this.sorting = sorting
-        currentItems.sortWith(sorting)
-        notifyItemRangeChanged(0, currentItems.size)
-    }
-
-    fun updateItem(progress: DownloadProgress) {
-        LogUtils.d(progress.toString())
-
-        var item = allItems[progress.hash]
-        if (item == null) {
-            item = TorrentListItem(progress)
-        } else {
-            item.update(progress)
-        }
-
-        if (!currentItems.contains(item)) {
-            val filtered = displayFilter.filter(item)
-            if (filtered != null) {
-                currentItems.add(filtered)
-                currentItems.sortWith(sorting)
-                notifyItemChanged(currentItems.indexOf(filtered))
-            }
-        } else {
-            val position = currentItems.indexOf(item)
-            if (position >= 0) {
-                currentItems.removeAt(position)
-                val filtered = displayFilter.filter(item)
-                if (filtered != null) {
-                    currentItems.add(position, filtered)
-                    currentItems.sortWith(sorting)
-                    val newPosition = currentItems.indexOf(item)
-                    if (newPosition == position) {
-                        notifyItemChanged(position)
-                    } else {
-                        notifyDataSetChanged()
-                    }
-                }
-            }
-        }
-
-        allItems[item.hash] = item
-    }
-
     fun addItem(item: TorrentListItem) {
-        val filtered = displayFilter.filter(item)
-        if (filtered != null) {
-            currentItems.add(filtered)
-            currentItems.sortWith(sorting)
-            notifyItemChanged(currentItems.indexOf(filtered))
+        if (!currentItems.contains(item)) {
+            currentItems.add(item)
+            notifyItemChanged(currentItems.indexOf(item))
+            allItems[item.hash] = item
         }
-        allItems[item.hash] = item
     }
 
     fun addItems(items: Collection<TorrentListItem>) {
-        val filtered = displayFilter.filter(items)
-        currentItems.addAll(filtered)
-        currentItems.sortWith(sorting)
-        notifyItemRangeInserted(0, filtered.size)
-        for (item in items) {
-            allItems[item.hash] = item
+        val list = items.filter { !currentItems.contains(it) }
+        if (list.isNotEmpty()) {
+            currentItems.addAll(list)
+            notifyItemRangeInserted(0, list.size)
+            for (item in list) {
+                allItems[item.hash] = item
+            }
         }
     }
 
     fun markAsOpen(item: TorrentListItem) {
         currentOpenTorrent.set(item)
         notifyDataSetChanged()
-    }
-
-    fun search(searchPattern: String) {
-        searchFilter.filter(searchPattern)
     }
 
     fun clearAll() {
@@ -209,8 +158,35 @@ class TorrentListAdapter(
             }
         }
 
+        fun attach() {
+            LogUtils.d("attach: $this")
+            val position = adapterPosition
+            if (position >= 0) {
+                val item = currentItems[position]
+                val hash = item.hash
+                downloader.onProgressChanged(hash) { progress ->
+                    item.update(progress)
+                    bind(item)
+                }
+            }
+        }
+
+        fun detach() {
+            LogUtils.d("detach: $this")
+            val position = adapterPosition
+            if (position >= 0) {
+                val item = currentItems[position]
+                val hash = item.hash
+                downloader.disposeDownload(hash)
+            }
+        }
+
         fun bind(position: Int) {
             val item = currentItems[position]
+            bind(item)
+        }
+
+        private fun bind(item: TorrentListItem) {
 
             name.text = item.name
             if (item.stateCode == TorrentStateCode.DOWNLOADING_METADATA) {
@@ -293,7 +269,7 @@ class TorrentListAdapter(
             return false
         }
 
-        fun setPauseButtonState(pause: Boolean) {
+        private fun setPauseButtonState(pause: Boolean) {
             val prevAnim = currentAnim
             currentAnim = if (pause) pauseToPlayAnim else playToPauseAnim
             pauseButton.setImageDrawable(currentAnim)
@@ -303,58 +279,4 @@ class TorrentListAdapter(
         }
     }
 
-    private inner class SearchFilter : Filter() {
-        override fun performFiltering(charSequence: CharSequence): FilterResults {
-            currentItems.clear()
-
-            if (charSequence.isEmpty()) {
-                currentItems.addAll(displayFilter.filter(allItems.values))
-            } else {
-                val filterPattern = charSequence.toString().toLowerCase(Locale.US).trim()
-                for (item in allItems.values) {
-                    if (item.name.toLowerCase(Locale.US).contains(filterPattern)) {
-                        currentItems.add(item)
-                    }
-                }
-            }
-
-            currentItems.sortWith(sorting)
-            return FilterResults()
-        }
-
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            notifyDataSetChanged()
-        }
-    }
-}
-
-private class DisplayFiler(@TorrentStateCode private val constraintCode: Int? = null) {
-    fun filter(items: Collection<TorrentListItem>): List<TorrentListItem> {
-        val filtered = ArrayList<TorrentListItem>(items.size)
-        if (constraintCode == null) {
-            filtered.addAll(items)
-        } else {
-            for (item in items) {
-                if (item.stateCode == constraintCode) {
-                    filtered.add(item)
-                }
-            }
-        }
-        return filtered
-    }
-
-    fun filter(item: TorrentListItem?): TorrentListItem? {
-        if (item == null) {
-            return null
-        }
-
-        if (constraintCode != null) {
-            if (item.stateCode == constraintCode) {
-                return item
-            }
-        } else {
-            return item
-        }
-        return null
-    }
 }

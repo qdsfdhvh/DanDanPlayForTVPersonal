@@ -6,7 +6,6 @@ import java.io.File
 
 private const val DATA_TORRENT_SESSION_FILE_NAME = "session"
 private const val DATA_TORRENT_RESUME_FILE_NAME = "resume"
-
 private const val META_DATA_MAX_SIZE = 2 * 1024 * 1024
 
 data class TorrentEngineOptions(

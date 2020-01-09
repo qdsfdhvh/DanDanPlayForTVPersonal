@@ -1,6 +1,6 @@
 package com.seiko.data.http.api
 
-import com.seiko.data.http.response.*
+import com.seiko.data.model.response.*
 import retrofit2.http.*
 
 internal interface DanDanApiService {

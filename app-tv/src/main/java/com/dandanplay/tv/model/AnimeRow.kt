@@ -1,4 +1,4 @@
-package com.dandanplay.tv.models
+package com.dandanplay.tv.model
 
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.Presenter

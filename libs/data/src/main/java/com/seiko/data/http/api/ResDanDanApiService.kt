@@ -1,6 +1,6 @@
 package com.seiko.data.http.api
 
-import com.seiko.data.http.response.ResMagnetSearchResponse
+import com.seiko.data.model.response.ResMagnetSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

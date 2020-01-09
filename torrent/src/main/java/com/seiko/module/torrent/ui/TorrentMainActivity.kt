@@ -46,32 +46,34 @@ class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
         super.onCreate(savedInstanceState)
         navController = findNavController(R.id.myNavHostFragment)
         EventBusScope.register(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
         startTorrentService()
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (serviceBound) {
-            unbindService(connection)
-        }
+    override fun onDestroy() {
+        EventBusScope.unRegister(this)
+        stopTorrentService()
+        super.onDestroy()
     }
 
     private fun startTorrentService() {
-        val serviceIntent = Intent(this, TorrentTaskService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
+        if (serviceBound) {
+            return
         }
-        /*
-         * Bind the service to get updates and keep the service running
-         * when the app goes in background
-         */
+
+        val serviceIntent = Intent(this, TorrentTaskService::class.java)
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(serviceIntent)
+//        } else {
+//            startService(serviceIntent)
+//        }
         bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun stopTorrentService() {
+        if (serviceBound) {
+            unbindService(connection)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -83,17 +85,9 @@ class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
                 }
 
                 val addParams = event.params
-                torrentTaskService.addTorrent(addParams, true)
-            }
-            is PostEvent.PauseResumeTorrent -> {
-                val hash = event.hash
-                torrentTaskService.pauseResumeTorrent(hash)
+                torrentTaskService.addTorrent(addParams)
             }
         }
     }
 
-    override fun onDestroy() {
-        EventBusScope.unRegister(this)
-        super.onDestroy()
-    }
 }
