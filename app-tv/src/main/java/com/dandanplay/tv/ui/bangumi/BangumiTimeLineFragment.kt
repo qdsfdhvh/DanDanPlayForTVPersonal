@@ -12,8 +12,8 @@ import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.vm.BangumiTimeLineViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.data.model.api.AirDayBangumiBean
-import com.seiko.data.model.api.BangumiIntro
+import com.seiko.core.model.api.AirDayBangumiBean
+import com.seiko.core.model.api.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.data.domain.torrent.DownloadTorrentUseCase
-import com.seiko.data.domain.torrent.GetTorrentInfoFileUseCase
-import com.seiko.data.domain.search.SearchMagnetListUseCase
-import com.seiko.data.model.api.ResMagnetItem
-import com.seiko.data.utils.Result
+import com.seiko.core.domain.torrent.DownloadTorrentUseCase
+import com.seiko.core.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.core.domain.search.SearchMagnetListUseCase
+import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,7 +59,7 @@ class SearchMagnetViewModel(
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      */
     fun isTorrentExist(animeTitle: String, magnet: String): String {
-        val result = getTorrentInfoFileUseCase.invoke(animeTitle, magnet)
+        val result = getTorrentInfoFileUseCase.invoke(magnet)
         if (result is Result.Success) {
             val torrentFile = result.data
             if (torrentFile.exists()) {
@@ -76,7 +76,7 @@ class SearchMagnetViewModel(
     fun downloadTorrent(animeTitle: String, magnet: String) = launch {
         _downloadState.showLoading()
         val result = withContext(Dispatchers.IO) {
-            downloadTorrent.invoke(animeTitle, magnet)
+            downloadTorrent.invoke(magnet)
         }
         when(result) {
             is Result.Error -> _downloadState.failed(result.exception)

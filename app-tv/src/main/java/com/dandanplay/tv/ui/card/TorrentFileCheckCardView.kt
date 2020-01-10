@@ -3,11 +3,11 @@ package com.dandanplay.tv.ui.card
 import android.content.Context
 import com.dandanplay.tv.R
 import com.dandanplay.tv.extensions.formatSize
-import com.seiko.data.extensions.TYPE_AUDIO
-import com.seiko.data.extensions.TYPE_PICTURE
-import com.seiko.data.extensions.TYPE_SUBTITLE
-import com.seiko.data.extensions.TYPE_VIDEO
-import com.seiko.data.model.TorrentCheckBean
+import com.seiko.core.util.TYPE_AUDIO
+import com.seiko.core.util.TYPE_PICTURE
+import com.seiko.core.util.TYPE_SUBTITLE
+import com.seiko.core.util.TYPE_VIDEO
+import com.seiko.core.model.TorrentCheckBean
 import kotlinx.android.synthetic.main.item_torrent.view.*
 
 class TorrentFileCheckCardView(context: Context) : AbsCardView<TorrentCheckBean>(context) {

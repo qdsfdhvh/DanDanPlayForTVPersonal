@@ -1,6 +1,6 @@
 package com.seiko.common.utils
 
-import com.seiko.data.model.api.BangumiIntro
+import com.seiko.core.model.api.BangumiIntro
 
 fun BangumiIntro.getBangumiStatus(): String {
     if (!isOnAir) return "已完结"

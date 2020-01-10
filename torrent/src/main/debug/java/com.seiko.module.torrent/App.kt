@@ -3,11 +3,10 @@ package com.seiko.module.torrent
 import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
-import com.seiko.data.di.*
+import com.seiko.core.di.*
 import com.seiko.module.torrent.di.downloadModule
 import com.seiko.module.torrent.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
 class App : Application() {

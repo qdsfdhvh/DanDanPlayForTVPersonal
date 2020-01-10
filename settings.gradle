@@ -1,7 +1,7 @@
 include ':app-tv',
         ':torrent',
         ':common',
-        ':libs:data',
+        ':libs:core',
         ':libs:thunder',
         ':libs:tool_torrent',
         ':plugin'

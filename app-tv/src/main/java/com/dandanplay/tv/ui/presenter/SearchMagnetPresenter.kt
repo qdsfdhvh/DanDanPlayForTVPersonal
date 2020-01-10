@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.SearchMagnetCardView
-import com.seiko.data.model.api.ResMagnetItem
+import com.seiko.core.model.api.ResMagnetItem
 
 class SearchMagnetPresenter : Presenter() {
 

@@ -2,7 +2,7 @@ package com.seiko.common.provider
 
 import android.app.Application
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.data.di.dataModule
+import com.seiko.core.di.dataModule
 import org.koin.core.context.loadKoinModules
 
 /**

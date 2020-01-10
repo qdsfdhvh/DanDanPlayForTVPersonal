@@ -2,7 +2,7 @@ apply plugin: 'com.gfd.comswitch'
 apply from:rootProject.file('libbase.gradle')
 
 dependencies {
-    api project(':libs:data')
+    api project(':libs:core')
 
     api 'androidx.multidex:multidex:2.0.1'
 

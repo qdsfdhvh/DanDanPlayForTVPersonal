@@ -6,10 +6,10 @@ import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.data.domain.bangumi.GetAirDayBangumiBeansUseCase
-import com.seiko.data.model.api.AirDayBangumiBean
-import com.seiko.data.model.api.BangumiIntro
-import com.seiko.data.utils.Result
+import com.seiko.core.domain.bangumi.GetAirDayBangumiBeansUseCase
+import com.seiko.core.model.api.AirDayBangumiBean
+import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

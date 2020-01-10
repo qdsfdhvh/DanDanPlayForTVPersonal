@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.seiko.common.BaseViewModel
-import com.seiko.data.model.db.TorrentEntity
-import com.seiko.data.repo.TorrentRepository
+import com.seiko.core.data.db.model.TorrentEntity
+import com.seiko.core.repo.TorrentRepository
 import com.seiko.module.torrent.model.TorrentListItem
 import kotlinx.coroutines.launch
 

@@ -7,9 +7,9 @@ import android.os.IBinder
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.eventbus.EventBusScope
-import com.seiko.data.constants.TORRENT_CONFIG_DIR
-import com.seiko.data.extensions.writeInputStream
-import com.seiko.data.utils.Result
+import com.seiko.core.constants.TORRENT_CONFIG_DIR
+import com.seiko.core.util.writeInputStream
+import com.seiko.core.data.Result
 import com.seiko.module.torrent.constants.ASSETS_TRACKER_NAME
 import com.seiko.module.torrent.constants.TORRENT_CONFIG_FILE_NAME
 import com.seiko.module.torrent.model.AddTorrentParams

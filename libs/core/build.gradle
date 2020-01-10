@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+apply from:rootProject.file('libbase.gradle')
+
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+}
+
+dependencies {
+    api project(path: ':libs:thunder')
+    api project(path: ':libs:tool_torrent')
+
+    // 协程
+    api dependence.libCoroutinesCore
+    api dependence.libCoroutinesAndroid
+
+    // 注入
+    api dependence.libKoinViewModel
+
+    // Prefs
+    api 'com.tencent:mmkv:1.0.23'
+
+    // NetWork
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
+
+    // Database
+    implementation dependence.libRoomRuntime
+    kapt dependence.libRoomCompiler
+    implementation dependence.libRoomKtx
+
+    // Database Debug 8080
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+}

@@ -19,10 +19,10 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
 import com.seiko.common.activity.addCallback
-import com.seiko.data.extensions.TYPE_VIDEO
-import com.seiko.data.extensions.toSingletonList
-import com.seiko.data.model.ThunderLocalUrl
-import com.seiko.data.model.TorrentCheckBean
+import com.seiko.core.util.TYPE_VIDEO
+import com.seiko.core.util.toSingletonList
+import com.seiko.core.model.ThunderLocalUrl
+import com.seiko.core.model.TorrentCheckBean
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedListener {

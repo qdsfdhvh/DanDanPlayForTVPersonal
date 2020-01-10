@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
-import com.seiko.data.constants.DEFAULT_CACHE_FOLDER_PATH
+import com.seiko.core.constants.DEFAULT_CACHE_FOLDER_PATH
 import com.xunlei.downloadlib.XLTaskHelper
 
 class PlayerManagerActivity: FragmentActivity() {

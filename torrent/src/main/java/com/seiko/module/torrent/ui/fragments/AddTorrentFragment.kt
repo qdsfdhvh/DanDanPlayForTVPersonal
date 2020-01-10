@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.seiko.common.eventbus.EventBusScope
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.extensions.lazyAndroid
-import com.seiko.data.utils.Result
+import com.seiko.core.data.Result
 import com.seiko.module.torrent.R
 import com.seiko.module.torrent.model.PostEvent
 import com.seiko.module.torrent.ui.dialogs.SpinnerProgressDialog

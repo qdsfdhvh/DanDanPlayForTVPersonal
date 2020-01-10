@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.palette.graphics.Palette
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
-import com.seiko.data.domain.bangumi.GetBangumiDetailsUseCase
-import com.seiko.data.model.api.BangumiDetails
-import com.seiko.data.model.api.BangumiEpisode
-import com.seiko.data.utils.Result
+import com.seiko.core.domain.bangumi.GetBangumiDetailsUseCase
+import com.seiko.core.model.api.BangumiDetails
+import com.seiko.core.model.api.BangumiEpisode
+import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -4,9 +4,9 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.seiko.common.BaseViewModel
-import com.seiko.data.domain.torrent.GetTorrentTempWithContentUseCase
-import com.seiko.data.domain.torrent.GetTorrentTempWithNetUseCase
-import com.seiko.data.utils.Result
+import com.seiko.core.domain.torrent.GetTorrentTempWithContentUseCase
+import com.seiko.core.domain.torrent.GetTorrentTempWithNetUseCase
+import com.seiko.core.data.Result
 import com.seiko.module.torrent.constants.*
 import com.seiko.module.torrent.extensions.find
 import com.seiko.module.torrent.extensions.getLeaves
