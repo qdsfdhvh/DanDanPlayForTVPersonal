@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.card
 import android.content.Context
 import android.widget.ImageView
 import com.dandanplay.tv.R
-import com.seiko.domain.model.api.SearchAnimeDetails
+import com.seiko.data.model.api.SearchAnimeDetails
 import kotlinx.android.synthetic.main.item_bangumi_related.view.*
 
 class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(context) {

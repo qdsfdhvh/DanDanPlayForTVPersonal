@@ -8,8 +8,7 @@ build/
 .externalNativeBuild
 .cxx
 
-
-repo/
+/repo
 schemas/
 
 key.properties

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.data.usecase.DeleteCacheTorrentUseCase
+import com.seiko.data.domain.DeleteCacheTorrentUseCase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

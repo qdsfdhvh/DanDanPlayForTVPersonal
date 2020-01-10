@@ -7,7 +7,7 @@ import com.seiko.data.http.api.ResDanDanApiService
 import com.seiko.data.http.api.TorrentApiService
 import com.seiko.data.http.cookie.CookiesManager
 import com.seiko.data.http.cookie.PersistentCookieStore
-import com.seiko.domain.local.PrefDataSource
+import com.seiko.data.local.pref.PrefDataSource
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

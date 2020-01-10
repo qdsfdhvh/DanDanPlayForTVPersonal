@@ -4,10 +4,9 @@ import com.seiko.data.http.api.DanDanApiService
 import com.seiko.data.http.api.ResDanDanApiService
 import com.seiko.data.model.response.ResMagnetSearchResponse
 import com.seiko.data.model.response.SearchAnimeResponse
-import com.seiko.domain.model.api.ResMagnetItem
-import com.seiko.domain.model.api.SearchAnimeDetails
-import com.seiko.domain.repo.SearchRepository
-import com.seiko.domain.utils.Result
+import com.seiko.data.model.api.ResMagnetItem
+import com.seiko.data.model.api.SearchAnimeDetails
+import com.seiko.data.utils.Result
 
 internal class SearchRepositoryImpl(
     private val api: DanDanApiService,

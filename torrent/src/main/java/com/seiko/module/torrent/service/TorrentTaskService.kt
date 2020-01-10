@@ -9,7 +9,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.eventbus.EventBusScope
 import com.seiko.data.constants.TORRENT_CONFIG_DIR
 import com.seiko.data.extensions.writeInputStream
-import com.seiko.domain.utils.Result
+import com.seiko.data.utils.Result
 import com.seiko.module.torrent.constants.ASSETS_TRACKER_NAME
 import com.seiko.module.torrent.constants.TORRENT_CONFIG_FILE_NAME
 import com.seiko.module.torrent.model.AddTorrentParams

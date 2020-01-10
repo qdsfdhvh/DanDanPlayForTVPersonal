@@ -7,7 +7,7 @@ import com.seiko.data.extensions.TYPE_AUDIO
 import com.seiko.data.extensions.TYPE_PICTURE
 import com.seiko.data.extensions.TYPE_SUBTITLE
 import com.seiko.data.extensions.TYPE_VIDEO
-import com.seiko.domain.model.TorrentCheckBean
+import com.seiko.data.model.TorrentCheckBean
 import kotlinx.android.synthetic.main.item_torrent.view.*
 
 class TorrentFileCheckCardView(context: Context) : AbsCardView<TorrentCheckBean>(context) {

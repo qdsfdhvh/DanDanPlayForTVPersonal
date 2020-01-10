@@ -7,8 +7,8 @@ import com.seiko.data.repo.BangumiRepositoryImpl
 import com.seiko.data.repo.SearchRepositoryImpl
 import com.seiko.data.repo.TorrentRepository
 import com.seiko.data.repo.TorrentRepositoryImpl
-import com.seiko.domain.repo.BangumiRepository
-import com.seiko.domain.repo.SearchRepository
+import com.seiko.data.repo.BangumiRepository
+import com.seiko.data.repo.SearchRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

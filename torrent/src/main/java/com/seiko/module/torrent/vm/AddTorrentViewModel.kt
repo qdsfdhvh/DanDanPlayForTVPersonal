@@ -3,13 +3,10 @@ package com.seiko.module.torrent.vm
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.BaseViewModel
-import com.seiko.common.eventbus.EventBusScope
-import com.seiko.data.usecase.torrent.GetTorrentTempWithContentUseCase
-import com.seiko.data.usecase.torrent.GetTorrentTempWithNetUseCase
-import com.seiko.domain.utils.Result
+import com.seiko.data.domain.torrent.GetTorrentTempWithContentUseCase
+import com.seiko.data.domain.torrent.GetTorrentTempWithNetUseCase
+import com.seiko.data.utils.Result
 import com.seiko.module.torrent.constants.*
 import com.seiko.module.torrent.extensions.find
 import com.seiko.module.torrent.extensions.getLeaves

@@ -8,7 +8,6 @@ kapt {
 }
 
 dependencies {
-    api project(path: ':libs:domain')
     api project(path: ':libs:thunder')
     api project(path: ':libs:tool_torrent')
 

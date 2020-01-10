@@ -8,7 +8,7 @@ import com.seiko.data.constants.PREFS_NAME_DEFAULT
 import com.seiko.data.http.cookie.PersistentCookieStore
 import com.seiko.data.local.db.AppDatabase
 import com.seiko.data.local.pref.PrefDataSourceImpl
-import com.seiko.domain.local.PrefDataSource
+import com.seiko.data.local.pref.PrefDataSource
 import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module

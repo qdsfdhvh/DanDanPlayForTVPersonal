@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
-import com.seiko.data.usecase.bangumi.GetBangumiListWithSeasonUseCase
-import com.seiko.data.usecase.bangumi.GetBangumiSeasonsUseCase
-import com.seiko.domain.model.api.BangumiIntro
-import com.seiko.domain.model.api.BangumiSeason
-import com.seiko.domain.utils.Result
+import com.seiko.data.domain.bangumi.GetBangumiListWithSeasonUseCase
+import com.seiko.data.domain.bangumi.GetBangumiSeasonsUseCase
+import com.seiko.data.model.api.BangumiIntro
+import com.seiko.data.model.api.BangumiSeason
+import com.seiko.data.utils.Result
 import kotlinx.coroutines.launch
 
 class BangumiAreaViewModel(

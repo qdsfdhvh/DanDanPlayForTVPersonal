@@ -4,14 +4,14 @@ import com.seiko.data.http.api.DanDanApiService
 import com.seiko.data.model.response.BangumiDetailsResponse
 import com.seiko.data.model.response.BangumiListResponse
 import com.seiko.data.model.response.BangumiSeasonListResponse
-import com.seiko.domain.model.api.BangumiDetails
-import com.seiko.domain.model.api.BangumiIntro
-import com.seiko.domain.model.api.BangumiSeason
-import com.seiko.domain.repo.BangumiRepository
-import com.seiko.domain.utils.Result
+import com.seiko.data.model.api.BangumiDetails
+import com.seiko.data.model.api.BangumiIntro
+import com.seiko.data.model.api.BangumiSeason
+import com.seiko.data.utils.Result
 import retrofit2.HttpException
 
-internal class BangumiRepositoryImpl(private val api: DanDanApiService) : BangumiRepository {
+internal class BangumiRepositoryImpl(private val api: DanDanApiService) :
+    BangumiRepository {
 
     override suspend fun getBangumiList(): Result<List<BangumiIntro>> {
         val response: BangumiListResponse

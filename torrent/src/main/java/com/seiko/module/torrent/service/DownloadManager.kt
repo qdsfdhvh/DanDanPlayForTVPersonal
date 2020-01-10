@@ -3,8 +3,8 @@ package com.seiko.module.torrent.service
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.data.model.db.TorrentEntity
 import com.seiko.data.repo.TorrentRepository
-import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
-import com.seiko.domain.utils.Result
+import com.seiko.data.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.data.utils.Result
 import com.seiko.module.torrent.constants.TORRENT_CONFIG_FILE_NAME
 import com.seiko.module.torrent.model.DownloadProgress
 import com.seiko.torrent.TorrentEngine

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.data.usecase.torrent.DownloadTorrentUseCase
-import com.seiko.data.usecase.torrent.GetTorrentInfoFileUseCase
-import com.seiko.data.usecase.search.SearchMagnetListUseCase
-import com.seiko.domain.model.api.ResMagnetItem
-import com.seiko.domain.utils.Result
+import com.seiko.data.domain.torrent.DownloadTorrentUseCase
+import com.seiko.data.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.data.domain.search.SearchMagnetListUseCase
+import com.seiko.data.model.api.ResMagnetItem
+import com.seiko.data.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

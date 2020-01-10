@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
-import com.seiko.data.usecase.torrent.GetTorrentCheckBeanListUseCase
-import com.seiko.data.usecase.torrent.GetTorrentLocalPlayUrlUseCase
-import com.seiko.data.usecase.torrent.GetTorrentTaskUseCase
-import com.seiko.domain.model.ThunderLocalUrl
-import com.seiko.domain.model.TorrentCheckBean
-import com.seiko.domain.utils.Result
+import com.seiko.data.domain.torrent.GetTorrentCheckBeanListUseCase
+import com.seiko.data.domain.torrent.GetTorrentLocalPlayUrlUseCase
+import com.seiko.data.model.ThunderLocalUrl
+import com.seiko.data.model.TorrentCheckBean
+import com.seiko.data.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
