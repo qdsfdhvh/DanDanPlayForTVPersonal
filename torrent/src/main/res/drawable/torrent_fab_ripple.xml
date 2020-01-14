@@ -5,3 +5,11 @@
     <item android:drawable="@drawable/torrent_fab_round_touch" android:state_pressed="true"/>
     <item android:drawable="@drawable/torrent_fab_round" />
 </selector>
+<!--<ripple xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:color="@color/torrent_accent_dark">-->
+<!--    <item>-->
+<!--        <shape android:shape="oval">-->
+<!--            <solid android:color="@color/torrent_accent"/>-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--</ripple>-->

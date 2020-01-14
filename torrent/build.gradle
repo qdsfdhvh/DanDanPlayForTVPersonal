@@ -3,6 +3,12 @@ apply plugin: 'androidx.navigation.safeargs'
 
 apply from:rootProject.file('libbase.gradle')
 
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
 android {
     resourcePrefix "torrent_"
 }
@@ -14,8 +20,14 @@ this.beforeEvaluate {
 
 dependencies {
     implementation project(':common')
+    implementation project(':libs:file_picker')
+    kapt dependence.libArouterCompiler
 
     // UI
+    implementation dependence.libSwiperefreshlayout
     implementation 'com.google.android.material:material:1.2.0-alpha03'
     implementation 'com.github.clans:fab:1.6.4'
+
+    // Buffer
+    implementation "com.squareup.okio:okio:2.4.3"
 }

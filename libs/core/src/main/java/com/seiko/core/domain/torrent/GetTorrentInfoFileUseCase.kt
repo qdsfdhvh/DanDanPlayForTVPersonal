@@ -31,7 +31,7 @@ class GetTorrentInfoFileUseCase : KoinComponent {
             return Result.Error(FileNotFoundException("File can't create: ${torrentInfoDir.absolutePath}"))
         }
 
-        val torrentName = (if (magnet.length > 20) magnet.substring(20) else magnet) + ".torrent"
+        val torrentName = (if (magnet.length > 32) magnet.substring(0, 32) else magnet) + ".torrent"
         return Result.Success(File(torrentInfoDir, torrentName))
     }
 }

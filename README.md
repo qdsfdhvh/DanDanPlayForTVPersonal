@@ -8,8 +8,10 @@ CleanArchitecture
 Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)。  
 
 架构参考DEMO:
-[Android-CleanArchitecture](https://github.com/android10/Android-CleanArchitecture)、
-[Plaid](https://github.com/android/plaid) 
+[Android-CleanArchitecture-Kotlin](https://github.com/android10/Android-CleanArchitecture-Kotlin)、
+[Plaid](https://github.com/android/plaid)、
+[KotlinAndroid](https://github.com/guofudong/KotlinAndroid)、
+[Notre-Dame](https://github.com/ApplETS/Notre-Dame)
 
 视频观看:
 [Bilibili - Kotlin 语言帮助开发者更好的构建应用](https://www.bilibili.com/video/av70762038)
@@ -24,9 +26,6 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 01) [DanDanPlayForAndroid](https://github.com/xyoye/DanDanPlayForAndroid)
 弹弹play 概念版，弹弹play系列应用安卓平台上的实现
-
-02) [KotlinAndroid](https://github.com/guofudong/KotlinAndroid)
-组件化 + MVP + Retrofit + RxKotlin + Dagger2实现的一款用Kotlin语言编写的多媒体类应用。
 
 ### 1.网络请求
 
@@ -62,13 +61,10 @@ Facebook开源的一个强大的图片加载组件
 08) [Eazy Runtime Permission](https://github.com/sagar-viradiya/eazypermissions)
 一个轻量的Android权限库
 
-09) [ObjectBox](https://github.com/objectbox/objectbox-java)
-一个高性能的符合ACID的NoSQL数据库
-
-10) [Navigator](https://github.com/florent37/Navigator)
+09) [Navigator](https://github.com/florent37/Navigator)
 Android Multi-module navigator, trying to find a way to navigate into a modularized android project
 
-11) [okio](https://github.com/square/okio)
+10) [okio](https://github.com/square/okio)
 一个非常优秀的Java IO/NIO封装库
 
 ### 3.播放器相关

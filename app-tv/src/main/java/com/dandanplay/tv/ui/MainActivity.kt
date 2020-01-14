@@ -40,6 +40,10 @@ class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
         navController = this.findNavController(R.id.myNavHostFragment)
     }
 
+    override fun onNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
+
     /**
      * 当软键盘弹出时，关闭软键盘。
      */

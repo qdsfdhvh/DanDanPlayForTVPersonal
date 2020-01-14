@@ -1,6 +1,7 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
@@ -39,7 +40,7 @@ class BangumiDetailViewModel(private val getBangumiDetails: GetBangumiDetailsUse
     // 上一次提取颜色的图片
     private var imageUrl = ""
 
-    fun getBangumiDetails(animeId: Int) = launch {
+    fun getBangumiDetails(animeId: Int) = viewModelScope.launch {
         mainState.showLoading()
         val result = withContext(Dispatchers.IO) {
             getBangumiDetails.invoke(animeId)

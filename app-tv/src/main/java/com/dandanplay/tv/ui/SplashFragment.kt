@@ -10,9 +10,7 @@ import com.dandanplay.tv.R
 import com.dandanplay.tv.ui.SplashFragmentDirections
 import kotlinx.coroutines.*
 
-class SplashFragment: Fragment() {
-
-    private var job: Job? = null
+class SplashFragment: Fragment(), CoroutineScope by MainScope() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_splash, container, false)
@@ -20,14 +18,14 @@ class SplashFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        job = GlobalScope.launch(Dispatchers.Main) {
+        launch {
             delay(400)
             launchMain()
         }
     }
 
     override fun onDestroy() {
-        job?.cancel()
+        cancel()
         super.onDestroy()
     }
 

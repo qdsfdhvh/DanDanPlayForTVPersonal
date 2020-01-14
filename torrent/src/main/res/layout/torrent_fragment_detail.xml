@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="enterAlways"
+                android:transitionName="actionBar"
+                app:popupTheme="?attr/popupTheme"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:focusable="true" />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/detail_torrent_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginRight="72dp"
+                android:layout_marginLeft="72dp"
+                android:layout_gravity="center_horizontal"
+                app:tabMode="scrollable"
+                app:tabMaxWidth="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/detail_torrent_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="?attr/torrent_backgroundBlank" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/save_changes_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="16dp"
+        android:transitionName="fab"
+        android:elevation="6dp"
+        android:padding="14dp"
+        android:scaleType="fitCenter"
+        android:stateListAnimator="@animator/torrent_fab_anim"
+        android:visibility="gone"
+        android:src="@drawable/ic_save_white_24dp"
+        android:contentDescription="@string/save"
+        android:focusable="true"
+        app:fab_colorNormal="@color/torrent_accent"
+        app:fab_colorPressed="@color/torrent_accent_dark"
+        app:fab_colorRipple="@color/torrent_accent_light"
+        tools:visibility="visible"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

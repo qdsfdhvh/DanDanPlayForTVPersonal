@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <androidx.cardview.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
+            android:layout_width="800dp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginLeft="200dp"
-            android:layout_marginRight="200dp"
             card_view:cardBackgroundColor="?android:windowBackground"
             card_view:cardCornerRadius="2dp"
             card_view:cardElevation="2dp">
-
             <include
                 layout="@layout/torrent_add_torrent_info" />
         </androidx.cardview.widget.CardView>
-    </RelativeLayout>
+    </FrameLayout>
 </androidx.core.widget.NestedScrollView>

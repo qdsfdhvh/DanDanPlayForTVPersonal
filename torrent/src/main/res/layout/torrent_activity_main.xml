@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.TorrentMainActivity">
+    tools:context="com.seiko.torrent.ui.TorrentMainActivity">
     <fragment
         android:id="@+id/myNavHostFragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/torrent_nav_main" />
+        app:navGraph="@navigation/torrent_nav_main"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

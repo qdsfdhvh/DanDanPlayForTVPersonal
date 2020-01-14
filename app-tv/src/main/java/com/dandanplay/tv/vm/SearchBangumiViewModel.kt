@@ -2,6 +2,7 @@ package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
@@ -16,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,
@@ -25,20 +27,16 @@ class SearchBangumiViewModel(
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<Boolean>()
-    val mainState: LiveData<ResultData<Boolean>>
-        get() = _mainState
+    val mainState: LiveData<ResultData<Boolean>> = _mainState
 
     private val _bangumiList = MutableLiveData<List<SearchAnimeDetails>>()
-    val bangumiList: LiveData<List<SearchAnimeDetails>>
-        get() = _bangumiList
+    val bangumiList: LiveData<List<SearchAnimeDetails>> = _bangumiList
 
     private val _magnetList = MutableLiveData<List<ResMagnetItem>>()
-    val magnetList: LiveData<List<ResMagnetItem>>
-        get() = _magnetList
+    val magnetList: LiveData<List<ResMagnetItem>> = _magnetList
 
-    private val _downloadState = ResultLiveData<String>()
-    val downloadState: LiveData<ResultData<String>>
-        get() = _downloadState
+    private val _downloadState = ResultLiveData<File>()
+    val downloadState: LiveData<ResultData<File>> = _downloadState
 
     // 上一次搜搜的关键字
     private var query = ""
@@ -47,7 +45,7 @@ class SearchBangumiViewModel(
      * 搜索番剧和磁力链接
      * @param keyword 关键字
      */
-    fun getBangumiListAndMagnetList(keyword: String) = launch {
+    fun getBangumiListAndMagnetList(keyword: String) = viewModelScope.launch {
         query = keyword
         _mainState.showLoading()
 
@@ -84,22 +82,22 @@ class SearchBangumiViewModel(
      * 是有存在此种子
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      */
-    fun isTorrentExist(magnet: String): String {
+    fun isTorrentExist(magnet: String): File? {
         val result = getTorrentInfoFileUseCase.invoke(magnet)
         if (result is Result.Success) {
             val torrentFile = result.data
             if (torrentFile.exists()) {
-                return torrentFile.absolutePath
+                return torrentFile
             }
         }
-        return ""
+        return null
     }
 
     /**
      * 下载种子
      * @param magnet 磁力链接
      */
-    fun downloadTorrent(magnet: String) = launch {
+    fun downloadTorrent(magnet: String) = viewModelScope.launch {
         _downloadState.showLoading()
         val result = withContext(Dispatchers.IO) {
             downloadTorrent.invoke(magnet)

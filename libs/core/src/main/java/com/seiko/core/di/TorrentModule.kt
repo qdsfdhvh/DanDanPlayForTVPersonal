@@ -8,7 +8,7 @@ import com.seiko.core.constants.TORRENT_CONFIG_DIR
 import com.seiko.core.constants.TORRENT_DATA_DIR
 import com.seiko.core.constants.TORRENT_DOWNLOAD_DIR
 import com.seiko.core.constants.TORRENT_TEMP_DIR
-import com.seiko.torrent.TorrentEngineOptions
+import com.seiko.download.torrent.TorrentEngineOptions
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -58,7 +58,7 @@ private fun createTorrentTempDir(dataDir: File): File {
  * Torrent配置目录
  */
 private fun createTorrentConfigDir(dataDir: File): File {
-    return File(dataDir, "_config")
+    return File(dataDir, "config")
 }
 
 private fun createContentResolver(context: Context): ContentResolver {

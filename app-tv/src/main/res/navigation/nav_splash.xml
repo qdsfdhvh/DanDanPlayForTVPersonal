@@ -77,6 +77,21 @@
             app:destination="@id/torrentFileCheckFragment"
             app:popUpTo="@id/searchBangumiFragment"/>
     </fragment>
+    <!--磁力搜索-->
+    <fragment
+        android:id="@+id/searchMagnetFragment"
+        android:name="com.dandanplay.tv.ui.bangumi.SearchMagnetFragment"
+        android:label="SearchMagnetFragment">
+        <argument
+            android:name="keyword"
+            app:argType="string"/>
+        <argument
+            android:name="animeTile"
+            app:argType="string"/>
+        <action android:id="@+id/action_episodesSearchFragment_to_torrentFileCheckFragment"
+            app:destination="@id/torrentFileCheckFragment"
+            app:popUpTo="@id/searchMagnetFragment"/>
+    </fragment>
     <!--番剧详情-->
     <fragment
         android:id="@+id/bangumiDetailsFragment"
@@ -97,21 +112,7 @@
             app:popEnterAnim="@anim/anim_activity_enter"
             app:popExitAnim="@anim/anim_activity_exit"/>
     </fragment>
-    <!--磁力搜索-->
-    <fragment
-        android:id="@+id/searchMagnetFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.SearchMagnetFragment"
-        android:label="SearchMagnetFragment">
-        <argument
-            android:name="keyword"
-            app:argType="string"/>
-        <argument
-            android:name="animeTile"
-            app:argType="string"/>
-        <action android:id="@+id/action_episodesSearchFragment_to_torrentFileCheckFragment"
-            app:destination="@id/torrentFileCheckFragment"
-            app:popUpTo="@id/searchMagnetFragment"/>
-    </fragment>
+    <!--种子详情 待废弃 -->
     <fragment
         android:id="@+id/torrentFileCheckFragment"
         android:name="com.dandanplay.tv.ui.bangumi.TorrentFileCheckFragment"

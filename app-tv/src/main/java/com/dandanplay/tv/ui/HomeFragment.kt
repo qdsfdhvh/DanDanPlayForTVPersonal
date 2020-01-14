@@ -8,14 +8,15 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.model.HomeBean
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.dandanplay.tv.ui.dialog.setLoadFragment
-import com.dandanplay.tv.ui.download.DownloadManagerActivity
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
 import com.dandanplay.tv.model.AnimeRow
@@ -23,6 +24,7 @@ import com.dandanplay.tv.vm.BangumiTimeLineViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.router.Routes
 import com.seiko.core.model.api.BangumiIntro
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -31,6 +33,8 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     private val viewModel by viewModel<BangumiTimeLineViewModel>()
 
     private lateinit var adapterRows: SparseArray<AnimeRow>
+
+    private lateinit var navController: NavController
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -58,6 +62,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
      * 生成相关UI
      */
     private fun setupUI() {
+        navController = findNavController()
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         title = "弹弹Play"
@@ -159,7 +164,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.title_orb -> {
-                findNavController().navigate(
+                navController.navigate(
                     HomeFragmentDirections.actionHomeFragmentToSearchBangumiFragment()
                 )
             }
@@ -173,7 +178,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is BangumiIntro -> {
-                findNavController().navigate(
+                navController.navigate(
                     HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
                         item.animeId
                     )
@@ -182,7 +187,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             is HomeBean -> {
                 when(item.id) {
                     ID_AREA -> {
-                        findNavController().navigate(
+                        navController.navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
                         )
                     }
@@ -190,7 +195,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                         ToastUtils.showShort("我的收藏")
                     }
                     ID_TIME -> {
-                        findNavController().navigate(
+                        navController.navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiTimeLineFragment()
                         )
                     }
@@ -201,7 +206,9 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                         ToastUtils.showShort("设置")
                     }
                     ID_DOWNLOAD -> {
-                        DownloadManagerActivity.launch(activity!!)
+                        ARouter.getInstance().build(Routes.Torrent.PATH)
+                            .navigation()
+//                        DownloadManagerActivity.launch(activity!!)
                     }
                 }
             }

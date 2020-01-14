@@ -1,6 +1,7 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
@@ -25,7 +26,8 @@ class TorrentFileCheckViewModel(
     private val _thunderUrl = ResultLiveData<ThunderLocalUrl>()
     val thunderUrl: LiveData<ResultData<ThunderLocalUrl>> = _thunderUrl
 
-    fun getTorrentCheckBeanList(torrentPath: String) = launch {
+    fun getTorrentCheckBeanList(torrentPath: String, force: Boolean) = viewModelScope.launch {
+        if (!force && mainState.value != null) return@launch
         _mainState.showLoading()
         delay(50) // 防止过快导致加载界面未被去除
         val result = withContext(Dispatchers.Default) {
@@ -37,7 +39,7 @@ class TorrentFileCheckViewModel(
         }
     }
 
-    fun playForThunder(torrentPath: String, item: TorrentCheckBean) = launch {
+    fun playForThunder(torrentPath: String, item: TorrentCheckBean) = viewModelScope.launch {
         _thunderUrl.showLoading()
         delay(10) // 防止过快..
         val result = withContext(Dispatchers.Default) {

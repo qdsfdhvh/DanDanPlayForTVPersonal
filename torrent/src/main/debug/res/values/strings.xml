@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="torrent_app_name">module-torrent</string>
+    <string name="torrent_app_name">种子下载</string>
 </resources>

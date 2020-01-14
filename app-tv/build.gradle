@@ -5,6 +5,12 @@ apply plugin: 'androidx.navigation.safeargs'
 //apply from: rootProject.file('releaseinfo.gradle')
 apply from: rootProject.file('libbase.gradle')
 
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -42,9 +48,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-//    packagingOptions {
-//        exclude 'META-INF/atomicfu.kotlin_module'
-//    }
     //自定义输出apk名字
     applicationVariants.all {
         variant ->
@@ -60,24 +63,18 @@ android {
 
 dependencies {
     implementation project(':common')
+    kapt dependence.libArouterCompiler
 
     // TV UI
-    implementation 'androidx.leanback:leanback:1.0.0'
-//    implementation 'androidx.leanback:leanback-preference:1.0.0'
+    implementation dependence.libLeanback
+    implementation 'androidx.leanback:leanback-preference:1.0.0'
 
     // Image
     implementation 'com.facebook.fresco:fresco:2.0.0'
-
-    // 屏幕适配
-    implementation 'me.jessyan:autosize:1.1.2'
 
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
 
     // WorkManger
     implementation "androidx.work:work-runtime-ktx:2.2.0"
-
-    // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
-    implementation 'com.google.android.exoplayer:extension-leanback:2.9.5'
 }

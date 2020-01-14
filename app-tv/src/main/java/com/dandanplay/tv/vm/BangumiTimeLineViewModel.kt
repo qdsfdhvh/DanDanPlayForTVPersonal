@@ -2,6 +2,7 @@ package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
@@ -32,7 +33,7 @@ class BangumiTimeLineViewModel(private val getWeekBangumiList: GetAirDayBangumiB
         }
     }
 
-    fun getBangumiList() = launch {
+    fun getBangumiList() = viewModelScope.launch {
         _airDayBangumiList.showLoading()
         val result = withContext(Dispatchers.IO) {
             getWeekBangumiList.invoke(getDayOfWeek())

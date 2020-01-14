@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.seiko.module.torrent">
+    package="com.seiko.torrent">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -7,6 +7,8 @@
     <application>
         <activity
             android:name=".ui.TorrentMainActivity"
+            android:theme="@style/torrent_BaseTheme"
+            android:launchMode="singleTask"
             android:screenOrientation="fullSensor"/>
 
         <service

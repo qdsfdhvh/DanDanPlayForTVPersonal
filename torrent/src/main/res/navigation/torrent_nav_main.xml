@@ -2,24 +2,29 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/torrent_nav_main"
     app:startDestination="@id/mainFragment">
+
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.seiko.module.torrent.ui.fragments.MainFragment"
+        android:name="com.seiko.torrent.ui.main.MainFragment"
         android:label="MainFragment"
         tools:layout="@layout/torrent_fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_addTorrentFragment"
             app:destination="@id/addTorrentFragment"
+            app:popUpToInclusive="false"
             app:popUpTo="@+id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/addTorrentFragment"
-        android:name="com.seiko.module.torrent.ui.fragments.AddTorrentFragment"
+        android:name="com.seiko.torrent.ui.add.AddTorrentFragment"
         android:label="AddTorrentFragment"
         tools:layout="@layout/torrent_fragment_add_torrent">
         <argument
             android:name="uri"
             app:argType="android.net.Uri"/>
     </fragment>
+
 </navigation>

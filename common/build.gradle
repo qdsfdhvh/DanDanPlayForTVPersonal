@@ -6,6 +6,9 @@ dependencies {
 
     api 'androidx.multidex:multidex:2.0.1'
 
+    // 屏幕适配
+    implementation 'me.jessyan:autosize:1.1.2'
+
     // UI
     api dependence.libAppCompat
     api dependence.libConstraintlayout
@@ -23,6 +26,7 @@ dependencies {
     }
 
     // 路由
-    api "com.github.florent37:navigator:1.0.0"
+//    api "com.github.florent37:navigator:1.0.0"
+    api dependence.libArouter
 
 }

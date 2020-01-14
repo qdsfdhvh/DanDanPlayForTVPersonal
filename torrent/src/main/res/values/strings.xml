@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- downloaded/total (percent) -->
     <string name="torrent_download_counter_template" formatted="false">%1$s/%2$s （%3$d%%）</string>
     <!-- ↓ download speed | ↑ upload speed -->
     <string name="torrent_download_upload_speed_template" formatted="false">\u2193 %1$s/s | \u2191 %2$s/s</string>
     <!-- downloaded/total • percent • ETA -->
-    <string name="torrent_download_counter_ETA_template" formatted="false">%1$s/%2$s \u2022 %3$d%% %4$s</string>
+    <string name="torrent_download_counter_ETA_template" formatted="false">%1$s/%2$s \u2022 %3$.2f%% %4$s</string>
     <!-- connected/total -->
     <string name="torrent_peers_template" formatted="false">%1$d/%2$d</string>
     <string name="torrent_status_downloading">下载中</string>
@@ -20,6 +21,10 @@
     <string name="torrent_info">详情</string>
     <string name="torrent_files">文件</string>
     <string name="torrent_name">名称</string>
+    <string name="torrent_state">状态</string>
+    <string name="torrent_trackers">追踪器</string>
+    <string name="torrent_peers">用户</string>
+    <string name="torrent_pieces">区块</string>
     <string name="torrent_upload_torrent_into">下载至</string>
     <string name="torrent_size">文件大小</string>
     <string name="torrent_file_count">文件数量</string>
@@ -30,6 +35,7 @@
     <string name="torrent_sequential_download">顺序下载</string>
     <string name="torrent_enable_sequential_download">启用顺序下载</string>
     <string name="torrent_start_torrent">开始 torrent</string>
+    <string name="torrent_added_date">已添加</string>
 
     <!-- Add torrent dialog -->
     <string name="torrent_decode_torrent_progress_title">加载中</string>
@@ -54,4 +60,5 @@
     <string name="torrent_list_empty">没有 torrent 任务</string>
     <string name="torrent_add_torrent_title">添加 torrent</string>
     <string name="torrent_title">种子下载</string>
+    <string name="torrent_select_or_add_torrent">选择或添加一个 torrent</string>
 </resources>

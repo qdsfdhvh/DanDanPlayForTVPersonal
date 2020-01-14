@@ -9,6 +9,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.io.File
 
 class DownloadTorrentUseCase : KoinComponent {
 
@@ -16,7 +17,7 @@ class DownloadTorrentUseCase : KoinComponent {
 
     private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase by inject()
 
-    suspend operator fun invoke(magnet: String): Result<String> {
+    suspend operator fun invoke(magnet: String): Result<File> {
         val downloadResult = dataSource.downloadTorrentWithMagnet(magnet)
         if (downloadResult is Result.Error) {
             return Result.Error(downloadResult.exception)
@@ -31,7 +32,7 @@ class DownloadTorrentUseCase : KoinComponent {
         val file = (result as Result.Success).data
         file.writeInputStream(inputStream)
 
-        return Result.Success(file.absolutePath)
+        return Result.Success(file)
     }
 
 }

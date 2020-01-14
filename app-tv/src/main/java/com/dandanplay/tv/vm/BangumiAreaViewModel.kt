@@ -1,6 +1,7 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
@@ -24,7 +25,7 @@ class BangumiAreaViewModel(
     val bangumiList: LiveData<ResultData<List<BangumiIntro>>>
         get() = _bangumiList
 
-    fun getBangumiSeasons() = launch {
+    fun getBangumiSeasons() = viewModelScope.launch {
         _bangumiSeasons.showLoading()
         when(val result = getBangumiSeasons.invoke()) {
             is Result.Success -> _bangumiSeasons.success(result.data)
@@ -32,13 +33,12 @@ class BangumiAreaViewModel(
         }
     }
 
-    fun getBangumiListWithSeason(season: BangumiSeason) = launch {
+    fun getBangumiListWithSeason(season: BangumiSeason) = viewModelScope.launch {
         _bangumiList.showLoading()
         when(val result = getBangumiListWithSeason.invoke(season)) {
             is Result.Success -> _bangumiList.success(result.data)
             is Result.Error -> _bangumiList.failed(result.exception)
         }
     }
-
 
 }

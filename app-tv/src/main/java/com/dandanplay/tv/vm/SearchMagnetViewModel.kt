@@ -1,6 +1,7 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
@@ -12,6 +13,7 @@ import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,
@@ -20,12 +22,10 @@ class SearchMagnetViewModel(
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<List<ResMagnetItem>>()
-    val mainState: LiveData<ResultData<List<ResMagnetItem>>>
-        get() = _mainState
+    val mainState: LiveData<ResultData<List<ResMagnetItem>>> = _mainState
 
-    private val _downloadState = ResultLiveData<String>()
-    val downloadState: LiveData<ResultData<String>>
-        get() = _downloadState
+    private val _downloadState = ResultLiveData<File>()
+    val downloadState: LiveData<ResultData<File>> = _downloadState
 
     // 上一次搜索的关键字
     private var query = ""
@@ -34,7 +34,7 @@ class SearchMagnetViewModel(
      * 搜索磁力链接
      * @param keyword 关键字
      */
-    fun getMagnetListWithSearch(keyword: String) = launch {
+    fun getMagnetListWithSearch(keyword: String) = viewModelScope.launch {
         query = keyword
         _mainState.showLoading()
         val result = withContext(Dispatchers.IO) {
@@ -55,25 +55,24 @@ class SearchMagnetViewModel(
 
     /**
      * 是有存在此种子
-     * @param animeTitle 番剧名称
      * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
      */
-    fun isTorrentExist(animeTitle: String, magnet: String): String {
+    fun isTorrentExist(magnet: String): File? {
         val result = getTorrentInfoFileUseCase.invoke(magnet)
         if (result is Result.Success) {
             val torrentFile = result.data
             if (torrentFile.exists()) {
-                return torrentFile.absolutePath
+                return torrentFile
             }
         }
-        return ""
+        return null
     }
 
     /**
      * 下载种子
      * @param magnet 磁力链接
      */
-    fun downloadTorrent(animeTitle: String, magnet: String) = launch {
+    fun downloadTorrent(animeTitle: String, magnet: String) = viewModelScope.launch {
         _downloadState.showLoading()
         val result = withContext(Dispatchers.IO) {
             downloadTorrent.invoke(magnet)

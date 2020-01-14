@@ -1,5 +1,22 @@
 apply plugin: 'com.android.library'
-apply from:rootProject.file('libbase.gradle')
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 
 kapt {
     arguments {
@@ -28,8 +45,8 @@ dependencies {
 
     // Database
     implementation dependence.libRoomRuntime
-    kapt dependence.libRoomCompiler
     implementation dependence.libRoomKtx
+    kapt dependence.libRoomCompiler
 
     // Database Debug 8080
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'

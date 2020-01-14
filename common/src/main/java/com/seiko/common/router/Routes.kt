@@ -1,9 +1,11 @@
 package com.seiko.common.router
 
-import com.github.florent37.navigator.Route
-
 object Routes {
 
-    object Torrent : Route("/torrent")
+    object Torrent {
+        const val PATH = "/torrent/torrentActivity"
+
+        const val KEY_TORRENT_PAT = "torrentPath"
+    }
 
 }

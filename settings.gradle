@@ -1,8 +1,12 @@
 include ':app-tv',
         ':torrent',
         ':common',
+
         ':libs:core',
         ':libs:thunder',
         ':libs:tool_torrent',
+        ':libs:file_picker',
+
         ':plugin'
 rootProject.name='DanDanPlayForTV'
+include ':player'

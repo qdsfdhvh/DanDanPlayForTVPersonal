@@ -5,12 +5,14 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
+import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
@@ -20,9 +22,13 @@ import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
+import com.seiko.common.router.Routes
 import com.seiko.core.model.api.ResMagnetItem
 import com.seiko.core.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.io.File
+import java.net.URLEncoder
+import java.util.*
 
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
@@ -119,7 +125,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
     /**
      * 种子下载完成
      */
-    private fun updateDownloadUI(data: ResultData<String>) {
+    private fun updateDownloadUI(data: ResultData<File>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)
@@ -211,29 +217,21 @@ class SearchBangumiFragment : SearchSupportFragment(),
      * 下载磁力
      */
     private fun downloadMagnet(magnet: String) {
-        val torrentPath = viewModel.isTorrentExist(magnet)
-        if (torrentPath.isNotEmpty()) {
-            downloadExisted(torrentPath)
+        val torrentFile = viewModel.isTorrentExist(magnet)
+        if (torrentFile != null) {
+            downloadTorrentOver(torrentFile)
         } else {
             viewModel.downloadTorrent(magnet)
         }
     }
 
     /**
-     * 种子已下载
-     */
-    private fun downloadExisted(torrentPath: String) {
-        // 暂时直接跳转种子详情
-        downloadTorrentOver(torrentPath)
-    }
-
-    /**
      * 下载种子完成，进入种子详情页
      */
-    private fun downloadTorrentOver(torrentPath: String) {
-        findNavController().navigate(
-            SearchBangumiFragmentDirections.actionSearchBangumiFragmentToTorrentFileCheckFragment(torrentPath)
-        )
+    private fun downloadTorrentOver(torrentFile: File) {
+        ARouter.getInstance().build(Routes.Torrent.PATH)
+            .withParcelable(Routes.Torrent.KEY_TORRENT_PAT, Uri.fromFile(torrentFile))
+            .navigation()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

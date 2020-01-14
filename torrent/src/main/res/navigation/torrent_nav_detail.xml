@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/blankFragment">
+
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.seiko.torrent.ui.detail.BlankFragment"
+        android:label="BlankFragment"
+        tools:layout="@layout/torrent_fragment_blank">
+        <action
+            android:id="@+id/action_blankFragment_to_detailTorrentFragment"
+            app:destination="@+id/detailTorrentFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailTorrentFragment"
+        android:name="com.seiko.torrent.ui.detail.DetailTorrentFragment"
+        android:label="DetailTorrentFragment"
+        tools:layout="@layout/torrent_fragment_detail">
+        <action
+            android:id="@+id/action_detailTorrentFragment_to_blankFragment"
+            app:destination="@+id/blankFragment"/>
+    </fragment>
+
+</navigation>
