@@ -15,9 +15,9 @@ val DEFAULT_DOWNLOAD_PATH = "${Environment.getExternalStorageDirectory().absolut
 val DEFAULT_CACHE_FOLDER_PATH = "$DEFAULT_DOWNLOAD_PATH.cache$SEP"
 //// 番剧封面缓存路径
 //val DEFAULT_IMAGE_PATH = "${DEFAULT_DOWNLOAD_PATH}_image$SEP"
-// 配置路径
-private val DEFAULT_CONFIG_PATH = "${DEFAULT_DOWNLOAD_PATH}_config$SEP"
-
+//// 配置路径
+//private val DEFAULT_CONFIG_PATH = "${DEFAULT_DOWNLOAD_PATH}_config$SEP"
+//
 //// 下载任务恢复文件路径
 //val DEFAULT_TORRENT_RESUME_FILE = "$DEFAULT_CONFIG_PATH.resume"
 //// 下载引擎配置路径

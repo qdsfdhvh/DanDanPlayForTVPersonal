@@ -7,10 +7,10 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
 
-    single { createCheckTorrentConfigUseCase(androidApplication()) }
+    single { createCheckTorrentConfigUseCase() }
 
 }
 
-private fun createCheckTorrentConfigUseCase(app: Application): CheckTorrentConfigUseCase {
-    return CheckTorrentConfigUseCase(app)
+private fun createCheckTorrentConfigUseCase(): CheckTorrentConfigUseCase {
+    return CheckTorrentConfigUseCase()
 }

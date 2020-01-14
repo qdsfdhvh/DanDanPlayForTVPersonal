@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui.bangumi
+package com.dandanplay.tv.ui.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Color

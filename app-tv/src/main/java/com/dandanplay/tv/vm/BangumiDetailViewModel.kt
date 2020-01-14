@@ -13,7 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class BangumiDetailViewModel(private val getBangumiDetails: GetBangumiDetailsUseCase) : BaseViewModel() {
+class BangumiDetailViewModel(
+    private val getBangumiDetails: GetBangumiDetailsUseCase
+) : BaseViewModel() {
 
     val mainState = ResultLiveData<BangumiDetails>()
 

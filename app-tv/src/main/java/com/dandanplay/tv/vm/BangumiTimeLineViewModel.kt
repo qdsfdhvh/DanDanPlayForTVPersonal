@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class BangumiTimeLineViewModel(private val getWeekBangumiList: GetAirDayBangumiBeansUseCase): BaseViewModel() {
+class BangumiTimeLineViewModel(
+    private val getWeekBangumiList: GetAirDayBangumiBeansUseCase
+): BaseViewModel() {
 
     private val _airDayBangumiList = ResultLiveData<List<AirDayBangumiBean>>()
     val airDayBangumiList: LiveData<ResultData<List<AirDayBangumiBean>>>

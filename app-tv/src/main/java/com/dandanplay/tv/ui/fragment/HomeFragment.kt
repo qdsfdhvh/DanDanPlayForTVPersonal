@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui
+package com.dandanplay.tv.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -20,6 +20,7 @@ import com.dandanplay.tv.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainMyPresenter
 import com.dandanplay.tv.model.AnimeRow
+import com.dandanplay.tv.ui.HomeFragmentDirections
 import com.dandanplay.tv.vm.BangumiTimeLineViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
@@ -84,11 +85,15 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         // 生成数据的Adapter
         adapterRows = SparseArray(2)
         adapterRows.put(
-            ROW_AREA, AnimeRow(ROW_AREA)
+            ROW_AREA, AnimeRow(
+                ROW_AREA
+            )
                 .setAdapter(MainAreaPresenter())
                 .setTitle("今日更新"))
         adapterRows.put(
-            ROW_MY, AnimeRow(ROW_MY)
+            ROW_MY, AnimeRow(
+                ROW_MY
+            )
                 .setAdapter(MainMyPresenter())
                 .setTitle("个人中心"))
 

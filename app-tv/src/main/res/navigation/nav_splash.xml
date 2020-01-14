@@ -7,7 +7,7 @@
     <!--启动界面-->
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.dandanplay.tv.ui.SplashFragment"
+        android:name="com.dandanplay.tv.ui.fragment.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <!--
@@ -24,7 +24,7 @@
     <!--主界面-->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.dandanplay.tv.ui.HomeFragment"
+        android:name="com.dandanplay.tv.ui.fragment.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/lb_browse_fragment">
         <action
@@ -47,7 +47,7 @@
     <!--播放表-->
     <fragment
         android:id="@+id/bangumiTimeLineFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.BangumiTimeLineFragment"
+        android:name="com.dandanplay.tv.ui.fragment.BangumiTimeLineFragment"
         android:label="BangumiTimeLineFragment">
         <action
             android:id="@+id/action_bangumiTimeLineFragment_to_bangumiDetailsFragment"
@@ -57,7 +57,7 @@
     <!--番剧-->
     <fragment
         android:id="@+id/bangumiAreaFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.BangumiAreaFragment"
+        android:name="com.dandanplay.tv.ui.fragment.BangumiAreaFragment"
         tools:layout="BangumiAreaFragment">
         <action
             android:id="@+id/action_bangumiAreaFragment_to_bangumiDetailsFragment"
@@ -67,7 +67,7 @@
     <!--番剧搜索-->
     <fragment
         android:id="@+id/searchBangumiFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.SearchBangumiFragment"
+        android:name="com.dandanplay.tv.ui.fragment.SearchBangumiFragment"
         android:label="SearchBangumiFragment">
         <action
             android:id="@+id/action_searchBangumiFragment_to_bangumiDetailsFragment"
@@ -80,7 +80,7 @@
     <!--磁力搜索-->
     <fragment
         android:id="@+id/searchMagnetFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.SearchMagnetFragment"
+        android:name="com.dandanplay.tv.ui.fragment.SearchMagnetFragment"
         android:label="SearchMagnetFragment">
         <argument
             android:name="keyword"
@@ -95,7 +95,7 @@
     <!--番剧详情-->
     <fragment
         android:id="@+id/bangumiDetailsFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.BangumiDetailsFragment"
+        android:name="com.dandanplay.tv.ui.fragment.BangumiDetailsFragment"
         android:label="BangumiDetailsFragment">
         <argument
             android:name="animeId"
@@ -115,7 +115,7 @@
     <!--种子详情 待废弃 -->
     <fragment
         android:id="@+id/torrentFileCheckFragment"
-        android:name="com.dandanplay.tv.ui.bangumi.TorrentFileCheckFragment"
+        android:name="com.dandanplay.tv.ui.fragment.TorrentFileCheckFragment"
         android:label="TorrentFileCheckFragment">
         <argument
             android:name="torrentPath"

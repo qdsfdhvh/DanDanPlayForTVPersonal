@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui.bangumi
+package com.dandanplay.tv.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -89,15 +89,17 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         }
     }
 
+    companion object {
+        private fun getWeekName(id: Int) = when(id) {
+            0 -> "周日"
+            1 -> "周一"
+            2 -> "周二"
+            3 -> "周三"
+            4 -> "周四"
+            5 -> "周五"
+            6 -> "周六"
+            else -> ""
+        }
+    }
 }
 
-private fun getWeekName(id: Int) = when(id) {
-    0 -> "周日"
-    1 -> "周一"
-    2 -> "周二"
-    3 -> "周三"
-    4 -> "周四"
-    5 -> "周五"
-    6 -> "周六"
-    else -> ""
-}

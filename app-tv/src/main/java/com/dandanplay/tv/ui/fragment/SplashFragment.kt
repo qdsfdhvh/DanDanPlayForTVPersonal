@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui
+package com.dandanplay.tv.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

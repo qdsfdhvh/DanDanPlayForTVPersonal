@@ -18,5 +18,4 @@ internal val viewModelModule = module {
 
     viewModel { BangumiAreaViewModel(get(), get()) }
 
-    viewModel { DownloadListViewModel() }
 }
