@@ -1,8 +1,6 @@
 package com.dandanplay.tv.ui.fragment
 
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -14,42 +12,43 @@ import androidx.palette.graphics.Palette
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
 import com.dandanplay.tv.model.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel
-import com.facebook.common.executors.CallerThreadExecutor
-import com.facebook.common.references.CloseableReference
-import com.facebook.datasource.DataSource
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
-import com.facebook.imagepipeline.image.CloseableImage
-import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.core.model.api.BangumiDetails
-import com.seiko.core.model.api.BangumiEpisode
-import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.db.model.BangumiDetailsEntity
+import com.seiko.core.data.db.model.BangumiEpisodeEntity
+import com.seiko.core.data.db.model.BangumiIntroEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener,
+class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainScope(),
+    OnItemViewClickedListener,
     OnActionClickedListener {
 
     private val args by navArgs<BangumiDetailsFragmentArgs>()
 
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
+
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupUI()
-    }
+    private lateinit var mActionAdapter: ArrayObjectAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
+    }
+
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
     }
 
     /**
@@ -76,7 +75,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 加载'动漫详情'数据
      */
-    private fun updateUI(data: ResultData<BangumiDetails>) {
+    private fun updateUI(data: ResultData<Pair<BangumiDetailsEntity, Palette?>>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)
@@ -86,8 +85,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
                 ToastUtils.showShort(data.error.toString())
             }
             Status.SUCCESSFUL -> {
-                updateDetails(data.data)
                 setLoadFragment(false)
+                updateDetails(data.data)
             }
         }
     }
@@ -95,19 +94,17 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 更新动漫详情
      */
-    private fun updateDetails(details: BangumiDetails?) {
-        if (details == null) return
-//        title = details.animeTitle
-        viewModel.palette.observe(this::getLifecycle) { palette ->
-            mAdapter.clear()
-            setupDetailsOverviewRowPresenter(palette)
-            setupDetailsOverviewRow(details)
-            setupEpisodesRows(details.episodes)
-            setupRelatedsRows(details.relateds)
-            setupSimilarsRows(details.similars)
-            prepareEntranceTransition()
-        }
-        getImagePaletteSync(details.imageUrl)
+    private fun updateDetails(pair: Pair<BangumiDetailsEntity, Palette?>?) {
+        if (pair == null) return
+        val details = pair.first
+        val palette = pair.second
+        mAdapter.clear()
+        setupDetailsOverviewRowPresenter(palette)
+        setupDetailsOverviewRow(details)
+        setupEpisodesRows(details.episodes)
+        setupRelatedsRows(details.relateds)
+        setupSimilarsRows(details.similars)
+        prepareEntranceTransition()
     }
 
     /**
@@ -135,31 +132,32 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 添加简介布局数据
      */
-    private fun setupDetailsOverviewRow(details: BangumiDetails) {
+    private fun setupDetailsOverviewRow(details: BangumiDetailsEntity) {
         val detailsOverviewRow = DetailsOverviewRow(details)
-        detailsOverviewRow.setImageBitmap(activity!!, null)
+        detailsOverviewRow.setImageBitmap(requireActivity(), null)
         detailsOverviewRow.isImageScaleUpAllowed = true
-        val actionAdapter = SparseArrayObjectAdapter()
-        actionAdapter.set(1, Action(ID_RATING, "评分:${details.rating}", null,
-            ContextCompat.getDrawable(activity!!, R.drawable.ic_rating))
+        mActionAdapter = ArrayObjectAdapter()
+        mActionAdapter.add(
+            Action(ID_RATING, "评分:${details.rating}", null,
+                ContextCompat.getDrawable(requireActivity(), R.drawable.ic_rating))
         )
-        if (details.isFavorited) {
-            actionAdapter.set(2, Action(ID_FAVOURITE, "已收藏", null,
-                ContextCompat.getDrawable(activity!!, R.drawable.ic_heart_full))
-            )
-        } else {
-            actionAdapter.set(2, Action(ID_FAVOURITE, "未收藏", null,
-                ContextCompat.getDrawable(activity!!, R.drawable.ic_heart_empty))
-            )
-        }
-        detailsOverviewRow.actionsAdapter = actionAdapter
+        mActionAdapter.add(
+            if (details.isFavorited) {
+                Action(ID_FAVOURITE, "已收藏", null,
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full))
+            } else {
+                Action(ID_FAVOURITE, "未收藏", null,
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty))
+            }
+        )
+        detailsOverviewRow.actionsAdapter = mActionAdapter
         mAdapter.add(detailsOverviewRow)
     }
 
     /**
      * 添加 分集
      */
-    private fun setupEpisodesRows(episodes: List<BangumiEpisode>) {
+    private fun setupEpisodesRows(episodes: List<BangumiEpisodeEntity>) {
         if (episodes.isNotEmpty()) {
             val episodesAdapter = ArrayObjectAdapter(BangumiEpisodePresenter())
             episodesAdapter.addAll(0, episodes)
@@ -172,7 +170,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 添加 其他系列
      */
-    private fun setupRelatedsRows(relateds: List<BangumiIntro>) {
+    private fun setupRelatedsRows(relateds: List<BangumiIntroEntity>) {
         if (relateds.isNotEmpty()) {
             val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
             relatedAdapter.addAll(0, relateds)
@@ -185,7 +183,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     /**
      * 添加 相似作品
      */
-    private fun setupSimilarsRows(similars: List<BangumiIntro>) {
+    private fun setupSimilarsRows(similars: List<BangumiIntroEntity>) {
         if (similars.isNotEmpty()) {
             val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
             relatedAdapter.addAll(0, similars)
@@ -201,7 +199,19 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     override fun onActionClicked(action: Action?) {
         when(action?.id) {
             ID_FAVOURITE -> {
-                ToastUtils.showShort("点击 收藏")
+                launch {
+                    if (viewModel.setFavourite()) {
+                        LogUtils.d("已收藏")
+                        action.label1 = "已收藏"
+                        action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full)
+                    } else {
+                        LogUtils.d("未收藏")
+                        action.label1 = "未收藏"
+                        action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty)
+                    }
+                    val index = mActionAdapter.indexOf(action)
+                    mActionAdapter.notifyItemRangeChanged(index, 1)
+                }
             }
         }
     }
@@ -212,50 +222,23 @@ class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListen
     override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
-            is BangumiEpisode -> {
+            is BangumiEpisodeEntity -> {
+                val details = viewModel.animeDetails ?: return
                 val keyword = viewModel.getSearchKey(item)
-                findNavController().navigate(
-                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(
-                        keyword, viewModel.animeTitle)
-                )
+
+                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
+                action.animeId = details.animeId
+                action.episodeId = item.episodeId
+                findNavController().navigate(action)
             }
-            is BangumiIntro -> {
+            is BangumiIntroEntity -> {
                 findNavController().navigate(
-                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
+                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(
+                        item.animeId
+                    )
                 )
             }
         }
-    }
-
-    /**
-     * 使用Fresco配合Palette，对网络图片取色
-     */
-    private fun getImagePaletteSync(imageUrl: String) {
-        if (viewModel.equalImageUrl(imageUrl)) return
-        LogUtils.d("加载图片：$imageUrl")
-
-        val uri = Uri.parse(imageUrl)
-        val imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
-//            .setProgressiveRenderingEnabled(true)
-            .build()
-        val imagePipeline = Fresco.getImagePipeline()
-        val dataSource = imagePipeline.fetchDecodedImage(imageRequest, activity!!)
-        val dataSubscriber = object : BaseBitmapDataSubscriber() {
-            override fun onNewResultImpl(bitmap: Bitmap?) {
-                if (bitmap == null) {
-                    return
-                }
-
-                Palette.Builder(bitmap).generate { palette ->
-                    viewModel.palette.value = palette
-                }
-            }
-
-            override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-
-            }
-        }
-        dataSource.subscribe(dataSubscriber, CallerThreadExecutor.getInstance())
     }
 
     companion object {

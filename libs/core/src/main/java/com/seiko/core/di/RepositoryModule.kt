@@ -13,19 +13,23 @@ import org.koin.dsl.module
 
 internal val repositoryModule = module {
 
-    single { createBangumiRepository(get()) }
+    single { createBangumiRepository(get(), get()) }
 
     single { createSearchRepository(get(), get()) }
 
     single { createTorrentRepository(get()) }
 }
 
-private fun createBangumiRepository(dataSource: DanDanApiRemoteDataSource): BangumiRepository {
-    return BangumiRepositoryImpl(dataSource)
+private fun createBangumiRepository(
+    dataSource: DanDanApiRemoteDataSource,
+    database: AppDatabase
+): BangumiRepository {
+    return BangumiRepositoryImpl(dataSource, database)
 }
 
-private fun createSearchRepository(dataSource: DanDanApiRemoteDataSource,
-                                   resDataSource: ResDanDanApiRemoteDataSource
+private fun createSearchRepository(
+    dataSource: DanDanApiRemoteDataSource,
+    resDataSource: ResDanDanApiRemoteDataSource
 ): SearchRepository {
     return SearchRepositoryImpl(dataSource, resDataSource)
 }

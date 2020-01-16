@@ -1,25 +1,26 @@
 package com.dandanplay.tv.vm
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
+import com.dandanplay.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
-import com.seiko.core.domain.bangumi.GetBangumiDetailsUseCase
-import com.seiko.core.model.api.BangumiDetails
-import com.seiko.core.model.api.BangumiEpisode
+import com.seiko.core.data.db.model.BangumiDetailsEntity
+import com.seiko.core.data.db.model.BangumiEpisodeEntity
 import com.seiko.core.data.Result
+import com.dandanplay.tv.domain.FavoriteBangumiDetailsUseCase
+import com.dandanplay.tv.domain.GetBangumiDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class BangumiDetailViewModel(
-    private val getBangumiDetails: GetBangumiDetailsUseCase
+    private val getBangumiDetails: GetBangumiDetailsUseCase,
+    private val getImageUrlPalette: GetImageUrlPaletteUseCase,
+    private val favoriteBangumiDetails: FavoriteBangumiDetailsUseCase
 ) : BaseViewModel() {
 
-    val mainState = ResultLiveData<BangumiDetails>()
-
-    val palette = MutableLiveData<Palette>()
+    val mainState = ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()
 
     /**
      * 番剧的搜索关键字
@@ -27,36 +28,40 @@ class BangumiDetailViewModel(
     private val searchKeyword: String
         get() {
             val details = mainState.value?.data ?: return ""
-            return details.searchKeyword
+            return details.first.searchKeyword
         }
 
     /**
      * 番剧名称
      */
-    val animeTitle: String
+    val animeDetails: BangumiDetailsEntity?
         get() {
-            val details = mainState.value?.data ?: return ""
-            return details.animeTitle
+            val details = mainState.value?.data ?: return null
+            return details.first
         }
 
-    // 上一次提取颜色的图片
-    private var imageUrl = ""
-
-    fun getBangumiDetails(animeId: Int) = viewModelScope.launch {
+    /**
+     * 获得动画详情
+     */
+    fun getBangumiDetails(animeId: Long) = viewModelScope.launch {
         mainState.showLoading()
         val result = withContext(Dispatchers.IO) {
             getBangumiDetails.invoke(animeId)
         }
         when(result) {
             is Result.Error -> mainState.failed(result.exception)
-            is Result.Success -> mainState.success(result.data)
+            is Result.Success -> {
+                val details = result.data
+                val palette = getImageUrlPalette.invoke(details.imageUrl)
+                mainState.success(details to palette)
+            }
         }
     }
 
     /**
      * 从标题(第一话 XXXXXX)中提取关键字
      */
-    fun getSearchKey(item: BangumiEpisode): String {
+    fun getSearchKey(item: BangumiEpisodeEntity): String {
         val infoArray = item.episodeTitle.split("\\s".toRegex())
         var episode = if (infoArray.isEmpty()) item.episodeTitle else infoArray[0]
         if (episode.startsWith("第") && episode.endsWith("话")) {
@@ -66,13 +71,14 @@ class BangumiDetailViewModel(
         return "$searchKeyword $episode"
     }
 
-    fun equalImageUrl(imageUrl: String): Boolean {
-        return if (this.imageUrl == imageUrl) {
-            true
-        } else {
-            this.imageUrl = imageUrl
-            false
-        }
+    /**
+     * 收藏
+     */
+    suspend fun setFavourite(): Boolean {
+        val anime = mainState.value?.data?.first ?: return false
+        anime.isFavorited = !anime.isFavorited
+        favoriteBangumiDetails.invoke(anime)
+        return anime.isFavorited
     }
 
 }

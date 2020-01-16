@@ -11,7 +11,7 @@ import androidx.leanback.app.AppVerticalGridFragment
 import androidx.leanback.app.AppVerticalGridPresenter
 import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.ui.dialog.SelectMagnetDialogFragment
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.TorrentFileCheckPresenter
 import com.dandanplay.tv.vm.TorrentFileCheckViewModel
 import com.seiko.common.ResultData

@@ -64,6 +64,26 @@
             app:destination="@id/bangumiDetailsFragment"
             app:popUpTo="@+id/bangumiAreaFragment" />
     </fragment>
+    <!--番剧详情-->
+    <fragment
+        android:id="@+id/bangumiDetailsFragment"
+        android:name="com.dandanplay.tv.ui.fragment.BangumiDetailsFragment"
+        android:label="BangumiDetailsFragment">
+        <argument
+            android:name="animeId"
+            app:argType="long"/>
+        <action android:id="@+id/action_bangumiDetailsFragment_to_episodesSearchFragment"
+            app:destination="@id/searchMagnetFragment"
+            app:popUpTo="@id/bangumiDetailsFragment"/>
+        <action
+            android:id="@+id/action_bangumiDetailsFragment_related_videos"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@+id/bangumiDetailsFragment"
+            app:enterAnim="@anim/anim_activity_enter"
+            app:exitAnim="@anim/anim_activity_exit"
+            app:popEnterAnim="@anim/anim_activity_enter"
+            app:popExitAnim="@anim/anim_activity_exit"/>
+    </fragment>
     <!--番剧搜索-->
     <fragment
         android:id="@+id/searchBangumiFragment"
@@ -86,31 +106,16 @@
             android:name="keyword"
             app:argType="string"/>
         <argument
-            android:name="animeTile"
-            app:argType="string"/>
+            android:name="animeId"
+            app:argType="long"
+            android:defaultValue="-1L"/>
+        <argument
+            android:name="episodeId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action android:id="@+id/action_episodesSearchFragment_to_torrentFileCheckFragment"
             app:destination="@id/torrentFileCheckFragment"
             app:popUpTo="@id/searchMagnetFragment"/>
-    </fragment>
-    <!--番剧详情-->
-    <fragment
-        android:id="@+id/bangumiDetailsFragment"
-        android:name="com.dandanplay.tv.ui.fragment.BangumiDetailsFragment"
-        android:label="BangumiDetailsFragment">
-        <argument
-            android:name="animeId"
-            app:argType="integer"/>
-        <action android:id="@+id/action_bangumiDetailsFragment_to_episodesSearchFragment"
-            app:destination="@id/searchMagnetFragment"
-            app:popUpTo="@id/bangumiDetailsFragment"/>
-        <action
-            android:id="@+id/action_bangumiDetailsFragment_related_videos"
-            app:destination="@id/bangumiDetailsFragment"
-            app:popUpTo="@+id/bangumiDetailsFragment"
-            app:enterAnim="@anim/anim_activity_enter"
-            app:exitAnim="@anim/anim_activity_exit"
-            app:popEnterAnim="@anim/anim_activity_enter"
-            app:popExitAnim="@anim/anim_activity_exit"/>
     </fragment>
     <!--种子详情 待废弃 -->
     <fragment

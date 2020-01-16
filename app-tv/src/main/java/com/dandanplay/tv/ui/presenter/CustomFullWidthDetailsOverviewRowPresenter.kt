@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
+import com.dandanplay.tv.R
 
 class CustomFullWidthDetailsOverviewRowPresenter(
     detailsPresenter: Presenter,
@@ -14,6 +15,10 @@ class CustomFullWidthDetailsOverviewRowPresenter(
 
     init {
         initialState = STATE_FULL
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.app_lb_fullwidth_details_overview
     }
 
     override fun onLayoutLogo(viewHolder: ViewHolder, oldState: Int, logoChanged: Boolean) {

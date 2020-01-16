@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.SearchMagnetCardView
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 
 class SearchMagnetPresenter : Presenter() {
 
@@ -14,7 +14,7 @@ class SearchMagnetPresenter : Presenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) {
         val cardView = holder.view as SearchMagnetCardView
-        val bean = item as ResMagnetItem
+        val bean = item as ResMagnetItemEntity
         cardView.bind(bean)
     }
 

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dandanplay.tv.R
-import com.dandanplay.tv.ui.SplashFragmentDirections
 import kotlinx.coroutines.*
 
 class SplashFragment: Fragment(), CoroutineScope by MainScope() {

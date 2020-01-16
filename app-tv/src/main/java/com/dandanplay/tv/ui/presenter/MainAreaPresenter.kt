@@ -2,8 +2,9 @@ package com.dandanplay.tv.ui.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
+import com.dandanplay.tv.model.HomeImageBean
 import com.dandanplay.tv.ui.card.MainAreaCardView
-import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.db.model.BangumiIntroEntity
 
 class MainAreaPresenter : Presenter() {
 
@@ -14,7 +15,7 @@ class MainAreaPresenter : Presenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) {
         val cardView = holder.view as MainAreaCardView
-        val intro = item as BangumiIntro
+        val intro = item as HomeImageBean
         cardView.bind(intro)
     }
 

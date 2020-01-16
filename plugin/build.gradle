@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 dependencies {
-    implementation 'com.android.tools.build:gradle:4.0.0-alpha07'
+    implementation 'com.android.tools.build:gradle:3.5.3'
     implementation group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     // gradle sdk
     implementation gradleApi()
@@ -14,7 +14,7 @@ repositories {
     mavenCentral()
 }
 
-//group和version在后面使用自定义插件的时候会用到
+// group和version在后面使用自定义插件的时候会用到
 group='com.gfd.plugin'
 version='1.0.0'
 

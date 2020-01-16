@@ -14,15 +14,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SnackbarUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.dialog.setLoadFragment
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.core.data.Result
 import com.seiko.torrent.R
-import com.seiko.torrent.model.PostEvent
 import com.seiko.torrent.service.TorrentTaskService
-import com.seiko.torrent.ui.dialog.SpinnerProgressDialog
 import com.seiko.torrent.ui.base.BaseFragment
 import com.seiko.torrent.vm.AddTorrentViewModel
 import kotlinx.android.synthetic.main.torrent_fragment_add_torrent.*
@@ -96,14 +93,14 @@ class AddTorrentFragment : BaseFragment() {
     private fun updateStateUI(state: Int) {
         when(state) {
             State.DECODE_TORRENT_FILE -> {
-                showProgress(getString(R.string.torrent_decode_torrent_default_message))
+                setLoadFragment(true, getString(R.string.torrent_decode_torrent_default_message))
             }
             State.FETCHING_HTTP -> {
-                showProgress(getString(R.string.torrent_decode_torrent_downloading_torrent_message))
+                setLoadFragment(true, getString(R.string.torrent_decode_torrent_downloading_torrent_message))
             }
             State.DECODE_TORRENT_COMPLETED,
             State.FETCHING_HTTP_COMPLETED -> {
-                dismissProgress()
+                setLoadFragment(false)
             }
             State.FETCHING_MAGNET -> {
                 fetch_magnet_progress.visibility = View.VISIBLE
@@ -121,37 +118,10 @@ class AddTorrentFragment : BaseFragment() {
      * 处理异常
      */
     private fun handleException(throwable: Throwable?) {
-        dismissProgress()
+        setLoadFragment(false)
         //
         LogUtils.w(throwable)
         ToastUtils.showShort(throwable?.message)
-    }
-
-    /************************************************
-     *               ProgressDialog                 *
-     ************************************************/
-
-    private var progress: SpinnerProgressDialog? = null
-
-    private fun showProgress(progressDialogText: String) {
-        if (childFragmentManager.findFragmentByTag(TAG_SPINNER_PROGRESS) == null) {
-            progress = SpinnerProgressDialog.newInstance(
-                R.string.torrent_decode_torrent_progress_title,
-                progressDialogText,
-                0,
-                true,
-                true)
-            progress!!.show(childFragmentManager,
-                TAG_SPINNER_PROGRESS
-            )
-        }
-    }
-
-    private fun dismissProgress() {
-        if (progress != null) {
-            progress!!.dismissAllowingStateLoss()
-            progress = null
-        }
     }
 
     /************************************************

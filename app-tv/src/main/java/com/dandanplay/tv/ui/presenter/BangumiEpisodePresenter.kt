@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.BangumiEpisodeCardView
-import com.seiko.core.model.api.BangumiEpisode
+import com.seiko.core.data.db.model.BangumiEpisodeEntity
 
 class BangumiEpisodePresenter : Presenter() {
 
@@ -14,7 +14,7 @@ class BangumiEpisodePresenter : Presenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any?) {
         val carView = holder.view as BangumiEpisodeCardView
-        val episode = item as BangumiEpisode
+        val episode = item as BangumiEpisodeEntity
         carView.bind(episode)
     }
 

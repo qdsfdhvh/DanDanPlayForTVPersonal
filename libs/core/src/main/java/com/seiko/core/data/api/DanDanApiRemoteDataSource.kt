@@ -1,24 +1,24 @@
 package com.seiko.core.data.api
 
-import com.seiko.core.model.api.BangumiDetails
-import com.seiko.core.model.api.BangumiIntro
+import android.util.Log
+import com.seiko.core.data.db.model.BangumiDetailsEntity
+import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.model.api.BangumiSeason
 import com.seiko.core.data.Result
-import com.seiko.core.data.api.model.SearchAnimeResponse
 import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.util.safeApiCall
 import okio.IOException
 
 internal class DanDanApiRemoteDataSource(private val api: DanDanApiService) {
 
-    suspend fun getBangumiList(): Result<List<BangumiIntro>> {
+    suspend fun getBangumiList(): Result<List<BangumiIntroEntity>> {
         return safeApiCall(
             call = { requestBangumiList() },
             errorMessage = "Error get BangumiIntroList"
         )
     }
 
-    private suspend fun requestBangumiList(): Result<List<BangumiIntro>> {
+    private suspend fun requestBangumiList(): Result<List<BangumiIntroEntity>> {
         val response = api.getBangumiList()
         if (response.success) {
             return Result.Success(response.bangumiList)
@@ -43,14 +43,14 @@ internal class DanDanApiRemoteDataSource(private val api: DanDanApiService) {
                 "${response.errorCode} ${response.errorMessage}"))
     }
 
-    suspend fun getBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntro>> {
+    suspend fun getBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntroEntity>> {
         return safeApiCall(
             call = { requestBangumiListWithSeason(season) },
             errorMessage = "Error get BangumiSeasonList"
         )
     }
 
-    private suspend fun requestBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntro>> {
+    private suspend fun requestBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntroEntity>> {
         val response = api.getBangumiListWithSeason(season.year, season.month)
         if (response.success) {
             return Result.Success(response.bangumiList)
@@ -59,14 +59,14 @@ internal class DanDanApiRemoteDataSource(private val api: DanDanApiService) {
                 "${response.errorCode} ${response.errorMessage}"))
     }
 
-    suspend fun getBangumiDetails(animeId: Int): Result<BangumiDetails> {
+    suspend fun getBangumiDetails(animeId: Long): Result<BangumiDetailsEntity> {
         return safeApiCall(
             call = { requestBangumiDetails(animeId) },
-            errorMessage = "Error get BangumiIntroList"
+            errorMessage = "Error get BangumiDetailsList"
         )
     }
 
-    private suspend fun requestBangumiDetails(animeId: Int): Result<BangumiDetails> {
+    private suspend fun requestBangumiDetails(animeId: Long): Result<BangumiDetailsEntity> {
         val response = api.getBangumiDetails(animeId)
         if (response.success) {
             return Result.Success(response.bangumi)

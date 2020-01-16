@@ -13,7 +13,7 @@ package com.seiko.core.model.api
 //    isFavorited (boolean): 当前用户是否已关注此作品
 //}
 data class SearchAnimeDetails(
-    var animeId: Int = 0,
+    var animeId: Long = 0,
     var animeTitle: String = "",
     var episodeCount: Int = 0,
     var imageUrl: String = "",

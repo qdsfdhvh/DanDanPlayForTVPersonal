@@ -6,13 +6,13 @@ import org.koin.dsl.module
 
 internal val viewModelModule = module {
 
-    viewModel { BangumiTimeLineViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 
-    viewModel { BangumiDetailViewModel(get()) }
+    viewModel { BangumiDetailViewModel(get(), get(), get()) }
 
     viewModel { SearchBangumiViewModel(get(), get(), get(), get()) }
 
-    viewModel { SearchMagnetViewModel(get(), get(), get()) }
+    viewModel { SearchMagnetViewModel(get(), get(), get(), get()) }
 
     viewModel { TorrentFileCheckViewModel(get(), get()) }
 

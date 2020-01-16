@@ -7,7 +7,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
 import com.seiko.core.domain.bangumi.GetBangumiListWithSeasonUseCase
 import com.seiko.core.domain.bangumi.GetBangumiSeasonsUseCase
-import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.model.api.BangumiSeason
 import com.seiko.core.data.Result
 import kotlinx.coroutines.launch
@@ -21,8 +21,8 @@ class BangumiAreaViewModel(
     val bangumiSeasons: LiveData<ResultData<List<BangumiSeason>>>
         get() = _bangumiSeasons
 
-    private val _bangumiList = ResultLiveData<List<BangumiIntro>>()
-    val bangumiList: LiveData<ResultData<List<BangumiIntro>>>
+    private val _bangumiList = ResultLiveData<List<BangumiIntroEntity>>()
+    val bangumiList: LiveData<ResultData<List<BangumiIntroEntity>>>
         get() = _bangumiList
 
     fun getBangumiSeasons() = viewModelScope.launch {

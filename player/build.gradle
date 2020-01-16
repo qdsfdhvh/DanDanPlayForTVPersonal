@@ -1,6 +1,5 @@
 apply plugin: 'com.gfd.comswitch'
-apply plugin: 'androidx.navigation.safeargs'
-
+//apply plugin: 'com.android.library'
 apply from:rootProject.file('libbase.gradle')
 
 kapt {

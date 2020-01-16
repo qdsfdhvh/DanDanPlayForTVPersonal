@@ -5,47 +5,40 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.DetailsOverviewRow
-import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.R
 import com.facebook.drawee.view.SimpleDraweeView
-import com.seiko.core.model.api.BangumiDetails
+import com.seiko.core.data.db.model.BangumiDetailsEntity
 
 class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
 
-    class ViewHolder(view: View) : DetailsOverviewLogoPresenter.ViewHolder(view) {
-
-        override fun getParentPresenter(): FullWidthDetailsOverviewRowPresenter {
-            return mParentPresenter
-        }
-
-        override fun getParentViewHolder(): FullWidthDetailsOverviewRowPresenter.ViewHolder {
-            return mParentViewHolder
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
-        val imageView = LayoutInflater.from(parent.context).inflate(
-            R.layout.fullwidth_detial_overview_logo, parent, false) as SimpleDraweeView
-
-        val res = parent.resources
-        val width = res.getDimensionPixelSize(R.dimen.detailsFragment_thumbnail_width)
-        val height = res.getDimensionPixelSize(R.dimen.detailsFragment_thumbnail_height)
-        imageView.layoutParams = ViewGroup.MarginLayoutParams(width, height)
-        return ViewHolder(imageView)
+        return ItemViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
         val row = item as DetailsOverviewRow
-        val details = row.item as BangumiDetails
-//        val imageView = viewHolder.view as ImageView
-//        imageView.setImageDrawable(row.imageDrawable)
-        val imageView = viewHolder.view as SimpleDraweeView
-        imageView.setImageURI(details.imageUrl)
-
-        if (isBoundToImage(viewHolder as ViewHolder, row)) {
+        val details = row.item as BangumiDetailsEntity
+        viewHolder as ItemViewHolder
+        viewHolder.bind(details)
+        if (isBoundToImage(viewHolder, row)) {
             viewHolder.parentPresenter.notifyOnBindLogo(viewHolder.parentViewHolder)
         }
     }
+}
 
+class ItemViewHolder(view: View) : DetailsOverviewLogoPresenter.ViewHolder(view) {
+    companion object {
+        fun create(parent: ViewGroup): ItemViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(
+                R.layout.app_fullwidth_detial_overview_logo, parent, false)
+            return ItemViewHolder(view)
+        }
+    }
+
+    private val logo: SimpleDraweeView = view.findViewById(R.id.details_overview_image)
+
+    fun bind(item: BangumiDetailsEntity) {
+        logo.setImageURI(item.imageUrl)
+    }
 }

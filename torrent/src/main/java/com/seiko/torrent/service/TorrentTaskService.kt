@@ -69,7 +69,6 @@ class TorrentTaskService : IntentService("TorrentTaskService") {
         }
     }
 
-    private val downloader: Downloader by inject()
 
     override fun onHandleIntent(intent: Intent?) {
         if (intent == null) return
@@ -93,15 +92,15 @@ class TorrentTaskService : IntentService("TorrentTaskService") {
         }
     }
 
+    private val downloader: Downloader by inject()
+
     /**
      * 添加 种子任务
      */
     private fun addTorrent(params: AddTorrentParams) = GlobalScope.launch {
-        LogUtils.d("addTorrent: ${params.sha1hash}")
         val task = params.toTask()
         when(val result = downloader.start(task, params.fromMagnet)) {
             is Result.Success -> {
-                LogUtils.d("Post Torrent Added: ${task.hash}")
                 EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
             }
             is Result.Error -> {

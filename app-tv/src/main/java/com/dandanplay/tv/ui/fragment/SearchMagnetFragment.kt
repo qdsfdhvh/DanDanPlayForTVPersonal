@@ -11,21 +11,26 @@ import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.navArgs
+import com.alibaba.android.arouter.core.LogisticsCenter
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.router.Routes
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.File
 
-class SearchMagnetFragment : SearchSupportFragment(),
+class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScope(),
     SearchSupportFragment.SearchResultProvider,
     SpeechRecognitionCallback,
     OnItemViewClickedListener {
@@ -48,6 +53,11 @@ class SearchMagnetFragment : SearchSupportFragment(),
         loadData()
     }
 
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
+    }
+
     private fun setupUI() {
         setSearchResultProvider(this)
         setOnItemViewClickedListener(this)
@@ -67,7 +77,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
     /**
      * 加载磁力搜索结果
      */
-    private fun updateUI(data: ResultData<List<ResMagnetItem>>) {
+    private fun updateUI(data: ResultData<List<ResMagnetItemEntity>>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)
@@ -99,12 +109,12 @@ class SearchMagnetFragment : SearchSupportFragment(),
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
-                downloadTorrentOver(data.data ?: return)
+                navToTorrent(data.data ?: return)
             }
         }
     }
 
-    private fun updateResults(magnets: List<ResMagnetItem>) {
+    private fun updateResults(magnets: List<ResMagnetItemEntity>) {
         val magnetAdapter = ArrayObjectAdapter(SearchMagnetPresenter())
         magnetAdapter.addAll(0, magnets)
         val headerItem = HeaderItem("搜索结果")
@@ -154,30 +164,19 @@ class SearchMagnetFragment : SearchSupportFragment(),
         rowsAdapter.clear()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
-            REQUEST_SPEECH -> {
-                when(resultCode) {
-                    Activity.RESULT_OK -> {
-                        setSearchQuery(data, false)
-                    }
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
     /**
      * 点击磁力
      */
     override fun onItemClicked(holder: Presenter.ViewHolder,
                                item: Any?,
                                rowHolder: RowPresenter.ViewHolder?,
-                               row: Row?) {
+                               row: Row?
+    ) {
         when(item) {
-            is ResMagnetItem -> {
+            is ResMagnetItemEntity -> {
+                viewModel.setCurrentMagnetItem(item)
                 if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
-                    downloadMagnet(item.magnet)
+                    downloadMagnet()
                 } else {
                     requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
                 }
@@ -186,27 +185,29 @@ class SearchMagnetFragment : SearchSupportFragment(),
     }
 
     /**
-     * 下载磁力
+     * 下载种子
      */
-    private fun downloadMagnet(magnet: String) {
-        val torrentFile = viewModel.isTorrentExist(magnet)
+    private fun downloadMagnet() {
+        val torrentFile = viewModel.isTorrentExist()
         if (torrentFile != null) {
-            downloadTorrentOver(torrentFile)
+
+            navToTorrent(torrentFile)
         } else {
-            viewModel.downloadTorrent(args.animeTile, magnet)
+            viewModel.downloadTorrent()
         }
     }
 
     /**
      * 下载种子完成，进入种子详情页
      */
-    private fun downloadTorrentOver(torrentFile: File) {
-        ARouter.getInstance().build(Routes.Torrent.PATH)
-            .withParcelable(Routes.Torrent.KEY_TORRENT_PAT, Uri.fromFile(torrentFile))
-            .navigation()
+    private fun navToTorrent(torrentFile: File) {
+        Routes.navigationToTorrent(this, Uri.fromFile(torrentFile), REQUEST_TORRENT)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
             REQUEST_ID_AUDIO -> {
@@ -215,8 +216,31 @@ class SearchMagnetFragment : SearchSupportFragment(),
                 }
             }
             REQUEST_ID_DOWNLOAD -> {
-                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    downloadMagnet()
+                } else {
                     ToastUtils.showShort("没有存储权限。")
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            REQUEST_SPEECH -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    setSearchQuery(data, false)
+                }
+            }
+            REQUEST_TORRENT -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val success = data.getBooleanExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, false)
+                    if (success) {
+                        val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
+                        if (hash != null) {
+                            viewModel.saveMagnetInfoUseCase(hash, args.animeId, args.episodeId)
+                        }
+                    }
                 }
             }
         }
@@ -227,6 +251,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
         private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
+        private const val REQUEST_TORRENT = 2223
 
         private val PERMISSIONS_AUDIO = arrayOf(
             Manifest.permission.RECORD_AUDIO

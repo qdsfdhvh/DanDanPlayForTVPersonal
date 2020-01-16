@@ -7,8 +7,8 @@ import android.app.Application
  */
 interface IProviderApplication {
     /** 组件加载*/
-    fun registered(application: Application)
+    fun onCreate(application: Application)
 
     /** 组件卸载*/
-    fun unregistered()
+    fun onTerminate()
 }

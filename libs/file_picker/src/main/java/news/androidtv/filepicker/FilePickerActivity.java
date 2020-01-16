@@ -77,7 +77,8 @@ public class FilePickerActivity extends FragmentActivity {
                         return filePickerFragment.explore(
                                 AbstractFile.fromLocalAbstractFile(abstractDirectory));
                     }
-        });
+                }
+        );
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.container, filePickerFragment, "root");
         transaction.commit();

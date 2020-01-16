@@ -12,13 +12,13 @@ import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.BangumiRelatedPresenter
 import com.dandanplay.tv.ui.presenter.BangumiSeasonPresenter
 import com.dandanplay.tv.vm.BangumiAreaViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.model.api.BangumiSeason
 import kotlinx.android.synthetic.main.fragment_area.*
 import org.koin.android.ext.android.inject
@@ -109,7 +109,7 @@ class BangumiAreaFragment : Fragment() {
         }
     }
 
-    private fun updateBangumiList(data: ResultData<List<BangumiIntro>>) {
+    private fun updateBangumiList(data: ResultData<List<BangumiIntroEntity>>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)

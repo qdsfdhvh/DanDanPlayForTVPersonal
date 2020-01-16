@@ -1,6 +1,6 @@
 # 弹弹Play For TV Personal
 
-> 通过弹弹Play的开源API所开发的android tv端个人用app。
+> 通过弹弹Play的开源API所开发的android tv端app，个人用。
 
 ## 架构相关
 
@@ -24,70 +24,56 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 ### 参考
 
-01) [DanDanPlayForAndroid](https://github.com/xyoye/DanDanPlayForAndroid)
-弹弹play 概念版，弹弹play系列应用安卓平台上的实现
+* [DanDanPlayForAndroid](https://github.com/xyoye/DanDanPlayForAndroid)
 
-### 1.网络请求
+* [KotlinAndroid](https://github.com/guofudong/KotlinAndroid)
 
-01) [okhttp](https://github.com/square/okhttp)
-安卓端最火热的轻量级HTTP网络请求框架
+### 1. 网络请求
 
-02) [retrofit](https://github.com/square/retrofi)
-一个Restful的HTTP网络请求框架的封装
+* [okhttp](https://github.com/square/okhttp)
 
-### 2.工具
+* [retrofit](https://github.com/square/retrofi)
 
-01) [Koin](https://github.com/InsertKoinIO/koin)
-一款轻量级的依赖注入框架
+### 2. 工具
 
-02) [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-Kotlin协程
+* [Koin](https://github.com/InsertKoinIO/koin)
 
-03) [Fresco](https://github.com/facebook/fresco)
-Facebook开源的一个强大的图片加载组件
+* [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 
-04) [MMKV](https://github.com/Tencent/MMKV)
-基于 mmap 内存映射的 key-value 组件
+* [Fresco](https://github.com/facebook/fresco)
 
-05) [EventBus](https://github.com/greenrobot/EventBus)
-一款在 Android 开发中使用的发布/订阅事件总线框架
+* [MMKV](https://github.com/Tencent/MMKV)
 
-06) [AndroidAutoSize](https://github.com/JessYanCoding/AndroidAutoSize)
-一个极低成本的 Android 屏幕适配方案
+* [EventBus](https://github.com/greenrobot/EventBus)
 
-07) [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)
-一个强大易用的安卓工具类库
+* [AndroidAutoSize](https://github.com/JessYanCoding/AndroidAutoSize)
 
-08) [Eazy Runtime Permission](https://github.com/sagar-viradiya/eazypermissions)
-一个轻量的Android权限库
+* [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)
 
-09) [Navigator](https://github.com/florent37/Navigator)
-Android Multi-module navigator, trying to find a way to navigate into a modularized android project
+* [okio](https://github.com/square/okio)
 
-10) [okio](https://github.com/square/okio)
-一个非常优秀的Java IO/NIO封装库
+### 3. Torrent相关
 
-### 3.播放器相关
+* [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
 
-01) [Exoplayer](https://github.com/google/ExoPlayer)
-Android系统的应用级媒体播放器
+* [simple-torrent-android](https://github.com/masterwok/simple-torrent-android)
 
-02) [ijkplayer](https://github.com/bilibili/ijkplayer)
-Bilibili开源媒体播放器
+* [libretorrent](https://github.com/proninyaroslav/libretorrent)
 
-03) [DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
-Bilibili开源弹幕引擎
+### 4. 播放器相关
 
-04) [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
-识别字幕文件编码格式
+* [Exoplayer](https://github.com/google/ExoPlayer)
 
-### 4.Torrent相关
+* [ijkplayer](https://github.com/bilibili/ijkplayer)
 
-01) [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
-种子下载
+* [DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
 
-02) [simple-torrent-android](https://github.com/masterwok/simple-torrent-android)
-基于jlibtorrent二次封装的kotlin库
+* [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
 
-03) [libretorrent](https://github.com/proninyaroslav/libretorrent)
-基于jlibtorrent开发的开源BT下载应用
+### 5. TV
+
+* [UKIKU](https://github.com/jordyamc/UKIKU)
+
+* [StarFxc](https://github.com/leginigel/StarFxc)
+
+* [aos-Video](https://github.com/archos-sa/aos-Video)

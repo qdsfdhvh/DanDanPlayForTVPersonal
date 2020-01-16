@@ -33,7 +33,7 @@ class CompileCodeTransform extends Transform {
 
         //要收集的application，一般情况下只有一个
         List<CtClass> applications = new ArrayList<>()
-        //要收集的applicationLoads，一般情况下有几个业务组件就有几个applicationload
+        //要收集的applicationLoads，一般情况下有几个业务组件就有几个applicationLoad
         List<CtClass> activators = new ArrayList<>()
 
         for (CtClass ctClass : box) {
@@ -93,9 +93,10 @@ class CompileCodeTransform extends Transform {
         //释放
     }
 
-    private void injectApplicationCode(CtClass ctClassApplication, List<CtClass> activators, String patch) {
+    private static void injectApplicationCode(CtClass ctClassApplication, List<CtClass> activators, String patch) {
         System.out.println("开始加载提供服务的代码")
         ctClassApplication.defrost()
+
         try {
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("onCreate", null)
             attachBaseContextMethod.insertAfter(getAutoLoadComCode(activators))
@@ -103,25 +104,24 @@ class CompileCodeTransform extends Transform {
             StringBuilder methodBody = new StringBuilder()
             methodBody.append("protected void onCreate() {")
             methodBody.append("super.onCreate();")
-            methodBody.
-                    append(getAutoLoadComCode(activators))
+            methodBody.append(getAutoLoadComCode(activators))
             methodBody.append("}")
             ctClassApplication.addMethod(CtMethod.make(methodBody.toString(), ctClassApplication))
         } catch (Exception e) {
 
         }
+
         ctClassApplication.writeFile(patch)
         ctClassApplication.detach()
 
         System.out.println("加载提供服务的代码成功")
     }
 
-    private String getAutoLoadComCode(List<CtClass> activators) {
+    private static String getAutoLoadComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder()
         for (CtClass ctClass : activators) {
-            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".registered(this);")
+            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this);")
         }
-
         return autoLoadComCode.toString()
     }
 

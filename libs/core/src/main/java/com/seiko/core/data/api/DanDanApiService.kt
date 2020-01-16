@@ -34,7 +34,7 @@ internal interface DanDanApiService {
      * @param animeId 作品编号
      */
     @GET("api/v2/bangumi/{animeId}")
-    suspend fun getBangumiDetails(@Path("animeId") animeId: Int): BangumiDetailsResponse
+    suspend fun getBangumiDetails(@Path("animeId") animeId: Long): BangumiDetailsResponse
 
     /**
      * 获取用户近期关注但未看/未看完的番剧的列表。

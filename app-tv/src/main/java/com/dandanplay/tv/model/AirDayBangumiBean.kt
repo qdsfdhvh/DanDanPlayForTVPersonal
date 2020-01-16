@@ -1,8 +1,8 @@
-package com.seiko.core.model.api
+package com.dandanplay.tv.model
 
 data class AirDayBangumiBean(
     val id: Int,
-    val bangumiList: List<BangumiIntro> = ArrayList()
+    val bangumiList: List<HomeImageBean> = ArrayList()
 ) {
     override fun toString(): String {
         return "AirDayBangumiBean{" +

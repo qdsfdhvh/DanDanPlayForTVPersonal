@@ -2,10 +2,8 @@
 <com.facebook.drawee.view.SimpleDraweeView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/details_overview_image"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/detailsFragment_thumbnail_width"
+    android:layout_height="@dimen/detailsFragment_thumbnail_height"
     android:adjustViewBounds="true"
     android:elevation="@dimen/lb_details_overview_z"
-    android:maxWidth="@dimen/lb_details_v2_logo_max_width"
-    android:maxHeight="@dimen/lb_details_v2_logo_max_height"
     app:placeholderImageScaleType="centerCrop" />

@@ -1,6 +1,6 @@
 package com.seiko.core.repo
 
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.data.Result
 
@@ -23,7 +23,7 @@ interface SearchRepository {
      * @param typeId 作品类型， 不过滤输入-1
      * @param subGroupId 字幕组Id， 不过滤输入-1
      */
-    suspend fun searchMagnetList(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItem>>
+    suspend fun searchMagnetList(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItemEntity>>
 
 
 

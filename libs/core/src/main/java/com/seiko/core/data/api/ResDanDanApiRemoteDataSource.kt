@@ -1,15 +1,14 @@
 package com.seiko.core.data.api
 
 import com.seiko.core.data.Result
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.util.safeApiCall
-import okio.IOException
 
 internal class ResDanDanApiRemoteDataSource(private val api: ResDanDanApiService) {
 
     suspend fun searchMagnetList(keyword: String,
                                  typeId: Int,
-                                 subGroupId: Int): Result<List<ResMagnetItem>> {
+                                 subGroupId: Int): Result<List<ResMagnetItemEntity>> {
         return safeApiCall(
             call = { requestSearchMagnetList(keyword, typeId, subGroupId) },
             errorMessage = "Error searchMagnetList"
@@ -18,7 +17,7 @@ internal class ResDanDanApiRemoteDataSource(private val api: ResDanDanApiService
 
     private suspend fun requestSearchMagnetList(keyword: String,
                                                 typeId: Int,
-                                                subGroupId: Int): Result<List<ResMagnetItem>> {
+                                                subGroupId: Int): Result<List<ResMagnetItemEntity>> {
         val type = if (typeId < 0) "" else typeId.toString()
         val subGroup = if (subGroupId < 0) "" else subGroupId.toString()
 

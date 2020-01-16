@@ -14,7 +14,7 @@ import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.model.AnimeRow
@@ -23,7 +23,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.router.Routes
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.File
@@ -116,7 +116,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         adapterRows[ROW_BANGUMI]?.setList(results)
     }
 
-    private fun updateMagnetList(results: List<ResMagnetItem>) {
+    private fun updateMagnetList(results: List<ResMagnetItemEntity>) {
         adapterRows[ROW_MAGNET]?.setList(results)
     }
 
@@ -178,19 +178,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
 //        rowsAdapter.clear()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
-            REQUEST_SPEECH -> {
-                when(resultCode) {
-                    Activity.RESULT_OK -> {
-                        setSearchQuery(data, true)
-                    }
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
     override fun onItemClicked(holder: Presenter.ViewHolder,
                                item: Any?,
                                rowHolder: RowPresenter.ViewHolder?,
@@ -201,7 +188,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
                     SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(item.animeId)
                 )
             }
-            is ResMagnetItem -> {
+            is ResMagnetItemEntity -> {
                 if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
                     downloadMagnet(item.magnet)
                 } else {
@@ -228,8 +215,8 @@ class SearchBangumiFragment : SearchSupportFragment(),
      */
     private fun downloadTorrentOver(torrentFile: File) {
         ARouter.getInstance().build(Routes.Torrent.PATH)
-            .withParcelable(Routes.Torrent.KEY_TORRENT_PAT, Uri.fromFile(torrentFile))
-            .navigation()
+            .withParcelable(Routes.Torrent.KEY_TORRENT_PATH, Uri.fromFile(torrentFile))
+            .navigation(requireActivity(), REQUEST_TORRENT)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -248,6 +235,21 @@ class SearchBangumiFragment : SearchSupportFragment(),
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            REQUEST_SPEECH -> {
+                when(resultCode) {
+                    Activity.RESULT_OK -> {
+                        setSearchQuery(data, true)
+                    }
+                }
+            }
+            REQUEST_TORRENT -> {
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     companion object {
         private const val ROW_BANGUMI = 100
@@ -257,6 +259,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
+        private const val REQUEST_TORRENT = 2223
 
         private val PERMISSIONS_AUDIO = arrayOf(
             Manifest.permission.RECORD_AUDIO

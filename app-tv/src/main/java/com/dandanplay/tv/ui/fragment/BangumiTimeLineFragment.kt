@@ -7,18 +7,18 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
-import com.dandanplay.tv.vm.BangumiTimeLineViewModel
+import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.core.model.api.AirDayBangumiBean
-import com.seiko.core.model.api.BangumiIntro
+import com.dandanplay.tv.model.AirDayBangumiBean
+import com.dandanplay.tv.model.HomeImageBean
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
 
-    private val viewModel by viewModel<BangumiTimeLineViewModel>()
+    private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
 
@@ -44,9 +44,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
 
     private fun bindViewModel() {
         viewModel.airDayBangumiList.observe(this::getLifecycle, this::updateUI)
-        if (viewModel.airDayBangumiList.value == null) {
-            viewModel.getBangumiList()
-        }
+        viewModel.getBangumiList(false)
     }
 
     private fun updateUI(data: ResultData<List<AirDayBangumiBean>>) {
@@ -81,7 +79,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     override fun onItemClicked(holder: Presenter.ViewHolder?, item: Any?,
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
-            is BangumiIntro -> {
+            is HomeImageBean -> {
                 findNavController().navigate(
                     BangumiTimeLineFragmentDirections.actionBangumiTimeLineFragmentToBangumiDetailsFragment(item.animeId)
                 )

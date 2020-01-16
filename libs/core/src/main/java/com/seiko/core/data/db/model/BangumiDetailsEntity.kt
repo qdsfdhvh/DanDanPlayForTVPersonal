@@ -1,4 +1,6 @@
-package com.seiko.core.model.api
+package com.seiko.core.data.db.model
+
+import androidx.room.*
 
 //BangumiDetails {
 //    type (string): 作品类型 = ['tvseries', 'tvspecial', 'ova', 'movie', 'musicvideo', 'web', 'other', 'jpmovie', 'jpdrama', 'unknown'],
@@ -24,42 +26,57 @@ package com.seiko.core.model.api
 //    isRestricted (boolean): 是否为限制级别的内容（例如属于R18分级） ,
 //    rating (number): 番剧综合评分（综合多个来源的评分求出的加权平均值，0-10分）
 //}
-data class BangumiDetails(
-    val type: String,
-    val typeDescription: String,
-    val episodes: List<BangumiEpisode>,
-    val summary: String,
-    val bangumiUrl: String,
-    val loushaoUrl: String,
-    val userRating: Int,
-    val favoriteStatus: String,
-    val comment: String,
-    val ratingDetails: RatingDetails,
-    val relateds: List<BangumiIntro>,
-    val similars: List<BangumiIntro>,
-    val tags: List<BangumiTag>,
-    val animeId: Int,
-    val animeTitle: String,
-    val imageUrl: String,
-    val searchKeyword: String,
-    val isOnAir: Boolean,
-    val airDay: Int,
-    val isFavorited: Boolean,
-    val isRestricted: Boolean,
-    val rating: Int
+@Entity(
+    tableName = "BangumiDetails"
+)
+data class BangumiDetailsEntity(
+    @PrimaryKey(autoGenerate = false)
+    var animeId: Long = 0,
+    var animeTitle: String = "",
+    var imageUrl: String = "",
+
+    var type: String = "",
+    var typeDescription: String = "",
+    var summary: String = "",
+    var bangumiUrl: String = "",
+//    var loushaoUrl: String = "",
+//    val userRating: Int,
+//    val favoriteStatus: String,
+//    val comment: String,
+//    val ratingDetails: RatingDetails,
+    @Ignore
+    var episodes: List<BangumiEpisodeEntity> = emptyList(),
+    @Ignore
+    var relateds: List<BangumiIntroEntity> = emptyList(),
+    @Ignore
+    var similars: List<BangumiIntroEntity> = emptyList(),
+    @Ignore
+    var tags: List<BangumiTagEntity> = emptyList(),
+
+    var isOnAir: Boolean = false,
+    var airDay: Int = 0,
+    var searchKeyword: String = "",
+    var isRestricted: Boolean = false,
+    var rating: Int = 0,
+
+    var addedDate: Long = 0
 ) {
+
+    @Ignore
+    var isFavorited: Boolean = false
+
     companion object {
-        fun empty() = BangumiDetails(
+        fun empty() = BangumiDetailsEntity(
             type = "",
             typeDescription = "",
             episodes = emptyList(),
             summary = "",
             bangumiUrl = "",
-            loushaoUrl = "",
-            userRating = 0,
-            favoriteStatus = "",
-            comment = "",
-            ratingDetails = RatingDetails.empty(),
+//            loushaoUrl = "",
+//            userRating = 0,
+//            favoriteStatus = "",
+//            comment = "",
+//            ratingDetails = RatingDetails.empty(),
             relateds = emptyList(),
             similars = emptyList(),
             tags = emptyList(),
@@ -69,7 +86,6 @@ data class BangumiDetails(
             searchKeyword = "",
             isOnAir = false,
             airDay = 0,
-            isFavorited = false,
             isRestricted = false,
             rating = 0
         )

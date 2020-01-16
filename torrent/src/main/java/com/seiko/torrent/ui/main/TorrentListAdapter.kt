@@ -177,7 +177,7 @@ class TorrentListAdapter(
         }
 
         fun attach() {
-            LogUtils.d("attach: $this")
+//            LogUtils.d("attach: $this")
             val position = adapterPosition
             if (position >= 0) {
                 val item = currentItems[position]
@@ -190,7 +190,7 @@ class TorrentListAdapter(
         }
 
         fun detach() {
-            LogUtils.d("detach: $this")
+//            LogUtils.d("detach: $this")
             val position = adapterPosition
             if (position >= 0) {
                 val item = currentItems[position]

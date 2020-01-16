@@ -10,13 +10,13 @@ import org.koin.core.context.loadKoinModules
  */
 class ProviderApplication : IProviderApplication {
 
-    override fun registered(application: Application) {
+    override fun onCreate(application: Application) {
         LogUtils.dTag("Provider", "start register common.")
 
         loadKoinModules(dataModule)
     }
 
-    override fun unregistered() {
+    override fun onTerminate() {
 
     }
 }

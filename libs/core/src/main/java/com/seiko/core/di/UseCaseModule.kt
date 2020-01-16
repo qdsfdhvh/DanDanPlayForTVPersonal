@@ -10,30 +10,19 @@ import org.koin.dsl.module
 internal val useCaseModule = module {
 
     single { GetBangumiListUseCase() }
-
-    single { GetAirDayBangumiBeansUseCase() }
-
+    single { GetBangumiListWithSeasonUseCase() }
     single { GetBangumiSeasonsUseCase() }
 
-    single { GetBangumiListWithSeasonUseCase() }
-
-    single { GetBangumiDetailsUseCase() }
-
     single { SearchBangumiListUseCase() }
-
     single { SearchMagnetListUseCase() }
 
     single { GetTorrentInfoFileUseCase() }
 
     single { DownloadTorrentUseCase() }
-
     single { GetTorrentCheckBeanListUseCase() }
+    single { GetTorrentLocalPlayUrlUseCase() }
+    single { GetTorrentTempWithContentUseCase() }
+    single { GetTorrentTempWithNetUseCase() }
 
     single { DeleteCacheTorrentUseCase() }
-
-    single { GetTorrentLocalPlayUrlUseCase() }
-
-    single { GetTorrentTempWithContentUseCase() }
-
-    single { GetTorrentTempWithNetUseCase() }
 }

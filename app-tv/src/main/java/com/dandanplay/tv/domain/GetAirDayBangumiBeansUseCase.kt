@@ -1,8 +1,10 @@
-package com.seiko.core.domain.bangumi
+package com.dandanplay.tv.domain
 
-import com.seiko.core.model.api.AirDayBangumiBean
-import com.seiko.core.model.api.BangumiIntro
+import com.dandanplay.tv.model.AirDayBangumiBean
+import com.dandanplay.tv.util.toHomeImageBean
+import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.data.Result
+import com.seiko.core.domain.bangumi.GetBangumiListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -17,7 +19,7 @@ class GetAirDayBangumiBeansUseCase : KoinComponent {
     private val getBangumiListUseCase: GetBangumiListUseCase by inject()
 
     /**
-     * @param weekDay 已周几开头，输入0~6，
+     * @param weekDay 已周几开头，输入0~6，假设输入二， 结果数据为：[周二、三、四、五、六、日、一]
      */
     suspend operator fun invoke(weekDay: Int): Result<List<AirDayBangumiBean>> {
         when(val result = getBangumiListUseCase.invoke()) {
@@ -36,7 +38,7 @@ class GetAirDayBangumiBeansUseCase : KoinComponent {
         }
     }
 
-    private suspend fun getAirDayBangumiBeans(weekDay: Int, intros: List<BangumiIntro>): List<AirDayBangumiBean> {
+    private suspend fun getAirDayBangumiBeans(weekDay: Int, intros: List<BangumiIntroEntity>): List<AirDayBangumiBean> {
         return withContext(Dispatchers.Default) {
             // 按顺序生成 周日 ~ 周六 数据
             val weekDays = listOf(
@@ -51,7 +53,7 @@ class GetAirDayBangumiBeansUseCase : KoinComponent {
 
             // 导入动漫信息
             for (intro in intros) {
-                (weekDays[intro.airDay].bangumiList as ArrayList).add(intro)
+                (weekDays[intro.airDay].bangumiList as ArrayList).add(intro.toHomeImageBean())
             }
 
             // 本周 ~ 周六 + 周日 ~ 本周

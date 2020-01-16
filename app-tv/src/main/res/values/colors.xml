@@ -11,5 +11,4 @@
     <color name="button_focused_shape">@color/colorAccent</color>
     <color name="button_default_shape">@android:color/transparent</color>
 
-    <color name="immutable_text_white">#ffffff</color>
 </resources>

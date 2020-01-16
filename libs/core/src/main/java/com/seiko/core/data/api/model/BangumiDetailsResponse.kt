@@ -1,6 +1,6 @@
 package com.seiko.core.data.api.model
 
-import com.seiko.core.model.api.BangumiDetails
+import com.seiko.core.data.db.model.BangumiDetailsEntity
 
 //BangumiDetailsResponse {
 //    bangumi (BangumiDetails, optional): 番剧详情 ,
@@ -9,5 +9,5 @@ import com.seiko.core.model.api.BangumiDetails
 //    errorMessage (string, optional, read only): 当发生错误时，说明错误具体原因
 //}
 class BangumiDetailsResponse : JsonResultResponse() {
-    var bangumi: BangumiDetails = BangumiDetails.empty()
+    var bangumi: BangumiDetailsEntity = BangumiDetailsEntity.empty()
 }

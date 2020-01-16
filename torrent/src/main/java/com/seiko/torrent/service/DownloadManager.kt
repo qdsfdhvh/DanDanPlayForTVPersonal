@@ -121,10 +121,6 @@ class DownloadManager(
             startEngine()
         }
 
-//        if (torrentRepo.exitTorrent(task.hash)) {
-//            return Result.Error(Exception("Torrent is exit"))
-//        }
-
         when {
             // 来自磁力
             isFromMagnet -> {

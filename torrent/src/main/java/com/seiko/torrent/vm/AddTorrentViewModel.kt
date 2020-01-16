@@ -21,6 +21,7 @@ import com.seiko.torrent.ui.add.State
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.torrent.extensions.isMagnet
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.libtorrent4j.Priority
 import java.io.File
@@ -90,6 +91,7 @@ class AddTorrentViewModel(
             }
             URLUtil.isContentUrl(path) -> {
                 updateState(State.FETCHING_HTTP)
+                delay(50)
                 when(val result = getTorrentTempWithNetUseCase.invoke(source)) {
                     is Result.Success -> {
                         source = result.data
@@ -101,12 +103,14 @@ class AddTorrentViewModel(
             }
             URLUtil.isFileUrl(path) -> {
                 updateState(State.DECODE_TORRENT_FILE)
+                delay(50)
                 source = uri.path!!
                 updateTorrentInfo(TorrentMetaInfo(source))
                 updateState(State.DECODE_TORRENT_COMPLETED)
             }
             URLUtil.isContentUrl(path) -> {
                 updateState(State.DECODE_TORRENT_FILE)
+                delay(50)
                 when(val result = getTorrentTempWithContentUseCase.invoke(uri)) {
                     is Result.Success -> {
                         source = result.data

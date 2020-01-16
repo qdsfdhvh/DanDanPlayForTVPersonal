@@ -1,10 +1,6 @@
 package com.seiko.core.repo
 
-import com.seiko.core.data.api.DanDanApiService
-import com.seiko.core.data.api.ResDanDanApiService
-import com.seiko.core.data.api.model.ResMagnetSearchResponse
-import com.seiko.core.data.api.model.SearchAnimeResponse
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.data.Result
 import com.seiko.core.data.api.DanDanApiRemoteDataSource
@@ -19,7 +15,7 @@ internal class SearchRepositoryImpl(
         return dataSource.searchBangumiList(keyword, type)
     }
 
-    override suspend fun searchMagnetList(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItem>> {
+    override suspend fun searchMagnetList(keyword: String, typeId: Int, subGroupId: Int): Result<List<ResMagnetItemEntity>> {
         return resDataSource.searchMagnetList(keyword, typeId, subGroupId)
     }
 

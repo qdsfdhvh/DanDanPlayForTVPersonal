@@ -1,7 +1,7 @@
 package com.seiko.core.data.api.model
 
 import com.google.gson.annotations.SerializedName
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 
 /**
  * HasMore : true
@@ -20,5 +20,5 @@ import com.seiko.core.model.api.ResMagnetItem
  */
 class ResMagnetSearchResponse {
     @SerializedName("HasMore") var hasMore: Boolean = false
-    @SerializedName("Resources") var resources: List<ResMagnetItem> = emptyList()
+    @SerializedName("Resources") var resources: List<ResMagnetItemEntity> = emptyList()
 }

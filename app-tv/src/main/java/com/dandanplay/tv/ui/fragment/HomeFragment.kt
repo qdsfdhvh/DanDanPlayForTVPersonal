@@ -14,24 +14,24 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.dandanplay.tv.model.HomeBean
+import com.dandanplay.tv.model.HomeSettingBean
 import com.dandanplay.tv.ui.dialog.SelectDialogFragment
-import com.dandanplay.tv.ui.dialog.setLoadFragment
+import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
-import com.dandanplay.tv.ui.presenter.MainMyPresenter
+import com.dandanplay.tv.ui.presenter.MainSettingPresenter
 import com.dandanplay.tv.model.AnimeRow
-import com.dandanplay.tv.ui.HomeFragmentDirections
-import com.dandanplay.tv.vm.BangumiTimeLineViewModel
+import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.router.Routes
-import com.seiko.core.model.api.BangumiIntro
+import com.seiko.core.data.db.model.BangumiIntroEntity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
 
-    private val viewModel by viewModel<BangumiTimeLineViewModel>()
+    private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var adapterRows: SparseArray<AnimeRow>
 
@@ -39,12 +39,12 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 
     private val leftItems by lazyAndroid {
         listOf(
-            HomeBean(ID_AREA, "番剧区", R.drawable.ic_bangumi_area),
+            HomeSettingBean(ID_AREA, "番剧区", R.drawable.ic_bangumi_area),
 //            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
-            HomeBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
+            HomeSettingBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
 //            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
-            HomeBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
-            HomeBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
+            HomeSettingBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
+            HomeSettingBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
         )
     }
 
@@ -83,19 +83,16 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     private fun setupRows() {
         if (adapter != null) return
         // 生成数据的Adapter
-        adapterRows = SparseArray(2)
-        adapterRows.put(
-            ROW_AREA, AnimeRow(
-                ROW_AREA
-            )
+        adapterRows = SparseArray(3)
+        adapterRows.put(ROW_AREA, AnimeRow(ROW_AREA)
                 .setAdapter(MainAreaPresenter())
                 .setTitle("今日更新"))
-        adapterRows.put(
-            ROW_MY, AnimeRow(
-                ROW_MY
-            )
-                .setAdapter(MainMyPresenter())
-                .setTitle("个人中心"))
+        adapterRows.put(ROW_FAVORITE, AnimeRow(ROW_FAVORITE)
+                .setAdapter(MainAreaPresenter())
+                .setTitle("我的收藏"))
+        adapterRows.put(ROW_SETTING, AnimeRow(ROW_SETTING)
+                .setAdapter(MainSettingPresenter())
+                .setTitle("工具中心"))
 
         // 生成界面的Adapter
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
@@ -116,19 +113,21 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
      */
     private fun bindViewModel() {
         viewModel.weekBangumiList.observe(this::getLifecycle, this::updateUI)
+        viewModel.favoriteBangumiList.observe(this::getLifecycle) { favorites ->
+            adapterRows.get(ROW_FAVORITE)?.setList(favorites)
+        }
         // 加载个人数据
-        adapterRows.get(ROW_MY)?.setList(leftItems)
+        adapterRows.get(ROW_SETTING)?.setList(leftItems)
 
         // Navigation在退栈时,回重新调用onCreateView
-        if (viewModel.weekBangumiList.value == null) {
-            viewModel.getBangumiList()
-        }
+        viewModel.getBangumiList(false)
+        viewModel.getFavoriteBangumiList()
     }
 
     /**
      * 加载'今日更新'数据
      */
-    private fun updateUI(data: ResultData<List<BangumiIntro>>) {
+    private fun updateUI(data: ResultData<List<HomeImageBean>>) {
         when(data.responseType) {
             Status.LOADING -> {
                 setLoadFragment(true)
@@ -140,7 +139,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
                 adapterRows.get(ROW_AREA)?.setList(data.data)
-                startEntranceTransition()
+//                startEntranceTransition()
             }
         }
     }
@@ -182,14 +181,14 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
-            is BangumiIntro -> {
+            is HomeImageBean -> {
                 navController.navigate(
                     HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
                         item.animeId
                     )
                 )
             }
-            is HomeBean -> {
+            is HomeSettingBean -> {
                 when(item.id) {
                     ID_AREA -> {
                         navController.navigate(
@@ -222,7 +221,8 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 
     companion object {
         private const val ROW_AREA = 0
-        private const val ROW_MY = 1
+        private const val ROW_FAVORITE = 1
+        private const val ROW_SETTING = 2
 
         private const val ID_AREA = 0
         private const val ID_FAVOURITE = 1

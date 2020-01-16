@@ -2,10 +2,10 @@ package com.dandanplay.tv.ui.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.dandanplay.tv.model.HomeBean
+import com.dandanplay.tv.model.HomeSettingBean
 import com.dandanplay.tv.ui.card.MainMyCardView
 
-class MainMyPresenter : Presenter() {
+class MainSettingPresenter : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = MainMyCardView(parent.context)
@@ -14,7 +14,7 @@ class MainMyPresenter : Presenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) {
         val cardView = holder.view as MainMyCardView
-        val bean = item as HomeBean
+        val bean = item as HomeSettingBean
         cardView.bind(bean)
     }
 

@@ -10,7 +10,7 @@ import com.seiko.core.domain.torrent.DownloadTorrentUseCase
 import com.seiko.core.domain.torrent.GetTorrentInfoFileUseCase
 import com.seiko.core.domain.search.SearchBangumiListUseCase
 import com.seiko.core.domain.search.SearchMagnetListUseCase
-import com.seiko.core.model.api.ResMagnetItem
+import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
@@ -32,8 +32,8 @@ class SearchBangumiViewModel(
     private val _bangumiList = MutableLiveData<List<SearchAnimeDetails>>()
     val bangumiList: LiveData<List<SearchAnimeDetails>> = _bangumiList
 
-    private val _magnetList = MutableLiveData<List<ResMagnetItem>>()
-    val magnetList: LiveData<List<ResMagnetItem>> = _magnetList
+    private val _magnetList = MutableLiveData<List<ResMagnetItemEntity>>()
+    val magnetList: LiveData<List<ResMagnetItemEntity>> = _magnetList
 
     private val _downloadState = ResultLiveData<File>()
     val downloadState: LiveData<ResultData<File>> = _downloadState
