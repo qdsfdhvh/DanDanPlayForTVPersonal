@@ -21,6 +21,7 @@ import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainSettingPresenter
 import com.dandanplay.tv.model.AnimeRow
 import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.util.diff.HomeImageBeanDiffCallback
 import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
@@ -33,7 +34,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 
     private val viewModel by viewModel<HomeViewModel>()
 
-    private lateinit var adapterRows: SparseArray<AnimeRow>
+    private lateinit var adapterRows: SparseArray<AnimeRow<*>>
 
     private lateinit var navController: NavController
 
@@ -84,13 +85,15 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         if (adapter != null) return
         // 生成数据的Adapter
         adapterRows = SparseArray(3)
-        adapterRows.put(ROW_AREA, AnimeRow(ROW_AREA)
-                .setAdapter(MainAreaPresenter())
-                .setTitle("今日更新"))
-        adapterRows.put(ROW_FAVORITE, AnimeRow(ROW_FAVORITE)
-                .setAdapter(MainAreaPresenter())
-                .setTitle("我的收藏"))
-        adapterRows.put(ROW_SETTING, AnimeRow(ROW_SETTING)
+        adapterRows.put(ROW_AREA, AnimeRow<HomeImageBean>(ROW_AREA)
+            .setDiffCallback(HomeImageBeanDiffCallback())
+            .setAdapter(MainAreaPresenter())
+            .setTitle("今日更新"))
+        adapterRows.put(ROW_FAVORITE, AnimeRow<HomeImageBean>(ROW_FAVORITE)
+            .setDiffCallback(HomeImageBeanDiffCallback())
+            .setAdapter(MainAreaPresenter())
+            .setTitle("我的收藏"))
+        adapterRows.put(ROW_SETTING, AnimeRow<HomeSettingBean>(ROW_SETTING)
                 .setAdapter(MainSettingPresenter())
                 .setTitle("工具中心"))
 

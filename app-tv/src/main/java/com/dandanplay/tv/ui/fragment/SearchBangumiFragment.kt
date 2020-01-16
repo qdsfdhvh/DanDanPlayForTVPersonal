@@ -18,6 +18,7 @@ import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.model.AnimeRow
+import com.dandanplay.tv.ui.card.SearchMagnetCardView
 import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
@@ -37,7 +38,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     private var rowsAdapter: ArrayObjectAdapter? = null // ArrayObjectAdapter(ListRowPresenter())
 
-    private lateinit var adapterRows: SparseArray<AnimeRow>
+    private lateinit var adapterRows: SparseArray<AnimeRow<*>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +64,11 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
         adapterRows = SparseArray(2)
         adapterRows.put(
-            ROW_BANGUMI, AnimeRow(ROW_BANGUMI)
+            ROW_BANGUMI, AnimeRow<SearchAnimeDetails>(ROW_BANGUMI)
                 .setAdapter(SearchBangumiPresenter())
                 .setTitle("相关作品"))
         adapterRows.put(
-            ROW_MAGNET, AnimeRow(ROW_MAGNET)
+            ROW_MAGNET, AnimeRow<SearchMagnetCardView>(ROW_MAGNET)
                 .setAdapter(SearchMagnetPresenter())
                 .setTitle("磁力链接"))
 
