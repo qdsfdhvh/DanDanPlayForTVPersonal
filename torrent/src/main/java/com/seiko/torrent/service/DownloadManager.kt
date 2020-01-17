@@ -1,11 +1,11 @@
 package com.seiko.torrent.service
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.core.data.db.model.TorrentEntity
-import com.seiko.core.repo.TorrentRepository
-import com.seiko.core.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.torrent.model.TorrentEntity
+import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
 import com.seiko.core.data.Result
-import com.seiko.torrent.constants.TORRENT_CONFIG_FILE_NAME
 import com.seiko.download.torrent.TorrentEngine
 import com.seiko.download.torrent.TorrentEngineCallback
 import com.seiko.download.torrent.TorrentEngineOptions
@@ -13,9 +13,12 @@ import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus
 import com.seiko.download.torrent.model.TorrentTask
-import com.seiko.torrent.parser.TrackerParser
+import com.seiko.torrent.data.comments.TorrentRepository
+import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.libtorrent4j.AddTorrentParams
 import java.io.File
 import java.io.FileNotFoundException
@@ -23,19 +26,24 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.collections.AbstractMap
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.concurrent.thread
+import kotlin.math.log
 
 @ExperimentalCoroutinesApi
 class DownloadManager(
     private val options: TorrentEngineOptions,
-    private val torrentRepo: TorrentRepository,
-    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase
-) : Downloader, TorrentEngineCallback {
+    private val torrentRepo: TorrentRepository
+) : Downloader, KoinComponent, TorrentEngineCallback {
 
     companion object {
         private const val TAG = "DownloadManager"
     }
+
+    private val getTorrentInfoFile: GetTorrentInfoFileUseCase by inject()
+    private val getTorrentTrackers: GetTorrentTrackersUseCase by inject()
 
     /**
      * 种子信息传输用协程
@@ -77,7 +85,7 @@ class DownloadManager(
      * 关闭引擎
      */
     private fun closeEngine() {
-//        downloadScope.cancel()
+        downloadScope.cancel()
         torrentEngine.setCallback(null)
         // 引擎的关闭非常耗时，启用单独的线程去关闭它
         thread(
@@ -138,7 +146,7 @@ class DownloadManager(
                     task.downloadingMetadata = false
 
                     // 获取种子保存路径
-                    val result = getTorrentInfoFileUseCase.invoke(task.hash)
+                    val result = getTorrentInfoFile.invoke(task.hash)
                     if (result !is Result.Success) {
                         val error = result as Result.Error
                         return Result.Error(error.exception)
@@ -191,10 +199,8 @@ class DownloadManager(
             startEngine()
         }
 
-        LogUtils.d("fetchMagnet: $source")
-
         val magnetInfo = torrentEngine.fetchMagnet(source).toMagnetInfo(source)
-        magnetMap[magnetInfo.sha1hash] = EventData(downloadScope, function)
+        magnetMap.safeGetEvent(magnetInfo.sha1hash).set(function)
         return magnetInfo
     }
 
@@ -222,7 +228,11 @@ class DownloadManager(
      * 停止所有种子
      */
     override fun release() {
+        LogUtils.d("release")
         if (isAlreadyRunning.compareAndSet(true, false)) {
+            for (event in downloadMap.values) {
+                event.cancel()
+            }
             closeEngine()
         }
     }
@@ -231,10 +241,7 @@ class DownloadManager(
      * 停止某个种子的监听
      */
     override fun disposeDownload(hash: String) {
-        downloadMap[hash]?.let { event ->
-            event.cancel()
-            downloadMap.remove(hash)
-        }
+        downloadMap[hash]?.set(null)
     }
 
     /**
@@ -242,10 +249,7 @@ class DownloadManager(
      */
     @ObsoleteCoroutinesApi
     override fun onProgressChanged(hash: String, function: (item: TorrentSessionStatus) -> Unit) {
-        if (downloadMap.containsKey(hash)) {
-            disposeDownload(hash)
-        }
-        downloadMap[hash] = EventData(downloadScope, function)
+        downloadMap.safeGetEvent(hash).set(function)
     }
 
     /**
@@ -264,23 +268,19 @@ class DownloadManager(
         downloadScope.launch {
             torrentRepo.deleteTorrent(hash)
             torrentEngine.removeTorrent(hash, withFile)
+            downloadMap[hash]?.let {
+                it.cancel()
+                downloadMap.remove(hash)
+            }
         }
-    }
-
-    /**
-     * 尝试从引擎data文件夹中的config文件中写入trackers
-     */
-    private fun loadConfigTrackers() {
-        val dataDir = torrentEngine.getDataDir()
-        val configDir = File(dataDir, TORRENT_CONFIG_FILE_NAME)
-        TrackerParser(configDir, listener = { trackers ->
-            options.trackers.addAll(trackers)
-        }).parse()
     }
 
     override fun onEngineStarted() {
         downloadScope.launch {
-            loadConfigTrackers()
+            when(val result = getTorrentTrackers.invoke()) {
+                is Result.Success -> options.trackers.addAll(result.data)
+                is Result.Error -> LogUtils.eTag(TAG, result.exception)
+            }
         }
     }
 
@@ -380,6 +380,15 @@ class DownloadManager(
         LogUtils.eTag(TAG, errorMsg)
     }
 
+    private fun <T> ConcurrentHashMap<String, EventData<T>>.safeGetEvent(hash: String): EventData<T> {
+        return if (containsKey(hash)) {
+            get(hash)!!
+        } else {
+            val event = EventData<T>(downloadScope)
+            put(hash, event)
+            event
+        }
+    }
 }
 
 private fun TorrentTask.toEntity(): TorrentEntity {
@@ -433,27 +442,39 @@ private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
 
 @ExperimentalCoroutinesApi
 data class EventData<T>(
-    val coroutineScope: CoroutineScope,
-    val callback: (T) -> Unit
+    val coroutineScope: CoroutineScope
 ) {
+
     private val channel = ConflatedBroadcastChannel<T>()
     private var job: Job? = null
 
+    private var callback: ((T) -> Unit)? = null
+    private var value: T? = null
+
     init {
         job = coroutineScope.launch(Dispatchers.Main) {
-            channel.openSubscription().consumeEach(callback)
+            channel.openSubscription().consumeEach {
+                callback?.invoke(it)
+            }
         }
+    }
+
+    fun set(callback: ((T) -> Unit)?) {
+        value?.let { callback?.invoke(it) }
+        this.callback = callback
     }
 
     fun post(data: T) {
         if (!channel.isClosedForSend) {
             coroutineScope.launch {
+                value = data
                 channel.send(data)
             }
         }
     }
 
     fun cancel() {
+        callback = null
         job?.cancel()
         channel.cancel()
     }

@@ -3,8 +3,8 @@ package com.seiko.core.repo
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.data.Result
-import com.seiko.core.data.api.DanDanApiRemoteDataSource
-import com.seiko.core.data.api.ResDanDanApiRemoteDataSource
+import com.seiko.core.data.comments.DanDanApiRemoteDataSource
+import com.seiko.core.data.comments.ResDanDanApiRemoteDataSource
 
 internal class SearchRepositoryImpl(
     private val dataSource: DanDanApiRemoteDataSource,

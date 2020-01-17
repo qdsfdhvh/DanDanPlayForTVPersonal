@@ -1,9 +1,9 @@
-package com.seiko.core.domain.torrent
+package com.seiko.torrent.domain
 
 import com.seiko.core.constants.TORRENT_TEMP_DIR
 import com.seiko.core.util.writeInputStream
 import com.seiko.core.data.Result
-import com.seiko.core.data.api.TorrentApiRemoteDataSource
+import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -11,7 +11,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
 
-class GetTorrentTempWithNetUseCase : KoinComponent {
+class DownloadTorrentWithNetUseCase : KoinComponent {
 
     private val tempDir: File by inject(named(TORRENT_TEMP_DIR))
 

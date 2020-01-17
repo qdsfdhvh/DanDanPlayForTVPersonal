@@ -21,6 +21,7 @@ import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
+import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import kotlinx.coroutines.CoroutineScope
@@ -44,8 +45,6 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        // onCreate在onCreateView前，重建View时旧的数据不会往下传递
-        viewModel.downloadState.observe(this::getLifecycle, this::updateDownloadUI)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,26 +89,6 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
                 updateResults(data.data ?: return)
-            }
-        }
-    }
-
-    /**
-     * 种子下载完成
-     */
-    private fun updateDownloadUI(data: ResultData<File>) {
-        when(data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                LogUtils.e(data.error)
-                ToastUtils.showShort(data.error.toString())
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                navToTorrent(data.data ?: return)
             }
         }
     }
@@ -165,7 +144,7 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
     }
 
     /**
-     * 点击磁力
+     * 点击：磁力
      */
     override fun onItemClicked(holder: Presenter.ViewHolder,
                                item: Any?,
@@ -185,25 +164,16 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
     }
 
     /**
-     * 下载种子
+     * 跳转Torrent下载种子
      */
     private fun downloadMagnet() {
-        val torrentFile = viewModel.isTorrentExist()
-        if (torrentFile != null) {
-
-            navToTorrent(torrentFile)
-        } else {
-            viewModel.downloadTorrent()
-        }
+        val uri = viewModel.getCurrentMagnetUri() ?: return
+        Navigator.navToTorrent(this, uri, REQUEST_TORRENT)
     }
 
     /**
-     * 下载种子完成，进入种子详情页
+     * 权限请求回调
      */
-    private fun navToTorrent(torrentFile: File) {
-        Routes.navigationToTorrent(this, Uri.fromFile(torrentFile), REQUEST_TORRENT)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<out String>,
                                             grantResults: IntArray
@@ -225,6 +195,9 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
         }
     }
 
+    /**
+     * Activity退栈回调
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode) {
             REQUEST_SPEECH -> {

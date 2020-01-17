@@ -1,8 +1,8 @@
 package com.seiko.core.repo
 
-import com.seiko.core.constants.BangumiIntroType
+import com.seiko.core.annotation.BangumiIntroType
 import com.seiko.core.data.Result
-import com.seiko.core.data.api.DanDanApiRemoteDataSource
+import com.seiko.core.data.comments.DanDanApiRemoteDataSource
 import com.seiko.core.data.db.AppDatabase
 import com.seiko.core.data.db.model.BangumiDetailsEntity
 import com.seiko.core.data.db.model.BangumiIntroEntity

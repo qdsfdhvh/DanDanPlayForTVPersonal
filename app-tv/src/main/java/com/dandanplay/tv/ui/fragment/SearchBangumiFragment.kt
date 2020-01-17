@@ -23,6 +23,7 @@ import com.dandanplay.tv.vm.SearchBangumiViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
+import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
@@ -43,8 +44,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        // onCreate在onCreateView前，重建View时旧的数据不会往下传递
-        viewModel.downloadState.observe(this::getLifecycle, this::updateDownloadUI)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,9 +91,10 @@ class SearchBangumiFragment : SearchSupportFragment(),
             if (!checkPermissions(PERMISSIONS_AUDIO)) {
                 requestPermissions(PERMISSIONS_AUDIO, REQUEST_ID_AUDIO)
             }
+
             // 测试
-            setSearchQuery("勇者", false)
-            search("勇者")
+            setSearchQuery("紫罗兰花园", false)
+            search("紫罗兰花园")
         }
     }
 
@@ -119,25 +119,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     private fun updateMagnetList(results: List<ResMagnetItemEntity>) {
         adapterRows[ROW_MAGNET]?.setList(results)
-    }
-
-    /**
-     * 种子下载完成
-     */
-    private fun updateDownloadUI(data: ResultData<File>) {
-        when(data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                ToastUtils.showShort(data.error.toString())
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                downloadTorrentOver(data.data ?: return)
-            }
-        }
     }
 
     override fun recognizeSpeech() {
@@ -179,6 +160,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
 //        rowsAdapter.clear()
     }
 
+    /**
+     * 点击：动画 / 磁力
+     */
     override fun onItemClicked(holder: Presenter.ViewHolder,
                                item: Any?,
                                rowHolder: RowPresenter.ViewHolder?,
@@ -190,8 +174,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
                 )
             }
             is ResMagnetItemEntity -> {
+                viewModel.setCurrentMagnetItem(item)
                 if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
-                    downloadMagnet(item.magnet)
+                    downloadMagnet()
                 } else {
                     requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
                 }
@@ -200,27 +185,20 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     /**
-     * 下载磁力
+     * 跳转Torrent下载种子
      */
-    private fun downloadMagnet(magnet: String) {
-        val torrentFile = viewModel.isTorrentExist(magnet)
-        if (torrentFile != null) {
-            downloadTorrentOver(torrentFile)
-        } else {
-            viewModel.downloadTorrent(magnet)
-        }
+    private fun downloadMagnet() {
+        val uri = viewModel.getCurrentMagnetUri() ?: return
+        Navigator.navToTorrent(this, uri, REQUEST_TORRENT)
     }
 
     /**
-     * 下载种子完成，进入种子详情页
+     * 权限请求回调
      */
-    private fun downloadTorrentOver(torrentFile: File) {
-        ARouter.getInstance().build(Routes.Torrent.PATH)
-            .withParcelable(Routes.Torrent.KEY_TORRENT_PATH, Uri.fromFile(torrentFile))
-            .navigation(requireActivity(), REQUEST_TORRENT)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
             REQUEST_ID_AUDIO -> {
@@ -229,13 +207,18 @@ class SearchBangumiFragment : SearchSupportFragment(),
                 }
             }
             REQUEST_ID_DOWNLOAD -> {
-                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    downloadMagnet()
+                } else {
                     ToastUtils.showShort("没有存储权限。")
                 }
             }
         }
     }
 
+    /**
+     * Activity退栈回调
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode) {
             REQUEST_SPEECH -> {
@@ -246,7 +229,16 @@ class SearchBangumiFragment : SearchSupportFragment(),
                 }
             }
             REQUEST_TORRENT -> {
-
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val success = data.getBooleanExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, false)
+                    if (success) {
+                        val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
+                        if (hash != null) {
+                            // 这里不存在animeId与episodeId，都是-1
+                            viewModel.saveMagnetInfoUseCase(hash, -1, -1)
+                        }
+                    }
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

@@ -1,19 +1,27 @@
 package com.seiko.torrent.service
 
+import android.content.Context
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.common.service.TorrentInfoService
-import com.seiko.torrent.constants.TORRENT_CONFIG_FILE_NAME
+import com.seiko.common.router.Routes
+import com.seiko.common.service.TorrentService
+import com.seiko.core.constants.TORRENT_DOWNLOAD_DIR
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
-class TorrentInfoServiceImpl : TorrentInfoService, KoinComponent {
+@Route(path = Routes.Service.TORRENT_INFO)
+class TorrentServiceImpl : TorrentService, KoinComponent {
+
+    override fun init(context: Context?) {
+
+    }
 
     override fun findDownloadPaths(hash: String): List<String> {
         LogUtils.d("搜索hash: $hash 的下载文件路径。")
 
-        val dataDir: File by inject(named(TORRENT_CONFIG_FILE_NAME))
+        val dataDir: File by inject(named(TORRENT_DOWNLOAD_DIR))
         return listOf(dataDir.absolutePath)
     }
 
@@ -22,4 +30,7 @@ class TorrentInfoServiceImpl : TorrentInfoService, KoinComponent {
         return listOf("BBB")
     }
 
+    override fun shutDown(context: Context) {
+        TorrentTaskService.shutDown(context)
+    }
 }

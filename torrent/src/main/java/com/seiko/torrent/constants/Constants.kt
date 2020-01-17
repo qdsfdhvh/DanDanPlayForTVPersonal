@@ -13,5 +13,17 @@ const val HASH_PATTERN = "\\b[0-9a-fA-F]{5,40}\\b"
 const val MAX_HTTP_REDIRECTION = 10
 const val MIME_TORRENT = "application/x-bittorrent"
 
+/**
+ * 本地配置文件名
+ */
+internal const val DB_NAME_DEFAULT = "Torrent_Database"
+
+/**
+ * 默认种子下载域名
+ */
+internal const val DOWNLOAD_BASE_URL = "https://m2t.chinacloudsites.cn/"
+
+/**
+ * Trackers文件名
+ */
 internal const val ASSETS_TRACKER_NAME = "tracker.txt"
-internal const val TORRENT_CONFIG_FILE_NAME = "config.txt"

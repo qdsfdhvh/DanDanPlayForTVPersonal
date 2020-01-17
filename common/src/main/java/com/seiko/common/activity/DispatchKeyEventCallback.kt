@@ -8,7 +8,7 @@ abstract class DispatchKeyEventCallback(
     private var mEnabled: Boolean = false
 ) {
 
-    private val cancellables = CopyOnWriteArrayList<Cancellable>()
+    private val cancelAbles = CopyOnWriteArrayList<Cancellable>()
 
     @MainThread
     fun setEnabled(enabled: Boolean) {
@@ -22,7 +22,7 @@ abstract class DispatchKeyEventCallback(
 
     @MainThread
     fun remove() {
-        for (cancellable in cancellables) {
+        for (cancellable in cancelAbles) {
             cancellable.cancel()
         }
     }
@@ -31,10 +31,10 @@ abstract class DispatchKeyEventCallback(
     abstract fun handleDispatchKeyEvent(event: KeyEvent?): Boolean
 
     fun addCancellable(cancellable: Cancellable) {
-        cancellables.add(cancellable)
+        cancelAbles.add(cancellable)
     }
 
     fun removeCancellable(cancellable: Cancellable) {
-        cancellables.remove(cancellable)
+        cancelAbles.remove(cancellable)
     }
 }

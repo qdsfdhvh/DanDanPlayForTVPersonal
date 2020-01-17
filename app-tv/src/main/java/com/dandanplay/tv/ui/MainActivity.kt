@@ -16,6 +16,7 @@ import com.dandanplay.tv.extensions.hideSoftInput
 import com.dandanplay.tv.extensions.isSoftInputMethodShowing
 import com.seiko.common.activity.DispatchKeyEventDispatcher
 import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
+import com.seiko.common.service.TorrentService
 
 class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
 
@@ -41,6 +42,12 @@ class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navController = this.findNavController(R.id.myNavHostFragment)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 关闭Torrent下载
+        TorrentService.get().shutDown(this)
     }
 
     /**

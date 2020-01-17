@@ -3,7 +3,6 @@ package com.seiko.core.di
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Environment
-import android.os.Environment.DIRECTORY_DOWNLOADS
 import com.seiko.core.constants.TORRENT_CONFIG_DIR
 import com.seiko.core.constants.TORRENT_DATA_DIR
 import com.seiko.core.constants.TORRENT_DOWNLOAD_DIR
@@ -37,7 +36,7 @@ internal val torrentModule = module {
  * 种子下载目录
  */
 private fun createTorrentDownloadDir(): File {
-    return Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS)
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 }
 
 /**

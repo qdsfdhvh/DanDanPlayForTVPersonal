@@ -21,7 +21,7 @@ internal val localModule = module {
 
     single { createPrefDataSource(get()) }
 
-    single { createObjectBox(androidContext()) }
+    single { createAppDatabase(androidContext()) }
 
 }
 
@@ -37,7 +37,7 @@ private fun createPrefDataSource(prefs: MMKV): PrefDataSource {
     return PrefDataSourceImpl(prefs)
 }
 
-private fun createObjectBox(context: Context): AppDatabase {
+private fun createAppDatabase(context: Context): AppDatabase {
     return Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME_DEFAULT).build()
 }
 

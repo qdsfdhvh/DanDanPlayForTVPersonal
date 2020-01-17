@@ -1,16 +1,12 @@
 package com.seiko.torrent.di
 
-import android.app.Application
-import com.seiko.torrent.domain.CheckTorrentConfigUseCase
-import org.koin.android.ext.koin.androidApplication
+import com.seiko.torrent.domain.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
-
-    single { createCheckTorrentConfigUseCase() }
-
-}
-
-private fun createCheckTorrentConfigUseCase(): CheckTorrentConfigUseCase {
-    return CheckTorrentConfigUseCase()
+    single { DownloadTorrentWithDanDanApiUseCase() }
+    single { DownloadTorrentWithNetUseCase() }
+    single { GetTorrentInfoFileUseCase() }
+    single { GetTorrentTrackersUseCase() }
+    single { GetTorrentTempWithContentUseCase() }
 }

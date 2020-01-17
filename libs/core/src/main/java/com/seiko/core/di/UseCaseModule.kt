@@ -16,13 +16,8 @@ internal val useCaseModule = module {
     single { SearchBangumiListUseCase() }
     single { SearchMagnetListUseCase() }
 
-    single { GetTorrentInfoFileUseCase() }
-
-    single { DownloadTorrentUseCase() }
     single { GetTorrentCheckBeanListUseCase() }
     single { GetTorrentLocalPlayUrlUseCase() }
-    single { GetTorrentTempWithContentUseCase() }
-    single { GetTorrentTempWithNetUseCase() }
 
     single { DeleteCacheTorrentUseCase() }
 }

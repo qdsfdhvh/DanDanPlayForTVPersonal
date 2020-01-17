@@ -8,7 +8,7 @@ import com.seiko.common.BaseViewModel
 import com.seiko.core.data.db.model.BangumiDetailsEntity
 import com.seiko.core.data.db.model.BangumiEpisodeEntity
 import com.seiko.core.data.Result
-import com.dandanplay.tv.domain.FavoriteBangumiDetailsUseCase
+import com.dandanplay.tv.domain.SaveFavoriteBangumiDetailsUseCase
 import com.dandanplay.tv.domain.GetBangumiDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 class BangumiDetailViewModel(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
-    private val favoriteBangumiDetails: FavoriteBangumiDetailsUseCase
+    private val favoriteBangumiDetails: SaveFavoriteBangumiDetailsUseCase
 ) : BaseViewModel() {
 
     val mainState = ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()

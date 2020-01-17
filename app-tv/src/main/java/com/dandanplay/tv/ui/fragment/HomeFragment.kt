@@ -26,7 +26,9 @@ import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
+import com.seiko.common.service.TorrentService
 import com.seiko.core.data.db.model.BangumiIntroEntity
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -213,9 +215,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                         ToastUtils.showShort("设置")
                     }
                     ID_DOWNLOAD -> {
-                        ARouter.getInstance().build(Routes.Torrent.PATH)
-                            .navigation()
-//                        DownloadManagerActivity.launch(activity!!)
+                        Navigator.navToTorrent()
                     }
                 }
             }

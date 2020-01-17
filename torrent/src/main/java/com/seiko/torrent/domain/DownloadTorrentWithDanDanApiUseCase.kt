@@ -1,38 +1,40 @@
-package com.seiko.core.domain.torrent
+package com.seiko.torrent.domain
 
 import com.seiko.core.util.writeInputStream
-import com.seiko.core.data.api.TorrentApiService
 import com.seiko.core.data.Result
-import com.seiko.core.data.api.TorrentApiRemoteDataSource
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
+import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.libtorrent4j.TorrentInfo
 import java.io.File
 
-class DownloadTorrentUseCase : KoinComponent {
+class DownloadTorrentWithDanDanApiUseCase : KoinComponent {
 
     private val dataSource: TorrentApiRemoteDataSource by inject()
 
     private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase by inject()
 
-    suspend operator fun invoke(magnet: String): Result<File> {
+    suspend operator fun invoke(magnet: String): Result<String> {
         val downloadResult = dataSource.downloadTorrentWithMagnet(magnet)
         if (downloadResult is Result.Error) {
             return Result.Error(downloadResult.exception)
         }
-
+        // 获得字节
         val inputStream = (downloadResult as Result.Success).data
+        val bytes = inputStream.readBytes()
+        // 加载信息
+        val info = TorrentInfo(bytes)
+        val hash = info.infoHash().toHex()
 
-        val result = getTorrentInfoFileUseCase(magnet)
+        val result = getTorrentInfoFileUseCase(hash)
         if (result is Result.Error) {
             return Result.Error(result.exception)
         }
-        val file = (result as Result.Success).data
-        file.writeInputStream(inputStream)
 
-        return Result.Success(file)
+        val file = (result as Result.Success).data
+        file.writeBytes(bytes)
+
+        return Result.Success(file.absolutePath)
     }
 
 }

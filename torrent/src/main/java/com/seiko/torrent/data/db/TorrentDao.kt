@@ -1,16 +1,16 @@
-package com.seiko.core.data.db.dao
+package com.seiko.torrent.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
-import com.seiko.core.data.db.model.TorrentEntity
+import com.seiko.torrent.model.TorrentEntity
 
 @Dao
 interface TorrentDao {
 
-    @Query("SELECT * FROM Torrent")
+    @Query("SELECT * FROM Torrent ORDER BY addedDate DESC")
     suspend fun all(): List<TorrentEntity>
 
     @Query("SELECT * FROM Torrent WHERE hash = :hash")

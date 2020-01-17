@@ -1,35 +1,27 @@
 package com.dandanplay.tv.vm
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.core.domain.torrent.DownloadTorrentUseCase
-import com.seiko.core.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.core.domain.search.SearchMagnetListUseCase
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,
-    private val getTorrentInfoFile: GetTorrentInfoFileUseCase,
-    private val downloadTorrent: DownloadTorrentUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<List<ResMagnetItemEntity>>()
     val mainState: LiveData<ResultData<List<ResMagnetItemEntity>>> = _mainState
-
-    private val _downloadState = ResultLiveData<File>()
-    val downloadState: LiveData<ResultData<File>> = _downloadState
 
     // 上一次搜索的关键字
     private var query = ""
@@ -68,34 +60,11 @@ class SearchMagnetViewModel(
     }
 
     /**
-     * 当前Magnet信息中的种子是否已经下载
+     * 获取当前选择的磁力链接
      */
-    fun isTorrentExist(): File? {
+    fun getCurrentMagnetUri(): Uri? {
         val item = currentMagnetItem ?: return null
-        val result = getTorrentInfoFile.invoke(item.magnet)
-        if (result is Result.Success) {
-            val torrentFile = result.data
-            if (torrentFile.exists()) {
-                return torrentFile
-            }
-        }
-        return null
-    }
-
-    /**
-     * 下载当前Magnet信息中的种子
-     */
-    fun downloadTorrent() = viewModelScope.launch {
-        val item = currentMagnetItem ?: return@launch
-        _downloadState.showLoading()
-        delay(50)
-        val result = withContext(Dispatchers.IO) {
-            downloadTorrent.invoke(item.magnet)
-        }
-        when(result) {
-            is Result.Error -> _downloadState.failed(result.exception)
-            is Result.Success -> _downloadState.success(result.data)
-        }
+        return Uri.parse(item.magnet)
     }
 
     /**

@@ -1,30 +1,18 @@
 package com.seiko.torrent.vm
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.BaseViewModel
-import com.seiko.core.constants.TORRENT_CONFIG_DIR
-import com.seiko.core.data.db.model.TorrentEntity
-import com.seiko.core.repo.TorrentRepository
-import com.seiko.core.util.writeInputStream
+import com.seiko.torrent.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
-import com.seiko.torrent.constants.ASSETS_TRACKER_NAME
-import com.seiko.torrent.constants.TORRENT_CONFIG_FILE_NAME
-import com.seiko.torrent.domain.CheckTorrentConfigUseCase
+import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
-import java.io.File
-import java.io.IOException
 
 class MainViewModel(
     private val downloader: Downloader,
-    private val torrentRepo: TorrentRepository,
-    private val checkTorrentConfigUseCase: CheckTorrentConfigUseCase
+    private val torrentRepo: TorrentRepository
 ) : BaseViewModel() {
 
     private val _torrentItems = MutableLiveData<List<TorrentEntity>>()
@@ -44,7 +32,6 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            checkTorrentConfigUseCase.invoke()
             downloader.restoreDownloads()
         }
     }

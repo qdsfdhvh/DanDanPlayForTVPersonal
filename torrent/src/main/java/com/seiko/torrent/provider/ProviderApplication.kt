@@ -3,12 +3,7 @@ package com.seiko.torrent.provider
 import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.provider.IProviderApplication
-import com.seiko.common.router.Routes
-import com.seiko.common.service.TorrentInfoService
-import com.seiko.torrent.di.downloadModule
-import com.seiko.torrent.di.useCaseModule
-import com.seiko.torrent.di.viewModelModule
-import com.seiko.torrent.service.TorrentInfoServiceImpl
+import com.seiko.torrent.di.torrentModules
 import org.koin.core.context.loadKoinModules
 
 /**
@@ -19,12 +14,10 @@ class ProviderApplication : IProviderApplication {
     override fun onCreate(application: Application) {
         LogUtils.dTag("Provider", "start register torrent.")
 
-        Routes.addService(TorrentInfoService::class.java.simpleName, TorrentInfoServiceImpl())
-
-        loadKoinModules(listOf(downloadModule, useCaseModule, viewModelModule))
+        loadKoinModules(torrentModules)
     }
 
     override fun onTerminate() {
-        Routes.removeService(TorrentInfoService::class.java.simpleName)
+
     }
 }

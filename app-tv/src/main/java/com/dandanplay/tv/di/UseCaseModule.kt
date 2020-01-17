@@ -4,7 +4,7 @@ import com.dandanplay.tv.domain.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    single { FavoriteBangumiDetailsUseCase() }
+    single { SaveFavoriteBangumiDetailsUseCase() }
     single { GetAirDayBangumiBeansUseCase() }
     single { GetBangumiDetailsUseCase() }
     single { GetFavoriteBangumiListUseCase() }

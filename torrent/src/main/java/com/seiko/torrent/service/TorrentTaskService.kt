@@ -1,27 +1,17 @@
 package com.seiko.torrent.service
 
 import android.app.IntentService
-import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Binder
-import android.os.IBinder
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.eventbus.EventBusScope
-import com.seiko.core.constants.TORRENT_CONFIG_DIR
-import com.seiko.core.util.writeInputStream
 import com.seiko.core.data.Result
-import com.seiko.torrent.constants.ASSETS_TRACKER_NAME
-import com.seiko.torrent.constants.TORRENT_CONFIG_FILE_NAME
 import com.seiko.torrent.model.AddTorrentParams
 import com.seiko.torrent.model.PostEvent
 import com.seiko.torrent.model.toTask
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
-import java.io.File
-import java.io.IOException
 
 class TorrentTaskService : IntentService("TorrentTaskService") {
 

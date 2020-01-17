@@ -5,12 +5,10 @@ import android.webkit.URLUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.BaseViewModel
-import com.seiko.core.domain.torrent.GetTorrentTempWithContentUseCase
-import com.seiko.core.domain.torrent.GetTorrentTempWithNetUseCase
+import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
+import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
 import com.seiko.core.data.Result
-import com.seiko.torrent.constants.*
 import com.seiko.torrent.extensions.find
 import com.seiko.torrent.extensions.getLeaves
 import com.seiko.torrent.extensions.toFileTree
@@ -20,6 +18,7 @@ import com.seiko.torrent.service.Downloader
 import com.seiko.torrent.ui.add.State
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
+import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.torrent.extensions.isMagnet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,8 +28,9 @@ import java.io.File
 class AddTorrentViewModel(
     private val downloader: Downloader,
     private val torrentDownloadDir: File,
+    private val downloadTorrentWithDanDanApi: DownloadTorrentWithDanDanApiUseCase,
     private val getTorrentTempWithContentUseCase: GetTorrentTempWithContentUseCase,
-    private val getTorrentTempWithNetUseCase: GetTorrentTempWithNetUseCase
+    private val getTorrentTempWithNetUseCase: DownloadTorrentWithNetUseCase
 ) : BaseViewModel() {
 
     /**
@@ -81,25 +81,41 @@ class AddTorrentViewModel(
         val path = uri.toString()
         when {
             path.isMagnet() -> {
-                fromMagnet = true
-                source = uri.toString()
-                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
-                    updateState(State.FETCHING_MAGNET_COMPLETED)
-                    updateTorrentInfo(info)
+                // 弹弹接口下载，较快
+                updateState(State.FETCHING_HTTP)
+                delay(50)
+                when(val result = downloadTorrentWithDanDanApi.invoke(path)) {
+                    is Result.Success -> {
+                        updateState(State.FETCHING_HTTP_COMPLETED)
+                        source = result.data
+                        updateTorrentInfo(TorrentMetaInfo(source))
+                    }
+                    is Result.Error -> {
+                        handleException(result.exception)
+                    }
                 }
-                updateState(State.FETCHING_MAGNET)
+                // 引擎下载磁力，比较慢
+//                fromMagnet = true
+//                source = uri.toString()
+//                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
+//                    updateState(State.FETCHING_MAGNET_COMPLETED)
+//                    updateTorrentInfo(info)
+//                }
+//                updateState(State.FETCHING_MAGNET)
             }
             URLUtil.isContentUrl(path) -> {
                 updateState(State.FETCHING_HTTP)
                 delay(50)
-                when(val result = getTorrentTempWithNetUseCase.invoke(source)) {
+                when(val result = getTorrentTempWithNetUseCase.invoke(path)) {
                     is Result.Success -> {
+                        updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
                         updateTorrentInfo(TorrentMetaInfo(source))
                     }
-                    is Result.Error -> Result.Error(result.exception)
+                    is Result.Error -> {
+                        handleException(result.exception)
+                    }
                 }
-                updateState(State.FETCHING_HTTP_COMPLETED)
             }
             URLUtil.isFileUrl(path) -> {
                 updateState(State.DECODE_TORRENT_FILE)
@@ -113,18 +129,24 @@ class AddTorrentViewModel(
                 delay(50)
                 when(val result = getTorrentTempWithContentUseCase.invoke(uri)) {
                     is Result.Success -> {
+                        updateState(State.DECODE_TORRENT_COMPLETED)
+
                         source = result.data
                         updateTorrentInfo(TorrentMetaInfo(source))
                     }
-                    is Result.Error -> Result.Error(result.exception)
+                    is Result.Error -> {
+                        handleException(result.exception)
+                    }
                 }
-                updateState(State.DECODE_TORRENT_COMPLETED)
             }
             else -> {
-                Result.Error(IllegalArgumentException("Unknown link/path type: ${uri.scheme}"))
-                return@launch
+                handleException(IllegalArgumentException("Unknown link/path type: $path"))
             }
         }
+    }
+
+    private fun handleException(error: Exception) {
+        _state.value = Result.Error(error)
     }
 
     private fun updateState(state: Int) {

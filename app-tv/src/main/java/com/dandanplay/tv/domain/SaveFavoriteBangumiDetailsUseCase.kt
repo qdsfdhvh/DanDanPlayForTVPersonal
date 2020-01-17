@@ -9,7 +9,7 @@ import org.koin.core.inject
 /**
  * 收藏or取消收藏 - 保存动漫详情内容or删除
  */
-class FavoriteBangumiDetailsUseCase : KoinComponent {
+class SaveFavoriteBangumiDetailsUseCase : KoinComponent {
 
     private val bangumiRepository: BangumiRepository by inject()
 

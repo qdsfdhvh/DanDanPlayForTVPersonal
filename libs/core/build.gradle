@@ -39,13 +39,13 @@ dependencies {
     api 'com.tencent:mmkv:1.0.23'
 
     // NetWork
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
+    api 'com.squareup.retrofit2:retrofit:2.7.1'
+    api 'com.squareup.retrofit2:converter-gson:2.7.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.0.1'
 
     // Database
-    implementation dependence.libRoomRuntime
-    implementation dependence.libRoomKtx
+    api dependence.libRoomRuntime
+    api dependence.libRoomKtx
     kapt dependence.libRoomCompiler
 
     // Database Debug 8080

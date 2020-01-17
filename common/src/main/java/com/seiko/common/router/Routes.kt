@@ -31,43 +31,11 @@ object Routes {
     }
 
     /**
-     * 跳转种子页面
-     * PS: ARouter默认的navigation不支持fragment
+     * 服务
      */
-    fun navigationToTorrent(fragment: Fragment, uri: Uri, requestCode: Int) {
-        val postcard = ARouter.getInstance().build(Torrent.PATH)
-            .withParcelable(Torrent.KEY_TORRENT_PATH, uri)
-        LogisticsCenter.completion(postcard)
-
-        val intent = Intent(fragment.requireContext(), postcard.destination)
-        intent.putExtras(postcard.extras)
-
-        fragment.startActivityForResult(intent, requestCode)
+    object Service {
+        const val TORRENT_INFO = "/service/torrentInfo"
     }
 
-    private val services = HashMap<String, Any>()
-
-    @Synchronized
-    fun addService(serviceName: String?, serviceImpl: Any?) {
-        if (serviceName == null || serviceImpl == null) {
-            return
-        }
-        services[serviceName] = serviceImpl
-    }
-
-    @Synchronized
-    fun getService(serviceName: String?): Any? {
-        return if (serviceName == null) {
-            null
-        } else services[serviceName]
-    }
-
-    @Synchronized
-    fun removeService(serviceName: String?) {
-        if (serviceName == null) {
-            return
-        }
-        services.remove(serviceName)
-    }
 
 }

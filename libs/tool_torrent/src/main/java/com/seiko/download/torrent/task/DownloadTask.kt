@@ -1,26 +1,14 @@
 package com.seiko.download.torrent.task
 
 import android.util.Log
-import com.seiko.download.torrent.TorrentEngine
 import com.seiko.download.torrent.constants.SAVE_RESUME_SYNC_TIME
-import com.seiko.download.torrent.exception.FreeSpaceException
-import com.seiko.download.torrent.extensions.getErrorMsg
 import com.seiko.download.torrent.extensions.isPaused
-import com.seiko.download.torrent.model.MagnetInfo
-import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.download.torrent.utils.*
 import org.libtorrent4j.*
-import org.libtorrent4j.alerts.*
 import java.io.File
-import java.io.FileNotFoundException
-import java.lang.ref.WeakReference
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
-
-private const val DOWNLOAD_TASK_TAG = "TorrentDownload"
 
 /**
  * 待移除
@@ -29,6 +17,9 @@ class DownloadTask(
     val torrentHandle: TorrentHandle,
     var task: TorrentTask
 ) {
+    companion object {
+        private const val TAG = "DownloadTask"
+    }
 
     private var lastSaveResumeTime = 0L
     private val parts = File(task.downloadPath, ".${torrentHandle.infoHash()}.parts")
@@ -91,8 +82,8 @@ class DownloadTask(
                 torrentHandle.saveResumeData(TorrentHandle.SAVE_INFO_DICT)
             }
         } catch (e: Exception) {
-            log(DOWNLOAD_TASK_TAG, "Error triggering resume data of $task:")
-            log(DOWNLOAD_TASK_TAG, Log.getStackTraceString(e))
+            log(TAG, "Error triggering resume data of $task:")
+            log(TAG, Log.getStackTraceString(e))
         }
     }
 
@@ -108,6 +99,7 @@ class DownloadTask(
     }
 
     fun addTrackers(trackers: List<AnnounceEntry>) {
+        log("add Trackers size = ${trackers.size}")
         for (tracker in trackers) {
             torrentHandle.addTracker(tracker)
         }
@@ -162,10 +154,10 @@ class DownloadTask(
         for (file in incompleteFiles) {
             try {
                 if (file.exists() && !file.delete()) {
-                    log(DOWNLOAD_TASK_TAG, "Can't delete file $file")
+                    log(TAG, "Can't delete file $file")
                 }
             } catch (e: Exception) {
-                log(DOWNLOAD_TASK_TAG, "Can't delete file $file, ex: ${e.message}")
+                log(TAG, "Can't delete file $file, ex: ${e.message}")
             }
         }
     }
@@ -217,7 +209,7 @@ class DownloadTask(
                 }
             }
         } catch (e: Exception) {
-            log(DOWNLOAD_TASK_TAG, "Error calculating the incomplete files set of ${task.hash}")
+            log(TAG, "Error calculating the incomplete files set of ${task.hash}")
         }
         return set
     }

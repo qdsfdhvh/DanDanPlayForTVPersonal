@@ -2,7 +2,6 @@ package com.seiko.core.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.seiko.core.data.db.dao.*
 import com.seiko.core.data.db.model.*
 
@@ -12,10 +11,9 @@ import com.seiko.core.data.db.model.*
     BangumiIntroEntity::class,
     BangumiTagEntity::class,
     ResMagnetItemEntity::class,
-    EpisodeTorrentEntity::class,
-    TorrentEntity::class
+    EpisodeTorrentEntity::class
 ], version = 1)
-@TypeConverters(PriorityListConverter::class)
+
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun bangumiDetailsDao(): BangumiDetailsDao
@@ -30,5 +28,4 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun episodeTorrentDao(): EpisodeTorrentDao
 
-    abstract fun torrentDao(): TorrentDao
 }

@@ -1,4 +1,4 @@
-package com.seiko.core.domain.torrent
+package com.seiko.torrent.domain
 
 import android.content.ContentResolver
 import android.net.Uri

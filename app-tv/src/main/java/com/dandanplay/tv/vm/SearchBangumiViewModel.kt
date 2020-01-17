@@ -1,13 +1,14 @@
 package com.dandanplay.tv.vm
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.core.domain.torrent.DownloadTorrentUseCase
-import com.seiko.core.domain.torrent.GetTorrentInfoFileUseCase
+import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.core.domain.search.SearchBangumiListUseCase
 import com.seiko.core.domain.search.SearchMagnetListUseCase
 import com.seiko.core.data.db.model.ResMagnetItemEntity
@@ -16,14 +17,11 @@ import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 
 class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,
     private val searchMagnetList: SearchMagnetListUseCase,
-    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase,
-    private val downloadTorrent: DownloadTorrentUseCase
+    private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : BaseViewModel() {
 
     private val _mainState = ResultLiveData<Boolean>()
@@ -35,11 +33,11 @@ class SearchBangumiViewModel(
     private val _magnetList = MutableLiveData<List<ResMagnetItemEntity>>()
     val magnetList: LiveData<List<ResMagnetItemEntity>> = _magnetList
 
-    private val _downloadState = ResultLiveData<File>()
-    val downloadState: LiveData<ResultData<File>> = _downloadState
-
     // 上一次搜搜的关键字
     private var query = ""
+
+    // 当前点击的Magnet信息
+    private var currentMagnetItem: ResMagnetItemEntity? = null
 
     /**
      * 搜索番剧和磁力链接
@@ -79,38 +77,25 @@ class SearchBangumiViewModel(
     }
 
     /**
-     * 是有存在此种子
-     * @param magnet 磁力链接 magnet:?xt=urn:btih:WEORDPJIJANN54BH2GNNJ6CSN7KB7S34
+     * 选择当前的Magnet信息
      */
-    fun isTorrentExist(magnet: String): File? {
-        val result = getTorrentInfoFileUseCase.invoke(magnet)
-        if (result is Result.Success) {
-            val torrentFile = result.data
-            if (torrentFile.exists()) {
-                return torrentFile
-            }
-        }
-        return null
+    fun setCurrentMagnetItem(item: ResMagnetItemEntity?) {
+        currentMagnetItem = item
     }
 
     /**
-     * 下载种子
-     * @param magnet 磁力链接
+     * 获取当前选择的磁力链接
      */
-    fun downloadTorrent(magnet: String) = viewModelScope.launch {
-        _downloadState.showLoading()
-        val result = withContext(Dispatchers.IO) {
-            downloadTorrent.invoke(magnet)
-        }
-        when(result) {
-            is Result.Error -> _downloadState.failed(result.exception)
-            is Result.Success -> _downloadState.success(result.data)
-        }
+    fun getCurrentMagnetUri(): Uri? {
+        val item = currentMagnetItem ?: return null
+        return Uri.parse(item.magnet)
     }
 
-    companion object {
-        // 直接搜索的种子的存放路径
-        private const val SEARCH_TITLE = "SearchTorrent"
+    /**
+     * 保存种子信息，尝试关联动漫与集数
+     */
+    fun saveMagnetInfoUseCase(hash: String, animeId: Long, episodeId: Int) = viewModelScope.launch {
+        val item = currentMagnetItem ?: return@launch
+        saveMagnetInfo.invoke(item, hash, animeId, episodeId)
     }
-
 }

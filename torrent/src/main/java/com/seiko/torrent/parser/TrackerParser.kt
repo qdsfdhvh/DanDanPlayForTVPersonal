@@ -7,6 +7,8 @@ import com.blankj.utilcode.util.LogUtils
 import okio.buffer
 import okio.source
 import java.io.File
+import java.util.*
+import kotlin.collections.HashSet
 
 typealias OnParsedListener = (Set<String>) -> Unit
 
@@ -33,6 +35,7 @@ private fun isSafeAddress(url: String?): Boolean {
     if (url.isNullOrEmpty()) return false
     return Patterns.WEB_URL.matcher(url.toString()).matches()
             || url.startsWith("udp://")
+            || url.startsWith("wss://")
 }
 
 private fun parseTrackers(file: File): Set<String> {
@@ -44,31 +47,27 @@ private fun parseTrackers(file: File): Set<String> {
     val trackers = HashSet<String>()
 
     val source = file.source().buffer()
-    var line = source.readUtf8Line()
-    while (line != null) {
 
-        line = line.trim()
+    var line: String?
+    while(true) {
+        line = source.readUtf8Line() ?: break
+
         if (line.isEmpty()) {
-            line = source.readUtf8Line()
             continue
         }
 
         // Ignore commented lines
-        if (line.startsWith("#")
-            || line.startsWith("//")) {
-            line = source.readUtf8Line()
+        if (line.startsWith("#") || line.startsWith("//")) {
             continue
         }
 
         val bool = isSafeAddress(line)
         if (!bool) {
-            LogUtils.d("tracker is not safe: $line")
-            line = source.readUtf8Line()
+//            LogUtils.d("tracker is not safe: $line")
             continue
         }
 
         trackers.add(line)
-        line = source.readUtf8Line()
     }
     source.close()
 

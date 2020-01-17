@@ -1,12 +1,10 @@
 package com.seiko.core.di
 
-val dataModule = listOf(
+val coreModules = listOf(
     // JSON
     gsonModule,
     // 本地存储、网络请求
-    localModule, networkModel,
-    //
-    dataSourceModule,
+    localModule, networkModule,
     //
     repositoryModule,
     // 种子

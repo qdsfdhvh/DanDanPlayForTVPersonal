@@ -10,12 +10,12 @@ import org.koin.dsl.module
 internal val viewModelModule = module {
 
     viewModel {
-        MainViewModel(get(), get(), get())
+        MainViewModel(get(), get())
     }
 
     viewModel {
         AddTorrentViewModel(get(), get(named(TORRENT_DOWNLOAD_DIR)),
-            get(), get())
+            get(), get(), get())
     }
 
 }

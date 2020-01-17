@@ -1,7 +1,10 @@
-package com.seiko.core.constants
+package com.seiko.core.annotation
 
 import androidx.annotation.IntDef
 
+/**
+ * 相关作品、系列作品
+ */
 @IntDef(
     value = [
         BangumiIntroType.RELATED,

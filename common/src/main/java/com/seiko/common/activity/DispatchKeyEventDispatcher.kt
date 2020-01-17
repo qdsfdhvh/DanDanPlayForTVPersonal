@@ -2,16 +2,18 @@ package com.seiko.common.activity
 
 import android.view.KeyEvent
 import androidx.annotation.MainThread
+import androidx.activity.OnBackPressedDispatcher
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.blankj.utilcode.util.LogUtils
 import java.util.*
 
+/**
+ * 模仿[OnBackPressedDispatcher]，让Fragment拦截Activity的dispatchKeyEvent
+ */
 class DispatchKeyEventDispatcher(
     private val handleDispatchKeyEvent: (KeyEvent?) -> Boolean
 ) {
-
     private val dispatchKeyEventCallbacks = ArrayDeque<DispatchKeyEventCallback>()
 
     @MainThread

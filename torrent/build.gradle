@@ -22,7 +22,9 @@ this.beforeEvaluate {
 dependencies {
     implementation project(':common')
     implementation project(':libs:file_picker')
+
     kapt dependence.libArouterCompiler
+    kapt dependence.libRoomCompiler
 
     // UI
 //    implementation dependence.libSwiperefreshlayout

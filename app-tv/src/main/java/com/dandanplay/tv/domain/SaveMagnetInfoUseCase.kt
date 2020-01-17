@@ -14,10 +14,11 @@ class SaveMagnetInfoUseCase : KoinComponent {
 
     private val bangumiRepository: BangumiRepository by inject()
 
-    suspend operator fun invoke(item: ResMagnetItemEntity,
-                                hash: String,
-                                animeId: Long,
-                                episodeId: Int
+    suspend operator fun invoke(
+        item: ResMagnetItemEntity,
+        hash: String,
+        animeId: Long,
+        episodeId: Int
     ): Result<Boolean> {
         //  保存磁力数据
         var result = bangumiRepository.insertResMagnetItem(hash, item)

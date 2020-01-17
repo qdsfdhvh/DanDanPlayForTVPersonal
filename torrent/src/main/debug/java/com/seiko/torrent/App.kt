@@ -7,9 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.seiko.core.di.*
-import com.seiko.torrent.di.downloadModule
-import com.seiko.torrent.di.useCaseModule
-import com.seiko.torrent.di.viewModelModule
+import com.seiko.torrent.di.torrentModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -45,8 +43,7 @@ class App : Application() {
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module
-            modules(dataModule + listOf(downloadModule,
-                useCaseModule, viewModelModule))
+            modules(coreModules + torrentModules)
         }
     }
 

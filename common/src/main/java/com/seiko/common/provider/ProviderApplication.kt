@@ -2,7 +2,7 @@ package com.seiko.common.provider
 
 import android.app.Application
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.core.di.dataModule
+import com.seiko.core.di.coreModules
 import org.koin.core.context.loadKoinModules
 
 /**
@@ -13,7 +13,7 @@ class ProviderApplication : IProviderApplication {
     override fun onCreate(application: Application) {
         LogUtils.dTag("Provider", "start register common.")
 
-        loadKoinModules(dataModule)
+        loadKoinModules(coreModules)
     }
 
     override fun onTerminate() {

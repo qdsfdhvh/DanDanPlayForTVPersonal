@@ -1,6 +1,7 @@
-package com.seiko.core.data.api
+package com.seiko.core.data.comments
 
 import com.seiko.core.data.Result
+import com.seiko.core.data.api.ResDanDanApiService
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.util.safeApiCall
 

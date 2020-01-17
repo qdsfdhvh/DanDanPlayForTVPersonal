@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.seiko.core.constants.BangumiIntroType
+import com.seiko.core.annotation.BangumiIntroType
 import java.io.Serializable
 
 //BangumiIntro {
