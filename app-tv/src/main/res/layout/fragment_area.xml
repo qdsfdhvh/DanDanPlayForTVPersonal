@@ -1,26 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/AppParentLayout"
-    tools:context=".ui.fragment.BangumiAreaFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppParentLayout">
     <androidx.leanback.widget.VerticalGridView
         android:id="@id/grid_season"
         android:layout_width="160dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        app:focusOutFront="true"
+        app:focusOutEnd="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/grid_bangumi"/>
-    <androidx.leanback.widget.VerticalGridView
+    <com.seiko.common.widget.AppVerticalGridView
         android:id="@id/grid_bangumi"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
+        app:focusOutFront="true"
+        app:focusOutEnd="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/grid_season"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <FrameLayout
+        android:id="@id/progress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black_30"
+        app:layout_constraintTop_toTopOf="@id/grid_bangumi"
+        app:layout_constraintBottom_toBottomOf="@id/grid_bangumi"
+        app:layout_constraintStart_toStartOf="@id/grid_bangumi"
+        app:layout_constraintEnd_toEndOf="@id/grid_bangumi"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,17 +1,18 @@
 package com.seiko.core.data.api
 
+import android.content.Context
 import com.google.gson.Gson
 import com.seiko.core.constants.DANDAN_API_BASE_URL
 import com.seiko.core.data.prefs.PrefDataSource
 import com.seiko.core.http.cookie.CookiesManager
-import okhttp3.Interceptor
+import com.seiko.core.http.interceptor.RetrofitCacheInterceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 internal class DanDanApiGenerater(
+    context: Context,
     okHttpClient: OkHttpClient,
     gson: Gson,
     cookiesManager: CookiesManager,
@@ -19,19 +20,18 @@ internal class DanDanApiGenerater(
 ) {
     private val newOkHttpClient = okHttpClient.newBuilder()
         .cookieJar(cookiesManager)
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-        .addInterceptor(object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val token = prefDataSource.token
-                if (token.isNotEmpty()) {
-                    val original = chain.request()
-                    val builder = original.newBuilder()
-                        .header("Authorization", "Bearer $token")
-                    return chain.proceed(builder.build())
-                }
-                return chain.proceed(chain.request())
+        .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+        .addInterceptor(RetrofitCacheInterceptor(context))
+        .addInterceptor { chain ->
+            val token = prefDataSource.token
+            if (token.isNotEmpty()) {
+                val original = chain.request()
+                val builder = original.newBuilder()
+                    .header("Authorization", "Bearer $token")
+                return@addInterceptor chain.proceed(builder.build())
             }
-        })
+            return@addInterceptor chain.proceed(chain.request())
+        }
         .build()
 
     private val retrofit = Retrofit.Builder()

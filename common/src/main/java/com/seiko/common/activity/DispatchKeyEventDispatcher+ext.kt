@@ -1,6 +1,7 @@
 package com.seiko.common.activity
 
 import android.view.KeyEvent
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 
 fun DispatchKeyEventDispatcher.addCallback(
@@ -19,4 +20,12 @@ fun DispatchKeyEventDispatcher.addCallback(
         addCallback(callback)
     }
     return callback
+}
+
+fun Fragment.requireDispatchKeyEventDispatcher(): DispatchKeyEventDispatcherOwner {
+    val activity = requireActivity()
+    if (activity !is DispatchKeyEventDispatcherOwner) {
+        throw IllegalStateException("Fragment $this is not DispatchKeyEventDispatcherOwner");
+    }
+    return activity
 }

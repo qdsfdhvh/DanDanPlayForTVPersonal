@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui.base
+package com.dandanplay.tv.ui.presenter
 
 import android.os.Bundle
 import androidx.leanback.widget.Presenter

@@ -1,10 +1,15 @@
-package com.dandanplay.tv.ui.base
+package com.dandanplay.tv.ui.adapter
 
 import android.os.Bundle
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter<T : RecyclerView.ViewHolder> : RecyclerView.Adapter<T>() {
+
+    protected var listener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
 
     override fun onBindViewHolder(holder: T, position: Int, payloads: MutableList<Any>) {
         if (payloads.isNullOrEmpty()) {

@@ -114,7 +114,6 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
 
     }
 
-
     //绘制横向 item 分割线
     private void drawHorizontal(Canvas canvas, RecyclerView parent) {
         final int left = parent.getPaddingLeft();

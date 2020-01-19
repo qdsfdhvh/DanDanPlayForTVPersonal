@@ -24,7 +24,7 @@ internal val networkModule = module {
     single { createCookieManager(get()) }
     single { createSingleHttpClient(get()) }
 
-    single { createApiService(get(), get(), get(), get()) }
+    single { createApiService(androidContext(), get(), get(), get(), get()) }
     single { createResApiService(get(), get()) }
 
     single { createDanDanApiRemoteDataSource(get()) }
@@ -50,12 +50,13 @@ private fun createSingleHttpClient(cache: Cache): OkHttpClient {
 }
 
 private fun createApiService(
+    context: Context,
     okHttpClient: OkHttpClient,
     gson: Gson,
     cookiesManager: CookiesManager,
     prefDataSource: PrefDataSource
 ): DanDanApiService {
-    return DanDanApiGenerater(okHttpClient, gson, cookiesManager, prefDataSource).create()
+    return DanDanApiGenerater(context, okHttpClient, gson, cookiesManager, prefDataSource).create()
 }
 
 private fun createResApiService(okHttpClient: OkHttpClient, gson: Gson): ResDanDanApiService {

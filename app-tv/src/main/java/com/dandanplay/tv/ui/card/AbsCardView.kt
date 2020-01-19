@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.LayoutRes
 import androidx.leanback.widget.BaseCardView
+import androidx.viewbinding.ViewBinding
 
 abstract class AbsCardView<T> : BaseCardView {
 

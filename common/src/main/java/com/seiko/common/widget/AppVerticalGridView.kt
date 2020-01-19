@@ -36,61 +36,6 @@ class AppVerticalGridView : VerticalGridView {
         return super.dispatchKeyEvent(event)
     }
 
-//    companion object {
-//        private const val MORE_STATE_END = 0 // 加载结束
-//        private const val MORE_STATE_LOADING = 1 // 加载中
-//        private const val MORE_STATE_NO_DATA = -1 // 加载更多已没有数据.
-//    }
-
-//    interface OnLoadMoreListener {
-//        fun onLoadMore()
-//        fun onLoadEnd()
-//    }
-//
-//    private var mMoreState: Int = MORE_STATE_END
-//    private var mListener: OnLoadMoreListener? = null
-//
-//    fun setOnLoadMoreListener(listener: OnLoadMoreListener?) {
-//        mListener = listener
-//    }
-
-//    // 加载更多结束调用.
-//    fun endMoreRefreshComplete() {
-//        mMoreState = MORE_STATE_END
-//    }
-//
-//    // 没有更多加载.
-//    fun endRefreshingWithNoMoreData() {
-//        mMoreState = MORE_STATE_NO_DATA
-//    }
-
-//    override fun onScrollStateChanged(state: Int) {
-//        if (state == SCROLL_STATE_IDLE) {
-//            adapter?.let { adapter ->
-//                if (getLastVisiblePosition() >= adapter.itemCount - 1) {
-//                    mListener?.let { listener ->
-//                        if (mMoreState == MORE_STATE_END) {
-//                            mMoreState = MORE_STATE_LOADING
-//                            listener.onLoadMore()
-//                        }
-//                        if (mMoreState == MORE_STATE_NO_DATA) {
-//                            listener.onLoadEnd()
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        super.onScrollStateChanged(state)
-//    }
-//
-//    fun getLastVisiblePosition(): Int {
-//        val childCount = childCount
-//        if (childCount == 0) {
-//            return 0
-//        }
-//        return getChildAdapterPosition(getChildAt(childCount - 1))
-//    }
-//
 //    override fun performClick(): Boolean {
 //        return super.performClick()
 //    }

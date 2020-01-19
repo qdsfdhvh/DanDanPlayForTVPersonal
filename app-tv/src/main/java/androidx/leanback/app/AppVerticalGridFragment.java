@@ -150,8 +150,7 @@ public class AppVerticalGridFragment extends BrandedSupportFragment {
 
     private void setupFocusSearchListener() {
         if (getView() == null) return;
-        BrowseFrameLayout browseFrameLayout = (BrowseFrameLayout) getView().findViewById(
-                R.id.grid_frame);
+        BrowseFrameLayout browseFrameLayout =  getView().findViewById(R.id.grid_frame);
         browseFrameLayout.setOnFocusSearchListener(getTitleHelper().getOnFocusSearchListener());
     }
 

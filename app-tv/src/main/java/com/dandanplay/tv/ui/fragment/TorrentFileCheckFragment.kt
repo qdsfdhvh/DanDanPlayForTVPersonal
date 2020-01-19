@@ -18,6 +18,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
 import com.seiko.common.activity.addCallback
+import com.seiko.common.activity.requireDispatchKeyEventDispatcher
 import com.seiko.core.util.TYPE_VIDEO
 import com.seiko.core.util.toSingletonList
 import com.seiko.core.model.ThunderLocalUrl
@@ -49,9 +50,8 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
         title = "种子详情"
         showTitle(true)
         onItemViewClickedListener = this
-        (requireActivity() as? DispatchKeyEventDispatcherOwner)
-            ?.getDispatchKeyEventDispatcher()
-            ?.addCallback(this, true, this::dispatchKeyEvent)
+        requireDispatchKeyEventDispatcher().getDispatchKeyEventDispatcher()
+            .addCallback(this, true, this::dispatchKeyEvent)
     }
 
     private fun setupGridPresenter() {

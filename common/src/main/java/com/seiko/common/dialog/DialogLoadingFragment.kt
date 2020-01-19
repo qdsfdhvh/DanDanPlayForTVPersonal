@@ -19,11 +19,11 @@ class DialogLoadingFragment: BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.msgTv.text = arguments?.getString(ARGS_CONTENT)
+        binding.tvMsg.text = arguments?.getString(ARGS_CONTENT)
     }
 
     fun setContent(content: String) {
-        binding.msgTv.text = content
+        binding.tvMsg.text = content
     }
 
     fun show(manager: FragmentManager) {
