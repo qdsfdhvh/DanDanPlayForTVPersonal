@@ -3,19 +3,23 @@ package com.dandanplay.tv.ui.dialog
 import android.os.Bundle
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.util.TypedValue.applyDimension
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
-import com.dandanplay.tv.R
+import com.dandanplay.tv.databinding.DialogExitFragmentBinding
 import com.seiko.common.dialog.BaseDialogFragment
-import kotlinx.android.synthetic.main.dialog_exit_fragment.*
 
-class SelectDialogFragment : BaseDialogFragment(), View.OnFocusChangeListener {
+class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
 
     private var onConfirm: (() -> Unit)? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.dialog_exit_fragment
+    private lateinit var binding: DialogExitFragmentBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DialogExitFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -23,25 +27,25 @@ class SelectDialogFragment : BaseDialogFragment(), View.OnFocusChangeListener {
         val bundle = arguments
         if (bundle != null) {
             if (bundle.containsKey(ARGS_TITLE)) {
-                tvTitle.text = bundle.getString(ARGS_TITLE)
+                binding.title.text = bundle.getString(ARGS_TITLE)
             }
             if (bundle.containsKey(ARGS_CONFIRM_TEXT)) {
-                btnExit.text = bundle.getString(ARGS_CONFIRM_TEXT)
+                binding.btnExit.text = bundle.getString(ARGS_CONFIRM_TEXT)
             }
             if (bundle.containsKey(ARGS_CANCEL_TEXT)) {
-                btnCancel.text = bundle.getString(ARGS_CANCEL_TEXT)
+                binding.btnCancel.text = bundle.getString(ARGS_CANCEL_TEXT)
             }
         }
 
-        btnExit.textSize = customTextSize(LARGE)
-        btnCancel.textSize = customTextSize(SMALL)
-        btnExit.requestFocus()
+        binding.btnExit.textSize = customTextSize(LARGE)
+        binding.btnCancel.textSize = customTextSize(SMALL)
+        binding.btnExit.requestFocus()
 
-        btnExit.setOnClickListener { onConfirm?.invoke() }
-        btnCancel.setOnClickListener { dismiss() }
+        binding.btnExit.setOnClickListener { onConfirm?.invoke() }
+        binding.btnCancel.setOnClickListener { dismiss() }
 
-        btnExit.onFocusChangeListener = this
-        btnCancel.onFocusChangeListener = this
+        binding.btnExit.onFocusChangeListener = this
+        binding.btnCancel.onFocusChangeListener = this
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
@@ -89,8 +93,8 @@ class SelectDialogFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             return this
         }
 
-        fun build(): SelectDialogFragment {
-            val fragment = SelectDialogFragment()
+        fun build(): DialogExitFragment {
+            val fragment = DialogExitFragment()
             fragment.arguments = bundle
             fragment.setConfirmClickListener(confirmClickListener)
             return fragment

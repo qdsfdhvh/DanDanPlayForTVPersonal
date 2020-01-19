@@ -8,11 +8,15 @@ dependencies {
     api 'androidx.multidex:multidex:2.0.1'
 
     // 屏幕适配
-    implementation 'me.jessyan:autosize:1.1.2'
+    api 'me.jessyan:autosize:1.1.2'
 
     // UI
     api dependence.libAppCompat
     api dependence.libConstraintlayout
+
+    // TV UI
+    api dependence.libLeanback
+    api 'androidx.leanback:leanback-preference:1.0.0'
 
     // navigation
     api dependence.libNavigationFragmentKtx

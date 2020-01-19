@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    &lt;!&ndash; pressed &ndash;&gt;-->
+<!--    <item android:state_pressed="true"-->
+<!--        android:drawable="@android:color/transparent" />-->
+<!--    &lt;!&ndash; focused &ndash;&gt;-->
+<!--    <item android:state_focused="true"-->
+<!--        android:drawable="@drawable/button_focused_shape" />-->
+<!--    &lt;!&ndash; unfocused &ndash;&gt;-->
+<!--    <item android:state_focused="false"-->
+<!--        android:drawable="@android:color/transparent" />-->
+<!--    &lt;!&ndash; disabled &ndash;&gt;&lt;!&ndash; disabled &ndash;&gt;-->
+<!--    <item android:state_enabled="false"-->
+<!--        android:drawable="@android:color/transparent" />-->
+<!--    &lt;!&ndash; hovered &ndash;&gt;-->
+<!--    <item android:state_hovered="true"-->
+<!--        android:drawable="@android:color/transparent" />-->
+<!--    <item android:state_selected="true"-->
+<!--        android:drawable=""/>-->
+<!--    &lt;!&ndash; default &ndash;&gt;-->
+<!--    <item android:drawable="@drawable/button_focused_shape" />-->
     <!-- pressed -->
     <item android:state_pressed="true"
         android:drawable="@android:color/transparent" />
     <!-- focused -->
     <item android:state_focused="true"
         android:drawable="@drawable/button_focused_shape" />
-    <!-- unfocused -->
-    <item android:state_focused="false"
-        android:drawable="@android:color/transparent" />
-    <!-- disabled --><!-- disabled -->
-    <item android:state_enabled="false"
-        android:drawable="@android:color/transparent" />
-    <!-- hovered -->
-    <item android:state_hovered="true"
-        android:drawable="@android:color/transparent" />
+    <item android:state_selected="true"
+        android:drawable="@drawable/button_selected_shape" />
     <!-- default -->
-    <item android:drawable="@drawable/button_focused_shape" />
+    <item android:drawable="@android:color/transparent" />
 </selector>

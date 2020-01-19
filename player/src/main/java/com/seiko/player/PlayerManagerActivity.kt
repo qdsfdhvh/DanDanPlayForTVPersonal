@@ -5,19 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.fragment.app.FragmentActivity
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 //import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.seiko.core.constants.DEFAULT_CACHE_FOLDER_PATH
 import com.xunlei.downloadlib.XLTaskHelper
-import com.seiko.player.R
 
 class PlayerManagerActivity: FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player_manager)
+        setContentView(R.layout.player_activity_manager)
         initView()
         initIntent()
     }

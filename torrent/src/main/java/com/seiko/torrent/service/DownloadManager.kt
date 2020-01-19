@@ -228,7 +228,6 @@ class DownloadManager(
      * 停止所有种子
      */
     override fun release() {
-        LogUtils.d("release")
         if (isAlreadyRunning.compareAndSet(true, false)) {
             for (event in downloadMap.values) {
                 event.cancel()

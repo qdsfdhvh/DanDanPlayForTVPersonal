@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.ToastUtils
 import androidx.leanback.app.AppVerticalGridFragment
 import androidx.leanback.app.AppVerticalGridPresenter
 import com.blankj.utilcode.util.LogUtils
-import com.dandanplay.tv.ui.dialog.SelectMagnetDialogFragment
+import com.dandanplay.tv.ui.dialog.DialogMagnetSelectFragment
 import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.TorrentFileCheckPresenter
 import com.dandanplay.tv.vm.TorrentFileCheckViewModel
@@ -124,8 +124,8 @@ class TorrentFileCheckFragment : AppVerticalGridFragment(), OnItemViewClickedLis
                                row: Row?) {
         when(item) {
             is TorrentCheckBean -> {
-                if (childFragmentManager.findFragmentByTag(SelectMagnetDialogFragment.TAG) == null) {
-                    SelectMagnetDialogFragment.Builder()
+                if (childFragmentManager.findFragmentByTag(DialogMagnetSelectFragment.TAG) == null) {
+                    DialogMagnetSelectFragment.Builder()
                         .isVideo(item.type == TYPE_VIDEO)
                         .setOnDownloadClickListener {
                             getTorrentTask(item)

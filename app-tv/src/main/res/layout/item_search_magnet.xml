@@ -6,7 +6,7 @@
     android:layout_width="260dp"
     android:layout_height="100dp">
     <TextView
-        android:id="@+id/title"
+        android:id="@id/title"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/type"/>
     <TextView
-        android:id="@+id/type"
+        android:id="@id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toStartOf="@id/subgroup"/>
 
     <TextView
-        android:id="@+id/subgroup"
+        android:id="@id/subgroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

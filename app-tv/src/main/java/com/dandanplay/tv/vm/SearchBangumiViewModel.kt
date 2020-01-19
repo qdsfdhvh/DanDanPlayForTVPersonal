@@ -8,7 +8,6 @@ import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.ResultLiveData
 import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
-import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.core.domain.search.SearchBangumiListUseCase
 import com.seiko.core.domain.search.SearchMagnetListUseCase
 import com.seiko.core.data.db.model.ResMagnetItemEntity

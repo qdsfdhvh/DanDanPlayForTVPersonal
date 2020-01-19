@@ -21,9 +21,6 @@ dependencies {
     implementation project(':common')
     kapt dependence.libArouterCompiler
 
-    // UI
-    implementation 'androidx.leanback:leanback:1.0.0'
-
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
     implementation 'com.google.android.exoplayer:extension-leanback:2.9.5'

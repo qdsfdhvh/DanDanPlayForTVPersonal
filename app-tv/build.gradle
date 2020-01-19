@@ -65,10 +65,6 @@ dependencies {
     implementation project(':common')
     kapt dependence.libArouterCompiler
 
-    // TV UI
-    implementation dependence.libLeanback
-    implementation 'androidx.leanback:leanback-preference:1.0.0'
-
     // Image
     implementation 'com.facebook.fresco:fresco:2.0.0'
 

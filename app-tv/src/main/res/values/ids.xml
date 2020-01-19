@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="browse_grid" type="id"/>
+
+    <item name="title" type="id"/><!--标题-->
+    <item name="img" type="id"/><!--Logo-->
+    <item name="type" type="id"/><!--类型-->
+    <item name="size" type="id"/><!--大小-->
+    <item name="subgroup" type="id"/><!--字幕组-->
+    <item name="chapter" type="id"/><!--集数-->
+
+    <item name="btn_download" type="id"/><!--下载按钮-->
+    <item name="btn_play" type="id"/><!--播放按钮-->
+    <item name="btn_cancel" type="id"/><!--取消按钮-->
+
+    <item name="grid_season" type="id"/>
+    <item name="grid_bangumi" type="id"/>
+</resources>

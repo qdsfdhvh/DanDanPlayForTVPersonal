@@ -3,59 +3,66 @@ package com.dandanplay.tv.ui.dialog
 import android.os.Bundle
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.util.TypedValue.applyDimension
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
 import com.dandanplay.tv.R
+import com.dandanplay.tv.databinding.DialogMagnetSelectFragmentBinding
 import com.seiko.common.dialog.BaseDialogFragment
-import kotlinx.android.synthetic.main.dialog_magnet_select.*
 
-class SelectMagnetDialogFragment : BaseDialogFragment(),
+class DialogMagnetSelectFragment : BaseDialogFragment(),
     View.OnClickListener,
     View.OnFocusChangeListener {
 
     private var onDownload: (() -> Unit)? = null
     private var onPlay: (() -> Unit)? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.dialog_magnet_select
+    private lateinit var binding: DialogMagnetSelectFragmentBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DialogMagnetSelectFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnDownload.textSize = customTextSize(SMALL)
-        btnPlay.textSize = customTextSize(LARGE)
-        btnCancel.textSize = customTextSize(SMALL)
+        binding.btnDownload.textSize = customTextSize(SMALL)
+        binding.btnPlay.textSize = customTextSize(LARGE)
+        binding.btnCancel.textSize = customTextSize(SMALL)
 
-        btnDownload.setOnClickListener(this)
-        btnPlay.setOnClickListener(this)
-        btnCancel.setOnClickListener(this)
+        binding.btnDownload.setOnClickListener(this)
+        binding.btnPlay.setOnClickListener(this)
+        binding.btnCancel.setOnClickListener(this)
 
-        btnDownload.onFocusChangeListener = this
-        btnPlay.onFocusChangeListener = this
-        btnCancel.onFocusChangeListener = this
+        binding.btnDownload.onFocusChangeListener = this
+        binding.btnPlay.onFocusChangeListener = this
+        binding.btnCancel.onFocusChangeListener = this
 
         // 是否显示播放按钮
         if (arguments?.getBoolean(ARGS_IS_VIDEO) == true) {
-            btnPlay.visibility = View.VISIBLE
-            btnPlay.requestFocus()
+            binding.btnPlay.visibility = View.VISIBLE
+            binding.btnPlay.requestFocus()
         } else {
-            btnPlay.visibility = View.GONE
-            btnDownload.requestFocus()
+            binding.btnPlay.visibility = View.GONE
+            binding.btnDownload.requestFocus()
         }
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.btnDownload -> {
+            R.id.btn_download -> {
                 dismissDialog()
                 onDownload?.invoke()
             }
-            R.id.btnPlay -> {
+            R.id.btn_play -> {
                 dismissDialog()
                 onPlay?.invoke()
             }
-            R.id.btnCancel -> dismissDialog()
+            R.id.btn_cancel -> {
+                dismissDialog()
+            }
         }
     }
 
@@ -108,8 +115,8 @@ class SelectMagnetDialogFragment : BaseDialogFragment(),
             return this
         }
 
-        fun build(): SelectMagnetDialogFragment {
-            val fragment = SelectMagnetDialogFragment()
+        fun build(): DialogMagnetSelectFragment {
+            val fragment = DialogMagnetSelectFragment()
             fragment.arguments = bundle
             fragment.setOnDownloadClickListener(onDownloadClickListener)
             fragment.setOnPlayClickListener(onPlayClickListener)

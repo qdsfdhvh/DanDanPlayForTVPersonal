@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.drawee.view.SimpleDraweeView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.facebook.drawee.view.SimpleDraweeView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/details_overview_image"
     android:layout_width="@dimen/detailsFragment_thumbnail_width"
     android:layout_height="@dimen/detailsFragment_thumbnail_height"
     android:adjustViewBounds="true"
     android:elevation="@dimen/lb_details_overview_z"
-    app:placeholderImageScaleType="centerCrop" />
+    app:placeholderImageScaleType="centerCrop"
+    tools:viewBindingIgnore="true" />

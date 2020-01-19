@@ -10,12 +10,11 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.model.HomeSettingBean
-import com.dandanplay.tv.ui.dialog.SelectDialogFragment
+import com.dandanplay.tv.ui.dialog.DialogExitFragment
 import com.seiko.common.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainSettingPresenter
@@ -27,9 +26,6 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
-import com.seiko.common.router.Routes
-import com.seiko.common.service.TorrentService
-import com.seiko.core.data.db.model.BangumiIntroEntity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
@@ -139,7 +135,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                ToastUtils.showShort(data.error.toString())
+                ToastUtils.showShort(data.error?.message)
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
@@ -154,8 +150,8 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
      */
     private fun launchExitDialog() {
         val manager = fragmentManager ?: return
-        if (manager.findFragmentByTag(SelectDialogFragment.TAG) == null) {
-            SelectDialogFragment.Builder()
+        if (manager.findFragmentByTag(DialogExitFragment.TAG) == null) {
+            DialogExitFragment.Builder()
                 .setTitle("你真的确认退出应用吗？")
                 .setConfirmText("确认")
                 .setCancelText("取消")

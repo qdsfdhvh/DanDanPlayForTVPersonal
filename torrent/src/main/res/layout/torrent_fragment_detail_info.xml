@@ -58,7 +58,7 @@
                 android:id="@+id/upload_torrent_into"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BaseTheme.TorrentInfoText" />
+                style="@style/torrent_BaseTheme.TorrentInfoText" />
         </LinearLayout>
 
         <ImageButton
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_gravity="center_vertical"
-                    style="@style/BaseTheme.TorrentInfoText" />
+                    style="@style/torrent_BaseTheme.TorrentInfoText" />
 
                 <TextView
                     android:id="@+id/free_space"
@@ -159,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    style="@style/BaseTheme.TorrentInfoText" />
+                    style="@style/torrent_BaseTheme.TorrentInfoText" />
             </LinearLayout>
 
         </LinearLayout>
@@ -181,7 +181,7 @@
             android:id="@+id/torrent_hash_sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BaseTheme.TorrentInfoText" />
+            style="@style/torrent_BaseTheme.TorrentInfoText" />
     </LinearLayout>
 
     <LinearLayout
@@ -201,7 +201,7 @@
             android:id="@+id/torrent_added"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BaseTheme.TorrentInfoText" />
+            style="@style/torrent_BaseTheme.TorrentInfoText" />
     </LinearLayout>
 
     <LinearLayout
@@ -221,7 +221,7 @@
             android:id="@+id/torrent_create_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BaseTheme.TorrentInfoText" />
+            style="@style/torrent_BaseTheme.TorrentInfoText" />
     </LinearLayout>
 
     <LinearLayout
@@ -244,7 +244,7 @@
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:linksClickable="true"
-            style="@style/BaseTheme.TorrentInfoText" />
+            style="@style/torrent_BaseTheme.TorrentInfoText" />
     </LinearLayout>
 
     <LinearLayout
@@ -265,6 +265,6 @@
             android:id="@+id/torrent_created_in_program"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/BaseTheme.TorrentInfoText" />
+            style="@style/torrent_BaseTheme.TorrentInfoText" />
     </LinearLayout>
 </LinearLayout>

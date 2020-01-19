@@ -5,39 +5,23 @@
     android:layout_width="@dimen/homeFragment_area_width"
     android:layout_height="@dimen/homeFragment_area_height"
     android:orientation="vertical">
-
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/img"
+        android:id="@id/img"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         fresco:placeholderImageScaleType="centerCrop"/>
-
     <TextView
-        android:id="@+id/title"
+        style="@style/AppTextStyle.Title"
+        android:id="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:gravity="center_vertical"
-        android:lines="2"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="8dp"
-        android:textSize="14sp"
-        tools:text="Title"/>
-
+        tools:text="暗黑破坏神在身边"/>
     <TextView
-        android:id="@+id/chapter"
+        style="@style/AppTextStyle.Chapter"
+        android:id="@id/chapter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
-        tools:text="Chapter"
-        android:textColor="@color/colorAccent"
-        android:textSize="12sp"/>
-
+        tools:text="连载中·周六更新"/>
 </LinearLayout>

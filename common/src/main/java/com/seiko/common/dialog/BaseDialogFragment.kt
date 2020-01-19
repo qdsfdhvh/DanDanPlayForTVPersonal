@@ -15,15 +15,6 @@ import com.blankj.utilcode.util.LogUtils
 
 abstract class BaseDialogFragment : DialogFragment() {
 
-    abstract fun getLayoutId(): Int
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (getLayoutId() == 0) {
-            throw RuntimeException("Invalid Layout ID")
-        }
-        return inflater.inflate(getLayoutId(), container, false)
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = RelativeLayout(activity)
         root.layoutParams = ViewGroup.LayoutParams(

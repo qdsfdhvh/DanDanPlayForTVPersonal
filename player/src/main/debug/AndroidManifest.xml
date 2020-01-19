@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         tools:ignore="AllowBackup,MissingApplicationIcon">
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

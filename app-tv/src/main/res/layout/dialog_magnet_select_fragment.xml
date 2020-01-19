@@ -4,35 +4,33 @@
     style="@style/AppParentLayout.Dialog"
     android:orientation="vertical"
     tools:context="com.dandanplay.tv.ui.dialog.DialogExitFragment">
-    <TextView
-        android:id="@id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center_horizontal"
-        tools:text="你真的确认退出应用吗？"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@+id/btnExit"
+        android:id="@id/btn_download"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="12dp"
-        tools:text="确认"/>
+        android:text="@string/txt_download"/>
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@+id/btnCancel"
+        android:id="@id/btn_play"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/txt_play">
+        <requestFocus />
+    </Button>
+    <Button
+        style="@style/AppButton.Dialog"
+        android:id="@id/btn_cancel"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="24dp"
-        tools:text="取消">
-        <requestFocus />
-    </Button>
+        android:text="@string/txt_cancel"/>
 </LinearLayout>

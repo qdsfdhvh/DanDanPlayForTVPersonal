@@ -7,7 +7,7 @@
     android:layout_height="100dp">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@id/title"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -23,7 +23,7 @@
         tools:text="【傲娇零自由字幕组】[刀剑神域III UnderWorld/Sword Art Online - Alicization][01][HEVC-10Bit-1080P AAC][外挂GB/BIG5][WEB-Rip][MP4+ass]" />
 
     <ImageView
-        android:id="@+id/type"
+        android:id="@id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -41,7 +41,7 @@
         tools:text="动画/新番连载" />
 
     <TextView
-        android:id="@+id/size"
+        android:id="@id/size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

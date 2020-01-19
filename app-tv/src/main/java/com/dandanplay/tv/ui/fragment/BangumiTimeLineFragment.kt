@@ -81,7 +81,8 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         when(item) {
             is HomeImageBean -> {
                 findNavController().navigate(
-                    BangumiTimeLineFragmentDirections.actionBangumiTimeLineFragmentToBangumiDetailsFragment(item.animeId)
+                    BangumiTimeLineFragmentDirections
+                        .actionBangumiTimeLineFragmentToBangumiDetailsFragment(item.animeId)
                 )
             }
         }

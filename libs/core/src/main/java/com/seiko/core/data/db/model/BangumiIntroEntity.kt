@@ -45,6 +45,34 @@ data class BangumiIntroEntity(
     var rating: Int = 0,
     var searchKeyword: String = ""
 ) : Serializable {
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false
+        if (other !is BangumiIntroEntity) return false
+        return animeId == other.animeId
+                && animeTitle == other.animeTitle
+                && imageUrl == other.imageUrl
+                && isFavorited == other.isFavorited
+                && isOnAir == other.isOnAir
+                && isRestricted == other.isRestricted
+                && airDay == other.airDay
+                && rating == other.rating
+                && searchKeyword == other.searchKeyword
+    }
+
+    override fun hashCode(): Int {
+        var result = animeId.hashCode()
+        result = 31 * result + animeTitle.hashCode()
+        result = 31 * result + imageUrl.hashCode()
+        result = 31 * result + isFavorited.hashCode()
+        result = 31 * result + isOnAir.hashCode()
+        result = 31 * result + isRestricted.hashCode()
+        result = 31 * result + airDay
+        result = 31 * result + rating
+        result = 31 * result + searchKeyword.hashCode()
+        return result
+    }
+
     override fun toString(): String {
         return "BangumiIntro{" +
                 "airDay=$airDay," +

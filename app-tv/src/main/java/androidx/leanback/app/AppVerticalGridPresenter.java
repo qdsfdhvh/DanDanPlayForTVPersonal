@@ -26,7 +26,7 @@ public class AppVerticalGridPresenter extends VerticalGridPresenter {
     @Override
     protected ViewHolder createGridViewHolder(ViewGroup parent) {
         View root = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.widget_gride_view, parent, false);
+                R.layout.widget_gride_center_view, parent, false);
         return new ViewHolder(root.findViewById(R.id.browse_grid));
     }
 }
