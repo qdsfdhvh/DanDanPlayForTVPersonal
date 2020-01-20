@@ -8,20 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.databinding.ItemBangumiSeasonBinding
 import com.dandanplay.tv.util.diff.BangumiSeasonDiffCallback
-import com.dandanplay.tv.util.scaleAnimator
-import com.seiko.common.extensions.lazyAndroid
 import com.seiko.core.model.api.BangumiSeason
-import kotlin.properties.Delegates
 
-class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>()
-    , UpdatableAdapter
-    , View.OnFocusChangeListener {
+class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
 
-//    private val diffCallback by lazyAndroid { BangumiSeasonDiffCallback() }
-//
-//    var items: List<BangumiSeason> by Delegates.observable(emptyList()) { _, old, new ->
-//        update(old, new, diffCallback)
-//    }
+    private var selectPosition = 0
 
     var items: List<BangumiSeason> = emptyList()
         set(value) {
@@ -38,28 +29,27 @@ class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemBangumiSeasonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.root.onFocusChangeListener = this
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], position)
     }
 
     override fun onPayload(holder: ViewHolder, bundle: Bundle) {
         holder.payload(bundle)
     }
 
-    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-        if (v == null) return
-
-        LogUtils.d("view = $v, hasFocus=$hasFocus")
-//        v.scaleAnimator(hasFocus, 1f, 0)
+    fun setSelectPosition(position: Int) {
+        selectPosition = position
     }
 
-    inner class ViewHolder(private val binding: ItemBangumiSeasonBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemBangumiSeasonBinding)
+        : RecyclerView.ViewHolder(binding.root)
+        , View.OnFocusChangeListener {
 
         init {
+            itemView.onFocusChangeListener = this
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != -1) {
@@ -68,8 +58,16 @@ class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>()
             }
         }
 
-        fun bind(item: BangumiSeason) {
+        override fun onFocusChange(v: View?, hasFocus: Boolean) {
+            if (v == null) return
+            val position = adapterPosition
+            v.isSelected = selectPosition == position
+            LogUtils.d("$position isSelected=${v.isSelected} hasFocus=$hasFocus")
+        }
+
+        fun bind(item: BangumiSeason, position: Int) {
             binding.title.text = item.seasonName
+            itemView.isSelected = selectPosition == position
         }
 
         fun payload(bundle: Bundle) {

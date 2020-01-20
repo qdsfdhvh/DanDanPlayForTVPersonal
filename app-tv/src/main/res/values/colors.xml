@@ -7,7 +7,7 @@
     <color name="selected_background">#ffaa3f</color>
     <color name="default_background">#3d3d3d</color>
 
-    <color name="button_selected_shape">@color/colorPrimary</color>
+    <color name="button_selected_shape">@color/colorPrimaryDark</color>
     <color name="button_focused_shape">@color/colorAccent</color>
     <color name="button_default_shape">@android:color/transparent</color>
 

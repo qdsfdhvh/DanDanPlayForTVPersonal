@@ -15,7 +15,7 @@ import com.seiko.core.data.db.model.BangumiIntroEntity
 import kotlin.properties.Delegates
 
 class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>()
-    , UpdatableAdapter
+//    , UpdatableAdapter
     , View.OnFocusChangeListener {
 
 //    private val diffCallback by lazyAndroid { BangumiIntroEntityDiffCallback() }

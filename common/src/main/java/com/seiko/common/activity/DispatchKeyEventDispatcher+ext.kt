@@ -6,6 +6,13 @@ import androidx.lifecycle.LifecycleOwner
 
 fun DispatchKeyEventDispatcher.addCallback(
     owner: LifecycleOwner? = null,
+    dispatchKeyEvent: (KeyEvent?) -> Boolean
+): DispatchKeyEventCallback {
+    return addCallback(owner, true, dispatchKeyEvent)
+}
+
+fun DispatchKeyEventDispatcher.addCallback(
+    owner: LifecycleOwner? = null,
     enable: Boolean = true,
     dispatchKeyEvent: (KeyEvent?) -> Boolean
 ): DispatchKeyEventCallback {
