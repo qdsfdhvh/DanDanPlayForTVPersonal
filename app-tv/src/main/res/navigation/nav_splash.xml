@@ -93,9 +93,6 @@
             android:id="@+id/action_searchBangumiFragment_to_bangumiDetailsFragment"
             app:destination="@id/bangumiDetailsFragment"
             app:popUpTo="@+id/searchBangumiFragment" />
-        <action android:id="@+id/action_searchBangumiFragment_to_torrentFileCheckFragment"
-            app:destination="@id/torrentFileCheckFragment"
-            app:popUpTo="@id/searchBangumiFragment"/>
     </fragment>
     <!--磁力搜索-->
     <fragment
@@ -113,17 +110,5 @@
             android:name="episodeId"
             app:argType="integer"
             android:defaultValue="-1"/>
-        <action android:id="@+id/action_episodesSearchFragment_to_torrentFileCheckFragment"
-            app:destination="@id/torrentFileCheckFragment"
-            app:popUpTo="@id/searchMagnetFragment"/>
-    </fragment>
-    <!--种子详情 待废弃 -->
-    <fragment
-        android:id="@+id/torrentFileCheckFragment"
-        android:name="com.dandanplay.tv.ui.fragment.TorrentFileCheckFragment"
-        android:label="TorrentFileCheckFragment">
-        <argument
-            android:name="torrentPath"
-            app:argType="string"/>
     </fragment>
 </navigation>

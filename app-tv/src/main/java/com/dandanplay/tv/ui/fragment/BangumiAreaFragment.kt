@@ -41,7 +41,7 @@ class BangumiAreaFragment : Fragment(), OnItemClickListener {
         private const val GRID_VIEW_TOP_PX = 50 //30->20
         private const val GRID_VIEW_BOTTOM_PX = 50 //50->40
 
-        private const val ITEM_TOP_PADDING_PX = 25 //15->25
+//        private const val ITEM_TOP_PADDING_PX = 25 //15->25
         private const val ITEM_RIGHT_PADDING_PX = 25
         
         private const val ARGS_SEASON_SELECTED_POSITION = "ARGS_SEASON_SELECTED_POSITION"

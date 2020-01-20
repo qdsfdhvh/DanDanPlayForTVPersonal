@@ -79,3 +79,5 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 * [aos-Video](https://github.com/archos-sa/aos-Video)
 
 * [androidtv-list-sample](https://github.com/androidmunich/androidtv-list-sample)
+
+* [AndroidTvTorrent](https://github.com/zh79325/AndroidTvTorrent)
