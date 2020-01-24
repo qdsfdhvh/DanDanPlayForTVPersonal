@@ -17,7 +17,7 @@
         android:textSize="24sp" />
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@+id/btnExit"
+        android:id="@id/btn_exit"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -26,7 +26,7 @@
         tools:text="确认"/>
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@+id/btnCancel"
+        android:id="@id/btn_cancel"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

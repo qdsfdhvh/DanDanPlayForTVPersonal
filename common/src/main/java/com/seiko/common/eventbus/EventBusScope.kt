@@ -12,76 +12,64 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 object EventBusScope {
 
-    private val isInitialized = AtomicBoolean(false)
-
-    private val eventScopePool by lazy { ConcurrentHashMap<Activity, LazyEventBusInstance>() }
-
-    fun init(context: Context) {
-        if (isInitialized.getAndSet(true)) {
-            return
-        }
-
-        (context.applicationContext as Application).
-            registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-
-            private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
-
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                eventScopePool[activity] = LazyEventBusInstance()
-            }
-
-            override fun onActivityStarted(activity: Activity) {
-
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-
-            }
-
-            override fun onActivityPaused(activity: Activity) {
-
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-                if (!eventScopePool.containsKey(activity)) {
-                    return
-                }
-
-                mainHandler.post {
-                    eventScopePool.remove(activity)
-                }
-            }
-        })
-    }
-
-    /**
-     * Activity
-     */
-    fun getDefault(activity: Activity?): EventBus {
-        if (activity == null) return Holder.INSTANCE
-        val lazyEventBusInstance = eventScopePool[activity] ?: return Holder.INSTANCE
-        return lazyEventBusInstance.getInstance()
-    }
-
-    fun register(subscriber: Any) {
-        if (!getDefault().isRegistered(subscriber)) {
-            getDefault().register(subscriber)
-        }
-    }
-
-    fun unRegister(subscriber: Any) {
-        if (getDefault().isRegistered(subscriber)) {
-            getDefault().unregister(subscriber)
-        }
-    }
+//    private val isInitialized = AtomicBoolean(false)
+//
+//    private val eventScopePool by lazy { ConcurrentHashMap<Activity, LazyEventBusInstance>() }
+//
+//    fun init(context: Context) {
+//        if (isInitialized.getAndSet(true)) {
+//            return
+//        }
+//
+//        (context.applicationContext as Application).
+//            registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+//
+//            private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
+//
+//            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+//                eventScopePool[activity] = LazyEventBusInstance()
+//            }
+//
+//            override fun onActivityStarted(activity: Activity) {
+//
+//            }
+//
+//            override fun onActivityResumed(activity: Activity) {
+//
+//            }
+//
+//            override fun onActivityPaused(activity: Activity) {
+//
+//            }
+//
+//            override fun onActivityStopped(activity: Activity) {
+//
+//            }
+//
+//            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+//
+//            }
+//
+//            override fun onActivityDestroyed(activity: Activity) {
+//                if (!eventScopePool.containsKey(activity)) {
+//                    return
+//                }
+//
+//                mainHandler.post {
+//                    eventScopePool.remove(activity)
+//                }
+//            }
+//        })
+//    }
+//
+//    /**
+//     * Activity
+//     */
+//    fun getDefault(activity: Activity?): EventBus {
+//        if (activity == null) return Holder.INSTANCE
+//        val lazyEventBusInstance = eventScopePool[activity] ?: return Holder.INSTANCE
+//        return lazyEventBusInstance.getInstance()
+//    }
 
     /**
      * 全局
@@ -94,13 +82,13 @@ object EventBusScope {
         val INSTANCE = EventBus()
     }
 
-    class LazyEventBusInstance {
-
-        private object Holder {
-            val INSTANCE = EventBus()
-        }
-
-        fun getInstance() = Holder.INSTANCE
-    }
+//    class LazyEventBusInstance {
+//
+//        private object Holder {
+//            val INSTANCE = EventBus()
+//        }
+//
+//        fun getInstance() = Holder.INSTANCE
+//    }
 
 }

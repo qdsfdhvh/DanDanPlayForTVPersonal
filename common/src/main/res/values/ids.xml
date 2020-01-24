@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="myNavHostFragment" type="id"/>
+
+    <item name="btn_cancel" type="id"/><!--取消按钮-->
+    <item name="btn_exit" type="id"/><!--退出按钮-->
+    <item name="btn_center" type="id"/><!--确认按钮-->
+
     <item name="container" type="id"/>
     <item name="progress" type="id"/>
     <item name="tv_msg" type="id"/>

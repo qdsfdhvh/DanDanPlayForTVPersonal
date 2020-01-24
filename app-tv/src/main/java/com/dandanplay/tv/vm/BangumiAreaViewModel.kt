@@ -1,9 +1,8 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.LogUtils
-import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.ResultLiveData
 import com.seiko.core.domain.bangumi.GetBangumiListWithSeasonUseCase
@@ -19,7 +18,7 @@ import kotlinx.coroutines.launch
 class BangumiAreaViewModel(
     private val getBangumiSeasons: GetBangumiSeasonsUseCase,
     private val getBangumiListWithSeason: GetBangumiListWithSeasonUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _bangumiSeasons = ResultLiveData<List<BangumiSeason>>()
     val bangumiSeasons: LiveData<ResultData<List<BangumiSeason>>>

@@ -5,17 +5,14 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.navArgs
-import com.alibaba.android.arouter.core.LogisticsCenter
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.vm.SearchMagnetViewModel
 import com.seiko.common.ResultData
@@ -27,9 +24,7 @@ import com.seiko.core.data.db.model.ResMagnetItemEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.io.File
 
 class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScope(),
     SearchSupportFragment.SearchResultProvider,
@@ -154,11 +149,7 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
         when(item) {
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)
-                if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
-                    downloadMagnet()
-                } else {
-                    requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
-                }
+                downloadMagnet()
             }
         }
     }
@@ -183,13 +174,6 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
             REQUEST_ID_AUDIO -> {
                 if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                     ToastUtils.showShort("没有语音权限。")
-                }
-            }
-            REQUEST_ID_DOWNLOAD -> {
-                if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    downloadMagnet()
-                } else {
-                    ToastUtils.showShort("没有存储权限。")
                 }
             }
         }
@@ -221,7 +205,6 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
 
     companion object {
         private const val REQUEST_ID_AUDIO = 1122
-        private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
@@ -230,9 +213,5 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
             Manifest.permission.RECORD_AUDIO
         )
 
-        private val PERMISSIONS_DOWNLOAD = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
     }
 }

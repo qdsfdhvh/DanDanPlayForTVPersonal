@@ -19,83 +19,53 @@
 
 package com.seiko.torrent.ui.main
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
-import android.util.TypedValue
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
-
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.eventbus.registerEventBus
+import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
-import com.seiko.torrent.constants.*
+import com.seiko.torrent.databinding.TorrentFragmentListBinding
 import com.seiko.torrent.extensions.fixItemAnim
-import com.seiko.torrent.extensions.getClipboard
-import com.seiko.torrent.extensions.isHash
-import com.seiko.torrent.extensions.isMagnet
 import com.seiko.torrent.model.PostEvent
 import com.seiko.torrent.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
-import com.seiko.torrent.ui.base.BaseFragment
-import com.seiko.torrent.ui.dialog.BaseAlertDialog
+import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.ui.widget.RecyclerViewDividerDecoration
 import com.seiko.torrent.vm.MainViewModel
-import kotlinx.android.synthetic.main.torrent_fragment_list.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
-/*
- * The list of torrents.
- */
-
-class TorrentListFragment : BaseFragment(),
-    TorrentListAdapter.ClickListener {
+class TorrentListFragment : Fragment(), OnItemClickListener {
 
     /* Save state scrolling */
     private var torrentsListState: Parcelable? = null
 
-    private val adapter by lazyAndroid {
-        TorrentListAdapter(requireActivity(), downloader, this)
-    }
-
-    private lateinit var layoutManager: LinearLayoutManager
-
     private val downloader: Downloader by inject()
     private val viewModel: MainViewModel by sharedViewModel()
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_list
+    private val adapter by lazyAndroid {
+        TorrentListAdapter(downloader)
+    }
+
+    private lateinit var binding: TorrentFragmentListBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = TorrentFragmentListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        EventBusScope.register(this)
+        registerEventBus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,47 +80,39 @@ class TorrentListFragment : BaseFragment(),
     }
 
     override fun onResume() {
-        torrent_list.adapter = adapter
+        binding.torrentList.adapter = adapter
         super.onResume()
         if (torrentsListState != null) {
-            layoutManager.onRestoreInstanceState(torrentsListState)
+            binding.torrentList.layoutManager?.onRestoreInstanceState(torrentsListState)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        torrent_list.adapter = null
+        binding.torrentList.adapter = null
     }
 
     override fun onDestroy() {
-        EventBusScope.unRegister(this)
+        unRegisterEventBus()
         super.onDestroy()
     }
 
     private fun setupUI() {
-        toolbar.setTitle(R.string.torrent_title)
-
-        val activity = requireActivity()
-        torrent_list.fixItemAnim()
-        torrent_list.addItemDecoration(RecyclerViewDividerDecoration(requireContext(), R.drawable.torrent_table_mode_divider))
-
+        adapter.setOnItemClickListener(this)
+        binding.torrentList.addItemDecoration(RecyclerViewDividerDecoration(requireContext(),
+            R.drawable.torrent_table_mode_divider))
         setHasOptionsMenu(true)
-
-        layoutManager = LinearLayoutManager(activity)
-        torrent_list.layoutManager = layoutManager
-
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItems.observe(this::getLifecycle, adapter::addItems)
+        viewModel.torrentItems.observe(this::getLifecycle) { adapter.items = it }
         viewModel.torrentItem.observe(this::getLifecycle) { item ->
             adapter.markAsOpen(item?.hash)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        torrentsListState = layoutManager.onSaveInstanceState()
-        super.onSaveInstanceState(outState)
+        torrentsListState = binding.torrentList.layoutManager?.onSaveInstanceState()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -160,21 +122,45 @@ class TorrentListFragment : BaseFragment(),
         }
     }
 
-    override fun onItemClicked(position: Int, item: TorrentListItem) {
-        if (adapter.isSelectHash(item.hash)) {
-            viewModel.setTorrentHash(null)
-        } else {
-            viewModel.setTorrentHash(item)
+    override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
+        when(holder.itemView.id) {
+            R.id.container -> {
+                item as TorrentListItem
+                downloader.pauseResumeTorrent(item.hash)
+
+//                if (adapter.isSelectHash(item.hash)) {
+//                    viewModel.setTorrentHash(null)
+//                } else {
+//                    viewModel.setTorrentHash(item)
+//                }
+            }
+//            R.id.torrent_btn_pause -> {
+//                item as TorrentListItem
+//                downloader.pauseResumeTorrent(item.hash)
+//            }
         }
     }
 
-    override fun onItemLongClicked(position: Int, item: TorrentListItem): Boolean {
-        return true
-    }
+//    /**
+//     * Item选择监听回调
+//     */
+//    private val mItemSelectedListener : OnChildViewHolderSelectedListener by lazyAndroid {
+//        object : OnChildViewHolderSelectedListener() {
+//            override fun onChildViewHolderSelected(
+//                parent: RecyclerView?,
+//                child: RecyclerView.ViewHolder?,
+//                position: Int,
+//                subposition: Int
+//            ) {
+//                when(parent) {
+//                    binding.torrentList -> {
+//                        adapter.setSelectPosition(position)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    override fun onPauseButtonClicked(position: Int, item: TorrentListItem) {
-        downloader.pauseResumeTorrent(item.hash)
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReceive(event: PostEvent) {
@@ -182,7 +168,7 @@ class TorrentListFragment : BaseFragment(),
             is PostEvent.TorrentAdded -> {
                 LogUtils.d("Get Torrent Added: ${event.torrent.hash}")
                 val item = TorrentListItem(event.torrent)
-                adapter.addItem(item)
+//                adapter.addItem(item)
             }
             is PostEvent.TorrentRemoved -> {
                 val hash = event.hash

@@ -9,6 +9,5 @@ internal val viewModelModule = module {
     viewModel { BangumiDetailViewModel(get(), get(), get()) }
     viewModel { SearchBangumiViewModel(get(), get(), get()) }
     viewModel { SearchMagnetViewModel(get(), get()) }
-    viewModel { TorrentFileCheckViewModel(get(), get()) }
     viewModel { BangumiAreaViewModel(get(), get()) }
 }

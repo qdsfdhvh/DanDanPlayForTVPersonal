@@ -82,7 +82,7 @@ class CustomDetailsDescriptionPresenter : Presenter() {
             mTitleFontMetricsInt = getFontMetricsInt(title)
             mSubtitleFontMetricsInt = getFontMetricsInt(subtitle)
             mBodyFontMetricsInt = getFontMetricsInt(body)
-            title.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            title.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 addPreDrawListener()
             }
         }

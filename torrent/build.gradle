@@ -22,14 +22,15 @@ this.beforeEvaluate {
 dependencies {
     implementation project(':common')
     implementation project(':libs:file_picker')
+    implementation project(':libs:tool_torrent')
 
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
 
     // UI
-    implementation 'com.google.android.material:material:1.2.0-alpha03'
-    implementation 'com.github.clans:fab:1.6.4'
+//    implementation 'com.google.android.material:material:1.2.0-alpha03'
+//    implementation 'com.github.clans:fab:1.6.4'
 
-    // Buffer
-    implementation "com.squareup.okio:okio:2.4.3"
+//    // Buffer
+//    implementation "com.squareup.okio:okio:2.4.3"
 }

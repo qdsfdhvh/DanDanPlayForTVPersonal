@@ -2,10 +2,10 @@ package com.dandanplay.tv.vm
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.ResultLiveData
-import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.core.domain.search.SearchMagnetListUseCase
 import com.seiko.core.data.db.model.ResMagnetItemEntity
@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _mainState = ResultLiveData<List<ResMagnetItemEntity>>()
     val mainState: LiveData<ResultData<List<ResMagnetItemEntity>>> = _mainState

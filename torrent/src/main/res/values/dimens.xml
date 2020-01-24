@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Height of the status bar -->
-    <dimen name="torrent_status_bar_height">25dp</dimen>
+    <dimen name="torrent_status_bar_height">60dp</dimen>
 
     <dimen name="torrent_min_width_dialog">300dp</dimen>
     <dimen name="torrent_dialog_padding">24dp</dimen>
+
+    <dimen name="torrent_title_width">60dp</dimen>
 </resources>

@@ -25,8 +25,8 @@ kapt {
 }
 
 dependencies {
-    api project(path: ':libs:thunder')
-    api project(path: ':libs:tool_torrent')
+    api project(':libs:thunder')
+//    api project(':libs:tool_torrent')
 
     // 协程
     api dependence.libCoroutinesCore

@@ -2,7 +2,6 @@ package com.seiko.torrent.vm
 
 import androidx.lifecycle.*
 import com.blankj.utilcode.util.LogUtils
-import com.seiko.common.BaseViewModel
 import com.seiko.torrent.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.torrent.data.comments.TorrentRepository
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val downloader: Downloader,
     private val torrentRepo: TorrentRepository
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _torrentItems = MutableLiveData<List<TorrentEntity>>()
     val torrentItems: LiveData<List<TorrentListItem>> = Transformations.map(_torrentItems) { entities ->
@@ -43,7 +42,7 @@ class MainViewModel(
 
     fun setTorrentHash(item: TorrentListItem?) {
         if (item == _torrentItem.value) return
-        LogUtils.d("setTorrentHash: ${item?.hash}")
+//        LogUtils.d("setTorrentHash: ${item?.hash}")
         _torrentItem.value = item
     }
 

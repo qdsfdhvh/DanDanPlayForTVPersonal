@@ -10,7 +10,6 @@ class BangumiRelatedPresenter : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = BangumiRelatedCardView(parent.context)
-
         return ViewHolder(view)
     }
 

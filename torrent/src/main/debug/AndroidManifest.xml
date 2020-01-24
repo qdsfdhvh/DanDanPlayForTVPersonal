@@ -2,27 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.torrent">
 
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/ic_banner"
         android:label="@string/torrent_app_name"
         android:supportsRtl="true"
         tools:ignore="AllowBackup,MissingApplicationIcon">
 
-        <activity android:name=".ui.TorrentMainActivity"
-            android:theme="@style/torrent_BaseTheme">
+        <activity android:name=".DebugActivity"
+            android:theme="@style/BaseTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <service
             android:name=".service.TorrentTaskService"/>
-
     </application>
 </manifest>

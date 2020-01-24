@@ -7,8 +7,6 @@ val coreModules = listOf(
     localModule, networkModule,
     //
     repositoryModule,
-    // 种子
-    torrentModule,
     // 实例
     useCaseModule
 )

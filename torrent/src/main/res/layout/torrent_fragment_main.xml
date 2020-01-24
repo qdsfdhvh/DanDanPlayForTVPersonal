@@ -2,128 +2,65 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:windowBackground">
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@id/torrent_container_btn"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/torrent_status_bar_height"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/torrent_container_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/torrent_container_detail"/>
+
+    <ImageButton
+        style="@style/AppButton.ImgButton"
+        android:id="@id/torrent_btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintTop_toTopOf="@id/torrent_container_btn"
+        app:layout_constraintBottom_toBottomOf="@id/torrent_container_btn"
+        app:layout_constraintStart_toStartOf="@id/torrent_container_btn"/>
+
+    <ImageButton
+        style="@style/AppButton.ImgButton"
+        android:id="@id/torrent_btn_open_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/ic_insert_drive_file_black_24dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintTop_toTopOf="@id/torrent_btn_add"
+        app:layout_constraintBottom_toBottomOf="@id/torrent_btn_add"
+        app:layout_constraintStart_toEndOf="@id/torrent_btn_add"/>
 
     <fragment
-        android:id="@+id/main_fragmentContainer"
+        android:id="@id/torrent_container_list"
         android:name="com.seiko.torrent.ui.main.TorrentListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout="@layout/torrent_fragment_list"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/torrent_container_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/toolbar_divider"
-        app:layout_constraintHorizontal_weight="2"/>
-
-    <View
-        android:id="@+id/toolbar_divider"
-        android:layout_width="1dp"
-        android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/content_divider"
-        app:layout_constraintStart_toEndOf="@id/main_fragmentContainer"
-        app:layout_constraintEnd_toStartOf="@id/detail_torrent_fragmentContainer"/>
-
-    <View
-        android:id="@+id/content_divider"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:background="@drawable/torrent_table_mode_divider"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_divider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/toolbar_divider"
-        app:layout_constraintEnd_toEndOf="@id/toolbar_divider"/>
+        app:layout_constraintStart_toStartOf="@id/torrent_container_btn"
+        app:layout_constraintEnd_toEndOf="@id/torrent_container_btn"/>
 
     <fragment
-        android:id="@+id/detail_torrent_fragmentContainer"
+        android:id="@id/torrent_container_detail"
         android:name="com.seiko.torrent.ui.detail.DetailTorrentFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:defaultNavHost="false"
+        tools:layout="@layout/torrent_fragment_detail"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/toolbar_divider"
+        app:layout_constraintStart_toEndOf="@id/torrent_container_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="4"/>
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/add_torrent_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/add"
-        android:focusable="true"
-        android:scaleType="fitCenter"
-        android:transitionName="fab"
-        app:layout_behavior="com.seiko.torrent.ui.widget.SnackBarBehavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/main_fragmentContainer"
-        fab:menu_animationDelayPerItem="50"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_colorNormal="@color/torrent_accent"
-        fab:menu_colorPressed="@color/torrent_accent_dark"
-        fab:menu_colorRipple="@color/torrent_accent_light"
-        fab:menu_fab_size="normal"
-        fab:menu_labels_colorPressed="@color/torrent_fab_menu_label_normal"
-        fab:menu_labels_colorRipple="@color/torrent_fab_menu_label_normal"
-        fab:menu_labels_colorNormal="@color/torrent_fab_menu_label_normal"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="8dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_textColor="@color/torrent_text_primary_inverse"
-        fab:menu_labels_textSize="14sp"
-        fab:menu_openDirection="up"
-        fab:menu_shadowColor="@color/torrent_fab_menu_shadow"
-        fab:menu_shadowRadius="2dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="1dp"
-        fab:menu_showShadow="true">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/add_link_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_link_white_18dp"
-            app:fab_colorNormal="@color/torrent_accent"
-            app:fab_colorPressed="@color/torrent_accent_dark"
-            app:fab_colorRipple="@color/torrent_accent_light"
-            fab:fab_label="@string/torrent_add_link"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/open_file_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_file_white_18dp"
-            app:fab_colorNormal="@color/torrent_accent"
-            app:fab_colorPressed="@color/torrent_accent_dark"
-            app:fab_colorRipple="@color/torrent_accent_light"
-            fab:fab_label="@string/torrent_open_file"
-            fab:fab_size="mini" />
-
-        <!--            <com.github.clans.fab.FloatingActionButton-->
-        <!--                android:id="@+id/create_torrent_button"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:src="@drawable/ic_mode_edit_white_18dp"-->
-        <!--                app:fab_colorNormal="@color/torrent_accent"-->
-        <!--                app:fab_colorPressed="@color/torrent_accent_dark"-->
-        <!--                app:fab_colorRipple="@color/torrent_accent_light"-->
-        <!--                fab:fab_size="mini"-->
-        <!--                fab:fab_label="@string/torrent_create_torrent" />-->
-    </com.github.clans.fab.FloatingActionMenu>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

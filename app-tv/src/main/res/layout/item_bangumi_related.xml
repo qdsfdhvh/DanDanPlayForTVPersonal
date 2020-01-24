@@ -4,9 +4,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/homeFragment_area_width"
     android:layout_height="@dimen/homeFragment_area_height"
-    android:orientation="vertical"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:orientation="vertical">
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@id/img"
         android:layout_width="match_parent"

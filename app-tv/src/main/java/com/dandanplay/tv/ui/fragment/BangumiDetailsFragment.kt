@@ -12,7 +12,7 @@ import androidx.palette.graphics.Palette
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
 import com.dandanplay.tv.model.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel

@@ -45,8 +45,7 @@ import java.util.List;
  * The adapter for representation of downloadable files in a file tree view.
  */
 
-public class DownloadableFilesAdapter
-        extends RecyclerView.Adapter<DownloadableFilesAdapter.ViewHolder>
+public class DownloadableFilesAdapter extends RecyclerView.Adapter<DownloadableFilesAdapter.ViewHolder>
 {
     private final Context context;
     private final ViewHolder.ClickListener clickListener;
@@ -78,7 +77,7 @@ public class DownloadableFilesAdapter
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View v = inflater.inflate(R.layout.torrent_item_torrent_downloadable_file, parent, false);
+        View v = inflater.inflate(R.layout.torrent_item_downloadable_file, parent, false);
         return new ViewHolder(v, clickListener, files);
     }
 

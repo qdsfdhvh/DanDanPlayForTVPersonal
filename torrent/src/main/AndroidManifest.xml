@@ -7,7 +7,7 @@
     <application>
         <activity
             android:name=".ui.TorrentMainActivity"
-            android:theme="@style/torrent_BaseTheme"
+            android:theme="@style/BaseTheme"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"/>
 

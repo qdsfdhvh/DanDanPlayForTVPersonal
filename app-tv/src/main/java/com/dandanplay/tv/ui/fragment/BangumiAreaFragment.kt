@@ -17,31 +17,32 @@ import com.dandanplay.tv.R
 import com.dandanplay.tv.databinding.FragmentAreaBinding
 import com.dandanplay.tv.ui.adapter.BangumiRelateAdapter
 import com.dandanplay.tv.ui.adapter.BangumiSeasonAdapter
-import com.dandanplay.tv.ui.adapter.OnItemClickListener
-import com.dandanplay.tv.ui.widget.SpaceItemDecoration
-import com.dandanplay.tv.util.getPercentHeightSize
-import com.dandanplay.tv.util.getPercentWidthSize
+import com.seiko.common.ui.adapter.OnItemClickListener
 import com.dandanplay.tv.vm.BangumiAreaViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
-import com.seiko.common.activity.addCallback
-import com.seiko.common.activity.requireDispatchKeyEventDispatcher
-import com.seiko.common.dialog.setLoadFragment
+import androidx.activity.addCallback
+import androidx.activity.requireDispatchKeyEventDispatcher
+import com.dandanplay.tv.ui.widget.SpaceItemDecoration
+import com.dandanplay.tv.util.getPercentHeightSize
+import com.dandanplay.tv.util.getPercentWidthSize
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.model.api.BangumiSeason
 import org.koin.android.ext.android.inject
 import java.lang.ref.WeakReference
 
-class BangumiAreaFragment : Fragment(), OnItemClickListener {
+class BangumiAreaFragment : Fragment(),
+    OnItemClickListener {
 
     companion object {
 //        private const val GRID_VIEW_LEFT_PX = 50 //80->60
 //        private const val GRID_VIEW_RIGHT_PX = 50 //50->40
-        private const val GRID_VIEW_TOP_PX = 50 //30->20
-        private const val GRID_VIEW_BOTTOM_PX = 50 //50->40
+        private const val GRID_VIEW_TOP_PX = 25 //30->20
+        private const val GRID_VIEW_BOTTOM_PX = 25 //50->40
 
-//        private const val ITEM_TOP_PADDING_PX = 25 //15->25
+        private const val ITEM_TOP_PADDING_PX = 15 //15->25
         private const val ITEM_RIGHT_PADDING_PX = 25
         
         private const val ARGS_SEASON_SELECTED_POSITION = "ARGS_SEASON_SELECTED_POSITION"
@@ -118,11 +119,11 @@ class BangumiAreaFragment : Fragment(), OnItemClickListener {
                 bangumiSelectedPosition = savedInstanceState.getInt(ARGS_BANGUMI_SELECTED_POSITION)
             }
         }
-        if (seasonSelectedPosition != -1) {
+        if (seasonSelectedPosition >= 0) {
             binding.gridSeason.selectedPosition = seasonSelectedPosition
             seasonAdapter.setSelectPosition(seasonSelectedPosition)
         }
-        if (bangumiSelectedPosition != -1) {
+        if (bangumiSelectedPosition >= 0) {
             binding.gridBangumi.selectedPosition = bangumiSelectedPosition
             binding.gridBangumi.requestFocus()
         } else {
@@ -144,18 +145,18 @@ class BangumiAreaFragment : Fragment(), OnItemClickListener {
         bangumiAdapter.setOnItemClickListener(this)
         // 自动计算count，由于用到了width，需要等界面绘制完，因此在post里运行
         binding.gridBangumi.post {
-//            val top = getPercentHeightSize(ITEM_TOP_PADDING_PX)
-//            val right = getPercentWidthSize(ITEM_RIGHT_PADDING_PX)
-//            binding.gridBangumi.addItemDecoration(SpaceItemDecoration(top, right))
-//            binding.gridBangumi.setPadding(GRID_VIEW_LEFT_PX, GRID_VIEW_TOP_PX, GRID_VIEW_RIGHT_PX, GRID_VIEW_BOTTOM_PX)
+            val top = getPercentHeightSize(ITEM_TOP_PADDING_PX)
+            val right = getPercentWidthSize(ITEM_RIGHT_PADDING_PX)
+            binding.gridBangumi.addItemDecoration(SpaceItemDecoration(top, right))
 
             // recView宽度，item宽度
             val width = binding.gridBangumi.width
             val itemWidth = requireContext().resources.getDimension(R.dimen.homeFragment_area_width).toInt()
             // 算出并排数、左右间距
             val count = width / (itemWidth + ITEM_RIGHT_PADDING_PX)
-            val padding = width % (itemWidth + ITEM_RIGHT_PADDING_PX) / 2
+            val padding = (width % (itemWidth + ITEM_RIGHT_PADDING_PX)) / 2
             binding.gridBangumi.setPadding(padding, GRID_VIEW_TOP_PX, padding, GRID_VIEW_BOTTOM_PX)
+
             binding.gridBangumi.setNumColumns(count)
             binding.gridBangumi.addOnChildViewHolderSelectedListener(mItemSelectedListener)
 

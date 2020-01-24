@@ -3,10 +3,10 @@ package com.dandanplay.tv.vm
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.ResultLiveData
-import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.core.domain.search.SearchBangumiListUseCase
 import com.seiko.core.domain.search.SearchMagnetListUseCase
@@ -21,7 +21,7 @@ class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,
     private val searchMagnetList: SearchMagnetListUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _mainState = ResultLiveData<Boolean>()
     val mainState: LiveData<ResultData<Boolean>> = _mainState

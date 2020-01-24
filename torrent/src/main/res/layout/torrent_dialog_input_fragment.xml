@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppParentLayout.Dialog"
+    tools:context="com.seiko.torrent.ui.dialog.DialogInputFragment">
+    <EditText
+        android:id="@id/torrent_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:hint="@string/torrent_dialog_add_link_title"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_center"
+        app:layout_constraintStart_toStartOf="@id/btn_center"
+        app:layout_constraintEnd_toEndOf="@id/btn_cancel"/>
+    <Button
+        style="@style/AppButton.Dialog"
+        android:id="@id/btn_center"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        tools:text="确认"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/torrent_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_cancel"/>
+    <Button
+        style="@style/AppButton.Dialog"
+        android:id="@id/btn_cancel"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        tools:text="取消"
+        app:layout_constraintTop_toTopOf="@id/btn_center"
+        app:layout_constraintBottom_toBottomOf="@id/btn_center"
+        app:layout_constraintStart_toEndOf="@id/btn_center"
+        app:layout_constraintEnd_toEndOf="parent">
+        <requestFocus />
+    </Button>
+</androidx.constraintlayout.widget.ConstraintLayout>

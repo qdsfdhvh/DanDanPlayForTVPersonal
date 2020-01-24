@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="torrent_tab" type="id"/>
+    <item name="torrent_view_pager" type="id"/>
+
+    <item name="torrent_title" type="id"/>
+    <item name="torrent_under_line" type="id"/>
+    <item name="torrent_indicator_line" type="id"/>
+    <item name="torrent_progress" type="id"/>
+    <item name="torrent_status" type="id"/>
+    <item name="torrent_download_upload_speed" type="id"/>
+    <item name="torrent_download_counter" type="id"/>
+    <item name="torrent_peers" type="id"/>
+    <item name="torrent_error" type="id"/>
+
+    <item name="torrent_edit" type="id"/>
+
+    <item name="torrent_btn_save" type="id"/>
+    <item name="torrent_btn_add" type="id"/>
+    <item name="torrent_btn_open_file" type="id"/>
+    <item name="torrent_btn_pause" type="id"/>
+
+    <item name="torrent_container_btn" type="id"/>
+    <item name="torrent_container_list" type="id"/>
+    <item name="torrent_container_detail" type="id"/>
+</resources>

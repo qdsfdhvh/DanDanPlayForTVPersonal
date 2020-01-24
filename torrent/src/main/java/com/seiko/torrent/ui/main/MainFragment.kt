@@ -6,169 +6,193 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
-import android.webkit.URLUtil
-import androidx.appcompat.app.AlertDialog
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.seiko.torrent.R
-import com.seiko.torrent.constants.HTTPS_PREFIX
-import com.seiko.torrent.constants.HTTP_PREFIX
-import com.seiko.torrent.constants.INFOHASH_PREFIX
+import com.seiko.torrent.databinding.TorrentFragmentMainBinding
 import com.seiko.torrent.extensions.getClipboard
 import com.seiko.torrent.extensions.isHash
 import com.seiko.torrent.extensions.isMagnet
-import com.seiko.torrent.ui.base.BaseFragment
 import com.seiko.torrent.ui.dialog.BaseAlertDialog
-import kotlinx.android.synthetic.main.torrent_fragment_main.*
+import com.seiko.torrent.ui.dialog.DialogInputFragment
+import com.seiko.torrent.util.buildTorrentUri
+import kotlinx.android.synthetic.main.torrent_fragment_main.view.*
 import news.androidtv.filepicker.TvFilePicker
 import java.io.File
 import java.util.*
 
-class MainFragment : BaseFragment(),
-    BaseAlertDialog.OnClickListener,
-    BaseAlertDialog.OnDialogShowListener {
+class MainFragment : Fragment(), View.OnClickListener {
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_main
+    private lateinit var binding: TorrentFragmentMainBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = TorrentFragmentMainBinding.inflate(inflater, container, false)
+        setupUI()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
         bindViewModel()
     }
 
     private fun setupUI() {
-        add_torrent_button.setClosedOnTouchOutside(true)
-
-        open_file_button.setOnClickListener {
-            add_torrent_button.close(true)
-            startFilePickerActivity()
-        }
-
-        add_link_button.setOnClickListener {
-            add_torrent_button.close(true)
-            addLinkDialog()
-        }
+//        binding.addTorrentButton.setClosedOnTouchOutside(true)
+//
+//        binding.openFileButton.setOnClickListener {
+//            binding.addTorrentButton.close(true)
+//            startFilePickerActivity()
+//        }
+//
+//        binding.addLinkButton.setOnClickListener {
+//            binding.addTorrentButton.close(true)
+//            addLinkDialog()
+//        }
+        binding.torrentBtnAdd.setOnClickListener(this)
+        binding.torrentBtnOpenFile.setOnClickListener(this)
+        binding.torrentBtnAdd.requestFocus()
     }
 
     private fun bindViewModel() {
 
     }
 
-    override fun onShow(dialog: AlertDialog?) {
-        if (dialog != null) {
-            val fm = fragmentManager ?: return
-
-            if (fm.findFragmentByTag(TAG_ADD_LINK_DIALOG) != null) {
-                initAddDialog(dialog)
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.torrent_btn_add -> {
+                openAddTorrentDialog()
+            }
+            R.id.torrent_btn_open_file -> {
+                startFilePickerActivity()
             }
         }
     }
 
-    override fun onPositiveClicked(v: View?) {
-
-    }
-
-    override fun onNegativeClicked(v: View?) {
-
-    }
-
-    override fun onNeutralClicked(v: View?) {
-        /* Nothing */
-    }
-
-
-    private fun initAddDialog(dialog: AlertDialog) {
-        val field = dialog.findViewById<TextInputEditText>(R.id.text_input_dialog)!!
-        val fieldLayout = dialog.findViewById<TextInputLayout>(R.id.layout_text_input_dialog)!!
-
-        /* Dismiss error label if user has changed the text */
-        field.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                /* Nothing */
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                fieldLayout.isErrorEnabled = false
-                fieldLayout.error = null
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                /* Nothing */
-            }
-        })
-
-        /*
-         * It is necessary in order to the dialog is not closed by
-         * pressing positive button if the text checker gave a false result
-         */
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-
-        positiveButton.setOnClickListener {
-            if (field.text != null) {
-                val link = field.text!!.toString()
-
-                if (checkEditTextField(link, fieldLayout)) {
-                    val uri = buildTorrentUri(link)
+    private fun openAddTorrentDialog() {
+        if (childFragmentManager.findFragmentByTag(DialogInputFragment.TAG) == null) {
+            DialogInputFragment.Builder()
+                .setHint(getString(R.string.torrent_dialog_add_link_title))
+                .setConfirmText(getString(R.string.ok))
+                .setCancelText(getString(R.string.cancel))
+                .setConfirmClickListener { source ->
+                    val uri = buildTorrentUri(source)
                     if (uri == null) {
-                        ToastUtils.showShort("无效的连接：$link")
-                        return@setOnClickListener
+                        ToastUtils.showShort("无效的连接：$source")
+                    } else {
+                        startAddTorrentDialog(uri)
                     }
-                    dialog.dismiss()
-                    addTorrentDialog(uri)
                 }
-            }
-        }
-
-        /* Inserting a link from the clipboard */
-        val clipboard = requireActivity().getClipboard() ?: return
-        val text = clipboard.toLowerCase(Locale.US)
-        if (text.isMagnet() || text.isHash()
-            || text.startsWith(HTTP_PREFIX)
-            || text.startsWith(HTTPS_PREFIX)) {
-            field.setText(clipboard)
-            return
+                .build()
+                .show(childFragmentManager)
         }
     }
 
-    private fun addLinkDialog() {
-        val fm = fragmentManager
-        if (fm != null && fm.findFragmentByTag(TAG_ADD_LINK_DIALOG) == null) {
-            val addLinkDialog = BaseAlertDialog.newInstance(
-                getString(R.string.torrent_dialog_add_link_title), null,
-                R.layout.torrent_dialog_text_input,
-                getString(R.string.ok),
-                getString(R.string.cancel), null,
-                this
-            )
-            addLinkDialog.show(fm,
-                TAG_ADD_LINK_DIALOG
-            )
-        }
-    }
+//    override fun onShow(dialog: AlertDialog?) {
+//        if (dialog != null) {
+//            val fm = fragmentManager ?: return
+//
+//            if (fm.findFragmentByTag(TAG_ADD_LINK_DIALOG) != null) {
+//                initAddDialog(dialog)
+//            }
+//        }
+//    }
 
-    private fun checkEditTextField(s: String?, layout: TextInputLayout?): Boolean {
-        if (s == null || layout == null)
-            return false
 
-        if (s.isNullOrEmpty()) {
-            layout.isErrorEnabled = true
-            layout.error = getString(R.string.torrent_error_empty_link)
-            layout.requestFocus()
-            return false
-        }
+//    private fun initAddDialog(dialog: AlertDialog) {
+//        val field = dialog.findViewById<TextInputEditText>(R.id.text_input_dialog)!!
+//        val fieldLayout = dialog.findViewById<TextInputLayout>(R.id.layout_text_input_dialog)!!
+//
+//        /* Dismiss error label if user has changed the text */
+//        field.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+//                /* Nothing */
+//            }
+//
+//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//                fieldLayout.isErrorEnabled = false
+//                fieldLayout.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable) {
+//                /* Nothing */
+//            }
+//        })
+//
+//        /*
+//         * It is necessary in order to the dialog is not closed by
+//         * pressing positive button if the text checker gave a false result
+//         */
+//        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+//
+//        positiveButton.setOnClickListener {
+//            if (field.text != null) {
+//                val link = field.text!!.toString()
+//
+//                if (checkEditTextField(link, fieldLayout)) {
+//                    val uri = buildTorrentUri(link)
+//                    if (uri == null) {
+//                        ToastUtils.showShort("无效的连接：$link")
+//                        return@setOnClickListener
+//                    }
+//                    dialog.dismiss()
+//                    addTorrentDialog(uri)
+//                }
+//            }
+//        }
+//
+//        /* Inserting a link from the clipboard */
+//        val clipboard = requireActivity().getClipboard() ?: return
+//        val text = clipboard.toLowerCase(Locale.US)
+//        if (text.isMagnet() || text.isHash()
+//            || text.startsWith(HTTP_PREFIX)
+//            || text.startsWith(HTTPS_PREFIX)) {
+//            field.setText(clipboard)
+//            return
+//        }
+//    }
+//
+//    private fun addLinkDialog() {
+//        val fm = fragmentManager
+//        if (fm != null && fm.findFragmentByTag(TAG_ADD_LINK_DIALOG) == null) {
+//            val addLinkDialog = BaseAlertDialog.newInstance(
+//                getString(R.string.torrent_dialog_add_link_title), null,
+//                R.layout.torrent_dialog_text_input,
+//                getString(R.string.ok),
+//                getString(R.string.cancel), null,
+//                this
+//            )
+//            addLinkDialog.show(fm,
+//                TAG_ADD_LINK_DIALOG
+//            )
+//        }
+//    }
+//
+//    private fun checkEditTextField(s: String?, layout: TextInputLayout?): Boolean {
+//        if (s == null || layout == null)
+//            return false
+//
+//        if (s.isNullOrEmpty()) {
+//            layout.isErrorEnabled = true
+//            layout.error = getString(R.string.torrent_error_empty_link)
+//            layout.requestFocus()
+//            return false
+//        }
+//
+//        layout.isErrorEnabled = false
+//        layout.error = null
+//
+//        return true
+//    }
 
-        layout.isErrorEnabled = false
-        layout.error = null
-
-        return true
-    }
-
-    private fun addTorrentDialog(uri: Uri) {
+    private fun startAddTorrentDialog(uri: Uri) {
         findNavController().navigate(MainFragmentDirections.actionMainFragmentToAddTorrentFragment(uri))
     }
 
@@ -183,31 +207,13 @@ class MainFragment : BaseFragment(),
             FilePickerRequestCode -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val uri = intent?.data ?: return
-                    addTorrentDialog(uri)
+                    startAddTorrentDialog(uri)
                 }
             }
         }
     }
 
-    private fun buildTorrentUri(source: String?): Uri? {
-        if (source.isNullOrEmpty()) return null
-
-        if (source.isMagnet()) return Uri.parse(source)
-
-        if (source.isHash()) return Uri.parse(INFOHASH_PREFIX + source)
-
-        if (URLUtil.isNetworkUrl(source)) return Uri.parse(source)
-
-        if (URLUtil.isFileUrl(source)) return Uri.fromFile(File(source))
-
-        if (URLUtil.isContentUrl(source)) return Uri.parse(source)
-
-        return null
-    }
-
     companion object {
-        private const val TAG_ADD_LINK_DIALOG = "add_link_dialog"
-
         private const val FilePickerRequestCode = 6906
     }
 }

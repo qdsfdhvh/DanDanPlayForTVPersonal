@@ -5,16 +5,14 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.model.AnimeRow
@@ -28,7 +26,6 @@ import com.seiko.common.router.Routes
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import com.seiko.core.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.io.File
 
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
@@ -175,11 +172,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
             }
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)
-                if (checkPermissions(PERMISSIONS_DOWNLOAD)) {
-                    downloadMagnet()
-                } else {
-                    requestPermissions(PERMISSIONS_DOWNLOAD, REQUEST_ID_DOWNLOAD)
-                }
+                downloadMagnet()
             }
         }
     }
@@ -204,13 +197,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
             REQUEST_ID_AUDIO -> {
                 if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                     ToastUtils.showShort("没有语音权限。")
-                }
-            }
-            REQUEST_ID_DOWNLOAD -> {
-                if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    downloadMagnet()
-                } else {
-                    ToastUtils.showShort("没有存储权限。")
                 }
             }
         }
@@ -249,18 +235,12 @@ class SearchBangumiFragment : SearchSupportFragment(),
         private const val ROW_MAGNET = 200
 
         private const val REQUEST_ID_AUDIO = 1122
-        private const val REQUEST_ID_DOWNLOAD = 1123
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
 
         private val PERMISSIONS_AUDIO = arrayOf(
             Manifest.permission.RECORD_AUDIO
-        )
-
-        private val PERMISSIONS_DOWNLOAD = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     }
 

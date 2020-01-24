@@ -1,22 +1,15 @@
 package com.dandanplay.tv.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.ResultLiveData
-import com.seiko.common.BaseViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.dandanplay.tv.domain.GetAirDayBangumiBeansUseCase
 import com.dandanplay.tv.domain.GetFavoriteBangumiListUseCase
 import com.dandanplay.tv.model.AirDayBangumiBean
 import com.dandanplay.tv.model.HomeImageBean
-import com.dandanplay.tv.util.toHomeImageBean
-import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.data.Result
-import com.seiko.core.data.db.model.BangumiDetailsEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,7 +18,7 @@ import java.util.*
 class HomeViewModel(
     private val getWeekBangumiList: GetAirDayBangumiBeansUseCase,
     private val getFavoriteBangumiList: GetFavoriteBangumiListUseCase
-): BaseViewModel() {
+): ViewModel() {
 
     /**
      * 每周更新

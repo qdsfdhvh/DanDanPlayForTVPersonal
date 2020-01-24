@@ -2,17 +2,19 @@ package com.seiko.torrent.ui.detail
 
 import android.os.Bundle
 import android.text.format.Formatter
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.seiko.torrent.R
-import com.seiko.torrent.ui.base.BaseFragment
+import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.MainViewModel
-import kotlinx.android.synthetic.main.torrent_fragment_detail_info.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DetailTorrentInfoFragment : BaseFragment() {
+class DetailTorrentInfoFragment : Fragment() {
 
     companion object {
         fun newInstance(): DetailTorrentInfoFragment {
@@ -22,8 +24,16 @@ class DetailTorrentInfoFragment : BaseFragment() {
 
     private val viewModel: MainViewModel by sharedViewModel()
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_detail_info
+    private lateinit var binding: TorrentFragmentDetailInfoBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = TorrentFragmentDetailInfoBinding.inflate(inflater, container, false)
+        setupUI()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,7 +42,7 @@ class DetailTorrentInfoFragment : BaseFragment() {
     }
 
     private fun setupUI() {
-        folder_chooser_button.setOnClickListener {
+        binding.folderChooserButton.setOnClickListener {
 
         }
     }
@@ -40,34 +50,35 @@ class DetailTorrentInfoFragment : BaseFragment() {
     private fun bindViewModel() {
         viewModel.torrentItem.observe(this::getLifecycle) { item ->
             if (item == null) {
-                upload_torrent_into.text = ""
-                free_space.text = ""
-                torrent_added.text = ""
+                binding.uploadTorrentInto.text = ""
+                binding.freeSpace.text = ""
+                binding.torrentAdded.text = ""
             } else {
-                upload_torrent_into.text = item.downloadPath
-                free_space.text = getString(R.string.torrent_free_space).format(
+                binding.uploadTorrentInto.text = item.downloadPath
+                binding.freeSpace.text = getString(R.string.torrent_free_space).format(
                     Formatter.formatFileSize(requireActivity(), File(item.downloadPath).usableSpace)
                 )
-                torrent_added.text = SimpleDateFormat.getDateTimeInstance()
+                binding.torrentAdded.text = SimpleDateFormat.getDateTimeInstance()
                     .format(Date(item.dateAdded))
             }
         }
         viewModel.torrentMetaInfo.observe(this::getLifecycle) { info ->
             if (info == null) {
-                torrent_name.setText("")
-                torrent_hash_sum.text = ""
-                torrent_comment.text = ""
-                torrent_created_in_program.text = ""
-                torrent_size.text = ""
-                torrent_create_date.text = ""
+                binding.torrentName.text = ""
+                binding.torrentHashSum.text = ""
+                binding.torrentComment.text = ""
+                binding.torrentCreatedInProgram.text = ""
+                binding.torrentSize.text = ""
+                binding.torrentFileCount.text = ""
+                binding.torrentCreateDate.text = ""
             } else {
-                torrent_name.setText(info.torrentName)
-                torrent_hash_sum.text = info.sha1Hash
-                torrent_comment.text = info.comment
-                torrent_created_in_program.text = info.createdBy
-                torrent_size.text = Formatter.formatFileSize(requireActivity(), info.torrentSize)
-                torrent_file_count.text = "%d".format(info.fileCount)
-                torrent_create_date.text = SimpleDateFormat.getDateTimeInstance()
+                binding.torrentName.text = info.torrentName
+                binding.torrentHashSum.text = info.sha1Hash
+                binding.torrentComment.text = info.comment
+                binding.torrentCreatedInProgram.text = info.createdBy
+                binding.torrentSize.text = Formatter.formatFileSize(requireActivity(), info.torrentSize)
+                binding.torrentFileCount.text = "%d".format(info.fileCount)
+                binding.torrentCreateDate.text = SimpleDateFormat.getDateTimeInstance()
                     .format(Date(info.creationDate))
             }
         }

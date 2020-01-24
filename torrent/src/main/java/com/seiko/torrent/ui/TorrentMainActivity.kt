@@ -1,16 +1,18 @@
 package com.seiko.torrent.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.blankj.utilcode.util.LogUtils
-import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.eventbus.registerEventBus
+import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.router.Routes
 import com.seiko.torrent.R
 import com.seiko.torrent.model.PostEvent
@@ -18,8 +20,9 @@ import com.seiko.torrent.ui.main.MainFragmentDirections
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@SuppressLint("Registered")
 @Route(path = Routes.Torrent.PATH)
-class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
+class TorrentMainActivity : FragmentActivity(R.layout.torrent_activity_main) {
 
     @Autowired(name = Routes.Torrent.KEY_TORRENT_PATH)
     @JvmField
@@ -45,12 +48,12 @@ class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
                 MainFragmentDirections.actionMainFragmentToAddTorrentFragment(source!!)
             )
         }
-        EventBusScope.register(this)
+        registerEventBus()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBusScope.unRegister(this)
+        unRegisterEventBus()
     }
 
     override fun onBackPressed() {
@@ -59,10 +62,6 @@ class TorrentMainActivity : AppCompatActivity(R.layout.torrent_activity_main) {
         if (addState == STATE_SOURCE_INTENT) {
             finish()
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

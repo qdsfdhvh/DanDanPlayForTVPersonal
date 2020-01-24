@@ -61,7 +61,7 @@ internal fun TorrentHandle.getTotalPeers(): Int = status()?.listPeers() ?: 0
 /**
  * 已下载的数据大小
  */
-internal fun TorrentHandle.getTotalDone(): Long = status().totalDone()
+internal fun TorrentHandle.getTotalDone(): Long = status()?.totalDone() ?: 0
 
 /**
  * 需要的数据总大小
@@ -71,7 +71,7 @@ internal fun TorrentHandle.getTotalWanted(): Long = status()?.totalWanted() ?: 0
 /**
  * 这次已下载的数据大小
  */
-internal fun TorrentHandle.getReceivedBytes(): Long = status().totalPayloadDownload()
+internal fun TorrentHandle.getReceivedBytes(): Long = status()?.totalPayloadDownload() ?: 0
 
 /**
  * 总的已下载的数据大小

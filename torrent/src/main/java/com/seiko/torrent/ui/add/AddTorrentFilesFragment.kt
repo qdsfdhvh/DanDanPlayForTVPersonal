@@ -2,24 +2,24 @@ package com.seiko.torrent.ui.add
 
 import android.os.Bundle
 import android.text.format.Formatter
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.torrent.R
+import com.seiko.torrent.databinding.TorrentFragmentAddFilesBinding
 import com.seiko.torrent.extensions.fixItemAnim
 
 import com.seiko.torrent.model.filetree.BencodeFileTree
 import com.seiko.torrent.model.filetree.FileNode
-import com.seiko.torrent.ui.base.BaseFragment
 import com.seiko.torrent.vm.AddTorrentViewModel
-import kotlinx.android.synthetic.main.torrent_fragment_add_torrent_files.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import kotlin.collections.ArrayList
 
-class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHolder.ClickListener {
+class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.ClickListener {
 
     companion object {
         fun newInstance(): AddTorrentFilesFragment {
@@ -31,6 +31,8 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         parentFragment as ViewModelStoreOwner
     })
 
+    private lateinit var binding: TorrentFragmentAddFilesBinding
+
     private val adapter by lazyAndroid {
         DownloadableFilesAdapter(requireActivity(), this)
     }
@@ -39,17 +41,26 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
 
     private var currentDir: BencodeFileTree? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_add_torrent_files
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = TorrentFragmentAddFilesBinding.inflate(inflater, container, false)
+        setupUI()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
-        initViews()
+        bindViewModel()
     }
 
-    private fun initViewModel() {
+    private fun setupUI() {
+        layoutManager = LinearLayoutManager(requireActivity())
+        binding.fileList.layoutManager = layoutManager
+        binding.fileList.fixItemAnim()
+        binding.fileList.adapter = adapter
+        setFileSize(0, 0)
+    }
+
+    private fun bindViewModel() {
         // 磁力信息
         viewModel.fileTree.observe(this::getLifecycle) { fileTree ->
             currentDir = fileTree
@@ -58,16 +69,8 @@ class AddTorrentFilesFragment : BaseFragment(), DownloadableFilesAdapter.ViewHol
         }
     }
 
-    private fun initViews() {
-        layoutManager = LinearLayoutManager(requireActivity())
-        file_list.layoutManager = layoutManager
-        file_list.fixItemAnim()
-        file_list.adapter = adapter
-        setFileSize(0, 0)
-    }
-
     private fun setFileSize(selectedSize: Long, totalSize: Long) {
-        files_size.text = getString(R.string.torrent_files_size).format(
+        binding.filesSize.text = getString(R.string.torrent_files_size).format(
             Formatter.formatFileSize(requireActivity().applicationContext, selectedSize),
             Formatter.formatFileSize(requireActivity().applicationContext, totalSize)
         )

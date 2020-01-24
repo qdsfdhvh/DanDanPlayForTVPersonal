@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import com.dandanplay.tv.model.HomeImageBean
 import com.dandanplay.tv.ui.card.MainAreaCardView
+import com.seiko.common.ui.presenter.BasePresenter
 
 class MainAreaPresenter : BasePresenter() {
 

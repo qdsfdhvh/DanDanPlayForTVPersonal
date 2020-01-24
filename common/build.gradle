@@ -16,7 +16,8 @@ dependencies {
 
     // TV UI
     api dependence.libLeanback
-    api 'androidx.leanback:leanback-preference:1.0.0'
+    api dependence.libLeanbackPreference
+    api dependence.libViewPager2
 
     // navigation
     api dependence.libNavigationFragmentKtx

@@ -98,6 +98,19 @@ data class TorrentListItem(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is TorrentListItem && hash == other.hash
+        if (other == null) return false
+        if (other !is TorrentListItem) return false
+        return hash == other.hash
+                && stateCode == other.stateCode
+                && progress == other.progress
+                && receivedBytes == other.receivedBytes
+                && uploadedBytes == other.uploadedBytes
+                && totalBytes == other.totalBytes
+                && downloadSpeed == other.downloadSpeed
+                && uploadSpeed == other.uploadSpeed
+                && ETA == other.ETA
+                && totalPeers == other.totalPeers
+                && peers == other.peers
+                && error == other.error
     }
 }

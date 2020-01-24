@@ -4,8 +4,8 @@ import android.net.Uri
 import android.webkit.URLUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.seiko.common.BaseViewModel
 import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
 import com.seiko.core.data.Result
@@ -31,7 +31,7 @@ class AddTorrentViewModel(
     private val downloadTorrentWithDanDanApi: DownloadTorrentWithDanDanApiUseCase,
     private val getTorrentTempWithContentUseCase: GetTorrentTempWithContentUseCase,
     private val getTorrentTempWithNetUseCase: DownloadTorrentWithNetUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     /**
      * 当前状态

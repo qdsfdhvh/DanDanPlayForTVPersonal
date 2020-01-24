@@ -1,24 +1,19 @@
 package com.dandanplay.tv.ui
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.extensions.hideSoftInput
 import com.dandanplay.tv.extensions.isSoftInputMethodShowing
-import com.seiko.common.activity.DispatchKeyEventDispatcher
-import com.seiko.common.activity.DispatchKeyEventDispatcherOwner
+import androidx.activity.DispatchKeyEventDispatcher
+import androidx.activity.DispatchKeyEventDispatcherOwner
 import com.seiko.common.service.TorrentService
 
-class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
+class MainActivity : FragmentActivity(R.layout.activity_main),
+    DispatchKeyEventDispatcherOwner {
 
     private val dispatchKeyEventDispatcher =
         DispatchKeyEventDispatcher { event ->
@@ -40,7 +35,6 @@ class MainActivity : FragmentActivity(), DispatchKeyEventDispatcherOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         navController = this.findNavController(R.id.myNavHostFragment)
     }
 

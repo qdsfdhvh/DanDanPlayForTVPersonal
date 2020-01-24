@@ -1,50 +1,87 @@
 package com.seiko.torrent.ui.detail
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.addCallback
-import androidx.core.content.ContextCompat
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
+import androidx.leanback.widget.OnChildViewHolderSelectedListener
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.tabs.TabLayoutMediator
-import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.extensions.lazyAndroid
 import com.seiko.torrent.R
-import com.seiko.torrent.model.PostEvent
+import com.seiko.torrent.databinding.TorrentFragmentDetailBinding
 import com.seiko.torrent.service.TorrentTaskService
-import com.seiko.torrent.ui.base.BaseFragment
+import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
-import kotlinx.android.synthetic.main.torrent_fragment_detail.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
-class DetailTorrentFragment : BaseFragment() {
+private const val NUM_FRAGMENTS = 6
+
+private const val INFO_FRAG_POS = 0
+private const val STATE_FRAG_POS = 1
+private const val FILES_FRAG_POS = 2
+private const val TRACKERS_FRAG_POS = 3
+private const val PEERS_FRAG_POS = 4
+private const val PIECES_FRAG_POS = 5
+
+class DetailTorrentFragment : Fragment() {
+
+    companion object {
+        private const val ARGS_DETAIL_TAB_SELECTED_POSITION = "ARGS_DETAIL_TAB_SELECTED_POSITION"
+    }
 
     private val viewModel: MainViewModel by sharedViewModel()
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_detail
+    private lateinit var binding: TorrentFragmentDetailBinding
+
+    private lateinit var tabAdapter: TabTitleAdapter
+
+    /**
+     * 记录位置
+     */
+    private var tabSelectPosition = -1
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = TorrentFragmentDetailBinding.inflate(inflater, container, false)
+        setupUI()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
+        checkSelectPosition(savedInstanceState)
         bindViewModel()
     }
 
-    private fun setupUI() {
-        detail_toolbar.inflateMenu(R.menu.torrent_detail_torrent)
-        detail_toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected)
+    override fun onDestroyView() {
+        binding.torrentTab.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
+        super.onDestroyView()
+    }
 
-        // ViewPager2
-        detail_torrent_viewpager.adapter = DetailPagerAdapter(this)
-        TabLayoutMediator(detail_torrent_tabs, detail_torrent_viewpager) { tab, position ->
-            tab.text = when(position) {
+    /**
+     * 保存视图状态
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ARGS_DETAIL_TAB_SELECTED_POSITION, tabSelectPosition)
+    }
+
+    private fun checkSelectPosition(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(ARGS_DETAIL_TAB_SELECTED_POSITION)) {
+                tabSelectPosition = savedInstanceState.getInt(ARGS_DETAIL_TAB_SELECTED_POSITION)
+            }
+        }
+        if (tabSelectPosition >= 0) {
+            tabAdapter.setSelectPosition(tabSelectPosition)
+        }
+    }
+
+    private fun setupUI() {
+        tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
+            tab.setText(when(position) {
                 INFO_FRAG_POS -> getString(R.string.torrent_info)
                 STATE_FRAG_POS -> getString(R.string.torrent_state)
                 FILES_FRAG_POS -> getString(R.string.torrent_files)
@@ -52,12 +89,37 @@ class DetailTorrentFragment : BaseFragment() {
                 PEERS_FRAG_POS -> getString(R.string.torrent_peers)
                 PIECES_FRAG_POS -> getString(R.string.torrent_pieces)
                 else -> ""
-            }
-        }.attach()
+            })
+        }
+        binding.torrentTab.adapter = tabAdapter
+        binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
+
+        // ViewPager2
+        binding.torrentViewPager.adapter = DetailPagerAdapter(this)
     }
 
     private fun bindViewModel() {
 
+    }
+
+    /**
+     * Item选择监听回调
+     */
+    private val mItemSelectedListener : OnChildViewHolderSelectedListener by lazyAndroid {
+        object : OnChildViewHolderSelectedListener() {
+            override fun onChildViewHolderSelected(
+                parent: RecyclerView?,
+                child: RecyclerView.ViewHolder?,
+                position: Int,
+                subposition: Int
+            ) {
+                when(parent) {
+                    binding.torrentTab -> {
+                        tabAdapter.setSelectPosition(position)
+                    }
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -73,14 +135,6 @@ class DetailTorrentFragment : BaseFragment() {
     }
 
 }
-
-private const val NUM_FRAGMENTS = 6
-private const val INFO_FRAG_POS = 0
-private const val STATE_FRAG_POS = 1
-private const val FILES_FRAG_POS = 2
-private const val TRACKERS_FRAG_POS = 3
-private const val PEERS_FRAG_POS = 4
-private const val PIECES_FRAG_POS = 5
 
 private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

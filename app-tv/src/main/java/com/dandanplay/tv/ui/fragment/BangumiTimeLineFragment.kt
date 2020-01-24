@@ -7,7 +7,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.ResultData

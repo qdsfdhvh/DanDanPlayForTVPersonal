@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -14,18 +13,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SnackbarUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.tabs.TabLayoutMediator
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.core.data.Result
 import com.seiko.torrent.R
+import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService
-import com.seiko.torrent.ui.base.BaseFragment
+import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.AddTorrentViewModel
-import kotlinx.android.synthetic.main.torrent_fragment_add_torrent.*
 import org.koin.android.viewmodel.ext.android.viewModel
-
-private const val TAG_SPINNER_PROGRESS = "spinner_progress"
 
 private const val PERMISSION_REQUEST = 1
 
@@ -33,45 +29,82 @@ private val PERMISSIONS = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 
-class AddTorrentFragment : BaseFragment() {
+
+/**
+ * 详情、文件
+ */
+private const val NUM_FRAGMENTS = 2
+
+private const val INFO_FRAG_POS = 0
+private const val FILES_FRAG_POS = 1
+
+class AddTorrentFragment : Fragment() {
+
+    companion object {
+        private const val ARGS_ADD_TAB_SELECTED_POSITION = "ARGS_ADD_TAB_SELECTED_POSITION"
+    }
 
     private val args by navArgs<AddTorrentFragmentArgs>()
 
     private val viewModel by viewModel<AddTorrentViewModel>()
 
+    private lateinit var binding: TorrentFragmentAddBinding
+
     private lateinit var navController: NavController
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_add_torrent
+    private lateinit var tabAdapter: TabTitleAdapter
+
+    /**
+     * 记录位置
+     */
+    private var tabSelectPosition = -1
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = TorrentFragmentAddBinding.inflate(inflater, container, false)
+        setupUI()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
+        checkSelectPosition(savedInstanceState)
         bindViewModel()
         checkPermissions()
     }
 
+    /**
+     * 保存视图状态
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ARGS_ADD_TAB_SELECTED_POSITION, tabSelectPosition)
+    }
+
+    private fun checkSelectPosition(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(ARGS_ADD_TAB_SELECTED_POSITION)) {
+                tabSelectPosition = savedInstanceState.getInt(ARGS_ADD_TAB_SELECTED_POSITION)
+            }
+        }
+        if (tabSelectPosition >= 0) {
+            tabAdapter.setSelectPosition(tabSelectPosition)
+        }
+    }
+
     private fun setupUI() {
         navController = findNavController()
-        // Toolbar
-        toolbar.setTitle(R.string.torrent_add_torrent_title)
-        val activity = requireActivity()
-        if (activity is AppCompatActivity) {
-            activity.setSupportActionBar(toolbar)
-            activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
-        setHasOptionsMenu(true)
 
-        // ViewPager2
-        add_torrent_viewpager.adapter = AddTorrentPagerAdapter(this)
-        TabLayoutMediator(add_torrent_tabs, add_torrent_viewpager) { tab, position ->
-            tab.text = when(position) {
+        tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
+            tab.setText(when(position) {
                 INFO_FRAG_POS -> getString(R.string.torrent_info)
                 FILES_FRAG_POS -> getString(R.string.torrent_files)
                 else -> ""
-            }
-        }.attach()
+            })
+        }
+        binding.torrentTab.adapter = tabAdapter
+
+        // ViewPager2
+        binding.torrentViewPager.adapter = AddTorrentPagerAdapter(this)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
     }
@@ -103,13 +136,13 @@ class AddTorrentFragment : BaseFragment() {
                 setLoadFragment(false)
             }
             State.FETCHING_MAGNET -> {
-                fetch_magnet_progress.visibility = View.VISIBLE
-                SnackbarUtils.with(coordinator_layout)
+                binding.fetchMagnetProgress.visibility = View.VISIBLE
+                SnackbarUtils.with(binding.root)
                     .setMessage(getString(R.string.torrent_decode_torrent_fetch_magnet_message))
                     .show()
             }
             State.FETCHING_MAGNET_COMPLETED -> {
-                fetch_magnet_progress.visibility = View.GONE
+                binding.fetchMagnetProgress.visibility = View.GONE
             }
         }
     }
@@ -186,13 +219,6 @@ class AddTorrentFragment : BaseFragment() {
     }
 
 }
-
-/**
- * 详情、文件
- */
-private const val NUM_FRAGMENTS = 2
-private const val INFO_FRAG_POS = 0
-private const val FILES_FRAG_POS = 1
 
 private class AddTorrentPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

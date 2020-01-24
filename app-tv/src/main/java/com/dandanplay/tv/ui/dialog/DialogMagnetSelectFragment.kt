@@ -10,7 +10,7 @@ import android.widget.Button
 import androidx.fragment.app.FragmentManager
 import com.dandanplay.tv.R
 import com.dandanplay.tv.databinding.DialogMagnetSelectFragmentBinding
-import com.seiko.common.dialog.BaseDialogFragment
+import com.seiko.common.ui.dialog.BaseDialogFragment
 
 class DialogMagnetSelectFragment : BaseDialogFragment(),
     View.OnClickListener,

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
 import com.dandanplay.tv.databinding.DialogExitFragmentBinding
-import com.seiko.common.dialog.BaseDialogFragment
+import com.seiko.common.ui.dialog.BaseDialogFragment
 
 class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
 

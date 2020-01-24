@@ -1,10 +1,10 @@
 package com.dandanplay.tv.vm
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.dandanplay.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.common.ResultLiveData
-import com.seiko.common.BaseViewModel
 import com.seiko.core.data.db.model.BangumiDetailsEntity
 import com.seiko.core.data.db.model.BangumiEpisodeEntity
 import com.seiko.core.data.Result
@@ -18,7 +18,7 @@ class BangumiDetailViewModel(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
     private val favoriteBangumiDetails: SaveFavoriteBangumiDetailsUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     val mainState = ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()
 

@@ -21,7 +21,7 @@
         android:id="@+id/addTorrentFragment"
         android:name="com.seiko.torrent.ui.add.AddTorrentFragment"
         android:label="AddTorrentFragment"
-        tools:layout="@layout/torrent_fragment_add_torrent">
+        tools:layout="@layout/torrent_fragment_add">
         <argument
             android:name="uri"
             app:argType="android.net.Uri"/>

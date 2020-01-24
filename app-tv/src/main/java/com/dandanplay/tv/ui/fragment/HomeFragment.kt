@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.model.HomeSettingBean
 import com.dandanplay.tv.ui.dialog.DialogExitFragment
-import com.seiko.common.dialog.setLoadFragment
+import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainSettingPresenter
 import com.dandanplay.tv.model.AnimeRow
@@ -38,12 +38,12 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
 
     private val leftItems by lazyAndroid {
         listOf(
-            HomeSettingBean(ID_AREA, "番剧区", R.drawable.ic_bangumi_area),
+            HomeSettingBean(ID_AREA, getString(R.string.bangumi_area), R.drawable.ic_bangumi_area),
 //            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
-            HomeSettingBean(ID_TIME, "放送表", R.drawable.ic_bangumi_time),
+            HomeSettingBean(ID_TIME, getString(R.string.bangumi_time), R.drawable.ic_bangumi_time),
 //            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
-            HomeSettingBean(ID_DOWNLOAD, "下载", R.drawable.ic_bangumi_download),
-            HomeSettingBean(ID_SETTING, "设置", R.drawable.ic_bangumi_setting)
+            HomeSettingBean(ID_DOWNLOAD, getString(R.string.bangumi_download), R.drawable.ic_bangumi_download),
+            HomeSettingBean(ID_SETTING, getString(R.string.bangumi_setting), R.drawable.ic_bangumi_setting)
         )
     }
 
@@ -65,7 +65,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         navController = findNavController()
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        title = "弹弹Play"
+        title = getString(R.string.app_name)
         brandColor = Color.parseColor("#424242")
 
         // 设置搜索键
@@ -86,14 +86,14 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         adapterRows.put(ROW_AREA, AnimeRow<HomeImageBean>(ROW_AREA)
             .setDiffCallback(HomeImageBeanDiffCallback())
             .setAdapter(MainAreaPresenter())
-            .setTitle("今日更新"))
+            .setTitle(getString(R.string.title_area)))
         adapterRows.put(ROW_FAVORITE, AnimeRow<HomeImageBean>(ROW_FAVORITE)
             .setDiffCallback(HomeImageBeanDiffCallback())
             .setAdapter(MainAreaPresenter())
-            .setTitle("我的收藏"))
+            .setTitle(getString(R.string.title_favorite)))
         adapterRows.put(ROW_SETTING, AnimeRow<HomeSettingBean>(ROW_SETTING)
                 .setAdapter(MainSettingPresenter())
-                .setTitle("工具中心"))
+                .setTitle(getString(R.string.title_setting)))
 
         // 生成界面的Adapter
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
@@ -152,9 +152,9 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         val manager = fragmentManager ?: return
         if (manager.findFragmentByTag(DialogExitFragment.TAG) == null) {
             DialogExitFragment.Builder()
-                .setTitle("你真的确认退出应用吗？")
-                .setConfirmText("确认")
-                .setCancelText("取消")
+                .setTitle(getString(R.string.msg_exit_app))
+                .setConfirmText(getString(R.string.exit))
+                .setCancelText(getString(R.string.cancel))
                 .setConfirmClickListener {
                     ActivityUtils.finishActivity(requireActivity(), true)
                 }
@@ -196,19 +196,10 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                             HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
                         )
                     }
-                    ID_FAVOURITE -> {
-                        ToastUtils.showShort("我的收藏")
-                    }
                     ID_TIME -> {
                         navController.navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiTimeLineFragment()
                         )
-                    }
-                    ID_INDEX -> {
-                        ToastUtils.showShort("索引")
-                    }
-                    ID_SETTING -> {
-                        ToastUtils.showShort("设置")
                     }
                     ID_DOWNLOAD -> {
                         Navigator.navToTorrent()

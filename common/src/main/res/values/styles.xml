@@ -1,10 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="BaseTheme" parent="Theme.Leanback.Browse">
+        <!--Leanback界面 不用?attr/colorPrimary, 用defaultBrandColor -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="defaultBrandColor">@color/colorPrimary</item>
+        <item name="defaultBrandColorDark">@color/colorPrimaryDark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_activity_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>
+    </style>
+
     <style name="BaseTheme.HeaderText" parent="android:TextAppearance.Widget.TextView">
         <item name="android:textColor">?attr/colorAccent</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppParentLayout">
+        <item name="android:id">@id/container</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <style name="AppParentLayout.Dialog" parent="AppParentLayout">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/black_30</item>
+    </style>
+
+    <style name="AppButton">
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+    </style>
+    <style name="AppButton.Dialog" parent="AppButton">
+        <item name="android:background">@drawable/button_focusable_selector</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="AppButton.ImgButton" parent="AppButton">
+        <item name="android:tint">@color/white</item>
+        <item name="android:background">@drawable/button_focusable_selector</item>
+        <item name="android:padding">12dp</item>
     </style>
 </resources>

@@ -1,9 +1,13 @@
 package com.seiko.torrent.ui.detail
 
-import com.seiko.torrent.R
-import com.seiko.torrent.ui.base.BaseFragment
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.seiko.torrent.databinding.TorrentFragmentDetailPeersBinding
 
-class DetailTorrentPeersFragment : BaseFragment() {
+class DetailTorrentPeersFragment : Fragment() {
 
     companion object {
         fun newInstance(): DetailTorrentPeersFragment {
@@ -11,7 +15,15 @@ class DetailTorrentPeersFragment : BaseFragment() {
         }
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.torrent_fragment_detail_peers
+    private lateinit var binding: TorrentFragmentDetailPeersBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = TorrentFragmentDetailPeersBinding.inflate(inflater, container, false)
+        return binding.root
     }
+
 }

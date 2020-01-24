@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.leanback.widget.BaseCardView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
 import com.dandanplay.tv.util.diff.BangumiIntroEntityDiffCallback
 import com.dandanplay.tv.util.getBangumiStatus
 import com.dandanplay.tv.util.scaleAnimator
-import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.core.data.db.model.BangumiIntroEntity
-import kotlin.properties.Delegates
 
-class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>()
-//    , UpdatableAdapter
-    , View.OnFocusChangeListener {
+class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>(),
+    View.OnFocusChangeListener {
 
 //    private val diffCallback by lazyAndroid { BangumiIntroEntityDiffCallback() }
 //
@@ -38,9 +36,15 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BangumiRelateViewHolder {
-        val binding = ItemBangumiRelatedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.root.onFocusChangeListener = this
-        return BangumiRelateViewHolder(binding)
+        // 在外面包一层cardView，看着UI统一
+        val cardView = BaseCardView(parent.context)
+        cardView.isFocusable = true
+        cardView.isFocusableInTouchMode = true
+        cardView.onFocusChangeListener = this
+
+        val binding = ItemBangumiRelatedBinding.inflate(
+            LayoutInflater.from(cardView.context), cardView, true)
+        return BangumiRelateViewHolder(binding, cardView)
     }
 
     override fun onBindViewHolder(holder: BangumiRelateViewHolder, position: Int) {
@@ -53,12 +57,13 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         if (v == null) return
-
-        LogUtils.d("view = $v, hasFocus=$hasFocus")
         v.scaleAnimator(hasFocus, 1.2f, 150)
     }
 
-    inner class BangumiRelateViewHolder(private val binding: ItemBangumiRelatedBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BangumiRelateViewHolder(
+        private val binding: ItemBangumiRelatedBinding,
+        cardView: View
+    ) : RecyclerView.ViewHolder(cardView) {
 
         init {
             itemView.setOnClickListener {

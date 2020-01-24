@@ -1,7 +1,21 @@
 apply plugin: 'com.android.library'
-apply from:rootProject.file('libbase.gradle')
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -21,5 +35,5 @@ dependencies {
     api dependence.libtorrent4j_x86_64
 
     // Buffer
-    implementation "com.squareup.okio:okio:2.4.3"
+    api "com.squareup.okio:okio:2.4.3"
 }
