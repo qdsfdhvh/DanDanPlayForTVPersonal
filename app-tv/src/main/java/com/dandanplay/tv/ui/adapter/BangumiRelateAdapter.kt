@@ -9,24 +9,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
 import com.dandanplay.tv.util.diff.BangumiIntroEntityDiffCallback
 import com.dandanplay.tv.util.getBangumiStatus
+import com.dandanplay.tv.util.loadImage
 import com.dandanplay.tv.util.scaleAnimator
+import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.ui.adapter.BaseAdapter
+import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.seiko.core.data.db.model.BangumiIntroEntity
+import kotlin.properties.Delegates
 
 class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>(),
+    UpdatableAdapter,
     View.OnFocusChangeListener {
 
-//    private val diffCallback by lazyAndroid { BangumiIntroEntityDiffCallback() }
-//
-//    var items: List<BangumiIntroEntity> by Delegates.observable(emptyList()) { _, old, new ->
-//        update(old, new, diffCallback)
-//    }
+    private val diffCallback by lazyAndroid { BangumiIntroEntityDiffCallback() }
 
-    var items: List<BangumiIntroEntity> = emptyList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var items: List<BangumiIntroEntity> by Delegates.observable(emptyList()) { _, old, new ->
+        update(old, new, diffCallback)
+    }
 
     fun get(position: Int): BangumiIntroEntity? {
         if (position < 0 || position >= items.size) return null
@@ -75,14 +74,14 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
         }
 
         fun bind(item: BangumiIntroEntity) {
-            binding.img.setImageURI(item.imageUrl)
+            binding.img.loadImage(item.imageUrl)
             binding.title.text = item.animeTitle
             binding.chapter.text = item.getBangumiStatus()
         }
 
         fun payload(bundle: Bundle) {
             if (bundle.containsKey(BangumiIntroEntityDiffCallback.ARGS_ANIME_IMAGE_URL)) {
-                binding.img.setImageURI(bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_IMAGE_URL))
+                binding.img.loadImage(bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_IMAGE_URL)!!)
             }
             if (bundle.containsKey(BangumiIntroEntityDiffCallback.ARGS_ANIME_TITLE)) {
                 binding.title.text = bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_TITLE)

@@ -15,6 +15,7 @@ import com.seiko.core.model.api.SearchAnimeDetails
 import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchBangumiViewModel(
@@ -50,6 +51,8 @@ class SearchBangumiViewModel(
         val defer2 = async(Dispatchers.IO) { searchMagnetList.invoke(keyword, -1, -1) }
         val result1 = defer1.await()
         val result2 = defer2.await()
+
+        delay(200)
 
         var error: Exception? = null
         when(result1) {

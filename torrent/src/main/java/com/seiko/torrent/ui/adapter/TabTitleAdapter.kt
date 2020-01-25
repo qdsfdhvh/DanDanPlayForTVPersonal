@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.BaseAdapter
+import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentItemTitleBinding
 
 typealias TabTitleConfigurationStrategy = (TabTitleAdapter.ViewHolder, Int) -> Unit
@@ -58,12 +59,26 @@ class TabTitleAdapter(
     inner class ViewHolder(
         private val binding: TorrentItemTitleBinding
     ) : RecyclerView.ViewHolder(binding.root)
-        , View.OnFocusChangeListener {
+        , View.OnFocusChangeListener
+        , View.OnClickListener {
 
         init {
             binding.root.isFocusable = true
             binding.root.isFocusableInTouchMode = true
             binding.root.onFocusChangeListener = this
+            binding.root.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            when(v?.id) {
+                R.id.container -> {
+                    val position = adapterPosition
+                    if (position <= 0) {
+                        return
+                    }
+                    listener?.onClick(this, "", position)
+                }
+            }
         }
 
         override fun onFocusChange(v: View?, hasFocus: Boolean) {

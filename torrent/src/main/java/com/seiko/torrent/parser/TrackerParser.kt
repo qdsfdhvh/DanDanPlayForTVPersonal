@@ -3,11 +3,10 @@ package com.seiko.torrent.parser
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Patterns
-import com.blankj.utilcode.util.LogUtils
 import okio.buffer
 import okio.source
+import timber.log.Timber
 import java.io.File
-import java.util.*
 import kotlin.collections.HashSet
 
 typealias OnParsedListener = (Set<String>) -> Unit
@@ -40,7 +39,7 @@ private fun isSafeAddress(url: String?): Boolean {
 
 private fun parseTrackers(file: File): Set<String> {
     if (!file.exists()) {
-        LogUtils.d("File not exits: ${file.absolutePath}")
+        Timber.d("File not exits: ${file.absolutePath}")
         return emptySet()
     }
 

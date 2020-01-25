@@ -11,7 +11,7 @@ dependencies {
     api 'me.jessyan:autosize:1.1.2'
 
     // UI
-    api dependence.libAppCompat
+//    api dependence.libAppCompat
     api dependence.libConstraintlayout
 
     // TV UI
@@ -26,10 +26,15 @@ dependencies {
     // EventBus
     api 'org.greenrobot:eventbus:3.1.1'
 
+    // Log
+    api 'com.jakewharton.timber:timber:4.7.1'
+
+    // Toast
+    implementation 'com.github.Dovar66:DToast:1.1.6'
     // Utils
-    api ('com.blankj:utilcode:1.25.9') {
-        exclude group: 'com.google.code.gson'
-    }
+//    api ('com.blankj:utilcode:1.25.9') {
+//        exclude group: 'com.google.code.gson'
+//    }
 
     // 路由
 //    api "com.github.florent37:navigator:1.0.0"

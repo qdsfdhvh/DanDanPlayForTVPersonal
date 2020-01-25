@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/colorAccent" android:state_focused="true" /> <!-- focused -->
+    <!-- focused -->
+    <item android:drawable="@color/colorAccent" android:state_focused="true" />
+    <!-- selected -->
+    <item android:drawable="@color/white" android:state_selected="true" />
     <item android:drawable="@android:color/transparent" /> <!-- default -->
 </selector>

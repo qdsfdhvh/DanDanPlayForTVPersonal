@@ -6,7 +6,6 @@ import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.vm.HomeViewModel
@@ -14,6 +13,7 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.dandanplay.tv.model.AirDayBangumiBean
 import com.dandanplay.tv.model.HomeImageBean
+import com.seiko.common.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
@@ -54,7 +54,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                ToastUtils.showShort(data.error.toString())
+                toast(data.error.toString())
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)

@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.blankj.utilcode.util.ToastUtils
+import com.seiko.common.toast.toast
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentMainBinding
 import com.seiko.torrent.extensions.getClipboard
@@ -85,7 +85,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                 .setConfirmClickListener { source ->
                     val uri = buildTorrentUri(source)
                     if (uri == null) {
-                        ToastUtils.showShort("无效的连接：$source")
+                        toast("无效的连接：$source")
                     } else {
                         startAddTorrentDialog(uri)
                     }

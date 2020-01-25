@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.model.HomeSettingBean
 import com.dandanplay.tv.ui.dialog.DialogExitFragment
@@ -26,15 +24,18 @@ import com.seiko.common.ResultData
 import com.seiko.common.Status
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
+import com.seiko.common.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
+class HomeFragment : BrowseSupportFragment()
+    , OnItemViewClickedListener
+    , View.OnClickListener {
 
     private val viewModel by viewModel<HomeViewModel>()
 
-    private lateinit var adapterRows: SparseArray<AnimeRow<*>>
+    private var adapterRows: SparseArray<AnimeRow<*>>? = null
 
-    private lateinit var navController: NavController
+//    private lateinit var navController: NavController
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -47,29 +48,31 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupUI()
-        setupRows()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupUI()
+        setupRows()
         bindViewModel()
+    }
+
+    override fun onDestroyView() {
+        adapterRows = null
+        adapter = null
+        super.onDestroyView()
     }
 
     /**
      * 生成相关UI
      */
     private fun setupUI() {
-        navController = findNavController()
+//        navController = findNavController()
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         title = getString(R.string.app_name)
         brandColor = Color.parseColor("#424242")
 
         // 设置搜索键
-        searchAffordanceColor = ContextCompat.getColor(activity!!, R.color.colorAccent)
+        searchAffordanceColor = ContextCompat.getColor(requireActivity(), R.color.colorAccent)
         setOnSearchClickedListener(this)
 
         // 监听返回键
@@ -80,25 +83,25 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
      * 生成Rows
      */
     private fun setupRows() {
-        if (adapter != null) return
+//        if (adapter != null) return
         // 生成数据的Adapter
         adapterRows = SparseArray(3)
-        adapterRows.put(ROW_AREA, AnimeRow<HomeImageBean>(ROW_AREA)
+        adapterRows!!.put(ROW_AREA, AnimeRow<HomeImageBean>(ROW_AREA)
             .setDiffCallback(HomeImageBeanDiffCallback())
             .setAdapter(MainAreaPresenter())
             .setTitle(getString(R.string.title_area)))
-        adapterRows.put(ROW_FAVORITE, AnimeRow<HomeImageBean>(ROW_FAVORITE)
+        adapterRows!!.put(ROW_FAVORITE, AnimeRow<HomeImageBean>(ROW_FAVORITE)
             .setDiffCallback(HomeImageBeanDiffCallback())
             .setAdapter(MainAreaPresenter())
             .setTitle(getString(R.string.title_favorite)))
-        adapterRows.put(ROW_SETTING, AnimeRow<HomeSettingBean>(ROW_SETTING)
+        adapterRows!!.put(ROW_SETTING, AnimeRow<HomeSettingBean>(ROW_SETTING)
                 .setAdapter(MainSettingPresenter())
                 .setTitle(getString(R.string.title_setting)))
 
         // 生成界面的Adapter
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        for (i in 0 until adapterRows.size()) {
-            val row = adapterRows.valueAt(i)
+        for (i in 0 until adapterRows!!.size()) {
+            val row = adapterRows!!.valueAt(i)
             val headerItem = HeaderItem(row.getId(), row.getTitle())
             val listRow = ListRow(headerItem, row.getAdapter())
             rowsAdapter.add(listRow)
@@ -115,10 +118,10 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     private fun bindViewModel() {
         viewModel.weekBangumiList.observe(this::getLifecycle, this::updateUI)
         viewModel.favoriteBangumiList.observe(this::getLifecycle) { favorites ->
-            adapterRows.get(ROW_FAVORITE)?.setList(favorites)
+            adapterRows?.get(ROW_FAVORITE)?.setList(favorites)
         }
         // 加载个人数据
-        adapterRows.get(ROW_SETTING)?.setList(leftItems)
+        adapterRows?.get(ROW_SETTING)?.setList(leftItems)
 
         // Navigation在退栈时,回重新调用onCreateView
         viewModel.getBangumiList(false)
@@ -135,11 +138,11 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                ToastUtils.showShort(data.error?.message)
+                toast(data.error?.message)
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
-                adapterRows.get(ROW_AREA)?.setList(data.data)
+                adapterRows?.get(ROW_AREA)?.setList(data.data)
 //                startEntranceTransition()
             }
         }
@@ -156,7 +159,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                 .setConfirmText(getString(R.string.exit))
                 .setCancelText(getString(R.string.cancel))
                 .setConfirmClickListener {
-                    ActivityUtils.finishActivity(requireActivity(), true)
+                    ActivityCompat.finishAffinity(requireActivity())
                 }
                 .build()
                 .show(manager)
@@ -169,7 +172,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.title_orb -> {
-                navController.navigate(
+                findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToSearchBangumiFragment()
                 )
             }
@@ -183,7 +186,7 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is HomeImageBean -> {
-                navController.navigate(
+                findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
                         item.animeId
                     )
@@ -192,12 +195,12 @@ class HomeFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             is HomeSettingBean -> {
                 when(item.id) {
                     ID_AREA -> {
-                        navController.navigate(
+                        findNavController().navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
                         )
                     }
                     ID_TIME -> {
-                        navController.navigate(
+                        findNavController().navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiTimeLineFragment()
                         )
                     }

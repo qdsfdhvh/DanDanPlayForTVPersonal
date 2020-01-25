@@ -9,8 +9,6 @@ import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.palette.graphics.Palette
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
@@ -18,6 +16,7 @@ import com.dandanplay.tv.model.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel
 import com.seiko.common.ResultData
 import com.seiko.common.Status
+import com.seiko.common.toast.toast
 import com.seiko.core.data.db.model.BangumiDetailsEntity
 import com.seiko.core.data.db.model.BangumiEpisodeEntity
 import com.seiko.core.data.db.model.BangumiIntroEntity
@@ -26,19 +25,20 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
-class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainScope(),
-    OnItemViewClickedListener,
-    OnActionClickedListener {
+class BangumiDetailsFragment : DetailsSupportFragment()
+    , CoroutineScope by MainScope()
+    , OnItemViewClickedListener
+    , OnActionClickedListener {
 
     private val args by navArgs<BangumiDetailsFragmentArgs>()
 
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
-
-    private lateinit var mPresenterSelector: ClassPresenterSelector
-    private lateinit var mAdapter: ArrayObjectAdapter
-    private lateinit var mActionAdapter: ArrayObjectAdapter
+    private var mPresenterSelector: ClassPresenterSelector? = null
+    private var mAdapter: ArrayObjectAdapter? = null
+    private var mActionAdapter: ArrayObjectAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,16 +46,24 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
         bindViewModel()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        mPresenterSelector = null
+        mAdapter = null
+        mActionAdapter = null
+        super.onDestroyView()
         cancel()
-        super.onDestroy()
     }
+
+//    override fun onDestroy() {
+//        cancel()
+//        super.onDestroy()
+//    }
 
     /**
      * 生成相关UI
      */
     private fun setupUI() {
-        if (adapter != null) return
+//        if (adapter != null) return
         mPresenterSelector = ClassPresenterSelector()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this
@@ -82,7 +90,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                ToastUtils.showShort(data.error.toString())
+                toast(data.error.toString())
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
@@ -98,7 +106,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
         if (pair == null) return
         val details = pair.first
         val palette = pair.second
-        mAdapter.clear()
+//        mAdapter.clear()
         setupDetailsOverviewRowPresenter(palette)
         setupDetailsOverviewRow(details)
         setupEpisodesRows(details.episodes)
@@ -124,9 +132,9 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             Color.colorToHSV(color, hsv)
             hsv[2] *= 0.8f
             descriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
-            mAdapter.notifyItemRangeChanged(0, 1)
+            mAdapter!!.notifyItemRangeChanged(0, 1)
         }
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, descriptionRowPresenter)
+        mPresenterSelector!!.addClassPresenter(DetailsOverviewRow::class.java, descriptionRowPresenter)
     }
 
     /**
@@ -137,11 +145,11 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
         detailsOverviewRow.setImageBitmap(requireActivity(), null)
         detailsOverviewRow.isImageScaleUpAllowed = true
         mActionAdapter = ArrayObjectAdapter()
-        mActionAdapter.add(
+        mActionAdapter!!.add(
             Action(ID_RATING, "评分:${details.rating}", null,
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_rating))
         )
-        mActionAdapter.add(
+        mActionAdapter!!.add(
             if (details.isFavorited) {
                 Action(ID_FAVOURITE, "已收藏", null,
                     ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full))
@@ -151,7 +159,7 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             }
         )
         detailsOverviewRow.actionsAdapter = mActionAdapter
-        mAdapter.add(detailsOverviewRow)
+        mAdapter!!.add(detailsOverviewRow)
     }
 
     /**
@@ -162,8 +170,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             val episodesAdapter = ArrayObjectAdapter(BangumiEpisodePresenter())
             episodesAdapter.addAll(0, episodes)
             val header = HeaderItem(0, "分集")
-            mAdapter.add(EpisodesListRow(header, episodesAdapter))
-            mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, EpisodesListRowPresenter(0))
+            mAdapter!!.add(EpisodesListRow(header, episodesAdapter))
+            mPresenterSelector!!.addClassPresenter(EpisodesListRow::class.java, EpisodesListRowPresenter(0))
         }
     }
 
@@ -175,8 +183,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
             relatedAdapter.addAll(0, relateds)
             val header = HeaderItem(0, "其他系列")
-            mAdapter.add(ListRow(header, relatedAdapter))
-            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+            mAdapter!!.add(ListRow(header, relatedAdapter))
+            mPresenterSelector!!.addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
     }
 
@@ -188,8 +196,8 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
             relatedAdapter.addAll(0, similars)
             val header = HeaderItem(0, "相似作品")
-            mAdapter.add(ListRow(header, relatedAdapter))
-            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+            mAdapter!!.add(ListRow(header, relatedAdapter))
+            mPresenterSelector!!.addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
     }
 
@@ -201,16 +209,16 @@ class BangumiDetailsFragment : DetailsSupportFragment(), CoroutineScope by MainS
             ID_FAVOURITE -> {
                 launch {
                     if (viewModel.setFavourite()) {
-                        LogUtils.d("已收藏")
+                        Timber.d("已收藏")
                         action.label1 = "已收藏"
                         action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full)
                     } else {
-                        LogUtils.d("未收藏")
+                        Timber.d("未收藏")
                         action.label1 = "未收藏"
                         action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty)
                     }
-                    val index = mActionAdapter.indexOf(action)
-                    mActionAdapter.notifyItemRangeChanged(index, 1)
+                    val index = mActionAdapter!!.indexOf(action)
+                    mActionAdapter!!.notifyItemRangeChanged(index, 1)
                 }
             }
         }

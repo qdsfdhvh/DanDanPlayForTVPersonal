@@ -1,7 +1,6 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.ResultLiveData
 import com.seiko.common.ResultData
 import com.seiko.common.Status
@@ -13,6 +12,7 @@ import com.seiko.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(
@@ -63,7 +63,7 @@ class HomeViewModel(
     fun getFavoriteBangumiList() = viewModelScope.launch {
         when(val result = getFavoriteBangumiList.invoke()) {
             is Result.Success -> _favoriteBangumiList.value = result.data
-            is Result.Error -> LogUtils.w(result.exception)
+            is Result.Error -> Timber.w(result.exception)
         }
     }
 

@@ -2,13 +2,13 @@ package com.seiko.torrent.service
 
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.router.Routes
 import com.seiko.common.service.TorrentService
 import com.seiko.core.constants.TORRENT_DOWNLOAD_DIR
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
+import timber.log.Timber
 import java.io.File
 
 @Route(path = Routes.Service.TORRENT_INFO)
@@ -19,14 +19,14 @@ class TorrentServiceImpl : TorrentService, KoinComponent {
     }
 
     override fun findDownloadPaths(hash: String): List<String> {
-        LogUtils.d("搜索hash: $hash 的下载文件路径。")
+        Timber.d("搜索hash: $hash 的下载文件路径。")
 
         val dataDir: File by inject(named(TORRENT_DOWNLOAD_DIR))
         return listOf(dataDir.absolutePath)
     }
 
     override fun findDownloadPaths(hashSet: Set<String>): List<String> {
-        LogUtils.d("搜索hashSet: $hashSet 的下载文件路径。")
+        Timber.d("搜索hashSet: $hashSet 的下载文件路径。")
         return listOf("BBB")
     }
 

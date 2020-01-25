@@ -1,8 +1,5 @@
 package com.seiko.torrent.service
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.torrent.model.TorrentEntity
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
 import com.seiko.core.data.Result
@@ -20,17 +17,15 @@ import kotlinx.coroutines.channels.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.libtorrent4j.AddTorrentParams
+import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.collections.AbstractMap
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.concurrent.thread
-import kotlin.math.log
 
 @ExperimentalCoroutinesApi
 class DownloadManager(
@@ -94,7 +89,7 @@ class DownloadManager(
             name = UUID.randomUUID().toString()
         ) {
             torrentEngine.stop()
-            LogUtils.d("Close TorrentEngine.")
+            Timber.d("Close TorrentEngine.")
         }
     }
 
@@ -111,7 +106,7 @@ class DownloadManager(
             val loadList = ArrayList<TorrentTask>(tasks.size)
             for (task in tasks) {
                 if (!task.downloadingMetadata && !File(task.source).exists()) {
-                    LogUtils.d("Torrent doesn't exists: $task")
+                    Timber.d("Torrent doesn't exists: $task")
                     torrentRepo.deleteTorrent(task.hash)
                 } else {
                     loadList.add(task.toTask())
@@ -278,7 +273,7 @@ class DownloadManager(
         downloadScope.launch {
             when(val result = getTorrentTrackers.invoke()) {
                 is Result.Success -> options.trackers.addAll(result.data)
-                is Result.Error -> LogUtils.eTag(TAG, result.exception)
+                is Result.Error -> Timber.e(TAG, result.exception)
             }
         }
     }
@@ -311,7 +306,7 @@ class DownloadManager(
     }
 
     override fun onTorrentPaused(hash: String) {
-        LogUtils.iTag(TAG, "onTorrentPaused hash: $hash")
+        Timber.tag(TAG).i("onTorrentPaused hash: $hash")
         downloadScope.launch {
             val task = torrentRepo.getTorrent(hash) ?: return@launch
             task.paused = true
@@ -323,7 +318,7 @@ class DownloadManager(
     }
 
     override fun onTorrentResumed(hash: String) {
-        LogUtils.iTag(TAG, "onTorrentResumed hash: $hash")
+        Timber.tag(TAG).i("onTorrentResumed hash: $hash")
         downloadScope.launch {
             val task = torrentRepo.getTorrent(hash) ?: return@launch
             task.paused = false
@@ -336,12 +331,12 @@ class DownloadManager(
     }
 
     override fun onMagnetLoaded(hash: String, bencode: ByteArray) {
-        LogUtils.d("onMagnetLoaded: $hash")
+        Timber.d("onMagnetLoaded: $hash")
         downloadScope.launch {
             val info = try {
                 TorrentMetaInfo(bencode)
             } catch (e: IOException) {
-                LogUtils.eTag(TAG, e)
+                Timber.tag(TAG).e(e)
                 return@launch
             }
             magnetMap[hash]?.post(info)
@@ -349,15 +344,15 @@ class DownloadManager(
     }
 
     override fun onTorrentMetadataLoaded(hash: String, error: Exception?) {
-        LogUtils.wTag(TAG, "Torrent Metadata Loaded ($hash), error = ${error?.message}")
+        Timber.tag(TAG).w("Torrent Metadata Loaded ($hash), error = ${error?.message}")
     }
 
     override fun onRestoreSessionError(hash: String) {
-        LogUtils.eTag(TAG, "Restore Session Error: $hash")
+        Timber.tag(TAG).e("Restore Session Error: $hash")
     }
 
     override fun onTorrentError(hash: String, errorMsg: String) {
-        LogUtils.eTag(TAG, "Torrent Error $hash: $errorMsg")
+        Timber.tag(TAG).e("Torrent Error $hash: $errorMsg")
         downloadScope.launch {
             val task = torrentRepo.getTorrent(hash) ?: return@launch
             task.error = errorMsg
@@ -372,11 +367,11 @@ class DownloadManager(
     }
 
     override fun onSessionError(errorMsg: String) {
-        LogUtils.eTag(TAG, errorMsg)
+        Timber.tag(TAG).e(errorMsg)
     }
 
     override fun onNatError(errorMsg: String) {
-        LogUtils.eTag(TAG, errorMsg)
+        Timber.tag(TAG).e(errorMsg)
     }
 
     private fun <T> ConcurrentHashMap<String, EventData<T>>.safeGetEvent(hash: String): EventData<T> {

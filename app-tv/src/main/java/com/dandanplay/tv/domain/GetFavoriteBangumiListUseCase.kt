@@ -15,8 +15,7 @@ class GetFavoriteBangumiListUseCase : KoinComponent{
 
     suspend operator fun invoke(): Result<List<HomeImageBean>> {
         return withContext(Dispatchers.Default) {
-            val result = bangumiRepository.getBangumiDetailsList()
-            return@withContext when(result) {
+            return@withContext when(val result = bangumiRepository.getBangumiDetailsList()) {
                 is Result.Success -> {
                     Result.Success(result.data.map { it.toHomeImageBean() })
                 }

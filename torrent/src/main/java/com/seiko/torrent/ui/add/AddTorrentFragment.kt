@@ -10,11 +10,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.SnackbarUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.google.android.material.snackbar.Snackbar
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.checkPermissions
+import com.seiko.common.toast.toast
 import com.seiko.core.data.Result
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
@@ -22,6 +21,7 @@ import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.AddTorrentViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val PERMISSION_REQUEST = 1
 
@@ -137,9 +137,11 @@ class AddTorrentFragment : Fragment() {
             }
             State.FETCHING_MAGNET -> {
                 binding.fetchMagnetProgress.visibility = View.VISIBLE
-                SnackbarUtils.with(binding.root)
-                    .setMessage(getString(R.string.torrent_decode_torrent_fetch_magnet_message))
-                    .show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.torrent_decode_torrent_fetch_magnet_message),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
             State.FETCHING_MAGNET_COMPLETED -> {
                 binding.fetchMagnetProgress.visibility = View.GONE
@@ -153,8 +155,8 @@ class AddTorrentFragment : Fragment() {
     private fun handleException(throwable: Throwable?) {
         setLoadFragment(false)
         //
-        LogUtils.w(throwable)
-        ToastUtils.showShort(throwable?.message)
+        Timber.w(throwable)
+        toast(throwable?.message)
     }
 
     /************************************************
@@ -205,7 +207,7 @@ class AddTorrentFragment : Fragment() {
                         onBackPressed()
                     }
                     is Result.Error -> {
-                        ToastUtils.showShort(result.exception.message)
+                        toast(result.exception.message)
                     }
                 }
             }
@@ -214,7 +216,7 @@ class AddTorrentFragment : Fragment() {
     }
 
     private fun onBackPressed() {
-        LogUtils.d("onBackPressed")
+        Timber.d("onBackPressed")
         navController.popBackStack()
     }
 

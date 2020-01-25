@@ -1,13 +1,13 @@
-package com.dandanplay.tv.ui.card
+package com.seiko.common.ui.card
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.leanback.widget.BaseCardView
-import androidx.viewbinding.ViewBinding
 
-abstract class AbsCardView<T> : BaseCardView {
+abstract class AbsBindingCardView<T> : BaseCardView {
 
     constructor(context: Context) : super(context) {
         initLayout(context)
@@ -24,11 +24,10 @@ abstract class AbsCardView<T> : BaseCardView {
     private fun initLayout(context: Context) {
         isFocusable = true
         isFocusableInTouchMode = true
-        LayoutInflater.from(context).inflate(getLayoutId(), this)
+        onCreateView(LayoutInflater.from(context), this)
     }
 
-    @LayoutRes
-    abstract fun getLayoutId(): Int
+    abstract fun onCreateView(inflater: LayoutInflater, parent: ViewGroup)
 
     abstract fun bind(item: T)
 

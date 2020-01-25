@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.seiko.torrent.R
@@ -36,6 +35,7 @@ import com.seiko.torrent.service.Downloader
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -312,7 +312,7 @@ class TorrentListAdapter(
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (v == null) return
             binding.root.isSelected = hasFocus
-            LogUtils.d("$adapterPosition, hasFocus=$hasFocus")
+            Timber.d("$adapterPosition, hasFocus=$hasFocus")
         }
 
         fun payload(bundle: Bundle) {

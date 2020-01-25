@@ -3,15 +3,15 @@ package com.seiko.torrent.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.eventbus.EventBusScope
+import com.seiko.common.toast.toast
 import com.seiko.core.data.Result
 import com.seiko.torrent.model.AddTorrentParams
 import com.seiko.torrent.model.PostEvent
 import com.seiko.torrent.model.toTask
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class TorrentTaskService : IntentService("TorrentTaskService") {
 
@@ -94,8 +94,8 @@ class TorrentTaskService : IntentService("TorrentTaskService") {
                 EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
             }
             is Result.Error -> {
-                LogUtils.w(result.exception.message)
-                ToastUtils.showShort(result.exception.message)
+                Timber.e(result.exception)
+                toast(result.exception.message)
             }
         }
     }

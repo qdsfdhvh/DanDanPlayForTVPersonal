@@ -10,8 +10,6 @@ import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.navArgs
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.vm.SearchMagnetViewModel
@@ -20,11 +18,13 @@ import com.seiko.common.Status
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
+import com.seiko.common.toast.toast
 import com.seiko.core.data.db.model.ResMagnetItemEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScope(),
     SearchSupportFragment.SearchResultProvider,
@@ -78,8 +78,8 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                LogUtils.d(data.error)
-                ToastUtils.showShort(data.error.toString())
+                Timber.d(data.error)
+                toast(data.error.toString())
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
@@ -173,7 +173,7 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
         when(requestCode) {
             REQUEST_ID_AUDIO -> {
                 if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    ToastUtils.showShort("没有语音权限。")
+                    toast("没有语音权限。")
                 }
             }
         }

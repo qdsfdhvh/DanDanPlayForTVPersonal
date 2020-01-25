@@ -22,4 +22,22 @@ data class SearchAnimeDetails(
     var startDate: String = "",
     var type: String = "",
     var typeDescription: String = ""
-)
+) {
+    override fun hashCode(): Int {
+        return animeId.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false
+        if (other !is SearchAnimeDetails) return false
+        return animeId == other.animeId
+                && animeTitle == other.animeTitle
+                && episodeCount == other.episodeCount
+                && imageUrl == other.imageUrl
+                && isFavorited == other.isFavorited
+                && rating == other.rating
+                && startDate == other.startDate
+                && type == other.type
+                && typeDescription == other.typeDescription
+    }
+}

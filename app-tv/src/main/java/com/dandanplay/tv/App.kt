@@ -1,16 +1,25 @@
 package com.dandanplay.tv
 
 import android.app.Application
+import android.content.ComponentCallbacks2
 import android.content.Context
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.Utils
+import com.dandanplay.tv.util.clearFrescoMemory
+import com.dandanplay.tv.util.initFresco
+import com.facebook.cache.disk.DiskCacheConfig
+import com.facebook.common.util.ByteConstants
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.core.ImagePipelineFactory
+import com.seiko.common.timber.NanoDebugTree
 import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import timber.log.Timber
+import java.io.File
+
 
 class App : Application() {
 
@@ -21,19 +30,16 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // 工具
-        Utils.init(this)
 
-        // 日志
-        LogUtils.getConfig()
-            .setLogHeadSwitch(false)
-            .setBorderSwitch(false)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(NanoDebugTree())
+        }
 
         // 存储
         MMKV.initialize(this)
 
         // 图片
-        Fresco.initialize(this)
+        initFresco()
 
         // 路由
         if (BuildConfig.DEBUG) {
@@ -46,9 +52,13 @@ class App : Application() {
 
         // 注解
         startKoin {
-            androidLogger()
+//            androidLogger()
             androidContext(this@App)
         }
     }
 
+    override fun onLowMemory() {
+        super.onLowMemory()
+        clearFrescoMemory()
+    }
 }

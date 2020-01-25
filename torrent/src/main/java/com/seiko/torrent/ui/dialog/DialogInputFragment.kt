@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
-import com.blankj.utilcode.util.ToastUtils
+import com.seiko.common.toast.toast
 import com.seiko.common.ui.dialog.BaseDialogFragment
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentDialogInputFragmentBinding
@@ -54,7 +54,7 @@ class DialogInputFragment : BaseDialogFragment()
             R.id.btn_center -> {
                 val text = binding.torrentEdit.text.toString()
                 if (text.isEmpty()) {
-                    ToastUtils.showShort("内容为空。")
+                    toast("内容为空。")
                     return
                 }
                 onConfirm?.invoke(text.trim())

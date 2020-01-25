@@ -16,6 +16,6 @@ android {
 }
 
 dependencies {
-    api dependence.libAppCompat
+//    api dependence.libAppCompat
     api dependence.libLeanback
 }

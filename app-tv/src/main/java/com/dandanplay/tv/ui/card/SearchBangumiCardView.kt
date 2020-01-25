@@ -1,24 +1,39 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
-import android.widget.ImageView
-import com.dandanplay.tv.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
+import com.dandanplay.tv.util.diff.SearchAnimeDetailsDiffCallback
+import com.dandanplay.tv.util.loadImage
+import com.seiko.common.ui.card.AbsBindingCardView
 import com.seiko.core.model.api.SearchAnimeDetails
-import kotlinx.android.synthetic.main.item_bangumi_related.view.*
 
-class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(context) {
+class SearchBangumiCardView(context: Context) : AbsBindingCardView<SearchAnimeDetails>(context) {
 
-    override fun getLayoutId(): Int {
-        return R.layout.item_bangumi_related
+    private lateinit var binding: ItemBangumiRelatedBinding
+
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup) {
+        binding = ItemBangumiRelatedBinding.inflate(inflater, parent, true)
     }
 
     override fun bind(item: SearchAnimeDetails) {
-        img.setImageURI(item.imageUrl)
-        title.text = item.animeTitle
-        chapter.text = String.format("上映时间：%s", item.startDate)
+        binding.img.loadImage(item.imageUrl)
+        binding.title.text = item.animeTitle
+        binding.chapter.text = String.format("上映时间：%s", item.startDate)
     }
 
-    fun getMainImageView(): ImageView {
-        return img
+    fun bind(bundle: Bundle) {
+        if (bundle.containsKey(SearchAnimeDetailsDiffCallback.ARGS_ANIME_IMAGE_URL)) {
+            binding.img.loadImage(bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_IMAGE_URL))
+        }
+        if (bundle.containsKey(SearchAnimeDetailsDiffCallback.ARGS_ANIME_TITLE)) {
+            binding.title.text = bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_TITLE)
+        }
+        if (bundle.containsKey(SearchAnimeDetailsDiffCallback.ARGS_ANIME_START_DATE)) {
+            binding.chapter.text = String.format("上映时间：%s", bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_START_DATE))
+        }
     }
+
 }

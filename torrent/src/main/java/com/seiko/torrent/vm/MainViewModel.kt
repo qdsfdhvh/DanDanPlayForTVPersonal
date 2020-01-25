@@ -1,13 +1,13 @@
 package com.seiko.torrent.vm
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.torrent.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel(
     private val downloader: Downloader,
@@ -49,7 +49,7 @@ class MainViewModel(
     override fun onCleared() {
         super.onCleared()
         _torrentItem.value = null
-        LogUtils.d("onCleared")
+        Timber.d("onCleared")
     }
 
 

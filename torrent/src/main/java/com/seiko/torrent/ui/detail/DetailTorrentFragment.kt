@@ -10,12 +10,15 @@ import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.toast.toast
+import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 private const val NUM_FRAGMENTS = 6
 
@@ -26,7 +29,8 @@ private const val TRACKERS_FRAG_POS = 3
 private const val PEERS_FRAG_POS = 4
 private const val PIECES_FRAG_POS = 5
 
-class DetailTorrentFragment : Fragment() {
+class DetailTorrentFragment : Fragment()
+    , OnItemClickListener {
 
     companion object {
         private const val ARGS_DETAIL_TAB_SELECTED_POSITION = "ARGS_DETAIL_TAB_SELECTED_POSITION"
@@ -91,8 +95,9 @@ class DetailTorrentFragment : Fragment() {
                 else -> ""
             })
         }
-        binding.torrentTab.adapter = tabAdapter
+        tabAdapter.setOnItemClickListener(this)
         binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
+        binding.torrentTab.adapter = tabAdapter
 
         // ViewPager2
         binding.torrentViewPager.adapter = DetailPagerAdapter(this)
@@ -100,6 +105,14 @@ class DetailTorrentFragment : Fragment() {
 
     private fun bindViewModel() {
 
+    }
+
+    override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
+        when(holder) {
+            is TabTitleAdapter.ViewHolder -> {
+                toast("position = $position")
+            }
+        }
     }
 
     /**
@@ -115,7 +128,11 @@ class DetailTorrentFragment : Fragment() {
             ) {
                 when(parent) {
                     binding.torrentTab -> {
+                        Timber.d("select position = $position")
+                        if (tabSelectPosition == position) return
+                        tabSelectPosition = position
                         tabAdapter.setSelectPosition(position)
+                        binding.torrentViewPager.currentItem = position
                     }
                 }
             }

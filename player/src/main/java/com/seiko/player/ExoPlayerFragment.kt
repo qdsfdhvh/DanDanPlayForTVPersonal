@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
-import com.blankj.utilcode.util.ToastUtils
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -17,6 +16,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.seiko.common.toast.toast
 
 class ExoPlayerFragment : VideoSupportFragment() {
 
@@ -56,7 +56,7 @@ class ExoPlayerFragment : VideoSupportFragment() {
 
         exoPlayer.addListener(object : Player.EventListener {
             override fun onPlayerError(error: ExoPlaybackException?) {
-                ToastUtils.showShort("播放失败")
+                toast("播放失败")
             }
         })
     }

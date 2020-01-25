@@ -9,17 +9,17 @@ import android.view.Window
 import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import com.blankj.utilcode.util.LogUtils
+import timber.log.Timber
 
 abstract class BaseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val root = RelativeLayout(activity)
+        val root = RelativeLayout(requireActivity())
         root.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT)
 
-        return Dialog(activity!!).apply {
+        return Dialog(requireActivity()).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(root)
             setCanceledOnTouchOutside(false)
@@ -44,7 +44,7 @@ abstract class BaseDialogFragment : DialogFragment() {
 
     protected fun dismissDialog(tag: String) {
         dismiss()
-        LogUtils.v("dismiss dialog $tag.")
+        Timber.v("dismiss dialog $tag.")
     }
 
 }

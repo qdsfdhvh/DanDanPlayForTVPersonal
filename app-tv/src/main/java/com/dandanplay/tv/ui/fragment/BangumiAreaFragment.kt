@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.dandanplay.tv.R
 import com.dandanplay.tv.databinding.FragmentAreaBinding
 import com.dandanplay.tv.ui.adapter.BangumiRelateAdapter
@@ -28,9 +26,11 @@ import com.dandanplay.tv.util.getPercentHeightSize
 import com.dandanplay.tv.util.getPercentWidthSize
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.toast.toast
 import com.seiko.core.data.db.model.BangumiIntroEntity
 import com.seiko.core.model.api.BangumiSeason
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class BangumiAreaFragment : Fragment(),
@@ -90,8 +90,8 @@ class BangumiAreaFragment : Fragment(),
      * 注销Item选择监听
      */
     override fun onDestroyView() {
-        binding.gridSeason.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
-        binding.gridBangumi.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
+//        binding.gridSeason.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
+//        binding.gridBangumi.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
         super.onDestroyView()
     }
 
@@ -100,14 +100,14 @@ class BangumiAreaFragment : Fragment(),
      */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        LogUtils.d("onSaveInstanceState")
+        Timber.d("onSaveInstanceState")
         outState.putInt(ARGS_SEASON_SELECTED_POSITION, seasonSelectedPosition)
         outState.putInt(ARGS_BANGUMI_SELECTED_POSITION, bangumiSelectedPosition)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        LogUtils.d("onViewStateRestored")
+        Timber.d("onViewStateRestored")
     }
 
     private fun checkSelectPosition(savedInstanceState: Bundle?) {
@@ -136,7 +136,7 @@ class BangumiAreaFragment : Fragment(),
         seasonAdapter.setOnItemClickListener(this)
 
         binding.gridSeason.setNumColumns(1)
-        binding.gridSeason.addOnChildViewHolderSelectedListener(mItemSelectedListener)
+        binding.gridSeason.setOnChildViewHolderSelectedListener(mItemSelectedListener)
         binding.gridSeason.adapter = seasonAdapter
     }
 
@@ -158,7 +158,7 @@ class BangumiAreaFragment : Fragment(),
             binding.gridBangumi.setPadding(padding, GRID_VIEW_TOP_PX, padding, GRID_VIEW_BOTTOM_PX)
 
             binding.gridBangumi.setNumColumns(count)
-            binding.gridBangumi.addOnChildViewHolderSelectedListener(mItemSelectedListener)
+            binding.gridBangumi.setOnChildViewHolderSelectedListener(mItemSelectedListener)
 
             binding.gridBangumi.adapter = bangumiAdapter
         }
@@ -179,8 +179,8 @@ class BangumiAreaFragment : Fragment(),
             }
             Status.ERROR -> {
                 setLoadFragment(false)
-                LogUtils.w(data.error)
-                ToastUtils.showShort(data.error.toString())
+                Timber.w(data.error)
+                toast(data.error.toString())
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)
@@ -193,7 +193,7 @@ class BangumiAreaFragment : Fragment(),
                     if (position == -1 || position >= seasons.size) {
                         position = 0
                     }
-                    LogUtils.d("Season Position = $position")
+                    Timber.d("Season Position = $position")
                     viewModel.getBangumiListWithSeason(seasons[position], false)
                 }
             }
@@ -210,7 +210,7 @@ class BangumiAreaFragment : Fragment(),
             }
             Status.ERROR -> {
                 binding.progress.visibility = View.GONE
-                ToastUtils.showShort(data.error.toString())
+                toast(data.error.toString())
             }
             Status.SUCCESSFUL -> {
                 binding.progress.visibility = View.GONE
@@ -242,8 +242,8 @@ class BangumiAreaFragment : Fragment(),
                 position: Int,
                 subposition: Int
             ) {
-                when(parent) {
-                    binding.gridSeason -> {
+                when(parent?.id) {
+                    R.id.grid_season -> {
                         if (seasonSelectedPosition == position) return
                         seasonSelectedPosition = position
                         seasonAdapter.setSelectPosition(position)
@@ -251,7 +251,7 @@ class BangumiAreaFragment : Fragment(),
                         val item = seasonAdapter.get(position) ?: return
                         handler.send(item)
                     }
-                    binding.gridBangumi -> {
+                    R.id.grid_bangumi -> {
                         if (bangumiSelectedPosition == position) return
                         bangumiSelectedPosition = position
                     }

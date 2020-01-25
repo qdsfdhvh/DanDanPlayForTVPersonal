@@ -25,7 +25,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.seiko.common.eventbus.registerEventBus
 import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.extensions.lazyAndroid
@@ -43,6 +42,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class TorrentListFragment : Fragment(), OnItemClickListener {
 
@@ -166,7 +166,7 @@ class TorrentListFragment : Fragment(), OnItemClickListener {
     fun onReceive(event: PostEvent) {
         when(event) {
             is PostEvent.TorrentAdded -> {
-                LogUtils.d("Get Torrent Added: ${event.torrent.hash}")
+                Timber.d("Get Torrent Added: ${event.torrent.hash}")
                 val item = TorrentListItem(event.torrent)
 //                adapter.addItem(item)
             }

@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.fragment.app.FragmentActivity
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.seiko.common.toast.toast
 //import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.seiko.core.constants.DEFAULT_CACHE_FOLDER_PATH
 import com.xunlei.downloadlib.XLTaskHelper
+import timber.log.Timber
 
 class PlayerManagerActivity: FragmentActivity() {
 
@@ -29,7 +29,7 @@ class PlayerManagerActivity: FragmentActivity() {
         val videoTitle = openIntent.getStringExtra(ARGS_VIDEO_TITLE) ?: ""
         val videoPath = openIntent.getStringExtra(ARGS_VIDEO_PATH) ?: ""
         if (videoPath.isEmpty()) {
-            ToastUtils.showShort("播放连接无效。")
+            toast("播放连接无效。")
             return
         }
 
@@ -60,7 +60,7 @@ class PlayerManagerActivity: FragmentActivity() {
         super.onStop()
         val thunderTaskId = intent?.getLongExtra(ARGS_THUNDER_TASK_ID, -1L) ?: -1L
         if (thunderTaskId != -1L) {
-            LogUtils.d("停止thunderTaskId=$thunderTaskId。")
+            Timber.d("停止thunderTaskId=$thunderTaskId。")
 //            XLTaskHelper.stopTask(thunderTaskId)
 //            FileUtils.deleteAllInDir(DEFAULT_CACHE_FOLDER_PATH)
             XLTaskHelper.deleteTask(thunderTaskId,
