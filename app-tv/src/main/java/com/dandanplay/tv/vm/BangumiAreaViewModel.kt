@@ -3,13 +3,13 @@ package com.dandanplay.tv.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.seiko.common.ResultData
-import com.seiko.common.ResultLiveData
-import com.seiko.core.domain.bangumi.GetBangumiListWithSeasonUseCase
-import com.seiko.core.domain.bangumi.GetBangumiSeasonsUseCase
-import com.seiko.core.data.db.model.BangumiIntroEntity
-import com.seiko.core.model.api.BangumiSeason
-import com.seiko.core.data.Result
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.ResultLiveData
+import com.dandanplay.tv.domain.bangumi.GetBangumiListWithSeasonUseCase
+import com.dandanplay.tv.domain.bangumi.GetBangumiSeasonsUseCase
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.model.api.BangumiSeason
+import com.seiko.common.data.Result
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,11 +20,13 @@ class BangumiAreaViewModel(
     private val getBangumiListWithSeason: GetBangumiListWithSeasonUseCase
 ) : ViewModel() {
 
-    private val _bangumiSeasons = ResultLiveData<List<BangumiSeason>>()
+    private val _bangumiSeasons =
+        ResultLiveData<List<BangumiSeason>>()
     val bangumiSeasons: LiveData<ResultData<List<BangumiSeason>>>
         get() = _bangumiSeasons
 
-    private val _bangumiList = ResultLiveData<List<BangumiIntroEntity>>()
+    private val _bangumiList =
+        ResultLiveData<List<BangumiIntroEntity>>()
     val bangumiList: LiveData<ResultData<List<BangumiIntroEntity>>>
         get() = _bangumiList
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.torrent.extensions.find
 import com.seiko.torrent.extensions.getLeaves
 import com.seiko.torrent.extensions.toFileTree

@@ -14,12 +14,12 @@ import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
 import com.dandanplay.tv.model.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel
-import com.seiko.common.ResultData
-import com.seiko.common.Status
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
 import com.seiko.common.toast.toast
-import com.seiko.core.data.db.model.BangumiDetailsEntity
-import com.seiko.core.data.db.model.BangumiEpisodeEntity
-import com.seiko.core.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel

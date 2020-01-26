@@ -17,8 +17,8 @@ import com.dandanplay.tv.ui.adapter.BangumiRelateAdapter
 import com.dandanplay.tv.ui.adapter.BangumiSeasonAdapter
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.dandanplay.tv.vm.BangumiAreaViewModel
-import com.seiko.common.ResultData
-import com.seiko.common.Status
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import com.dandanplay.tv.ui.widget.SpaceItemDecoration
@@ -27,8 +27,8 @@ import com.seiko.common.util.getPercentWidthSize
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.toast.toast
-import com.seiko.core.data.db.model.BangumiIntroEntity
-import com.seiko.core.model.api.BangumiSeason
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.model.api.BangumiSeason
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.lang.ref.WeakReference

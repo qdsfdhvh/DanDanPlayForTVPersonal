@@ -3,7 +3,7 @@ package com.dandanplay.tv.work
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.seiko.core.domain.DeleteCacheTorrentUseCase
+import com.dandanplay.tv.domain.DeleteCacheTorrentUseCase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber

@@ -3,7 +3,7 @@ package com.dandanplay.tv.util.diff
 import android.os.Bundle
 import androidx.leanback.widget.DiffCallback
 import com.dandanplay.tv.util.getBangumiStatus
-import com.seiko.core.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
 
 class BangumiIntroEntityDiffCallback : DiffCallback<BangumiIntroEntity>() {
 

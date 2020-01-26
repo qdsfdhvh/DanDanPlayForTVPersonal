@@ -11,7 +11,7 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.R
-import com.seiko.core.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 
 class CustomDetailsDescriptionPresenter : Presenter() {
 

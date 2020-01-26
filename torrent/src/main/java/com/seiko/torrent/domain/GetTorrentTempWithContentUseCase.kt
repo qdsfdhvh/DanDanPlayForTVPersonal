@@ -2,9 +2,9 @@ package com.seiko.torrent.domain
 
 import android.content.ContentResolver
 import android.net.Uri
-import com.seiko.core.constants.TORRENT_TEMP_DIR
-import com.seiko.core.util.writeInputStream
-import com.seiko.core.data.Result
+import com.seiko.common.util.writeInputStream
+import com.seiko.common.data.Result
+import com.seiko.torrent.constants.TORRENT_TEMP_DIR
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named

@@ -1,7 +1,7 @@
 package com.seiko.common.provider
 
 import android.app.Application
-import com.seiko.core.di.coreModules
+import com.seiko.common.di.coreModules
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 

@@ -1,6 +1,6 @@
 package com.seiko.torrent.service
 
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus

@@ -20,8 +20,8 @@ import com.dandanplay.tv.model.AnimeRow
 import com.dandanplay.tv.model.HomeImageBean
 import com.dandanplay.tv.util.diff.HomeImageBeanDiffCallback
 import com.dandanplay.tv.vm.HomeViewModel
-import com.seiko.common.ResultData
-import com.seiko.common.Status
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
 import com.seiko.common.toast.toast

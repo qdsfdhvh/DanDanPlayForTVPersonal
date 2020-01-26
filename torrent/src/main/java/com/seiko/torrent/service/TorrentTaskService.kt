@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.seiko.common.eventbus.EventBusScope
 import com.seiko.common.toast.toast
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.torrent.model.AddTorrentParams
 import com.seiko.torrent.model.PostEvent
 import com.seiko.torrent.model.toTask

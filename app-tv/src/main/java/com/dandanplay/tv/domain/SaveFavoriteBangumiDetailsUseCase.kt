@@ -1,8 +1,8 @@
 package com.dandanplay.tv.domain
 
-import com.seiko.core.data.Result
-import com.seiko.core.data.db.model.BangumiDetailsEntity
-import com.seiko.core.repo.BangumiRepository
+import com.seiko.common.data.Result
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.repo.BangumiRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

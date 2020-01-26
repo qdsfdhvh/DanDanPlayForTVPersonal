@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
+import com.seiko.common.di.coreModules
 import com.seiko.common.timber.NanoDebugTree
-import com.seiko.core.di.*
 import com.seiko.torrent.di.torrentModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

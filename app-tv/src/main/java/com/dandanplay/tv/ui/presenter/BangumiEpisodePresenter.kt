@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.presenter
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.BangumiEpisodeCardView
-import com.seiko.core.data.db.model.BangumiEpisodeEntity
+import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
 
 class BangumiEpisodePresenter : Presenter() {
 

@@ -10,9 +10,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.toast.toast
 import com.seiko.common.ui.dialog.DialogSelectFragment
-//import com.dandanplay.tv.ui.dialog.SelectDialogFragment
-import com.seiko.core.constants.DEFAULT_CACHE_FOLDER_PATH
-import com.xunlei.downloadlib.XLTaskHelper
 import timber.log.Timber
 
 @Route(path = Routes.Player.PATH)
@@ -66,11 +63,6 @@ class PlayerManagerActivity: FragmentActivity() {
         val thunderTaskId = intent?.getLongExtra(ARGS_THUNDER_TASK_ID, -1L) ?: -1L
         if (thunderTaskId != -1L) {
             Timber.d("停止thunderTaskId=$thunderTaskId。")
-//            XLTaskHelper.stopTask(thunderTaskId)
-//            FileUtils.deleteAllInDir(DEFAULT_CACHE_FOLDER_PATH)
-            XLTaskHelper.deleteTask(thunderTaskId,
-                DEFAULT_CACHE_FOLDER_PATH
-            )
         }
         finish()
     }

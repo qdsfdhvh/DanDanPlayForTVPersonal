@@ -1,12 +1,10 @@
 package com.seiko.torrent.domain
 
-import com.seiko.core.util.writeInputStream
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.libtorrent4j.TorrentInfo
-import java.io.File
 
 class DownloadTorrentWithDanDanApiUseCase : KoinComponent {
 

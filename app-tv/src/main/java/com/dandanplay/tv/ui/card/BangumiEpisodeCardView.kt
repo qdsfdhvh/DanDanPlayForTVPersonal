@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.card
 import android.content.Context
 import com.dandanplay.tv.R
 import com.seiko.common.ui.card.AbsCardView
-import com.seiko.core.data.db.model.BangumiEpisodeEntity
+import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
 import kotlinx.android.synthetic.main.item_bangumi_episode.view.*
 
 class BangumiEpisodeCardView(context: Context) : AbsCardView<BangumiEpisodeEntity>(context) {

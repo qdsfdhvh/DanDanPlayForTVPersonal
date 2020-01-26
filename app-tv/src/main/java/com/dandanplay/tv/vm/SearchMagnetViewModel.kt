@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dandanplay.tv.domain.SaveMagnetInfoUseCase
-import com.seiko.common.ResultLiveData
-import com.seiko.common.ResultData
-import com.seiko.core.domain.search.SearchMagnetListUseCase
-import com.seiko.core.data.db.model.ResMagnetItemEntity
-import com.seiko.core.data.Result
+import com.seiko.common.data.ResultLiveData
+import com.seiko.common.data.ResultData
+import com.dandanplay.tv.domain.search.SearchMagnetListUseCase
+import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
+import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,7 +19,8 @@ class SearchMagnetViewModel(
     private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : ViewModel() {
 
-    private val _mainState = ResultLiveData<List<ResMagnetItemEntity>>()
+    private val _mainState =
+        ResultLiveData<List<ResMagnetItemEntity>>()
     val mainState: LiveData<ResultData<List<ResMagnetItemEntity>>> = _mainState
 
     // 上一次搜索的关键字

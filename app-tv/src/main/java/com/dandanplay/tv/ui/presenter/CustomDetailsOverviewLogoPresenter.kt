@@ -8,7 +8,7 @@ import androidx.leanback.widget.DetailsOverviewRow
 import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.R
 import com.facebook.drawee.view.SimpleDraweeView
-import com.seiko.core.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 
 class CustomDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
 

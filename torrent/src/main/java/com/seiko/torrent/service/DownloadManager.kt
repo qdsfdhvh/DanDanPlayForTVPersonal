@@ -2,7 +2,7 @@ package com.seiko.torrent.service
 
 import com.seiko.torrent.model.TorrentEntity
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.download.torrent.TorrentEngine
 import com.seiko.download.torrent.TorrentEngineCallback
 import com.seiko.download.torrent.TorrentEngineOptions

@@ -1,6 +1,6 @@
 package com.seiko.torrent.di
 
-import com.seiko.core.constants.TORRENT_DOWNLOAD_DIR
+import com.seiko.torrent.constants.TORRENT_DOWNLOAD_DIR
 import com.seiko.torrent.vm.AddTorrentViewModel
 import com.seiko.torrent.vm.MainViewModel
 import org.koin.android.viewmodel.dsl.viewModel

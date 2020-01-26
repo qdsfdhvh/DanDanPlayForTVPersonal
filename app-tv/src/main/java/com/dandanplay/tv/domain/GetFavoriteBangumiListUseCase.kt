@@ -2,8 +2,8 @@ package com.dandanplay.tv.domain
 
 import com.dandanplay.tv.model.HomeImageBean
 import com.dandanplay.tv.util.toHomeImageBean
-import com.seiko.core.data.Result
-import com.seiko.core.repo.BangumiRepository
+import com.seiko.common.data.Result
+import com.dandanplay.tv.repo.BangumiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent

@@ -13,13 +13,13 @@ import androidx.navigation.fragment.navArgs
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
 import com.dandanplay.tv.vm.SearchMagnetViewModel
-import com.seiko.common.ResultData
-import com.seiko.common.Status
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
 import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.toast.toast
-import com.seiko.core.data.db.model.ResMagnetItemEntity
+import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel

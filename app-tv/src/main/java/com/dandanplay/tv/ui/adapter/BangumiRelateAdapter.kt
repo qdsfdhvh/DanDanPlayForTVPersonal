@@ -14,7 +14,7 @@ import com.seiko.common.util.scaleAnimator
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.common.ui.adapter.UpdatableAdapter
-import com.seiko.core.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
 import kotlin.properties.Delegates
 
 class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>(),

@@ -3,8 +3,8 @@ package com.seiko.torrent.data.comments
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.InputStream
-import com.seiko.core.data.Result
-import com.seiko.core.util.safeApiCall
+import com.seiko.common.data.Result
+import com.seiko.common.util.safeApiCall
 import com.seiko.torrent.data.api.TorrentApiService
 
 internal class TorrentApiRemoteDataSource(private val api: TorrentApiService) {

@@ -26,3 +26,13 @@ internal const val DOWNLOAD_BASE_URL = "https://m2t.chinacloudsites.cn/"
  * Trackers文件名
  */
 internal const val ASSETS_TRACKER_NAME = "tracker.txt"
+
+/**
+ * Torrent
+ */
+internal const val TORRENT_DOWNLOAD_DIR = "TORRENT_DOWNLOAD_DIR"
+internal const val TORRENT_DATA_DIR = "TORRENT_DATA_DIR"
+internal const val TORRENT_TEMP_DIR = "TORRENT_TEMP_DIR"
+internal const val TORRENT_CONFIG_DIR = "TORRENT_CONFIG_DIR"
+
+internal const val DATA_TORRENT_INFO_FILE_NAME = "torrent"

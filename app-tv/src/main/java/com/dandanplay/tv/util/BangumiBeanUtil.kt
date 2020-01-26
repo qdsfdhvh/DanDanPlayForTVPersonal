@@ -1,9 +1,9 @@
 package com.dandanplay.tv.util
 
 import com.dandanplay.tv.model.HomeImageBean
-import com.seiko.core.data.db.model.BangumiDetailsEntity
-import com.seiko.core.data.db.model.BangumiIntroEntity
-import com.seiko.core.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.model.api.SearchAnimeDetails
 
 fun BangumiDetailsEntity.toHomeImageBean(): HomeImageBean {
     return HomeImageBean(

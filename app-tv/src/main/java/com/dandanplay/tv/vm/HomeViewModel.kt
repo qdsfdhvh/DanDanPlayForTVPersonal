@@ -1,14 +1,14 @@
 package com.dandanplay.tv.vm
 
 import androidx.lifecycle.*
-import com.seiko.common.ResultLiveData
-import com.seiko.common.ResultData
-import com.seiko.common.Status
-import com.dandanplay.tv.domain.GetAirDayBangumiBeansUseCase
+import com.seiko.common.data.ResultLiveData
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
+import com.dandanplay.tv.domain.bangumi.GetBangumiAirDayBeansUseCase
 import com.dandanplay.tv.domain.GetFavoriteBangumiListUseCase
 import com.dandanplay.tv.model.AirDayBangumiBean
 import com.dandanplay.tv.model.HomeImageBean
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,23 +16,26 @@ import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(
-    private val getWeekBangumiList: GetAirDayBangumiBeansUseCase,
+    private val getWeekBangumiList: GetBangumiAirDayBeansUseCase,
     private val getFavoriteBangumiList: GetFavoriteBangumiListUseCase
 ): ViewModel() {
 
     /**
      * 每周更新
      */
-    private val _airDayBangumiList = ResultLiveData<List<AirDayBangumiBean>>()
+    private val _airDayBangumiList =
+        ResultLiveData<List<AirDayBangumiBean>>()
     val airDayBangumiList: LiveData<ResultData<List<AirDayBangumiBean>>> = _airDayBangumiList
     val weekBangumiList: LiveData<ResultData<List<HomeImageBean>>> = Transformations.map(_airDayBangumiList) { data ->
         when(data.responseType) {
             Status.SUCCESSFUL -> ResultData(
                 responseType = Status.SUCCESSFUL,
-                data = data.data!![0].bangumiList)
+                data = data.data!![0].bangumiList
+            )
             else -> ResultData(
                 responseType = data.responseType,
-                error = data.error)
+                error = data.error
+            )
         }
     }
 

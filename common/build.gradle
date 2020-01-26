@@ -3,8 +3,6 @@ apply plugin: 'com.android.library'
 apply from:rootProject.file('libbase.gradle')
 
 dependencies {
-    api project(':libs:core')
-
     api 'androidx.multidex:multidex:2.0.1'
 
     // 屏幕适配
@@ -23,21 +21,34 @@ dependencies {
     api dependence.libFragment
     api dependence.libFragmentKtx
 
-    // EventBus
-    api 'org.greenrobot:eventbus:3.1.1'
-
     // Log
     api 'com.jakewharton.timber:timber:4.7.1'
 
     // Toast
     implementation 'com.github.Dovar66:DToast:1.1.6'
-    // Utils
-//    api ('com.blankj:utilcode:1.25.9') {
-//        exclude group: 'com.google.code.gson'
-//    }
+
+    // 协程
+    api dependence.libCoroutinesCore
+    api dependence.libCoroutinesAndroid
+
+    // 注入
+    api dependence.libKoinViewModel
+
+    // Prefs
+    api 'com.tencent:mmkv:1.0.23'
+
+    // NetWork
+    api 'com.squareup.retrofit2:retrofit:2.7.1'
+    api 'com.squareup.retrofit2:converter-gson:2.7.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.3.1'
+
+    // Database
+    api dependence.libRoomRuntime
+    api dependence.libRoomKtx
 
     // 路由
-//    api "com.github.florent37:navigator:1.0.0"
     api dependence.libArouter
 
+    // EventBus
+    api 'org.greenrobot:eventbus:3.1.1'
 }

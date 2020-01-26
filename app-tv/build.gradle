@@ -8,6 +8,7 @@ apply from: rootProject.file('libbase.gradle')
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
 }
 
@@ -63,7 +64,9 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation project(':libs:thunder')
     kapt dependence.libArouterCompiler
+    kapt dependence.libRoomCompiler
 
     // navigation
     implementation dependence.libNavigationFragmentKtx
@@ -81,4 +84,7 @@ dependencies {
 
     // 内存泄漏
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+
+    // Database Debug 8080
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

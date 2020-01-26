@@ -2,7 +2,7 @@ package com.dandanplay.tv.util.diff
 
 import android.os.Bundle
 import androidx.leanback.widget.DiffCallback
-import com.seiko.core.model.api.SearchAnimeDetails
+import com.dandanplay.tv.model.api.SearchAnimeDetails
 
 class SearchAnimeDetailsDiffCallback : DiffCallback<SearchAnimeDetails>() {
 

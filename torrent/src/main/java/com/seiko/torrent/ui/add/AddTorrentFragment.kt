@@ -5,8 +5,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.activity.addCallback
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +14,7 @@ import com.seiko.common.extensions.checkPermissions
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
-import com.seiko.core.data.Result
+import com.seiko.common.data.Result
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService

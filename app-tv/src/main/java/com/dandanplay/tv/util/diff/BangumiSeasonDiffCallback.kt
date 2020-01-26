@@ -2,7 +2,7 @@ package com.dandanplay.tv.util.diff
 
 import android.os.Bundle
 import androidx.leanback.widget.DiffCallback
-import com.seiko.core.model.api.BangumiSeason
+import com.dandanplay.tv.model.api.BangumiSeason
 
 class BangumiSeasonDiffCallback : DiffCallback<BangumiSeason>() {
 

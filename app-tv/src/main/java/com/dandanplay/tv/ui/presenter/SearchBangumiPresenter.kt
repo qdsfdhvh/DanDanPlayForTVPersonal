@@ -2,10 +2,9 @@ package com.dandanplay.tv.ui.presenter
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.leanback.widget.Presenter
 import com.dandanplay.tv.ui.card.SearchBangumiCardView
 import com.seiko.common.ui.presenter.BasePresenter
-import com.seiko.core.model.api.SearchAnimeDetails
+import com.dandanplay.tv.model.api.SearchAnimeDetails
 
 class SearchBangumiPresenter : BasePresenter() {
 

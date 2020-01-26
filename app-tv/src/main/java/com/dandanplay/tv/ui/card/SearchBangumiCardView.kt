@@ -8,7 +8,7 @@ import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
 import com.dandanplay.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.dandanplay.tv.util.loadImage
 import com.seiko.common.ui.card.AbsBindingCardView
-import com.seiko.core.model.api.SearchAnimeDetails
+import com.dandanplay.tv.model.api.SearchAnimeDetails
 
 class SearchBangumiCardView(context: Context) : AbsBindingCardView<SearchAnimeDetails>(context) {
 

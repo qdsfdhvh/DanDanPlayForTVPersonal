@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.dandanplay.tv.domain.GetImageUrlPaletteUseCase
-import com.seiko.common.ResultLiveData
-import com.seiko.core.data.db.model.BangumiDetailsEntity
-import com.seiko.core.data.db.model.BangumiEpisodeEntity
-import com.seiko.core.data.Result
+import com.seiko.common.data.ResultLiveData
+import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
+import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
+import com.seiko.common.data.Result
 import com.dandanplay.tv.domain.SaveFavoriteBangumiDetailsUseCase
-import com.dandanplay.tv.domain.GetBangumiDetailsUseCase
+import com.dandanplay.tv.domain.bangumi.GetBangumiDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +20,8 @@ class BangumiDetailViewModel(
     private val favoriteBangumiDetails: SaveFavoriteBangumiDetailsUseCase
 ) : ViewModel() {
 
-    val mainState = ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()
+    val mainState =
+        ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()
 
     /**
      * 番剧的搜索关键字
