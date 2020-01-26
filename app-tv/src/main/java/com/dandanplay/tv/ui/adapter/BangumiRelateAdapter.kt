@@ -10,7 +10,7 @@ import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
 import com.dandanplay.tv.util.diff.BangumiIntroEntityDiffCallback
 import com.dandanplay.tv.util.getBangumiStatus
 import com.dandanplay.tv.util.loadImage
-import com.dandanplay.tv.util.scaleAnimator
+import com.seiko.common.util.scaleAnimator
 import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.common.ui.adapter.UpdatableAdapter

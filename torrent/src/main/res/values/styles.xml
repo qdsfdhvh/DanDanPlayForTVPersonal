@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="torrent_BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="torrent_BaseTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/torrent_background</item>
-        <!--        <item name="android:divider">@drawable/torrent_table_mode_divider</item>-->
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
 
-        <item name="torrent_backgroundBlank">@color/torrent_background_blank</item>
-        <item name="torrent_defaultRoundRipple">@drawable/torrent_default_round_ripple</item>
-        <item name="torrent_defaultRectRipple">@drawable/torrent_default_rect_ripple</item>
-    </style>
-    <style name="torrent_BaseTheme.Toolbar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
-        <item name="android:background">@null</item>
-        <item name="android:divider">@null</item>
-    </style>
     <style name="torrent_BaseTheme.TorrentInfoText" parent="android:TextAppearance.Widget.TextView">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>

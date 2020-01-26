@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
         <item name="defaultBrandColor">@color/colorPrimary</item>
         <item name="defaultBrandColorDark">@color/colorPrimaryDark</item>
         <item name="android:windowNoTitle">true</item>
@@ -14,12 +14,12 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/anim_activity_enter</item>
-        <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>
-        <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>
-        <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>
-    </style>
+<!--    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">-->
+<!--        <item name="android:activityOpenEnterAnimation">@anim/anim_activity_enter</item>-->
+<!--        <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>-->
+<!--        <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>-->
+<!--        <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>-->
+<!--    </style>-->
 
     <style name="BaseTheme.HeaderText" parent="android:TextAppearance.Widget.TextView">
         <item name="android:textColor">?attr/colorAccent</item>
@@ -42,15 +42,14 @@
     <style name="AppButton">
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
+        <item name="android:background">@drawable/button_focusable_selector</item>
     </style>
     <style name="AppButton.Dialog" parent="AppButton">
-        <item name="android:background">@drawable/button_focusable_selector</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">8dp</item>
     </style>
     <style name="AppButton.ImgButton" parent="AppButton">
         <item name="android:tint">@color/white</item>
-        <item name="android:background">@drawable/button_focusable_selector</item>
         <item name="android:padding">12dp</item>
     </style>
 </resources>

@@ -12,7 +12,7 @@ import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.dandanplay.tv.R
 import com.dandanplay.tv.model.HomeSettingBean
-import com.dandanplay.tv.ui.dialog.DialogExitFragment
+import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainSettingPresenter
@@ -153,8 +153,8 @@ class HomeFragment : BrowseSupportFragment()
      */
     private fun launchExitDialog() {
         val manager = fragmentManager ?: return
-        if (manager.findFragmentByTag(DialogExitFragment.TAG) == null) {
-            DialogExitFragment.Builder()
+        if (manager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+            DialogSelectFragment.Builder()
                 .setTitle(getString(R.string.msg_exit_app))
                 .setConfirmText(getString(R.string.exit))
                 .setCancelText(getString(R.string.cancel))
@@ -205,7 +205,7 @@ class HomeFragment : BrowseSupportFragment()
                         )
                     }
                     ID_DOWNLOAD -> {
-                        Navigator.navToTorrent()
+                        Navigator.navToTorrent(requireActivity())
                     }
                 }
             }

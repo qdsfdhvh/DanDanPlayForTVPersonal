@@ -2,18 +2,20 @@ package com.seiko.torrent.ui.add
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.leanback.widget.OnChildViewHolderSelectedListener
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.snackbar.Snackbar
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.extensions.checkPermissions
+import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.toast.toast
+import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.core.data.Result
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
@@ -38,25 +40,37 @@ private const val NUM_FRAGMENTS = 2
 private const val INFO_FRAG_POS = 0
 private const val FILES_FRAG_POS = 1
 
-class AddTorrentFragment : Fragment() {
+class AddTorrentFragment : Fragment()
+    , OnItemClickListener
+    , View.OnClickListener {
 
     companion object {
+        const val TAG = "AddTorrentFragment"
+        private const val ARGS_TORRENT_URI = "ARGS_TORRENT_URI"
         private const val ARGS_ADD_TAB_SELECTED_POSITION = "ARGS_ADD_TAB_SELECTED_POSITION"
+
+        fun newInstance(uri: Uri): AddTorrentFragment {
+            val bundle = Bundle()
+            bundle.putParcelable(ARGS_TORRENT_URI, uri)
+
+            val fragment = AddTorrentFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
-    private val args by navArgs<AddTorrentFragmentArgs>()
+//    private val args by navArgs<AddTorrentFragmentArgs>()
+
+    private val uri by lazyAndroid {
+        arguments!!.getParcelable<Uri>(ARGS_TORRENT_URI)!!
+    }
 
     private val viewModel by viewModel<AddTorrentViewModel>()
 
     private lateinit var binding: TorrentFragmentAddBinding
 
-    private lateinit var navController: NavController
 
     private lateinit var tabAdapter: TabTitleAdapter
-
-    /**
-     * 记录位置
-     */
     private var tabSelectPosition = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,6 +84,11 @@ class AddTorrentFragment : Fragment() {
         checkSelectPosition(savedInstanceState)
         bindViewModel()
         checkPermissions()
+    }
+
+    override fun onDestroyView() {
+        binding.torrentTab.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
+        super.onDestroyView()
     }
 
     /**
@@ -92,8 +111,6 @@ class AddTorrentFragment : Fragment() {
     }
 
     private fun setupUI() {
-        navController = findNavController()
-
         tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
             tab.setText(when(position) {
                 INFO_FRAG_POS -> getString(R.string.torrent_info)
@@ -101,12 +118,19 @@ class AddTorrentFragment : Fragment() {
                 else -> ""
             })
         }
+        tabAdapter.setOnItemClickListener(this)
+        binding.torrentTab.setPadding(25, 0, 25, 0)
+        binding.torrentTab.setItemSpacing(25)
+        binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
         binding.torrentTab.adapter = tabAdapter
 
         // ViewPager2
         binding.torrentViewPager.adapter = AddTorrentPagerAdapter(this)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
+        binding.torrentBtnCenter.setOnClickListener(this)
+        binding.torrentBtnCenter.requestFocus()
+
+//        requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
     }
 
     private fun bindViewModel() {
@@ -137,11 +161,7 @@ class AddTorrentFragment : Fragment() {
             }
             State.FETCHING_MAGNET -> {
                 binding.fetchMagnetProgress.visibility = View.VISIBLE
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.torrent_decode_torrent_fetch_magnet_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                toast(getString(R.string.torrent_decode_torrent_fetch_magnet_message))
             }
             State.FETCHING_MAGNET_COMPLETED -> {
                 binding.fetchMagnetProgress.visibility = View.GONE
@@ -159,6 +179,53 @@ class AddTorrentFragment : Fragment() {
         toast(throwable?.message)
     }
 
+    override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
+        when(holder.itemView.id) {
+            R.id.container -> {
+                toast("position = $position")
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.torrent_btn_center -> {
+                when (val result = viewModel.buildTorrentTask()) {
+                    is Result.Success -> {
+                        TorrentTaskService.addTorrent(requireActivity(), result.data)
+                        onBackPressed()
+                    }
+                    is Result.Error -> {
+                        toast(result.exception.message)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Item选择监听回调
+     */
+    private val mItemSelectedListener : OnChildViewHolderSelectedListener by lazyAndroid {
+        object : OnChildViewHolderSelectedListener() {
+            override fun onChildViewHolderSelected(
+                parent: RecyclerView?,
+                child: RecyclerView.ViewHolder?,
+                position: Int,
+                subposition: Int
+            ) {
+                when(parent) {
+                    binding.torrentTab -> {
+                        if (tabSelectPosition == position) return
+                        tabSelectPosition = position
+                        tabAdapter.setSelectPosition(position)
+                        binding.torrentViewPager.currentItem = position
+                    }
+                }
+            }
+        }
+    }
+
     /************************************************
      *                   权限请求                    *
      ************************************************/
@@ -167,7 +234,7 @@ class AddTorrentFragment : Fragment() {
         if (viewModel.state.value != null) return
 
         if (checkPermissions(PERMISSIONS)) {
-            viewModel.decodeUri(args.uri)
+            viewModel.decodeUri(uri)
         } else {
             requestPermissions(
                 PERMISSIONS,
@@ -183,49 +250,28 @@ class AddTorrentFragment : Fragment() {
     ) {
         if (requestCode == PERMISSION_REQUEST) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                viewModel.decodeUri(args.uri)
+                viewModel.decodeUri(uri)
             }
         }
     }
 
-    /************************************************
-     *                  Toolbar按钮                  *
-     ************************************************/
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.torrent_add_torrent, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            android.R.id.home -> onBackPressed()
-            R.id.add_torrent_dialog_add_menu -> {
-                when (val result = viewModel.buildTorrentTask()) {
-                    is Result.Success -> {
-                        TorrentTaskService.addTorrent(requireActivity(), result.data)
-                        onBackPressed()
-                    }
-                    is Result.Error -> {
-                        toast(result.exception.message)
-                    }
-                }
-            }
-        }
-        return true
-    }
-
+    /**
+     * 返回
+     */
     private fun onBackPressed() {
         Timber.d("onBackPressed")
-        navController.popBackStack()
+        requireActivity().finish()
+//        ActivityCompat.finishAffinity(requireActivity())
     }
 
 }
 
+/**
+ * Fragment Pager
+ */
 private class AddTorrentPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int =
-        NUM_FRAGMENTS
+    override fun getItemCount(): Int = NUM_FRAGMENTS
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {

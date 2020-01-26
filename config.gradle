@@ -3,9 +3,11 @@ versions.android_plugin = "3.6.0-rc01"
 versions.kotlin = "1.3.61"
 versions.kotlin_coroutines = "1.3.3"
 versions.support = "1.1.0"
-versions.leanback = "1.1.0-alpha03"
 versions.viewpager2 = "1.0.0"
+versions.constraintlayout = "1.1.3"
+versions.leanback = "1.1.0-alpha03"
 versions.navigation = "2.1.0"
+versions.fragment = "1.2.0"
 versions.koin = "2.0.1"
 versions.room = "2.2.3"
 versions.arouter_api = "1.5.0"
@@ -31,11 +33,12 @@ ext {
             'libGradlePlugin'      : "com.android.tools.build:gradle:${versions.android_plugin}",
 //            'libAppCompat'         : "androidx.appcompat:appcompat:${versions.support}",
             'libAnnotation'        : "androidx.annotation:annotation:${versions.support}",
-//            'libSwiperefreshlayout': "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0",
-            'libConstraintlayout'  : "androidx.constraintlayout:constraintlayout:1.1.3",
+            'libConstraintlayout'  : "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}",
+            'libViewPager2'        : "androidx.viewpager2:viewpager2:${versions.viewpager2}",
             'libLeanback'          : "androidx.leanback:leanback:${versions.leanback}",
             'libLeanbackPreference': "androidx.leanback:leanback-preference:${versions.leanback}",
-            'libViewPager2'        : "androidx.viewpager2:viewpager2:${versions.viewpager2}",
+            'libFragment'          : "androidx.fragment:fragment:${versions.fragment}",
+            'libFragmentKtx'       : "androidx.fragment:fragment-ktx:${versions.fragment}",
 
             'libKotlinGradlePlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
             'libKotlinJdk7'        : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",

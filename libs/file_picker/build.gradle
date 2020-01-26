@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -18,4 +20,7 @@ android {
 dependencies {
 //    api dependence.libAppCompat
     api dependence.libLeanback
+}
+repositories {
+    mavenCentral()
 }

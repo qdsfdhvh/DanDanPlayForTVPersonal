@@ -9,15 +9,18 @@
         android:id="@id/torrent_edit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:inputType="text|textNoSuggestions"
+        android:autofillHints=""
+        tools:ignore="LabelFor"
         tools:hint="@string/torrent_dialog_add_link_title"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_center"
-        app:layout_constraintStart_toStartOf="@id/btn_center"
+        app:layout_constraintBottom_toTopOf="@id/btn_confirm"
+        app:layout_constraintStart_toStartOf="@id/btn_confirm"
         app:layout_constraintEnd_toEndOf="@id/btn_cancel"/>
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@id/btn_center"
+        android:id="@id/btn_confirm"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -36,9 +39,9 @@
         android:layout_gravity="center"
         android:layout_margin="8dp"
         tools:text="取消"
-        app:layout_constraintTop_toTopOf="@id/btn_center"
-        app:layout_constraintBottom_toBottomOf="@id/btn_center"
-        app:layout_constraintStart_toEndOf="@id/btn_center"
+        app:layout_constraintTop_toTopOf="@id/btn_confirm"
+        app:layout_constraintBottom_toBottomOf="@id/btn_confirm"
+        app:layout_constraintStart_toEndOf="@id/btn_confirm"
         app:layout_constraintEnd_toEndOf="parent">
         <requestFocus />
     </Button>

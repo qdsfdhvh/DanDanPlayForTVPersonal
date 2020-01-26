@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="torrent_app_name">种子下载</string>
+
     <!-- downloaded/total (percent) -->
     <string name="torrent_download_counter_template" formatted="false">%1$s/%2$s （%3$d%%）</string>
     <!-- ↓ download speed | ↑ upload speed -->
@@ -61,4 +63,9 @@
     <string name="torrent_add_torrent_title">添加 torrent</string>
     <string name="torrent_title">种子下载</string>
     <string name="torrent_select_or_add_torrent">选择或添加一个 torrent</string>
+
+    <string name="torrent_btn_play">播放</string>
+    <string name="torrent_btn_resume">继续</string>
+    <string name="torrent_btn_pause">暂停</string>
+    <string name="torrent_btn_delete">删除</string>
 </resources>

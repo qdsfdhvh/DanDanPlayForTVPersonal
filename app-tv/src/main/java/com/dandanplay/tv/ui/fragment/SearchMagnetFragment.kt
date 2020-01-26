@@ -159,7 +159,7 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
      */
     private fun downloadMagnet() {
         val uri = viewModel.getCurrentMagnetUri() ?: return
-        Navigator.navToTorrent(this, uri, REQUEST_TORRENT)
+        Navigator.navToAddTorrent(this, uri, REQUEST_TORRENT)
     }
 
     /**

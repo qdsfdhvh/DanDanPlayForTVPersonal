@@ -78,11 +78,7 @@
         <action
             android:id="@+id/action_bangumiDetailsFragment_related_videos"
             app:destination="@id/bangumiDetailsFragment"
-            app:popUpTo="@+id/bangumiDetailsFragment"
-            app:enterAnim="@anim/anim_activity_enter"
-            app:exitAnim="@anim/anim_activity_exit"
-            app:popEnterAnim="@anim/anim_activity_enter"
-            app:popExitAnim="@anim/anim_activity_exit"/>
+            app:popUpTo="@+id/bangumiDetailsFragment"/>
     </fragment>
     <!--番剧搜索-->
     <fragment

@@ -19,7 +19,7 @@ import com.seiko.torrent.vm.AddTorrentViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import kotlin.collections.ArrayList
 
-class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.ClickListener {
+class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
 
     companion object {
         fun newInstance(): AddTorrentFilesFragment {
@@ -34,14 +34,17 @@ class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.
     private lateinit var binding: TorrentFragmentAddFilesBinding
 
     private val adapter by lazyAndroid {
-        DownloadableFilesAdapter(requireActivity(), this)
+        DownloadableFilesAdapter()
     }
 
     private lateinit var layoutManager: LinearLayoutManager
-
     private var currentDir: BencodeFileTree? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = TorrentFragmentAddFilesBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
@@ -52,8 +55,14 @@ class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        adapter.setOnItemClickListener(null)
+        super.onDestroyView()
+    }
+
     private fun setupUI() {
-        layoutManager = LinearLayoutManager(requireActivity())
+        adapter.setOnItemClickListener(this)
+        layoutManager = LinearLayoutManager(requireContext())
         binding.fileList.layoutManager = layoutManager
         binding.fileList.fixItemAnim()
         binding.fileList.adapter = adapter
@@ -67,6 +76,19 @@ class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.
             adapter.setFiles(getChildren(currentDir))
             updateFileSize()
         }
+    }
+
+    override fun onItemClicked(node: BencodeFileTree) {
+        if (node.name == BencodeFileTree.PARENT_DIR) {
+            backToParent()
+        } else if (node.type == FileNode.Type.DIR) {
+            chooseDir(node)
+        }
+    }
+
+    override fun onItemCheckedChanged(node: BencodeFileTree, selected: Boolean) {
+        node.select(selected)
+        updateFileSize()
     }
 
     private fun setFileSize(selectedSize: Long, totalSize: Long) {
@@ -109,19 +131,6 @@ class AddTorrentFilesFragment : Fragment(), DownloadableFilesAdapter.ViewHolder.
         }
         children.addAll(currentDir.children)
         return children
-    }
-
-    override fun onItemClicked(node: BencodeFileTree) {
-        if (node.name == BencodeFileTree.PARENT_DIR) {
-            backToParent()
-        } else if (node.type == FileNode.Type.DIR) {
-            chooseDir(node)
-        }
-    }
-
-    override fun onItemCheckedChanged(node: BencodeFileTree, selected: Boolean) {
-        node.select(selected)
-        updateFileSize()
     }
 
 }

@@ -65,15 +65,19 @@ dependencies {
     implementation project(':common')
     kapt dependence.libArouterCompiler
 
+    // navigation
+    implementation dependence.libNavigationFragmentKtx
+    implementation dependence.libNavigationUiKtx
+
     // Image
     // 2.0.0 CloseableReference: Finalized without closing
     // @see https://github.com/facebook/fresco/issues/2445
-    implementation 'com.facebook.fresco:fresco:1.14.2'
+    implementation 'com.facebook.fresco:fresco:2.0.0'
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
 
     // WorkManger
-    implementation "androidx.work:work-runtime-ktx:2.2.0"
+    implementation "androidx.work:work-runtime-ktx:2.3.0"
 
     // 内存泄漏
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'

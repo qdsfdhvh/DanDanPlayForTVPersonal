@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#1b1b1b</color>
     <color name="colorAccent">@color/red_50</color>
 
-    <color name="button_selected_shape">@color/colorPrimaryDark</color>
+    <color name="button_pressed_shape">@color/colorPrimaryDark</color>
     <color name="button_focused_shape">@color/colorAccent</color>
+    <color name="button_selected_shape">@color/white_50</color>
     <color name="button_default_shape">@android:color/transparent</color>
 
     <color name="white">#ffffffff</color>

@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class GetTorrentLocalPlayUrlUseCase : KoinComponent {
 
-
     private val seq = AtomicInteger(0)
 
     /**

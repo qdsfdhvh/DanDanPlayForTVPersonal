@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppParentLayout.Dialog"
     android:orientation="vertical"
-    tools:context="com.dandanplay.tv.ui.dialog.DialogExitFragment">
+    tools:context="com.seiko.common.ui.dialog.DialogSelectFragment">
     <TextView
         android:id="@id/title"
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         android:textSize="24sp" />
     <Button
         style="@style/AppButton.Dialog"
-        android:id="@id/btn_exit"
+        android:id="@id/btn_confirm"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

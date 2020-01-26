@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:src="@drawable/ic_add_black_24dp"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="@string/torrent_app_name"
         app:layout_constraintTop_toTopOf="@id/torrent_container_btn"
         app:layout_constraintBottom_toBottomOf="@id/torrent_container_btn"
         app:layout_constraintStart_toStartOf="@id/torrent_container_btn"/>
@@ -35,12 +35,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:src="@drawable/ic_insert_drive_file_black_24dp"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="@string/torrent_app_name"
         app:layout_constraintTop_toTopOf="@id/torrent_btn_add"
         app:layout_constraintBottom_toBottomOf="@id/torrent_btn_add"
         app:layout_constraintStart_toEndOf="@id/torrent_btn_add"/>
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@id/torrent_container_list"
         android:name="com.seiko.torrent.ui.main.TorrentListFragment"
         android:layout_width="0dp"
@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="@id/torrent_container_btn"
         app:layout_constraintEnd_toEndOf="@id/torrent_container_btn"/>
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@id/torrent_container_detail"
         android:name="com.seiko.torrent.ui.detail.DetailTorrentFragment"
         android:layout_width="0dp"

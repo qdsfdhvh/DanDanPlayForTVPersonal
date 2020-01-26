@@ -4,13 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.seiko.common.router.Routes
 import com.seiko.common.toast.toast
+import com.seiko.common.ui.dialog.DialogSelectFragment
 //import com.dandanplay.tv.ui.dialog.SelectDialogFragment
 import com.seiko.core.constants.DEFAULT_CACHE_FOLDER_PATH
 import com.xunlei.downloadlib.XLTaskHelper
 import timber.log.Timber
 
+@Route(path = Routes.Player.PATH)
 class PlayerManagerActivity: FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,17 +48,17 @@ class PlayerManagerActivity: FragmentActivity() {
     }
 
     private fun launchExitDialog() {
-//        if (supportFragmentManager.findFragmentByTag(SelectDialogFragment.TAG) == null) {
-//            SelectDialogFragment.Builder()
-//                .setTitle("你真的确认退出播放吗？")
-//                .setConfirmText("确认")
-//                .setCancelText("取消")
-//                .setConfirmClickListener {
-//                    ActivityUtils.finishActivity(this, true)
-//                }
-//                .build()
-//                .show(supportFragmentManager)
-//        }
+        if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+            DialogSelectFragment.Builder()
+                .setTitle("你真的确认退出播放吗？")
+                .setConfirmText("确认")
+                .setCancelText("取消")
+                .setConfirmClickListener {
+                    ActivityCompat.finishAffinity(this)
+                }
+                .build()
+                .show(supportFragmentManager)
+        }
     }
 
     override fun onStop() {

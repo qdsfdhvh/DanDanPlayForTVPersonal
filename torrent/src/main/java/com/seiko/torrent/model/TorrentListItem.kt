@@ -102,15 +102,17 @@ data class TorrentListItem(
         if (other !is TorrentListItem) return false
         return hash == other.hash
                 && stateCode == other.stateCode
-                && progress == other.progress
-                && receivedBytes == other.receivedBytes
-                && uploadedBytes == other.uploadedBytes
-                && totalBytes == other.totalBytes
-                && downloadSpeed == other.downloadSpeed
-                && uploadSpeed == other.uploadSpeed
-                && ETA == other.ETA
-                && totalPeers == other.totalPeers
-                && peers == other.peers
+//                && progress == other.progress
+//                && receivedBytes == other.receivedBytes
+//                && uploadedBytes == other.uploadedBytes
+//                && totalBytes == other.totalBytes
+//                && downloadSpeed == other.downloadSpeed
+//                && uploadSpeed == other.uploadSpeed
+//                && ETA == other.ETA
+//                && totalPeers == other.totalPeers
+//                && peers == other.peers
+                && downloadPath == other.downloadPath
+                && dateAdded == other.dateAdded
                 && error == other.error
     }
 }

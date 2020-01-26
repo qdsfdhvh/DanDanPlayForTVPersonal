@@ -36,22 +36,22 @@ class DialogInputFragment : BaseDialogFragment()
                 binding.torrentEdit.hint = bundle.getString(ARGS_HINT)
             }
             if (bundle.containsKey(ARGS_CONFIRM_TEXT)) {
-                binding.btnCenter.text = bundle.getString(ARGS_CONFIRM_TEXT)
+                binding.btnConfirm.text = bundle.getString(ARGS_CONFIRM_TEXT)
             }
             if (bundle.containsKey(ARGS_CANCEL_TEXT)) {
                 binding.btnCancel.text = bundle.getString(ARGS_CANCEL_TEXT)
             }
         }
         binding.btnCancel.requestFocus()
-        binding.btnCenter.setOnClickListener(this)
+        binding.btnConfirm.setOnClickListener(this)
         binding.btnCancel.setOnClickListener(this)
-        binding.btnCenter.onFocusChangeListener = this
+        binding.btnConfirm.onFocusChangeListener = this
         binding.btnCancel.onFocusChangeListener = this
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.btn_center -> {
+            R.id.btn_confirm -> {
                 val text = binding.torrentEdit.text.toString()
                 if (text.isEmpty()) {
                     toast("内容为空。")

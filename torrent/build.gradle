@@ -7,6 +7,7 @@ apply from:rootProject.file('libbase.gradle')
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
 }
 
@@ -28,6 +29,7 @@ dependencies {
     kapt dependence.libRoomCompiler
 
     // UI
+    implementation 'androidx.cardview:cardview:1.0.0'
 //    implementation 'com.google.android.material:material:1.2.0-alpha03'
 //    implementation 'com.github.clans:fab:1.6.4'
 

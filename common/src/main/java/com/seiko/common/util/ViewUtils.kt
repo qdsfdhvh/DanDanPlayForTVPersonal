@@ -1,4 +1,4 @@
-package com.dandanplay.tv.util
+package com.seiko.common.util
 
 import android.content.Context
 import android.view.View

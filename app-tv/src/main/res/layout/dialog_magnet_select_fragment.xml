@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppParentLayout.Dialog"
     android:orientation="vertical"
-    tools:context="com.dandanplay.tv.ui.dialog.DialogExitFragment">
+    tools:context="com.seiko.common.ui.dialog.DialogSelectFragment">
     <Button
         style="@style/AppButton.Dialog"
         android:id="@id/btn_download"

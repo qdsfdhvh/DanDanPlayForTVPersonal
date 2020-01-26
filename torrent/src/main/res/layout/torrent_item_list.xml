@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@id/container"
+    android:id="@id/torrent_container_list"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimaryDark">
 
     <View
         android:id="@id/torrent_indicator_line"
@@ -26,7 +27,7 @@
         android:scaleType="fitXY"
         android:padding="6dp"
         android:background="@drawable/torrent_fab_ripple"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="@string/torrent_app_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/torrent_indicator_line"

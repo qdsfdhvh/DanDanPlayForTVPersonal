@@ -45,20 +45,22 @@ class TorrentListAdapter(
     private val downloader: Downloader
 ) : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), UpdatableAdapter {
 
+//    companion object {
+//        private const val ARGS_SELECT_POSITION = "ARGS_SELECT_POSITION"
+//    }
+
     private val diffCallback = TorrentListItemDiffCallback()
 
     var items: List<TorrentListItem> by Delegates.observable(emptyList()) { _, old, new ->
         update(old, new, diffCallback)
     }
 
-    companion object {
-        private const val ARGS_SELECT_POSITION = "ARGS_SELECT_POSITION"
-    }
-
-//    private val currentItems = ArrayList<TorrentListItem>()
-//    private val allItems = HashMap<String, TorrentListItem>()
-
     private val currentOpenTorrent = AtomicReference<String>()
+
+    fun get(position: Int): TorrentListItem? {
+        if (position < 0 || position >= items.size) return null
+        return items[position]
+    }
 
     override fun getItemCount(): Int = items.size
 
@@ -76,65 +78,9 @@ class TorrentListAdapter(
 
     override fun onViewDetachedFromWindow(holder: ItemViewHolder) = holder.detach()
 
-//    fun addItem(item: TorrentListItem) {
-//        if (!currentItems.contains(item)) {
-//            currentItems.add(item)
-//            notifyItemChanged(currentItems.indexOf(item))
-//            allItems[item.hash] = item
-//        }
-//    }
-//
-//    fun addItems(items: Collection<TorrentListItem>) {
-//        val list = items.filter { !currentItems.contains(it) }
-//        if (list.isNotEmpty()) {
-//            currentItems.addAll(list)
-//            notifyItemRangeInserted(0, list.size)
-//            for (item in list) {
-//                allItems[item.hash] = item
-//            }
-//        }
-//    }
-
-    fun markAsOpen(hash: String?) {
-//        val oldHash = currentOpenTorrent.get()
-//        if (oldHash == hash) return
-//
-//        currentOpenTorrent.set(hash)
-//
-//        val oldPosition = if (oldHash != null) {
-//            currentItems.indexOfFirst { oldHash == it.hash }
-//        } else -1
-//        if (oldPosition >= 0) {
-//            notifyItemChanged(oldPosition, Bundle().apply { putBoolean(ARGS_SELECT_POSITION, false) })
-//        }
-//
-//        val position = if (hash != null) {
-//            currentItems.indexOfFirst { hash == it.hash }
-//        } else -1
-//        if (position >= 0) {
-//            notifyItemChanged(position, Bundle().apply { putBoolean(ARGS_SELECT_POSITION, true) })
-//        }
-    }
-
     fun isSelectHash(hash: String): Boolean {
         return hash == currentOpenTorrent.get()
     }
-
-    fun deleteItem(hash: String) {
-//        currentItems.remove(getItem(hash))
-//        allItems.remove(hash)
-//        notifyDataSetChanged()
-    }
-
-//    fun getItem(hash: String): TorrentListItem? {
-//        if (!allItems.containsKey(hash)) {
-//            return null
-//        }
-//        val item = allItems[hash]
-//        return if (currentItems.contains(item)) {
-//            item
-//        } else null
-//    }
 
     inner class ItemViewHolder(
         private val binding: TorrentItemListBinding
@@ -156,12 +102,13 @@ class TorrentListAdapter(
         }
 
         fun attach() {
-//            LogUtils.d("attach: $this")
+            Timber.d("attach: $this")
             val position = adapterPosition
             if (position >= 0) {
                 val item = items[position]
                 val hash = item.hash
                 downloader.onProgressChanged(hash) { progress ->
+                    Timber.d("change: ${progress.hash}")
                     item.update(progress)
                     bind(item)
                 }
@@ -169,7 +116,7 @@ class TorrentListAdapter(
         }
 
         fun detach() {
-//            LogUtils.d("detach: $this")
+            Timber.d("detach: $this")
             val position = adapterPosition
             if (position >= 0) {
                 val item = items[position]
@@ -316,8 +263,14 @@ class TorrentListAdapter(
         }
 
         fun payload(bundle: Bundle) {
-            if (bundle.containsKey(ARGS_SELECT_POSITION)) {
+//            if (bundle.containsKey(ARGS_SELECT_POSITION)) {
 //                binding.root.isSelected = bundle.getBoolean(ARGS_SELECT_POSITION)
+//            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_TITLE)) {
+                setTorrentTitle(bundle.getString(TorrentListItemDiffCallback.ARGS_TORRENT_TITLE)!!)
+            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_STATE)) {
+                setTorrentState(bundle.getInt(TorrentListItemDiffCallback.ARGS_TORRENT_STATE))
             }
         }
     }

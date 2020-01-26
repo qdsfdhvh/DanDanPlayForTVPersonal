@@ -1,4 +1,4 @@
-package com.dandanplay.tv.ui.dialog
+package com.seiko.common.ui.dialog
 
 import android.os.Bundle
 import android.util.TypedValue.COMPLEX_UNIT_SP
@@ -8,17 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
-import com.dandanplay.tv.databinding.DialogExitFragmentBinding
-import com.seiko.common.ui.dialog.BaseDialogFragment
+import com.seiko.common.databinding.DialogSelectFragmentBinding
 
-class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
+class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
 
     private var onConfirm: (() -> Unit)? = null
 
-    private lateinit var binding: DialogExitFragmentBinding
+    private lateinit var binding: DialogSelectFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogExitFragmentBinding.inflate(inflater, container, false)
+        binding = DialogSelectFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -30,28 +29,27 @@ class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
                 binding.title.text = bundle.getString(ARGS_TITLE)
             }
             if (bundle.containsKey(ARGS_CONFIRM_TEXT)) {
-                binding.btnExit.text = bundle.getString(ARGS_CONFIRM_TEXT)
+                binding.btnConfirm.text = bundle.getString(ARGS_CONFIRM_TEXT)
             }
             if (bundle.containsKey(ARGS_CANCEL_TEXT)) {
                 binding.btnCancel.text = bundle.getString(ARGS_CANCEL_TEXT)
             }
         }
 
-        binding.btnExit.textSize = customTextSize(LARGE)
-        binding.btnCancel.textSize = customTextSize(SMALL)
-        binding.btnExit.requestFocus()
-
-        binding.btnExit.setOnClickListener { onConfirm?.invoke() }
+//        binding.btnConfirm.textSize = customTextSize(LARGE)
+//        binding.btnCancel.textSize = customTextSize(SMALL)
+        binding.btnConfirm.requestFocus()
+        binding.btnConfirm.setOnClickListener { onConfirm?.invoke() }
         binding.btnCancel.setOnClickListener { dismiss() }
 
-        binding.btnExit.onFocusChangeListener = this
+        binding.btnConfirm.onFocusChangeListener = this
         binding.btnCancel.onFocusChangeListener = this
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
-        if (v is Button) {
-            v.textSize = customTextSize(if (hasFocus) LARGE else SMALL)
-        }
+//        if (v is Button) {
+//            v.textSize = customTextSize(if (hasFocus) LARGE else SMALL)
+//        }
     }
 
     private fun setConfirmClickListener(listener: (() -> Unit)?) {
@@ -62,12 +60,12 @@ class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
         show(manager, TAG)
     }
 
-    private fun customTextSize(type: Int): Float {
-        return when (type) {
-            SMALL -> applyDimension(COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
-            else -> applyDimension(COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
-        }
-    }
+//    private fun customTextSize(type: Int): Float {
+//        return when (type) {
+//            SMALL -> applyDimension(COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
+//            else -> applyDimension(COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
+//        }
+//    }
 
     class Builder {
         private val bundle = Bundle()
@@ -93,8 +91,8 @@ class DialogExitFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             return this
         }
 
-        fun build(): DialogExitFragment {
-            val fragment = DialogExitFragment()
+        fun build(): DialogSelectFragment {
+            val fragment = DialogSelectFragment()
             fragment.arguments = bundle
             fragment.setConfirmClickListener(confirmClickListener)
             return fragment

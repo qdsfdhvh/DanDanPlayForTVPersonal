@@ -9,7 +9,6 @@
         android:id="@id/torrent_tab"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/torrent_status_bar_height"
-        android:background="?attr/defaultBrandColorDark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/torrent_view_pager"
         app:layout_constraintStart_toStartOf="parent"

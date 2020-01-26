@@ -39,7 +39,6 @@ class DetailTorrentFragment : Fragment()
     private val viewModel: MainViewModel by sharedViewModel()
 
     private lateinit var binding: TorrentFragmentDetailBinding
-
     private lateinit var tabAdapter: TabTitleAdapter
 
     /**
@@ -96,6 +95,8 @@ class DetailTorrentFragment : Fragment()
             })
         }
         tabAdapter.setOnItemClickListener(this)
+        binding.torrentTab.setPadding(25, 0, 25, 0)
+        binding.torrentTab.setItemSpacing(25)
         binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
         binding.torrentTab.adapter = tabAdapter
 

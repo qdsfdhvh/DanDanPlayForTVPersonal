@@ -213,8 +213,10 @@ class DownloadManager(
     override fun pauseResumeTorrent(hash: String) {
         val task = torrentEngine.getDownloadTask(hash) ?: return
         if (task.isPaused) {
+            Timber.d("重启：$hash")
             task.resume()
         } else {
+            Timber.d("停止：$hash")
             task.pause()
         }
     }
@@ -273,7 +275,7 @@ class DownloadManager(
         downloadScope.launch {
             when(val result = getTorrentTrackers.invoke()) {
                 is Result.Success -> options.trackers.addAll(result.data)
-                is Result.Error -> Timber.e(TAG, result.exception)
+                is Result.Error -> Timber.tag(TAG).e(result.exception)
             }
         }
     }
