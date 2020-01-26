@@ -6,8 +6,8 @@ import com.seiko.common.data.ResultData
 import com.seiko.common.data.Status
 import com.dandanplay.tv.domain.bangumi.GetBangumiAirDayBeansUseCase
 import com.dandanplay.tv.domain.GetFavoriteBangumiListUseCase
-import com.dandanplay.tv.model.AirDayBangumiBean
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.AirDayBangumiBean
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

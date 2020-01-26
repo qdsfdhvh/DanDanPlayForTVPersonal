@@ -29,16 +29,14 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.seiko.torrent.R
-import com.seiko.torrent.constants.INFINITY_SYMBOL
-import com.seiko.torrent.model.TorrentListItem
+import com.seiko.torrent.util.constants.INFINITY_SYMBOL
+import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
 class TorrentListAdapter(
@@ -108,7 +106,6 @@ class TorrentListAdapter(
                 val item = items[position]
                 val hash = item.hash
                 downloader.onProgressChanged(hash) { progress ->
-                    Timber.d("change: ${progress.hash}")
                     item.update(progress)
                     bind(item)
                 }

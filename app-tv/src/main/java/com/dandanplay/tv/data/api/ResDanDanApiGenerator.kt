@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.api
 
-import com.dandanplay.tv.constants.DANDAN_RES_BASE_URL
+import com.dandanplay.tv.util.constants.DANDAN_RES_BASE_URL
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

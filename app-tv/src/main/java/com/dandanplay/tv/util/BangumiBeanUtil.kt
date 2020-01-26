@@ -1,9 +1,9 @@
 package com.dandanplay.tv.util
 
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 
 fun BangumiDetailsEntity.toHomeImageBean(): HomeImageBean {
     return HomeImageBean(

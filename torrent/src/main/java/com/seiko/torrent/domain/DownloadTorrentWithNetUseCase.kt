@@ -2,7 +2,7 @@ package com.seiko.torrent.domain
 
 import com.seiko.common.util.writeInputStream
 import com.seiko.common.data.Result
-import com.seiko.torrent.constants.TORRENT_TEMP_DIR
+import com.seiko.torrent.util.constants.TORRENT_TEMP_DIR
 import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
 import org.koin.core.KoinComponent
 import org.koin.core.inject

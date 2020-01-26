@@ -7,11 +7,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.dandanplay.tv.R
-import com.dandanplay.tv.extensions.hideSoftInput
-import com.dandanplay.tv.extensions.isSoftInputMethodShowing
+import com.dandanplay.tv.util.extensions.hideSoftInput
+import com.dandanplay.tv.util.extensions.isSoftInputMethodShowing
 import androidx.activity.DispatchKeyEventDispatcher
 import androidx.activity.DispatchKeyEventDispatcherOwner
-import com.seiko.common.extensions.lazyAndroid
 import com.seiko.common.service.TorrentService
 
 class MainActivity : FragmentActivity(R.layout.activity_main),
@@ -37,7 +36,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navController = findNavController(R.id.myNavHostFragment)
+        navController = findNavController(R.id.nav_controller)
     }
 
     override fun onDestroy() {

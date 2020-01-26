@@ -74,7 +74,7 @@
             android:padding="5dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/dir_chooser_title"
+            android:contentDescription="@string/torrent_app_name"
             android:src="@drawable/ic_folder_grey600_24dp" />
     </RelativeLayout>
 

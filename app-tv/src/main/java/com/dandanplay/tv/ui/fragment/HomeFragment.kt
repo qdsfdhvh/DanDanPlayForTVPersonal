@@ -11,20 +11,20 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.dandanplay.tv.R
-import com.dandanplay.tv.model.HomeSettingBean
+import com.dandanplay.tv.data.model.HomeSettingBean
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.MainAreaPresenter
 import com.dandanplay.tv.ui.presenter.MainSettingPresenter
-import com.dandanplay.tv.model.AnimeRow
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.AnimeRow
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.dandanplay.tv.util.diff.HomeImageBeanDiffCallback
 import com.dandanplay.tv.vm.HomeViewModel
 import com.seiko.common.data.ResultData
 import com.seiko.common.data.Status
-import com.seiko.common.extensions.lazyAndroid
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : BrowseSupportFragment()

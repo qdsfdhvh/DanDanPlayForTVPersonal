@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="myNavHostFragment" type="id"/>
-
     <item name="btn_cancel" type="id"/><!--取消按钮-->
     <item name="btn_confirm" type="id"/><!--退出按钮-->
-<!--    <item name="btn_center" type="id"/>&lt;!&ndash;确认按钮&ndash;&gt;-->
 
     <item name="container" type="id"/>
     <item name="progress" type="id"/>

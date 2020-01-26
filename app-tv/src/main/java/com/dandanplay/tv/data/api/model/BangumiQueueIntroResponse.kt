@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.api.model
 
-import com.dandanplay.tv.model.api.BangumiQueueIntro
+import com.dandanplay.tv.data.model.api.BangumiQueueIntro
 
 //BangumiQueueIntroResponseV2 {
 //    hasMore (boolean): 是否有更多数据可以展示（显示界面上的“更多”按钮） ,

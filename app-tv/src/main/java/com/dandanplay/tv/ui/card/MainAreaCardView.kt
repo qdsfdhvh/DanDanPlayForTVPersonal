@@ -3,7 +3,7 @@ package com.dandanplay.tv.ui.card
 import android.content.Context
 import android.os.Bundle
 import com.dandanplay.tv.R
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.dandanplay.tv.util.diff.HomeImageBeanDiffCallback
 import com.dandanplay.tv.util.loadImage
 import com.seiko.common.ui.card.AbsCardView

@@ -1,6 +1,6 @@
 package com.seiko.torrent.service
 
-import com.seiko.torrent.model.TorrentEntity
+import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
 import com.seiko.common.data.Result
 import com.seiko.download.torrent.TorrentEngine
@@ -43,7 +43,7 @@ class DownloadManager(
     /**
      * 种子信息传输用协程
      */
-    private val downloadScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private lateinit var downloadScope: CoroutineScope
 
     /**
      * 种子下载引擎
@@ -71,6 +71,7 @@ class DownloadManager(
      * 启动引擎
      */
     private fun startEngine() {
+        downloadScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         torrentEngine = TorrentEngine(options)
         torrentEngine.setCallback(this)
         torrentEngine.start()
@@ -81,6 +82,8 @@ class DownloadManager(
      */
     private fun closeEngine() {
         downloadScope.cancel()
+        downloadMap.clear()
+        magnetMap.clear()
         torrentEngine.setCallback(null)
         // 引擎的关闭非常耗时，启用单独的线程去关闭它
         thread(
@@ -119,7 +122,7 @@ class DownloadManager(
     /**
      * 下载种子
      */
-    override suspend fun start(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean> {
+    override suspend fun addTorrent(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean> {
         if (isAlreadyRunning.compareAndSet(false, true)) {
             startEngine()
         }
@@ -184,6 +187,19 @@ class DownloadManager(
 
         torrentEngine.download(task)
         return Result.Success(true)
+    }
+
+    /**
+     * 删除种子
+     */
+    override suspend fun deleteTorrent(hash: String, withFile: Boolean) {
+        val id = torrentRepo.deleteTorrent(hash)
+        Timber.d("deleteTorrent: $hash, $id")
+        torrentEngine.removeTorrent(hash, withFile)
+        downloadMap[hash]?.let {
+            it.cancel()
+            downloadMap.remove(hash)
+        }
     }
 
     /**
@@ -255,20 +271,6 @@ class DownloadManager(
         val task = torrentEngine.getDownloadTask(hash) ?: return null
         val info = task.torrentInfo ?: return null
         return TorrentMetaInfo(info)
-    }
-
-    /**
-     * 删除种子
-     */
-    override fun deleteTorrent(hash: String, withFile: Boolean) {
-        downloadScope.launch {
-            torrentRepo.deleteTorrent(hash)
-            torrentEngine.removeTorrent(hash, withFile)
-            downloadMap[hash]?.let {
-                it.cancel()
-                downloadMap.remove(hash)
-            }
-        }
     }
 
     override fun onEngineStarted() {

@@ -1,6 +1,6 @@
 package com.dandanplay.tv.domain.bangumi
 
-import com.dandanplay.tv.model.AirDayBangumiBean
+import com.dandanplay.tv.data.model.AirDayBangumiBean
 import com.dandanplay.tv.util.toHomeImageBean
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
 import com.seiko.common.data.Result

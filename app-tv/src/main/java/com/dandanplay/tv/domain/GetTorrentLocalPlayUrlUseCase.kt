@@ -1,7 +1,7 @@
 package com.dandanplay.tv.domain
 
-import com.dandanplay.tv.constants.DEFAULT_CACHE_FOLDER_PATH
-import com.dandanplay.tv.model.ThunderLocalUrl
+import com.dandanplay.tv.util.constants.DEFAULT_CACHE_FOLDER_PATH
+import com.dandanplay.tv.data.model.ThunderLocalUrl
 import com.seiko.common.data.Result
 import com.xunlei.downloadlib.XLDownloadManager
 import com.xunlei.downloadlib.XLTaskHelper

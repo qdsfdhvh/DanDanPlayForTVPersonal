@@ -2,8 +2,8 @@ package com.seiko.torrent.util
 
 import android.net.Uri
 import android.webkit.URLUtil
-import com.seiko.torrent.extensions.isHash
-import com.seiko.torrent.extensions.isMagnet
+import com.seiko.torrent.util.extensions.isHash
+import com.seiko.torrent.util.extensions.isMagnet
 import java.io.File
 
 private const val INFO_HASH_PREFIX = "magnet:?xt=urn:btih:"

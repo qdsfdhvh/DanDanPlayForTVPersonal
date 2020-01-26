@@ -9,17 +9,17 @@ import androidx.lifecycle.viewModelScope
 import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
 import com.seiko.common.data.Result
-import com.seiko.torrent.extensions.find
-import com.seiko.torrent.extensions.getLeaves
-import com.seiko.torrent.extensions.toFileTree
-import com.seiko.torrent.model.AddTorrentParams
-import com.seiko.torrent.model.filetree.BencodeFileTree
+import com.seiko.torrent.util.extensions.find
+import com.seiko.torrent.util.extensions.getLeaves
+import com.seiko.torrent.util.extensions.toFileTree
+import com.seiko.torrent.data.model.AddTorrentParams
+import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.service.Downloader
 import com.seiko.torrent.ui.add.State
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
-import com.seiko.torrent.extensions.isMagnet
+import com.seiko.torrent.util.extensions.isMagnet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.libtorrent4j.Priority
@@ -89,19 +89,23 @@ class AddTorrentViewModel(
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
                         updateTorrentInfo(TorrentMetaInfo(source))
+                        return@launch
                     }
                     is Result.Error -> {
                         handleException(result.exception)
                     }
                 }
+
+                // 接口下载种子失败，让引擎下载
+
                 // 引擎下载磁力，比较慢
-//                fromMagnet = true
-//                source = uri.toString()
-//                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
-//                    updateState(State.FETCHING_MAGNET_COMPLETED)
-//                    updateTorrentInfo(info)
-//                }
-//                updateState(State.FETCHING_MAGNET)
+                fromMagnet = true
+                source = uri.toString()
+                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
+                    updateState(State.FETCHING_MAGNET_COMPLETED)
+                    updateTorrentInfo(info)
+                }
+                updateState(State.FETCHING_MAGNET)
             }
             URLUtil.isContentUrl(path) -> {
                 updateState(State.FETCHING_HTTP)

@@ -22,19 +22,18 @@ package com.seiko.torrent.ui.main
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
-import androidx.core.widget.PopupWindowCompat
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.eventbus.registerEventBus
 import com.seiko.common.eventbus.unRegisterEventBus
-import com.seiko.common.extensions.lazyAndroid
-import com.seiko.common.toast.toast
+import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentListBinding
-import com.seiko.torrent.model.PostEvent
-import com.seiko.torrent.model.TorrentListItem
+import com.seiko.torrent.data.model.PostEvent
+import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
@@ -125,6 +124,7 @@ class TorrentListFragment : Fragment()
 
     private fun bindViewModel() {
         viewModel.torrentItems.observe(this::getLifecycle) {
+            Timber.d("torrent size = ${it.size}")
             adapter!!.items = it
         }
 //        viewModel.torrentItem.observe(this::getLifecycle) { item ->

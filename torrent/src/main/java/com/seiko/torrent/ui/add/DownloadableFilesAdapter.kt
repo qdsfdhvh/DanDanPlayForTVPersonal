@@ -18,19 +18,15 @@
  */
 package com.seiko.torrent.ui.add
 
-import android.content.Context
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentItemDownloadableFileBinding
-import com.seiko.torrent.model.filetree.BencodeFileTree
-import com.seiko.torrent.model.filetree.FileNode
+import com.seiko.torrent.data.model.filetree.BencodeFileTree
+import com.seiko.torrent.data.model.filetree.FileNode
 import java.util.*
 
 /*

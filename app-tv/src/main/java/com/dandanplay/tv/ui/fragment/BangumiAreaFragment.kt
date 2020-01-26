@@ -25,10 +25,10 @@ import com.dandanplay.tv.ui.widget.SpaceItemDecoration
 import com.seiko.common.util.getPercentHeightSize
 import com.seiko.common.util.getPercentWidthSize
 import com.seiko.common.ui.dialog.setLoadFragment
-import com.seiko.common.extensions.lazyAndroid
-import com.seiko.common.toast.toast
+import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.toast.toast
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.lang.ref.WeakReference

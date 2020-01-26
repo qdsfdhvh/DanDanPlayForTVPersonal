@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dandanplay.tv.databinding.ItemBangumiSeasonBinding
 import com.dandanplay.tv.util.diff.BangumiSeasonDiffCallback
 import com.seiko.common.ui.adapter.BaseAdapter
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 
 class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
 

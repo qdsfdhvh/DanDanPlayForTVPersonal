@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.api.model
 
-import com.dandanplay.tv.model.api.BangumiQueueDetails
+import com.dandanplay.tv.data.model.api.BangumiQueueDetails
 
 //BangumiQueueDetailsResponseV2 {
 //    bangumiList (Array[BangumiQueueDetailsV2], optional): 未看番剧剧集列表 ,

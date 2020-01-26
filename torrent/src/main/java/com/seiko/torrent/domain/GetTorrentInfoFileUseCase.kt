@@ -1,8 +1,8 @@
 package com.seiko.torrent.domain
 
 import com.seiko.common.data.Result
-import com.seiko.torrent.constants.DATA_TORRENT_INFO_FILE_NAME
-import com.seiko.torrent.constants.TORRENT_DATA_DIR
+import com.seiko.torrent.util.constants.DATA_TORRENT_INFO_FILE_NAME
+import com.seiko.torrent.util.constants.TORRENT_DATA_DIR
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named

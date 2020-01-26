@@ -1,7 +1,7 @@
 package com.dandanplay.tv.di
 
-import com.dandanplay.tv.constants.PREFS_NAME_COOKIES
-import com.dandanplay.tv.constants.PREFS_NAME_DEFAULT
+import com.dandanplay.tv.util.constants.PREFS_NAME_COOKIES
+import com.dandanplay.tv.util.constants.PREFS_NAME_DEFAULT
 import com.seiko.common.http.cookie.PersistentCookieStore
 import com.tencent.mmkv.MMKV
 import org.koin.dsl.module

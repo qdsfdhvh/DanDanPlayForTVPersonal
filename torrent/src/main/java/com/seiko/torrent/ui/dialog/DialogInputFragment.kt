@@ -1,18 +1,14 @@
 package com.seiko.torrent.ui.dialog
 
 import android.os.Bundle
-import android.util.TypedValue.COMPLEX_UNIT_SP
-import android.util.TypedValue.applyDimension
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.FragmentManager
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.dialog.BaseDialogFragment
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentDialogInputFragmentBinding
-import kotlinx.android.synthetic.main.torrent_dialog_input_fragment.view.*
 
 
 class DialogInputFragment : BaseDialogFragment()
@@ -57,8 +53,8 @@ class DialogInputFragment : BaseDialogFragment()
                     toast("内容为空。")
                     return
                 }
-                onConfirm?.invoke(text.trim())
                 dismissDialog()
+                onConfirm?.invoke(text.trim())
             }
             R.id.btn_cancel -> {
                 dismissDialog()

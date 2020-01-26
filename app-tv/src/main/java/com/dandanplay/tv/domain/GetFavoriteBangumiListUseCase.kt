@@ -1,6 +1,6 @@
 package com.dandanplay.tv.domain
 
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.dandanplay.tv.util.toHomeImageBean
 import com.seiko.common.data.Result
 import com.dandanplay.tv.repo.BangumiRepository

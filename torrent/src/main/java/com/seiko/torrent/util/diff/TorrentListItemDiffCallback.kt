@@ -2,7 +2,7 @@ package com.seiko.torrent.util.diff
 
 import android.os.Bundle
 import androidx.leanback.widget.DiffCallback
-import com.seiko.torrent.model.TorrentListItem
+import com.seiko.torrent.data.model.TorrentListItem
 
 class TorrentListItemDiffCallback : DiffCallback<TorrentListItem>() {
     companion object {

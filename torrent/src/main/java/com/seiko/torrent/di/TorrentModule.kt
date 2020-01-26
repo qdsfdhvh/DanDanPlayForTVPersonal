@@ -4,10 +4,10 @@ import android.content.ContentResolver
 import android.content.Context
 import android.os.Environment
 import com.seiko.download.torrent.TorrentEngineOptions
-import com.seiko.torrent.constants.TORRENT_CONFIG_DIR
-import com.seiko.torrent.constants.TORRENT_DATA_DIR
-import com.seiko.torrent.constants.TORRENT_DOWNLOAD_DIR
-import com.seiko.torrent.constants.TORRENT_TEMP_DIR
+import com.seiko.torrent.util.constants.TORRENT_CONFIG_DIR
+import com.seiko.torrent.util.constants.TORRENT_DATA_DIR
+import com.seiko.torrent.util.constants.TORRENT_DOWNLOAD_DIR
+import com.seiko.torrent.util.constants.TORRENT_TEMP_DIR
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

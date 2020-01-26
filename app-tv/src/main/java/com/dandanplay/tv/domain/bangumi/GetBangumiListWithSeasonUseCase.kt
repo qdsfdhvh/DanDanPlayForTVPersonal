@@ -1,6 +1,6 @@
 package com.dandanplay.tv.domain.bangumi
 
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 import com.dandanplay.tv.repo.BangumiRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject

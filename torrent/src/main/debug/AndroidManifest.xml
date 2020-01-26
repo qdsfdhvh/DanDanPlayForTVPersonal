@@ -25,6 +25,7 @@
         tools:ignore="AllowBackup,MissingApplicationIcon">
 
         <activity android:name=".DebugActivity"
+            android:launchMode="singleTask"
             android:theme="@style/torrent_BaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -35,6 +36,9 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.TorrentMainActivity"
+            android:theme="@style/torrent_BaseTheme"/>
 
         <activity
             android:label="@string/torrent_app_name"

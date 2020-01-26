@@ -1,6 +1,6 @@
 package com.seiko.torrent.data.api
 
-import com.seiko.torrent.constants.DOWNLOAD_BASE_URL
+import com.seiko.torrent.util.constants.DOWNLOAD_BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 

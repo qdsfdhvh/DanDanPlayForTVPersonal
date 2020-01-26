@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="nav_controller" type="id"/>
     <item name="title" type="id"/><!--标题-->
     <item name="img" type="id"/><!--Logo-->
     <item name="type" type="id"/><!--类型-->

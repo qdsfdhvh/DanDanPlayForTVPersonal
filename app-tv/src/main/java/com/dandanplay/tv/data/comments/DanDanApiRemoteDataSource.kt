@@ -2,10 +2,10 @@ package com.dandanplay.tv.data.comments
 
 import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 import com.seiko.common.data.Result
 import com.dandanplay.tv.data.api.DanDanApiService
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import com.seiko.common.util.safeApiCall
 import okio.IOException
 

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.dandanplay.tv.annotation.BangumiIntroType
+import com.dandanplay.tv.util.annotation.BangumiIntroType
 import java.io.Serializable
 
 //BangumiIntro {

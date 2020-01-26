@@ -1,6 +1,6 @@
 package com.seiko.torrent.data.comments
 
-import com.seiko.torrent.model.TorrentEntity
+import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.torrent.data.db.TorrentDatabase
 
 class TorrentRepository(database: TorrentDatabase) {
@@ -15,8 +15,8 @@ class TorrentRepository(database: TorrentDatabase) {
         torrentDao.put(entity)
     }
 
-    suspend fun deleteTorrent(hash: String) {
-        torrentDao.delete(hash)
+    suspend fun deleteTorrent(hash: String): Int {
+        return torrentDao.delete(hash)
     }
 
     suspend fun exitTorrent(hash: String): Boolean {

@@ -2,7 +2,7 @@ package com.seiko.torrent.di
 
 import android.content.Context
 import androidx.room.Room
-import com.seiko.torrent.constants.DB_NAME_DEFAULT
+import com.seiko.torrent.util.constants.DB_NAME_DEFAULT
 import com.seiko.torrent.data.db.TorrentDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module

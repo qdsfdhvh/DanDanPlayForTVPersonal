@@ -2,7 +2,7 @@ package com.dandanplay.tv.repo
 
 import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 import com.seiko.common.data.Result
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
 

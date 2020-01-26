@@ -34,7 +34,9 @@
         </activity>
 
         <!--播放器中介-->
-        <activity android:name=".PlayerManagerActivity"
+        <activity
+            android:label="@string/player_app_name"
+            android:name=".ui.PlayerManagerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="fullSensor">
 

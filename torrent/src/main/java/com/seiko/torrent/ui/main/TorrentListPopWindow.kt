@@ -12,7 +12,7 @@ import androidx.core.widget.PopupWindowCompat
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentPopListBinding
-import com.seiko.torrent.model.TorrentListItem
+import com.seiko.torrent.data.model.TorrentListItem
 
 class TorrentListPopWindow(context: Context, item: TorrentListItem) : PopupWindow(context) {
 

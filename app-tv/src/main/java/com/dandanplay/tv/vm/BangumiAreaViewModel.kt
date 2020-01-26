@@ -8,7 +8,7 @@ import com.seiko.common.data.ResultLiveData
 import com.dandanplay.tv.domain.bangumi.GetBangumiListWithSeasonUseCase
 import com.dandanplay.tv.domain.bangumi.GetBangumiSeasonsUseCase
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 import com.seiko.common.data.Result
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job

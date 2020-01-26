@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.prefs
 
-import com.dandanplay.tv.constants.DEFAULT_DOWNLOAD_PATH
+import com.dandanplay.tv.util.constants.DEFAULT_DOWNLOAD_PATH
 import com.tencent.mmkv.MMKV
 
 class PrefDataSourceImpl(prefs: MMKV): PrefDataSource, MMKVProperty {

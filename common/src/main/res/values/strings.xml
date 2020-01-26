@@ -22,23 +22,4 @@
     <string name="search">搜索</string>
     <string name="not_available">不可用</string>
 
-    <!-- name (size) -->
-    <string name="storage_name_and_size" formatted="false">%1$s (%2$s)</string>
-    <string name="internal_storage_name">内部存储</string>
-    <string name="external_storage_name" formatted="false">外部存储 %1$d</string>
-    <string name="permission_denied">权限被拒</string>
-    <string name="save_file">保存文件</string>
-    <string name="file_name">文件名</string>
-    <string name="error_file_exists">文件已经存在</string>
-    <string name="file_name_is_empty">文件名不能为空</string>
-
-    <!-- Filemanager dialog -->
-    <string name="dir_chooser_title">选择文件夹</string>
-    <string name="file_chooser_title">选择文件</string>
-    <string name="torrent_file_chooser_title">选择 torrent 文件</string>
-    <string name="dialog_new_folder_title">创建文件夹</string>
-    <string name="error_dialog_new_folder">无法创建文件夹</string>
-    <string name="error_perm_write_in_folder">无法下载至所选文件夹。请选择其他文件夹。</string>
-    <string name="error_open_dir">无法打开文件夹</string>
-    <string name="home_directory">主页</string>
 </resources>

@@ -1,10 +1,10 @@
 package com.seiko.torrent.vm
 
 import androidx.lifecycle.*
-import com.seiko.torrent.model.TorrentEntity
+import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.torrent.data.comments.TorrentRepository
-import com.seiko.torrent.model.TorrentListItem
+import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
 import kotlinx.coroutines.launch
 import timber.log.Timber

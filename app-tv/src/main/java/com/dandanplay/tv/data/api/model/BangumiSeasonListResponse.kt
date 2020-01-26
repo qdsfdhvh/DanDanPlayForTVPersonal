@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.api.model
 
-import com.dandanplay.tv.model.api.BangumiSeason
+import com.dandanplay.tv.data.model.api.BangumiSeason
 
 //BangumiSeasonListResponse {
 //    seasons (Array[BangumiSeason], optional): 番剧季度列表 ,

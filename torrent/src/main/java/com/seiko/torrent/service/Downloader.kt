@@ -28,7 +28,12 @@ interface Downloader {
     /**
      * 添加种子
      */
-    suspend fun start(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean>
+    suspend fun addTorrent(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean>
+
+    /**
+     * 删除种子任务
+     */
+    suspend fun deleteTorrent(hash: String, withFile: Boolean)
 
     /**
      * 重启/暂停 种子任务
@@ -54,10 +59,5 @@ interface Downloader {
      * 获取种子信息
      */
     fun getTorrentMetaInfo(hash: String): TorrentMetaInfo?
-
-    /**
-     * 删除种子任务
-     */
-    fun deleteTorrent(hash: String, withFile: Boolean)
 
 }

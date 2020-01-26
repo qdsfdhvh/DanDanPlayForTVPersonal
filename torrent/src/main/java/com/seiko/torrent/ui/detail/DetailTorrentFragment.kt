@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.seiko.common.extensions.lazyAndroid
-import com.seiko.common.toast.toast
+import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailBinding

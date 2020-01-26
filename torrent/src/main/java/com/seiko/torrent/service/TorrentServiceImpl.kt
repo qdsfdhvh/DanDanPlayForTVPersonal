@@ -4,7 +4,7 @@ import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.service.TorrentService
-import com.seiko.torrent.constants.TORRENT_DOWNLOAD_DIR
+import com.seiko.torrent.util.constants.TORRENT_DOWNLOAD_DIR
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named

@@ -2,7 +2,7 @@ package com.dandanplay.tv.ui.presenter
 
 import android.os.Bundle
 import android.view.ViewGroup
-import com.dandanplay.tv.model.HomeImageBean
+import com.dandanplay.tv.data.model.HomeImageBean
 import com.dandanplay.tv.ui.card.MainAreaCardView
 import com.seiko.common.ui.presenter.BasePresenter
 

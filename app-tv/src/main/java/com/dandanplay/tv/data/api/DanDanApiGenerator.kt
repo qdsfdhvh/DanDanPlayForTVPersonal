@@ -1,7 +1,7 @@
 package com.dandanplay.tv.data.api
 
 import android.content.Context
-import com.dandanplay.tv.constants.DANDAN_API_BASE_URL
+import com.dandanplay.tv.util.constants.DANDAN_API_BASE_URL
 import com.google.gson.Gson
 import com.dandanplay.tv.data.prefs.PrefDataSource
 import com.seiko.common.http.cookie.CookiesManager

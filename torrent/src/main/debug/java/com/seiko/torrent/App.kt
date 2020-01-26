@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
-import com.seiko.common.di.coreModules
-import com.seiko.common.timber.NanoDebugTree
+import com.seiko.common.di.commonModules
+import com.seiko.common.util.timber.NanoDebugTree
 import com.seiko.torrent.di.torrentModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -39,7 +39,7 @@ class App : Application() {
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module
-            modules(coreModules + torrentModules)
+            modules(commonModules + torrentModules)
         }
     }
 

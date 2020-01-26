@@ -11,7 +11,7 @@ import com.seiko.common.data.ResultData
 import com.dandanplay.tv.domain.search.SearchBangumiListUseCase
 import com.dandanplay.tv.domain.search.SearchMagnetListUseCase
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

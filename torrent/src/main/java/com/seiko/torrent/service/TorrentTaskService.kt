@@ -4,16 +4,16 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import com.seiko.common.eventbus.EventBusScope
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import com.seiko.common.data.Result
-import com.seiko.torrent.model.AddTorrentParams
-import com.seiko.torrent.model.PostEvent
-import com.seiko.torrent.model.toTask
+import com.seiko.torrent.data.model.AddTorrentParams
+import com.seiko.torrent.data.model.PostEvent
+import com.seiko.torrent.data.model.toTask
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class TorrentTaskService : IntentService("TorrentTaskService") {
+class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope by MainScope() {
 
     companion object {
 
@@ -87,9 +87,9 @@ class TorrentTaskService : IntentService("TorrentTaskService") {
     /**
      * 添加 种子任务
      */
-    private fun addTorrent(params: AddTorrentParams) = GlobalScope.launch {
+    private fun addTorrent(params: AddTorrentParams) = launch {
         val task = params.toTask()
-        when(val result = downloader.start(task, params.fromMagnet)) {
+        when(val result = downloader.addTorrent(task, params.fromMagnet)) {
             is Result.Success -> {
                 EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
             }
@@ -103,7 +103,7 @@ class TorrentTaskService : IntentService("TorrentTaskService") {
     /**
      * 删除 种子任务
      */
-    private fun delTorrent(hash: String, withFile: Boolean) {
+    private fun delTorrent(hash: String, withFile: Boolean) = launch {
         downloader.deleteTorrent(hash, withFile)
         EventBusScope.getDefault().post(PostEvent.TorrentRemoved(hash))
     }

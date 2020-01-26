@@ -12,11 +12,11 @@ import androidx.palette.graphics.Palette
 import com.dandanplay.tv.R
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.*
-import com.dandanplay.tv.model.EpisodesListRow
+import com.dandanplay.tv.data.model.EpisodesListRow
 import com.dandanplay.tv.vm.BangumiDetailViewModel
 import com.seiko.common.data.ResultData
 import com.seiko.common.data.Status
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity

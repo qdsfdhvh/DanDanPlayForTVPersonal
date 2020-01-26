@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.dandanplay.tv.ui.presenter.SearchBangumiPresenter
 import com.dandanplay.tv.ui.presenter.SearchMagnetPresenter
-import com.dandanplay.tv.model.AnimeRow
+import com.dandanplay.tv.data.model.AnimeRow
 import com.dandanplay.tv.ui.card.SearchMagnetCardView
 import com.dandanplay.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.dandanplay.tv.vm.SearchBangumiViewModel
@@ -20,9 +20,9 @@ import com.seiko.common.data.ResultData
 import com.seiko.common.data.Status
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchBangumiFragment : SearchSupportFragment(),

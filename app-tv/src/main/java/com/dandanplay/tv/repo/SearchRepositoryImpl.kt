@@ -1,7 +1,7 @@
 package com.dandanplay.tv.repo
 
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import com.seiko.common.data.Result
 import com.dandanplay.tv.data.comments.ResDanDanApiRemoteDataSource
 

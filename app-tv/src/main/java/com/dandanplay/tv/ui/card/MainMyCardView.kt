@@ -2,7 +2,7 @@ package com.dandanplay.tv.ui.card
 
 import android.content.Context
 import com.dandanplay.tv.R
-import com.dandanplay.tv.model.HomeSettingBean
+import com.dandanplay.tv.data.model.HomeSettingBean
 import com.seiko.common.ui.card.AbsCardView
 import kotlinx.android.synthetic.main.item_main_my.view.*
 

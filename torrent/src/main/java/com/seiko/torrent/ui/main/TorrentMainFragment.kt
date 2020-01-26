@@ -9,11 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.seiko.common.router.Navigator
-import com.seiko.common.toast.toast
+import com.seiko.common.util.toast.toast
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentMainBinding
 import com.seiko.torrent.ui.dialog.DialogInputFragment
 import com.seiko.torrent.util.buildTorrentUri
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import news.androidtv.filepicker.TvFilePicker
 
 class TorrentMainFragment : Fragment(), View.OnClickListener {

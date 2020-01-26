@@ -1,7 +1,7 @@
 package com.seiko.common.provider
 
 import android.app.Application
-import com.seiko.common.di.coreModules
+import com.seiko.common.di.commonModules
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -13,7 +13,7 @@ class ProviderApplication : IProviderApplication {
     override fun onCreate(application: Application) {
         Timber.tag("Provider").d("start register common.")
 
-        loadKoinModules(coreModules)
+        loadKoinModules(commonModules)
     }
 
     override fun onTerminate() {

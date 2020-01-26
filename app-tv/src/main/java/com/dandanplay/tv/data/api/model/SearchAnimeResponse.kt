@@ -1,6 +1,6 @@
 package com.dandanplay.tv.data.api.model
 
-import com.dandanplay.tv.model.api.SearchAnimeDetails
+import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 
 //SearchAnimeResponse {
 //    animes (Array[SearchAnimeDetails], optional): 作品列表 ,

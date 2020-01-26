@@ -3,9 +3,9 @@ package com.seiko.torrent.domain
 import android.app.Application
 import com.seiko.common.data.Result
 import com.seiko.common.util.writeInputStream
-import com.seiko.torrent.constants.ASSETS_TRACKER_NAME
-import com.seiko.torrent.constants.TORRENT_CONFIG_DIR
-import com.seiko.torrent.parser.TrackerParser
+import com.seiko.torrent.util.constants.ASSETS_TRACKER_NAME
+import com.seiko.torrent.util.constants.TORRENT_CONFIG_DIR
+import com.seiko.torrent.util.parser.TrackerParser
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named

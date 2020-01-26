@@ -82,8 +82,8 @@ dependencies {
     // WorkManger
     implementation "androidx.work:work-runtime-ktx:2.3.0"
 
-    // 内存泄漏
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+//    // 内存泄漏
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 
     // Database Debug 8080
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
