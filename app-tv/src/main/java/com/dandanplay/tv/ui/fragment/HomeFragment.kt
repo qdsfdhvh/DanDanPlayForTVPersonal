@@ -26,6 +26,7 @@ import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class HomeFragment : BrowseSupportFragment()
     , OnItemViewClickedListener
@@ -139,6 +140,7 @@ class HomeFragment : BrowseSupportFragment()
             Status.ERROR -> {
                 setLoadFragment(false)
                 toast(data.error?.message)
+                Timber.e(data.error)
             }
             Status.SUCCESSFUL -> {
                 setLoadFragment(false)

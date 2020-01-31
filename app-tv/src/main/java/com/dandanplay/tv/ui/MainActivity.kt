@@ -48,9 +48,9 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     /**
      * 当软键盘弹出时，关闭软键盘。
      */
-//    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-//        return getDispatchKeyEventDispatcher().dispatchKeyEvent(event)
-//    }
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+        return getDispatchKeyEventDispatcher().dispatchKeyEvent(event)
+    }
 
     override fun getDispatchKeyEventDispatcher(): DispatchKeyEventDispatcher {
         return dispatchKeyEventDispatcher

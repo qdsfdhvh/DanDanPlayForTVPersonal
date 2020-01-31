@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="rounded_background" format="reference" />
+
+    <attr name="advanced_options_style" format="reference" />
+    <attr name="advanced_options_bg" format="reference"/>
+
+    <declare-styleable name="MiniVisualizer">
+        <attr name="bar_color" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="HalfCircleView">
+        <attr name="is_left" format="boolean"/>
+    </declare-styleable>
+</resources>

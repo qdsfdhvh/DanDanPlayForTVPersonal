@@ -42,7 +42,7 @@ data class BangumiIntroEntity(
     var isOnAir: Boolean = false,
     var isRestricted: Boolean = false,
     var airDay: Int = 0,
-    var rating: Int = 0,
+    var rating: Float = 0f,
     var searchKeyword: String = ""
 ) : Serializable {
 
@@ -68,7 +68,7 @@ data class BangumiIntroEntity(
         result = 31 * result + isOnAir.hashCode()
         result = 31 * result + isRestricted.hashCode()
         result = 31 * result + airDay
-        result = 31 * result + rating
+        result = 31 * result + rating.hashCode()
         result = 31 * result + searchKeyword.hashCode()
         return result
     }

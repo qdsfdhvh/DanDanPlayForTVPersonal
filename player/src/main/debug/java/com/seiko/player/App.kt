@@ -5,7 +5,10 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.di.commonModules
+import com.seiko.common.util.closeAutoSizeDebug
 import com.seiko.common.util.timber.NanoDebugTree
+import com.seiko.player.delegate.VlcDelegate
+import com.seiko.player.di.playerModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -22,6 +25,9 @@ class App : Application() {
             Timber.plant(NanoDebugTree())
         }
 
+        // 关闭AutoSize日志
+        closeAutoSizeDebug()
+
         // 路由
         if (BuildConfig.DEBUG) {
             // 打印日志
@@ -37,7 +43,9 @@ class App : Application() {
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module
-            modules(commonModules)
+            modules(commonModules + playerModules)
         }
+
+        VlcDelegate.init(this)
     }
 }

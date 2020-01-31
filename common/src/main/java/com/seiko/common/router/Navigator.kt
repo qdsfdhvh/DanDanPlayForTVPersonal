@@ -28,6 +28,7 @@ object Navigator {
 
         val intent = Intent(activity, postcard.destination)
         intent.data = uri
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
 
         activity.startActivity(intent)
@@ -39,14 +40,17 @@ object Navigator {
      */
     fun navToAddTorrent(fragment: Fragment, uri: Uri, requestCode: Int) {
         val postcard = ARouter.getInstance().build(Routes.Torrent.PATH_ADD)
-//            .withParcelable(Routes.Torrent.KEY_TORRENT_URI, uri)
         LogisticsCenter.completion(postcard)
 
         val intent = Intent(fragment.requireContext(), postcard.destination)
         intent.data = uri
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
 
         fragment.startActivityForResult(intent, requestCode)
     }
 
+    fun navToPlayer(activity: Activity, uri: Uri, title: String) {
+
+    }
 }

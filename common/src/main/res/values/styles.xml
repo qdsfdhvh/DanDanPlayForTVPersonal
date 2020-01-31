@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BaseTheme" parent="Theme.Leanback.Browse">
+    <style name="BaseTheme" parent="Theme.Leanback">
         <!--Leanback界面 不用?attr/colorPrimary, 用defaultBrandColor -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
-<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
-        <item name="defaultBrandColor">@color/colorPrimary</item>
-        <item name="defaultBrandColorDark">@color/colorPrimaryDark</item>
+        <item name="imageCardViewInfoAreaStyle">@style/VLCardViewInfoStyle</item>
+        <item name="imageCardViewTitleStyle">@style/VLCardViewTitleStyle</item>
+        <item name="imageCardViewStyle">@style/VLCardView</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-<!--    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">-->
-<!--        <item name="android:activityOpenEnterAnimation">@anim/anim_activity_enter</item>-->
-<!--        <item name="android:activityOpenExitAnimation">@anim/anim_activity_exit</item>-->
-<!--        <item name="android:activityCloseEnterAnimation">@anim/anim_activity_enter</item>-->
-<!--        <item name="android:activityCloseExitAnimation">@anim/anim_activity_exit</item>-->
-<!--    </style>-->
+    <style name="VLCardViewTitleStyle" parent="Widget.Leanback.ImageCardView.TitleStyle">
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
+    <style name="VLCardViewInfoStyle" parent="Widget.Leanback.ImageCardView.InfoAreaStyle">
+        <item name="android:background">@color/tv_card_content_dark</item>
+    </style>
+
+    <style name="VLCardView" parent="Widget.Leanback.ImageCardViewStyle">
+        <item name="cardType">infoUnderWithExtra</item>
+        <item name="infoVisibility">always</item>
+    </style>
 
     <style name="BaseTheme.HeaderText" parent="android:TextAppearance.Widget.TextView">
         <item name="android:textColor">?attr/colorAccent</item>

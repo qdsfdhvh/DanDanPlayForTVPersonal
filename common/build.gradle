@@ -11,11 +11,11 @@ dependencies {
     // UI
 //    api dependence.libAppCompat
     api dependence.libConstraintlayout
+    api dependence.libViewPager2
 
     // TV UI
     api dependence.libLeanback
     api dependence.libLeanbackPreference
-    api dependence.libViewPager2
 
     // fragment
     api dependence.libFragment
@@ -35,11 +35,12 @@ dependencies {
     api dependence.libKoinViewModel
 
     // Prefs
-    api 'com.tencent:mmkv:1.0.23'
+    api 'com.tencent:mmkv:1.0.24'
 
     // NetWork
     api 'com.squareup.retrofit2:retrofit:2.7.1'
-    api 'com.squareup.retrofit2:converter-gson:2.7.1'
+//    api 'com.squareup.retrofit2:converter-gson:2.7.1'
+    api 'com.squareup.retrofit2:converter-moshi:2.7.1'
     api 'com.squareup.okhttp3:logging-interceptor:4.3.1'
 
     // Database

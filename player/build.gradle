@@ -9,7 +9,17 @@ kapt {
 }
 
 android {
-    resourcePrefix "player_"
+//    resourcePrefix "player_"
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v8a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+    }
 }
 
 this.beforeEvaluate {
@@ -19,9 +29,15 @@ this.beforeEvaluate {
 
 dependencies {
     implementation project(':common')
+    implementation project(':libs:live_plot_graph')
     kapt dependence.libArouterCompiler
-
-    // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
-    implementation 'com.google.android.exoplayer:extension-leanback:2.9.5'
+    //AppCompat
+    implementation "androidx.lifecycle:lifecycle-service:2.2.0"
+    implementation "com.google.android.material:material:1.2.0-alpha04"
+//    // ExoPlayer
+//    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
+//    implementation 'com.google.android.exoplayer:extension-leanback:2.9.5'
+    // VLC
+    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"
+    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
 }

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 //BangumiTag {
 //    id (integer): 标签编号 ,
@@ -18,16 +18,16 @@ import com.google.gson.annotations.SerializedName
 )
 data class BangumiTagEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
-    @SerializedName(value = "_id")
+    @field:Json(name = "_id")
     var id: Long = 0,
 
     var fromAnimeId: Long = 0,
 
     @ColumnInfo(name = "id")
-    @SerializedName(value = "id")
+    @field:Json(name = "id")
     var tagId: Int = 0,
 
     @ColumnInfo(name = "name")
-    @SerializedName(value = "name")
+    @field:Json(name = "name")
     var tagName: String = ""
 )

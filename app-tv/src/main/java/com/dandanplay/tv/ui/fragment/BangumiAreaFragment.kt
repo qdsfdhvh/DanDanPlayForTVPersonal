@@ -293,11 +293,12 @@ class BangumiAreaFragment : Fragment(),
 }
 
 /**
- * 防止左侧季度列表移动太快
+ * 放弃左侧季度列表，快速拖动时重复请求
  */
 private class AreaHandler(fragment: BangumiAreaFragment) : Handler() {
 
     companion object {
+        private const val POST_DELAY_TIME = 500L
         private const val HANDLER_WHAT_SEASON = 100
     }
 
@@ -307,7 +308,7 @@ private class AreaHandler(fragment: BangumiAreaFragment) : Handler() {
         removeMessages(HANDLER_WHAT_SEASON)
         val msg = obtainMessage(HANDLER_WHAT_SEASON)
         msg.obj = item
-        sendMessageDelayed(msg, 500)
+        sendMessageDelayed(msg, POST_DELAY_TIME)
     }
 
     override fun handleMessage(msg: Message) {

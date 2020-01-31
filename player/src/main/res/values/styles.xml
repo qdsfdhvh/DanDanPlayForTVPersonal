@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.VLC.Transparent" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/orange800</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/orange600</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.VLC.Transparent.NoUI" parent="Theme.VLC.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.VLC.Player" parent="Theme.VLC.Transparent">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/black</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+
+        <item name="android:windowTranslucentStatus">true</item>">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/status_bar_transparency</item>
+        <item name="android:navigationBarColor">@color/status_bar_transparency</item>
+
+        <item name="advanced_options_style">@style/Theme.MaterialComponents.Dialog</item>
+        <item name="advanced_options_bg">@drawable/advanced_options_background</item>
+    </style>
+
+    <style name="VLC.TextView" parent="android:Widget.TextView">
+        <item name="android:textDirection">locale</item>
+    </style>
+
+    <style name="VLC.CtxTitle" parent="VLC.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/grey900</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="VLC.CtxImageButton" parent="AppButton">
+        <item name="android:tint">@color/grey900</item>
+    </style>
+
+    <style name="TipsFontStyle">
+        <item name="android:textColor">@color/orange700</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TipsFontStyle.Small" parent="TipsFontStyle">
+        <item name="android:textSize">10sp</item>
+    </style>
+</resources>

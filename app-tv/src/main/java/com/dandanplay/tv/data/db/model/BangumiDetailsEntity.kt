@@ -57,7 +57,7 @@ data class BangumiDetailsEntity(
     var airDay: Int = 0,
     var searchKeyword: String = "",
     var isRestricted: Boolean = false,
-    var rating: Int = 0,
+    var rating: Float = 0f,
 
     var addedDate: Long = 0
 ) {
@@ -87,7 +87,7 @@ data class BangumiDetailsEntity(
             isOnAir = false,
             airDay = 0,
             isRestricted = false,
-            rating = 0
+            rating = 0f
         )
     }
 }

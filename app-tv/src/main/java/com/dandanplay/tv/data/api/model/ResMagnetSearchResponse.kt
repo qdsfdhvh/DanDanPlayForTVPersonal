@@ -1,7 +1,7 @@
 package com.dandanplay.tv.data.api.model
 
-import com.google.gson.annotations.SerializedName
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
+import com.squareup.moshi.Json
 
 /**
  * HasMore : true
@@ -19,6 +19,6 @@ import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
  * ]
  */
 class ResMagnetSearchResponse {
-    @SerializedName("HasMore") var hasMore: Boolean = false
-    @SerializedName("Resources") var resources: List<ResMagnetItemEntity> = emptyList()
+    @field:Json(name = "HasMore") var hasMore: Boolean = false
+    @field:Json(name = "Resources") var resources: List<ResMagnetItemEntity> = emptyList()
 }

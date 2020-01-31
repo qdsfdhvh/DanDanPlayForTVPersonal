@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import me.jessyan.autosize.AutoSizeConfig
+import timber.log.Timber
 
 /**
  * 动画 放大/缩放
@@ -39,4 +40,11 @@ fun getPercentHeightSize(value: Int): Int {
     } else {
         res / designHeight + 1
     }
+}
+
+/**
+ * 关闭AutoSize日志
+ */
+fun closeAutoSizeDebug() {
+    AutoSizeConfig.getInstance().setLog(false)
 }

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 // {
 // "Title":"【傲娇零&自由字幕组】[刀剑神域III UnderWorld/Sword Art Online - Alicization][01][HEVC-10Bit-1080P AAC][外挂GB/BIG5][WEB-Rip][MP4+ass]",
@@ -28,23 +28,23 @@ data class ResMagnetItemEntity(
     var id: Long = 0,
     var hash: String = "", // 添加此字段，方便表管理
 
-    @SerializedName("Title")
+    @field:Json(name = "Title")
     var title: String = "",
-    @SerializedName("TypeId")
+    @field:Json(name = "TypeId")
     var typeId: Int = 0,
-    @SerializedName("TypeName")
+    @field:Json(name = "TypeName")
     var typeName: String = "",
-    @SerializedName("SubgroupId")
+    @field:Json(name = "SubgroupId")
     var subgroupId: Int = 0,
-    @SerializedName("SubgroupName")
+    @field:Json(name = "SubgroupName")
     var subgroupName: String = "",
-    @SerializedName("Magnet")
+    @field:Json(name = "Magnet")
     var magnet: String = "",
-    @SerializedName("PageUrl")
+    @field:Json(name = "PageUrl")
     var pageUrl: String = "",
-    @SerializedName("FileSize")
+    @field:Json(name = "FileSize")
     var fileSize: String = "",
-    @SerializedName("PublishDate")
+    @field:Json(name = "PublishDate")
     var publishDate: String = "",
 
     var addedDate: Long = 0
