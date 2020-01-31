@@ -1,20 +1,23 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
-import com.dandanplay.tv.R
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.dandanplay.tv.data.model.HomeSettingBean
-import com.seiko.common.ui.card.AbsCardView
-import kotlinx.android.synthetic.main.item_main_my.view.*
+import com.dandanplay.tv.databinding.ItemMainMyBinding
+import com.seiko.common.ui.card.AbsBindingCardView
 
-class MainMyCardView(context: Context) : AbsCardView<HomeSettingBean>(context) {
+class MainMyCardView(context: Context) : AbsBindingCardView<HomeSettingBean>(context) {
 
-    override fun getLayoutId(): Int {
-        return R.layout.item_main_my
+    private lateinit var binding: ItemMainMyBinding
+
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup) {
+        binding = ItemMainMyBinding.inflate(inflater, parent, true)
     }
 
     override fun bind(item: HomeSettingBean) {
-        img.setImageResource(item.image)
-        title.text = item.name
+        binding.img.setImageResource(item.image)
+        binding.title.text = item.name
     }
 
 }

@@ -35,7 +35,6 @@ class App : Application() {
 
         // 注解
         startKoin {
-//            androidLogger()
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module

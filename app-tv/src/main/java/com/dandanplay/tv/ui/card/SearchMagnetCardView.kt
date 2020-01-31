@@ -1,21 +1,24 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
-import com.dandanplay.tv.R
-import com.seiko.common.ui.card.AbsCardView
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
-import kotlinx.android.synthetic.main.item_search_magnet.view.*
+import com.dandanplay.tv.databinding.ItemSearchMagnetBinding
+import com.seiko.common.ui.card.AbsBindingCardView
 
-class SearchMagnetCardView(context: Context) : AbsCardView<ResMagnetItemEntity>(context) {
+class SearchMagnetCardView(context: Context) : AbsBindingCardView<ResMagnetItemEntity>(context) {
 
-    override fun getLayoutId(): Int {
-        return R.layout.item_search_magnet
+    private lateinit var binding: ItemSearchMagnetBinding
+
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup) {
+        binding = ItemSearchMagnetBinding.inflate(inflater, parent, true)
     }
 
     override fun bind(item: ResMagnetItemEntity) {
-        title.text = item.title
-        type.text = item.typeName
-        subgroup.text = item.subgroupName
+        binding.title.text = item.title
+        binding.type.text = item.typeName
+        binding.subgroup.text = item.subgroupName
     }
 
 }

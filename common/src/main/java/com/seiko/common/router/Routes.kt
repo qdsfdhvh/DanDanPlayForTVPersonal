@@ -18,8 +18,6 @@ object Routes {
         const val PATH = "/torrent/torrentActivity"
         const val PATH_ADD = "/torrent/torrentAddActivity"
 
-//        const val KEY_TORRENT_URI = "KEY_TORRENT_URI"
-
         const val RESULT_KEY_ADD_SUCCESS = "addSuccess"
         const val RESULT_KEY_ADD_HASH = "addHash"
     }

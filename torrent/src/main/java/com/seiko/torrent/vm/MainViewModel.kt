@@ -3,6 +3,7 @@ package com.seiko.torrent.vm
 import androidx.lifecycle.*
 import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
+import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.service.Downloader
@@ -14,7 +15,10 @@ class MainViewModel(
     private val torrentRepo: TorrentRepository
 ) : ViewModel() {
 
-    private val _torrentItems = MutableLiveData<List<TorrentEntity>>()
+    /**
+     * 种子信息集合
+     */
+    private val _torrentItems = MutableLiveData<List<TorrentTask>>()
     val torrentItems: LiveData<List<TorrentListItem>> = Transformations.map(_torrentItems) { entities ->
         entities.map { TorrentListItem(it) }
     }

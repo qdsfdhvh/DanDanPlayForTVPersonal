@@ -18,6 +18,7 @@ import com.seiko.torrent.service.Downloader
 import com.seiko.torrent.ui.add.State
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
+import com.seiko.torrent.domain.BuildTorrentTaskUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.torrent.util.extensions.isMagnet
 import kotlinx.coroutines.delay
@@ -30,7 +31,8 @@ class AddTorrentViewModel(
     private val torrentDownloadDir: File,
     private val downloadTorrentWithDanDanApi: DownloadTorrentWithDanDanApiUseCase,
     private val getTorrentTempWithContentUseCase: GetTorrentTempWithContentUseCase,
-    private val getTorrentTempWithNetUseCase: DownloadTorrentWithNetUseCase
+    private val getTorrentTempWithNetUseCase: DownloadTorrentWithNetUseCase,
+    private val buildTorrentTask: BuildTorrentTaskUseCase
 ) : ViewModel() {
 
     /**
@@ -182,7 +184,6 @@ class AddTorrentViewModel(
      * 创建种子任务
      */
     fun buildTorrentTask(): Result<AddTorrentParams> {
-
         // 种子解析完成，有信息
         val info = torrentMetaInfo.value ?: return Result.Error(Exception("种子尚未解析完成"))
 
@@ -204,29 +205,21 @@ class AddTorrentViewModel(
             return Result.Error(Exception("没有选中的下载文件"))
         }
 
-        //
-        val priorities: List<Priority> = if (info.fileCount == selectedIndexes.size) {
-            MutableList(info.fileCount) { Priority.DEFAULT }
-        } else {
-            MutableList(info.fileCount) { i ->
-                if (selectedIndexes.contains(i)) {
-                    Priority.DEFAULT
-                } else {
-                    Priority.IGNORE
-                }
-            }
+        // 下载路径
+        val downloadPath = downloadDir.value?.absolutePath
+        if (downloadPath.isNullOrEmpty()) {
+            return Result.Error(Exception("无效的下载路径"))
         }
 
-        val params = AddTorrentParams(
+        return buildTorrentTask.invoke(
             source = source,
             fromMagnet = fromMagnet,
-            sha1hash = info.sha1Hash,
-            name = info.torrentName,
-            filePriorities = priorities,
-            pathToDownload = _downloadDir.value!!.absolutePath,
-            sequentialDownload = isSequentialDownload,
-            addPaused = !autoStart)
-        return Result.Success(params)
+            info = info,
+            selectedIndexes = selectedIndexes,
+            name = name,
+            downloadPath = downloadPath,
+            isSequentialDownload = isSequentialDownload,
+            autoStart = autoStart)
     }
 
     override fun onCleared() {

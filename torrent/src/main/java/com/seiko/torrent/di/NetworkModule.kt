@@ -1,6 +1,6 @@
 package com.seiko.torrent.di
 
-import com.seiko.torrent.data.api.TorrentApiGenerater
+import com.seiko.torrent.data.api.TorrentApiGenerator
 import com.seiko.torrent.data.api.TorrentApiService
 import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ internal val networkModule = module {
 }
 
 private fun createTorrentApiService(okHttpClient: OkHttpClient): TorrentApiService {
-    return TorrentApiGenerater(okHttpClient).create()
+    return TorrentApiGenerator(okHttpClient).create()
 }
 
 private fun createTorrentApiRemoteDataSource(api: TorrentApiService): TorrentApiRemoteDataSource {

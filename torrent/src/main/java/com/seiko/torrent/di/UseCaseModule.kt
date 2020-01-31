@@ -4,6 +4,7 @@ import com.seiko.torrent.domain.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
+    single { BuildTorrentTaskUseCase() }
     single { DownloadTorrentWithDanDanApiUseCase() }
     single { DownloadTorrentWithNetUseCase() }
     single { GetTorrentInfoFileUseCase() }

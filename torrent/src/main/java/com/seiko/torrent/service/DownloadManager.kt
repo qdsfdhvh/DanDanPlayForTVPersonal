@@ -112,7 +112,7 @@ class DownloadManager(
                     Timber.d("Torrent doesn't exists: $task")
                     torrentRepo.deleteTorrent(task.hash)
                 } else {
-                    loadList.add(task.toTask())
+                    loadList.add(task)
                 }
             }
             torrentEngine.restoreDownloads(loadList)
@@ -138,7 +138,7 @@ class DownloadManager(
                     // 没有种子数据，标记下载
                     task.downloadingMetadata = true
                     // 写入数据库
-                    torrentRepo.insertTorrent(task.toEntity())
+                    torrentRepo.insertTorrent(task)
                 } else {
                     // 已经下载种子数据，不需要下载
                     task.downloadingMetadata = false
@@ -161,7 +161,7 @@ class DownloadManager(
                     }
 
                     // 写入or更新 数据库
-                    torrentRepo.insertTorrent(task.toEntity())
+                    torrentRepo.insertTorrent(task)
                 }
             }
             // 来自本地，并存在此种子文件
@@ -173,7 +173,7 @@ class DownloadManager(
                 }
 
                 // 写入 数据库种子信息
-                torrentRepo.insertTorrent(task.toEntity())
+                torrentRepo.insertTorrent(task)
             }
             else -> return Result.Error(FileNotFoundException(
                 "Task is not magnet and not exit: ${task.source}"))
@@ -305,7 +305,7 @@ class DownloadManager(
             torrentRepo.insertTorrent(task)
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task.toTask()
+            downloadTask.task = task
         }
     }
 
@@ -317,7 +317,7 @@ class DownloadManager(
             torrentRepo.insertTorrent(task)
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task.toTask()
+            downloadTask.task = task
         }
     }
 
@@ -330,7 +330,7 @@ class DownloadManager(
             torrentRepo.insertTorrent(task)
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task.toTask()
+            downloadTask.task = task
         }
     }
 
@@ -364,7 +364,7 @@ class DownloadManager(
 
             val downloadTask = torrentEngine.getDownloadTask(hash)
             if (downloadTask != null) {
-                downloadTask.task = task.toTask()
+                downloadTask.task = task
                 downloadTask.pause()
             }
         }
@@ -389,43 +389,6 @@ class DownloadManager(
     }
 }
 
-private fun TorrentTask.toEntity(): TorrentEntity {
-    return TorrentEntity(
-        hash = hash,
-        source = source,
-        downloadPath = downloadPath,
-
-        name = name,
-        priorityList = priorityList,
-
-        sequentialDownload = sequentialDownload,
-        paused = paused,
-        finished = finished,
-        downloadingMetadata = downloadingMetadata,
-
-        addedDate = addedDate,
-        error = error
-    )
-}
-
-private fun TorrentEntity.toTask(): TorrentTask {
-    return TorrentTask(
-        hash = hash,
-        source = source,
-        downloadPath = downloadPath,
-
-        name = name,
-        priorityList = priorityList,
-
-        sequentialDownload = sequentialDownload,
-        paused = paused,
-        finished = finished,
-        downloadingMetadata = downloadingMetadata,
-
-        addedDate = addedDate,
-        error = error
-    )
-}
 
 private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
     val hash = infoHash().toHex()

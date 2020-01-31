@@ -1,18 +1,21 @@
 package com.dandanplay.tv.ui.card
 
 import android.content.Context
-import com.dandanplay.tv.R
-import com.seiko.common.ui.card.AbsCardView
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
-import kotlinx.android.synthetic.main.item_bangumi_episode.view.*
+import com.dandanplay.tv.databinding.ItemBangumiEpisodeBinding
+import com.seiko.common.ui.card.AbsBindingCardView
 
-class BangumiEpisodeCardView(context: Context) : AbsCardView<BangumiEpisodeEntity>(context) {
+class BangumiEpisodeCardView(context: Context) : AbsBindingCardView<BangumiEpisodeEntity>(context) {
 
-    override fun getLayoutId(): Int {
-        return R.layout.item_bangumi_episode
+    private lateinit var binding: ItemBangumiEpisodeBinding
+
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup) {
+        binding = ItemBangumiEpisodeBinding.inflate(inflater, parent, true)
     }
 
     override fun bind(item: BangumiEpisodeEntity) {
-        chapter.text = item.episodeTitle
+        binding.chapter.text = item.episodeTitle
     }
 }

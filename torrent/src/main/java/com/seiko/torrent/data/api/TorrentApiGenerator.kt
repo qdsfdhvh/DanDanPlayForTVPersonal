@@ -4,7 +4,7 @@ import com.seiko.torrent.util.constants.DOWNLOAD_BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
-internal class TorrentApiGenerater(okHttpClient: OkHttpClient) {
+internal class TorrentApiGenerator(okHttpClient: OkHttpClient) {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(DOWNLOAD_BASE_URL)

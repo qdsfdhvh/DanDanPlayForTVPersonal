@@ -3,6 +3,7 @@ package com.seiko.torrent.ui
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commit
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.torrent.R
@@ -14,10 +15,10 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("onCreate")
 
         val intent = intent
         if (intent == null) {
+            Timber.w("Torrent Add Intent is Null.")
             finish()
             return
         }
@@ -27,24 +28,19 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add) {
                 intent.data!!
             }
             else -> {
-//                toast("torrent uri is null.")
-//                finish()
+                Timber.w("Torrent Add Uri is Null.")
+                finish()
                 return
             }
         }
         openAddFragment(uri)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("onDestroy")
-    }
-
     private fun openAddFragment(uri: Uri) {
         if (supportFragmentManager.findFragmentByTag(AddTorrentFragment.TAG) == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.torrent_container_add, AddTorrentFragment.newInstance(uri))
-                .commit()
+            supportFragmentManager.commit {
+                add(R.id.torrent_container_add, AddTorrentFragment.newInstance(uri))
+            }
         }
     }
 

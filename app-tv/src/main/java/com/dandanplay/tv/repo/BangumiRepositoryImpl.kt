@@ -1,5 +1,6 @@
 package com.dandanplay.tv.repo
 
+import com.dandanplay.tv.data.comments.DanDanApiRemoteDataSource
 import com.dandanplay.tv.util.annotation.BangumiIntroType
 import com.seiko.common.data.Result
 import com.dandanplay.tv.data.db.AppDatabase
@@ -12,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class BangumiRepositoryImpl(
-    private val dataSource: com.dandanplay.tv.data.comments.DanDanApiRemoteDataSource,
+    private val dataSource: DanDanApiRemoteDataSource,
     database: AppDatabase
 ) : BangumiRepository {
 

@@ -51,14 +51,6 @@ data class TorrentListItem(
         error = task.error
     )
 
-    constructor(entity: TorrentEntity) : this(
-        hash = entity.hash,
-        name = entity.name,
-        downloadPath = entity.downloadPath,
-        dateAdded = entity.addedDate,
-        error = entity.error
-    )
-
     constructor(state: TorrentSessionStatus) : this(
         hash = state.hash,
 //        name = state.name,

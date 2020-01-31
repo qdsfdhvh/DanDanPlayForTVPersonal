@@ -15,6 +15,7 @@ import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.ui.adapter.BaseAdapter
 import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.ui.card.BangumiIntroEntityCardView
 import kotlin.properties.Delegates
 
 class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>(),
@@ -35,15 +36,9 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BangumiRelateViewHolder {
-        // 在外面包一层cardView，看着UI统一
-        val cardView = BaseCardView(parent.context)
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
+        val cardView = BangumiIntroEntityCardView(parent.context)
         cardView.onFocusChangeListener = this
-
-        val binding = ItemBangumiRelatedBinding.inflate(
-            LayoutInflater.from(cardView.context), cardView, true)
-        return BangumiRelateViewHolder(binding, cardView)
+        return BangumiRelateViewHolder(cardView)
     }
 
     override fun onBindViewHolder(holder: BangumiRelateViewHolder, position: Int) {
@@ -60,35 +55,27 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
     }
 
     inner class BangumiRelateViewHolder(
-        private val binding: ItemBangumiRelatedBinding,
-        cardView: View
-    ) : RecyclerView.ViewHolder(cardView) {
+        private val cardView: BangumiIntroEntityCardView
+    ) : RecyclerView.ViewHolder(cardView)
+        , View.OnClickListener {
 
         init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != -1) {
-                    listener?.onClick(this, items[position], position)
-                }
+            cardView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != -1) {
+                listener?.onClick(this, items[position], position)
             }
         }
 
         fun bind(item: BangumiIntroEntity) {
-            binding.img.loadImage(item.imageUrl)
-            binding.title.text = item.animeTitle
-            binding.chapter.text = item.getBangumiStatus()
+            cardView.bind(item)
         }
 
         fun payload(bundle: Bundle) {
-            if (bundle.containsKey(BangumiIntroEntityDiffCallback.ARGS_ANIME_IMAGE_URL)) {
-                binding.img.loadImage(bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_IMAGE_URL)!!)
-            }
-            if (bundle.containsKey(BangumiIntroEntityDiffCallback.ARGS_ANIME_TITLE)) {
-                binding.title.text = bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_TITLE)
-            }
-            if (bundle.containsKey(BangumiIntroEntityDiffCallback.ARGS_ANIME_STATUS)) {
-                binding.chapter.text = bundle.getString(BangumiIntroEntityDiffCallback.ARGS_ANIME_STATUS)
-            }
+            cardView.bind(bundle)
         }
     }
 }

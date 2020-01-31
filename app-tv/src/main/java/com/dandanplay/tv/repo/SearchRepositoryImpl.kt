@@ -1,12 +1,13 @@
 package com.dandanplay.tv.repo
 
+import com.dandanplay.tv.data.comments.DanDanApiRemoteDataSource
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
 import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import com.seiko.common.data.Result
 import com.dandanplay.tv.data.comments.ResDanDanApiRemoteDataSource
 
 internal class SearchRepositoryImpl(
-    private val dataSource: com.dandanplay.tv.data.comments.DanDanApiRemoteDataSource,
+    private val dataSource: DanDanApiRemoteDataSource,
     private val resDataSource: ResDanDanApiRemoteDataSource
 ) : SearchRepository {
 

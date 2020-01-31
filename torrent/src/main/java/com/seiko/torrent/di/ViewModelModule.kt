@@ -15,7 +15,7 @@ internal val viewModelModule = module {
 
     viewModel {
         AddTorrentViewModel(get(), get(named(TORRENT_DOWNLOAD_DIR)),
-            get(), get(), get())
+            get(), get(), get(), get())
     }
 
 }

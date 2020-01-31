@@ -7,7 +7,6 @@ import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.router.Routes
-import timber.log.Timber
 
 /**
  * 将所有跳转到TorrentMainActivity的改为DebugActivity
