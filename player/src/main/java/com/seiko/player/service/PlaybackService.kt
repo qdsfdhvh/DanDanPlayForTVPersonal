@@ -15,6 +15,7 @@ import androidx.media.MediaBrowserServiceCompat
 import com.seiko.player.ui.VideoPlayerActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.videolan.medialibrary.MLServiceLocator
@@ -38,10 +39,10 @@ class PlaybackService : IntentService("PlaybackService"), CoroutineScope by Main
 //            ContextCompat.startForegroundService(context, serviceIntent)
 //        }
 
-        @JvmStatic
-        fun openMediaNoUi(context: Context, uri: Uri) {
-            openMediaNoUi(context, MLServiceLocator.getAbstractMediaWrapper(uri))
-        }
+//        @JvmStatic
+//        fun openMediaNoUi(context: Context, uri: Uri) {
+//            openMediaNoUi(context, MLServiceLocator.getAbstractMediaWrapper(uri))
+//        }
 
         @JvmStatic
         fun openMediaNoUi(context: Context, media: MediaWrapper) {
@@ -82,12 +83,13 @@ class PlaybackService : IntentService("PlaybackService"), CoroutineScope by Main
         Timber.d("onDestroy")
     }
 
-    private fun load(mediaList: List<MediaWrapper>, position: Int) = runBlocking {
+    private fun load(mediaList: List<MediaWrapper>, position: Int) = runBlocking(coroutineContext) {
         val success = playListManager.load(mediaList, position)
-        if (success) {
-            val intent = Intent(this@PlaybackService, VideoPlayerActivity::class.java)
-            startActivity(intent)
-        }
+        Timber.d("Play Success=$success")
+//        if (success) {
+//            val intent = Intent(this@PlaybackService, VideoPlayerActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 
 

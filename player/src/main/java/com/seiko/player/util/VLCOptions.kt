@@ -118,10 +118,8 @@ object VLCOptions {
             options.add("file_crypt,none")
         else
             options.add("file_plaintext,none")
-//        if (context != null) {
-            options.add("--keystore-file")
-            options.add(File(context.getDir("keystore", Context.MODE_PRIVATE), "file").absolutePath)
-//        }
+        options.add("--keystore-file")
+        options.add(File(context.getDir("keystore", Context.MODE_PRIVATE), "file").absolutePath)
         options.add(if (verboseMode) "-vv" else "-v")
         if (pref.getBoolean("casting_passthrough", false))
             options.add("--sout-chromecast-audio-passthrough")

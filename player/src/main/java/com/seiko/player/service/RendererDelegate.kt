@@ -4,6 +4,7 @@ import com.seiko.player.util.extensions.retry
 import org.videolan.libvlc.RendererDiscoverer
 import org.videolan.libvlc.RendererItem
 import org.videolan.libvlc.interfaces.ILibVLC
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RendererDelegate(private val libVlc: ILibVLC) : RendererDiscoverer.EventListener {
@@ -12,7 +13,7 @@ class RendererDelegate(private val libVlc: ILibVLC) : RendererDiscoverer.EventLi
     private val renderers = ArrayList<RendererItem>()
     private val renderStarted = AtomicBoolean(false)
 
-    suspend fun startRender() {
+    suspend fun start() {
         if (renderStarted.compareAndSet(false, true)) {
             for (discoverer in RendererDiscoverer.list(libVlc)) {
                 val rd = RendererDiscoverer(libVlc, discoverer.name)
@@ -25,7 +26,7 @@ class RendererDelegate(private val libVlc: ILibVLC) : RendererDiscoverer.EventLi
         }
     }
 
-    fun stopRender() {
+    fun stop() {
         if (renderStarted.compareAndSet(true, false)) {
             for (discoverer in discoverers) {
                 discoverer.stop()

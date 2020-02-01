@@ -3,33 +3,32 @@ package com.seiko.player.service
 import android.content.Context
 import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.player.data.db.Slave
-import com.seiko.player.data.db.SlaveRepository
 import com.seiko.player.data.model.Progress
-import com.seiko.player.util.VLCInstance
 import com.seiko.player.util.VLCOptions
-import com.seiko.player.util.extensions.retry
 import kotlinx.coroutines.*
 import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.RendererDiscoverer
 import org.videolan.libvlc.RendererItem
+import org.videolan.libvlc.interfaces.ILibVLC
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IMediaList
 import org.videolan.libvlc.interfaces.IVLCVout
-import java.util.concurrent.atomic.AtomicBoolean
+import org.videolan.libvlc.util.DisplayManager
+import org.videolan.libvlc.util.VLCVideoLayout
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 class PlayerController(
-    private val context: Context
+    private val context: Context,
+    private val libVLC: ILibVLC
 ) : IPlayerController,
     IVLCVout.Callback,
     MediaPlayer.EventListener {
 
-    private val libVlc = VLCInstance.invoke(context)
-    private val rendererDelegate = RendererDelegate(libVlc)
+    private val rendererDelegate = RendererDelegate(libVLC)
 
     private var mediaPlayer = newMediaPlayer()
 
@@ -46,19 +45,26 @@ class PlayerController(
     /**
      * Render
      */
-//    init {
-//        launch {
-//            rendererDelegate.startRender()
-//        }
-//    }
-
-
     suspend fun init() {
-        rendererDelegate.startRender()
+        rendererDelegate.start()
     }
 
-    override fun getMediaPlayer(): MediaPlayer {
-        return mediaPlayer
+//    override fun getMediaPlayer(): MediaPlayer {
+//        return mediaPlayer
+//    }
+
+    override fun attachView(surfaceFrame: View, displayManager: DisplayManager?) {
+        if (surfaceFrame !is VLCVideoLayout) return
+        val vlcVout = mediaPlayer.vlcVout
+        if (vlcVout.areViewsAttached()) {
+            vlcVout.detachViews()
+        }
+        mediaPlayer.attachViews(surfaceFrame, displayManager, true, false)
+        mediaPlayer.videoScale = MediaPlayer.ScaleType.SURFACE_BEST_FIT
+    }
+
+    override fun detachView() {
+        mediaPlayer.detachViews()
     }
 
     override fun getRendererItem(): RendererItem? {
@@ -88,10 +94,10 @@ class PlayerController(
     }
 
     private fun updateProgress(newTime: Long = -1L, newLength: Long = -1L) {
-        progress.value = progress.value?.apply {
-            if (newTime != -1L) time = newTime
-            if (newLength != -1L) length = newLength
-        }
+//        progress.value = progress.value?.apply {
+//            if (newTime != -1L) time = newTime
+//            if (newLength != -1L) length = newLength
+//        }
     }
 
     private fun resetPlaybackState(time: Long, duration: Long) {
@@ -124,6 +130,10 @@ class PlayerController(
     }
 
     suspend fun startPlayback(media: IMedia, listener: MediaPlayerEventListener?, time: Long) {
+//        resetPlaybackState(time, media.duration)
+//        mediaPlayerEventListener = listener
+//        mediaPlayer.media = media
+//        mediaPlayer.play()
         mediaPlayerEventListener = listener
         resetPlaybackState(time, media.duration)
         mediaPlayer.setEventListener(null)
@@ -140,7 +150,15 @@ class PlayerController(
         }
     }
 
-    fun play(): Boolean {
+    override fun setRate(rate: Float, save: Boolean) {
+        if (mediaPlayer.isReleased) {
+            return
+        }
+        mediaPlayer.rate = rate
+        // save
+    }
+
+    override fun play(): Boolean {
         if (mediaPlayer.hasMedia() && !mediaPlayer.isReleased) {
             mediaPlayer.play()
             return true
@@ -148,7 +166,7 @@ class PlayerController(
         return false
     }
 
-    fun pause(): Boolean {
+    override fun pause(): Boolean {
         if (isPlaying() && mediaPlayer.hasMedia() && pausable) {
             mediaPlayer.pause()
             return true
@@ -156,7 +174,7 @@ class PlayerController(
         return false
     }
 
-    fun stop(): Boolean {
+    override fun stop(): Boolean {
         if (mediaPlayer.hasMedia() && !mediaPlayer.isReleased) {
             mediaPlayer.stop()
             return true
@@ -170,6 +188,7 @@ class PlayerController(
     }
 
     override fun release() {
+        rendererDelegate.stop()
         releasePlayer(mediaPlayer)
     }
 
@@ -186,41 +205,40 @@ class PlayerController(
         setPlaybackStopped()
     }
 
-    fun setRate(rate: Float, save: Boolean) {
-        if (mediaPlayer.isReleased) {
-            return
-        }
-        mediaPlayer.rate = rate
-        // save
-    }
-
     private fun newMediaPlayer(): MediaPlayer {
-        val mediaPlayer = MediaPlayer(libVlc)
-        mediaPlayer.setAudioDigitalOutputEnabled(false)
-        val renderer = rendererDelegate.getRenderer()
-        if (renderer != null) {
-            mediaPlayer.setRenderer(renderer)
-        }
+        val mediaPlayer = MediaPlayer(libVLC)
         mediaPlayer.vlcVout.addCallback(this)
         return mediaPlayer
     }
 
     override fun onSurfacesCreated(vlcVout: IVLCVout?) {
-
+        Timber.d("onSurfacesCreated")
     }
 
     override fun onSurfacesDestroyed(vlcVout: IVLCVout?) {
-
+        Timber.d("onSurfacesDestroyed")
     }
 
     override fun onEvent(event: MediaPlayer.Event) {
         when (event.type) {
-            MediaPlayer.Event.Playing -> playbackState.lazySet(PlaybackStateCompat.STATE_PLAYING)
-            MediaPlayer.Event.Paused -> playbackState.lazySet(PlaybackStateCompat.STATE_PAUSED)
-            MediaPlayer.Event.EncounteredError -> setPlaybackStopped()
-            MediaPlayer.Event.PausableChanged -> pausable = event.pausable
-            MediaPlayer.Event.SeekableChanged -> seekable = event.seekable
-            MediaPlayer.Event.LengthChanged -> updateProgress(newLength = event.lengthChanged)
+            MediaPlayer.Event.Playing -> {
+                playbackState.lazySet(PlaybackStateCompat.STATE_PLAYING)
+            }
+            MediaPlayer.Event.Paused -> {
+                playbackState.lazySet(PlaybackStateCompat.STATE_PAUSED)
+            }
+            MediaPlayer.Event.EncounteredError -> {
+                setPlaybackStopped()
+            }
+            MediaPlayer.Event.PausableChanged -> {
+                pausable = event.pausable
+            }
+            MediaPlayer.Event.SeekableChanged -> {
+                seekable = event.seekable
+            }
+            MediaPlayer.Event.LengthChanged -> {
+                updateProgress(newLength = event.lengthChanged)
+            }
             MediaPlayer.Event.TimeChanged -> {
                 val time = event.timeChanged
                 if (abs(time - lastTime) > 950L) {

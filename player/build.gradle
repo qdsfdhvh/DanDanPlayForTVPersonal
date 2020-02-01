@@ -30,7 +30,9 @@ this.beforeEvaluate {
 dependencies {
     implementation project(':common')
     implementation project(':libs:live_plot_graph')
+
     kapt dependence.libArouterCompiler
+    kapt dependence.libRoomCompiler
     //AppCompat
     implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha04"

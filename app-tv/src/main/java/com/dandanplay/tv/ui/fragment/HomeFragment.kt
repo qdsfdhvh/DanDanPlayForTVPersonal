@@ -77,7 +77,7 @@ class HomeFragment : BrowseSupportFragment()
         setOnSearchClickedListener(this)
 
         // 监听返回键
-        requireActivity().onBackPressedDispatcher.addCallback(this) { launchExitDialog() }
+        requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
     }
 
     /**
@@ -151,24 +151,6 @@ class HomeFragment : BrowseSupportFragment()
     }
 
     /**
-     * 加载退出选择界面
-     */
-    private fun launchExitDialog() {
-        val manager = fragmentManager ?: return
-        if (manager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
-            DialogSelectFragment.Builder()
-                .setTitle(getString(R.string.msg_exit_app))
-                .setConfirmText(getString(R.string.exit))
-                .setCancelText(getString(R.string.cancel))
-                .setConfirmClickListener {
-                    ActivityCompat.finishAffinity(requireActivity())
-                }
-                .build()
-                .show(manager)
-        }
-    }
-
-    /**
      * PS: 控件id查看 {@link [androidx.leanback.widget.TitleView]}
      */
     override fun onClick(v: View?) {
@@ -211,6 +193,23 @@ class HomeFragment : BrowseSupportFragment()
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 退出
+     */
+    private fun onBackPressed() {
+        if (childFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+            DialogSelectFragment.Builder()
+                .setTitle(getString(R.string.msg_exit_app))
+                .setConfirmText(getString(R.string.exit))
+                .setCancelText(getString(R.string.cancel))
+                .setConfirmClickListener {
+                    ActivityCompat.finishAffinity(requireActivity())
+                }
+                .build()
+                .show(childFragmentManager)
         }
     }
 

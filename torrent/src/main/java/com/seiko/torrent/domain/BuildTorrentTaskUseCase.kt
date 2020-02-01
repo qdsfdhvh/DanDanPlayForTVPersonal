@@ -24,8 +24,11 @@ class BuildTorrentTaskUseCase : KoinComponent {
             }
             else -> {
                  MutableList(info.fileCount) { i ->
-                     if (selectedIndexes.contains(i)) Priority.DEFAULT
-                     else Priority.IGNORE
+                     if (selectedIndexes.contains(i)) {
+                         Priority.DEFAULT
+                     } else {
+                         Priority.IGNORE
+                     }
                  }
             }
         }
