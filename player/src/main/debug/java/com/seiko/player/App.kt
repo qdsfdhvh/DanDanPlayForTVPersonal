@@ -7,8 +7,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.di.commonModules
 import com.seiko.common.util.closeAutoSizeDebug
 import com.seiko.common.util.timber.NanoDebugTree
-import com.seiko.player.delegate.VlcDelegate
 import com.seiko.player.di.playerModules
+import com.seiko.player.media.initVlc
 import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -50,6 +50,6 @@ class App : Application() {
             modules(commonModules + playerModules)
         }
 
-        VlcDelegate.init(this)
+        initVlc()
     }
 }

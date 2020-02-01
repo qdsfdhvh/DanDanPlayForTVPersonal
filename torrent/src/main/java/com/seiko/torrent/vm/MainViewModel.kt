@@ -1,14 +1,12 @@
 package com.seiko.torrent.vm
 
 import androidx.lifecycle.*
-import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.service.Downloader
+import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewModel(
     private val downloader: Downloader,
@@ -33,12 +31,6 @@ class MainViewModel(
         }
     }
 
-    init {
-        viewModelScope.launch {
-            downloader.restoreDownloads()
-        }
-    }
-
     fun loadData(force: Boolean) = viewModelScope.launch {
         if (!force && _torrentItems.value != null) return@launch
         _torrentItems.value = torrentRepo.getTorrents()
@@ -46,14 +38,13 @@ class MainViewModel(
 
     fun setTorrentHash(item: TorrentListItem?) {
         if (item == _torrentItem.value) return
-//        LogUtils.d("setTorrentHash: ${item?.hash}")
         _torrentItem.value = item
     }
 
     override fun onCleared() {
         super.onCleared()
+        _torrentItems.value = null
         _torrentItem.value = null
-        Timber.d("onCleared")
     }
 
 

@@ -1,4 +1,4 @@
-package com.seiko.torrent.service
+package com.seiko.torrent.download
 
 import com.seiko.common.data.Result
 import com.seiko.download.torrent.model.MagnetInfo

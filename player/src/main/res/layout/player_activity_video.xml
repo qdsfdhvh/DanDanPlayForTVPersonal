@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/player_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <!--
-     the double FrameLayout is necessary here to do cropping on the bottom right
-     (which requires the surface not be centered), while keeping the result centered
-    -->
+    <!--画面-->
     <org.videolan.libvlc.util.VLCVideoLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false" />
+    <!--控制-->
+    <include
+        layout="@layout/player_hud"
+        android:id="@id/player_view_stub_hud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <!--    <androidx.appcompat.widget.ViewStubCompat-->
 <!--        android:id="@+id/player_seek_stub"-->
@@ -60,16 +61,6 @@
 <!--            android:layout_centerVertical="true"-->
 <!--            android:layout_alignParentEnd="true"-->
 <!--            android:layout_marginEnd="@dimen/default_margin"/>-->
-
-<!--        <androidx.appcompat.widget.ViewStubCompat-->
-<!--            android:id="@+id/player_hud_stub"-->
-<!--            android:layout_width="800dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout="@layout/player_hud"-->
-<!--            android:layout_marginBottom="@dimen/overlay_margin"-->
-<!--            android:layout_marginRight="@dimen/overlay_margin"-->
-<!--            android:layout_marginLeft="@dimen/overlay_margin"-->
-<!--            android:layout_alignParentBottom="true"/>-->
 
 <!--        <androidx.appcompat.widget.ViewStubCompat-->
 <!--            android:id="@+id/player_hud_right_stub"-->

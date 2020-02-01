@@ -29,4 +29,6 @@
     <dimen name="default_margin">8dp</dimen>
 
 
+    <dimen name="player_control_bottom_width">600dp</dimen>
+
 </resources>

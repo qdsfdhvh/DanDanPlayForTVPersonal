@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/rounded_background"
+    android:background="@drawable/player_rounded_corners"
     android:visibility="gone"
     tools:visibility="visible">
 

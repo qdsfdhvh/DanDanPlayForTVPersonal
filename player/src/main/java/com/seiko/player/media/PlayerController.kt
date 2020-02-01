@@ -138,6 +138,13 @@ class PlayerController(
         mediaPlayer!!.rate = rate
     }
 
+    override fun seekTo(position: Float) {
+        if (!seekable || !hasMedia() || isReleased()) {
+            return
+        }
+        mediaPlayer!!.position = position
+    }
+
     override fun play(): Boolean {
         if (hasMedia() && !isReleased()) {
             Timber.d("play")

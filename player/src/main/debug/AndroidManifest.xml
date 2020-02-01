@@ -29,7 +29,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/banner"
-        android:label="@string/player_app_name"
+        android:label="@string/player_debug_app_name"
         android:supportsRtl="true"
         tools:ignore="AllowBackup,MissingApplicationIcon">
 
@@ -57,7 +57,7 @@
 
 
         <activity
-            android:name=".StartActivity"
+            android:name=".ui.StartActivity"
             android:theme="@style/Theme.VLC.Transparent.NoUI">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -437,6 +437,10 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.VLC.Player">
         </activity>
+
+        <activity
+            android:name=".ui.CompatErrorActivity"
+            android:theme="@style/Theme.VLC.Transparent"/>
 
         <service android:name=".service.PlaybackService"/>
 

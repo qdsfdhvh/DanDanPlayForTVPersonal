@@ -1,7 +1,7 @@
 package com.seiko.torrent.di
 
-import com.seiko.torrent.service.DownloadManager
-import com.seiko.torrent.service.Downloader
+import com.seiko.torrent.download.DownloadManager
+import com.seiko.torrent.download.Downloader
 import com.seiko.download.torrent.TorrentEngineOptions
 import com.seiko.torrent.data.comments.TorrentRepository
 import org.koin.dsl.module

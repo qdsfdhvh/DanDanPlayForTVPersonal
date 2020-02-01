@@ -32,6 +32,11 @@ interface IPlayerController {
     fun setRate(rate: Float, save: Boolean)
 
     /**
+     * 跳转到
+     */
+    fun seekTo(position: Float)
+
+    /**
      * 播放
      */
     fun play(): Boolean

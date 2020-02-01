@@ -5,34 +5,38 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.io.File
 
+/**
+ * 过期时间，3天
+ */
+private const val PAST_TIME = 3 * 24 * 60 * 60 * 1000L
+
 class DeleteCacheTorrentUseCase : KoinComponent {
 
     private val prefHelper: PrefDataSource by inject()
 
     operator fun invoke() {
-        val dir = File(prefHelper.downloadFolder)
-        deleteDirTorrent(dir)
+        deleteDirTorrent(File(prefHelper.downloadFolder), PAST_TIME)
     }
 }
 
 /**
  * 删除此目录下所有过期的种子
  */
-private fun deleteDirTorrent(dir: File) {
+private fun deleteDirTorrent(dir: File, pastTime: Long) {
     if (!dir.exists()) return
     if (!dir.isDirectory) return
     var files = dir.listFiles()
     if (files == null || files.isEmpty()) return
     for (file in files) {
         if (file.isTorrent()) {
-            if (file.isPast()) {
+            if (file.isPast(pastTime)) {
 //                LogUtils.d("${file.absolutePath} -> 过期")
                 file.delete()
             } else {
 //                LogUtils.d("${file.absolutePath} -> 未过期")
             }
         } else if (file.isDirectory) {
-            deleteDirTorrent(file)
+            deleteDirTorrent(file, pastTime)
         }
     }
 
@@ -45,15 +49,10 @@ private fun deleteDirTorrent(dir: File) {
 }
 
 /**
- * 过期时间，3天
- */
-private const val PAST_TIME = 3 * 24 * 60 * 60 * 1000
-
-/**
  * 是否过期
  */
-private fun File.isPast(): Boolean {
-    return System.currentTimeMillis() - this.lastModified() > PAST_TIME
+private fun File.isPast(pastTime: Long): Boolean {
+    return System.currentTimeMillis() - this.lastModified() > pastTime
 }
 
 /**

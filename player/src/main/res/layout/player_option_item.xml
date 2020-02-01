@@ -9,7 +9,7 @@
     android:padding="8dp">
 
     <ImageView
-        style="@style/VLC.CtxImageButton"
+        style="@style/VLC.ImageButton"
         android:id="@+id/option_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"

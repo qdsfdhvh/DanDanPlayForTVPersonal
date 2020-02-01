@@ -31,7 +31,7 @@ import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.seiko.torrent.R
 import com.seiko.torrent.util.constants.INFINITY_SYMBOL
 import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.service.Downloader
+import com.seiko.torrent.download.Downloader
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback

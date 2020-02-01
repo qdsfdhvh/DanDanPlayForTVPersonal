@@ -34,7 +34,7 @@ import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentListBinding
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.service.Downloader
+import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.vm.MainViewModel

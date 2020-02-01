@@ -14,7 +14,7 @@ import com.seiko.torrent.util.extensions.getLeaves
 import com.seiko.torrent.util.extensions.toFileTree
 import com.seiko.torrent.data.model.AddTorrentParams
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
-import com.seiko.torrent.service.Downloader
+import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.ui.add.State
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo

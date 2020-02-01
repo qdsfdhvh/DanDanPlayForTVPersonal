@@ -1,6 +1,5 @@
-package com.seiko.torrent.service
+package com.seiko.torrent.download
 
-import com.seiko.torrent.data.model.TorrentEntity
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
 import com.seiko.common.data.Result
 import com.seiko.download.torrent.TorrentEngine

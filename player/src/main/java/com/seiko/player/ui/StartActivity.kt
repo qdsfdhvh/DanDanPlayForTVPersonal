@@ -1,11 +1,9 @@
-package com.seiko.player
+package com.seiko.player.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.seiko.player.service.PlaybackService
-import com.seiko.player.ui.VideoPlayerActivity
 import timber.log.Timber
 
 class StartActivity : FragmentActivity() {
