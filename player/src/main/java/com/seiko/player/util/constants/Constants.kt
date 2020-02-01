@@ -1,6 +1,4 @@
-package com.seiko.player.constants
-
-import com.seiko.player.BuildConfig
+package com.seiko.player.util.constants
 
 /**
  * 字幕下载域名
@@ -10,7 +8,15 @@ internal const val SUBTITLE_BASE_URL = "https://dandanplay.com/"
 /**
  * 数据库名称
  */
-internal const val DB_NAME_DEFAULT = "Torrent_Database"
+internal const val DB_NAME_DEFAULT = "Seiko_Player_Database"
+
+/**
+ * 本地配置文件名
+ */
+internal const val PREFS_NAME_DEFAULT = "Seiko_Player_Prefs"
+
+
+internal const val CHROMA_RV16 = "RV16"
 
 // StartActivity
 const val PREF_FIRST_RUN = "first_run"

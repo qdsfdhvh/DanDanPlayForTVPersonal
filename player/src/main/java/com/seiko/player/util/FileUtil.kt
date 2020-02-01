@@ -3,7 +3,6 @@ package com.seiko.player.util
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.seiko.player.media.MediaUtil
 import org.videolan.libvlc.util.AndroidUtil
 
 private const val SCHEME_CONTENT = "content"

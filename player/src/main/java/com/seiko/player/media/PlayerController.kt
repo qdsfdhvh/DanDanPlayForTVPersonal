@@ -1,4 +1,4 @@
-package com.seiko.player.service
+package com.seiko.player.media
 
 import android.content.Context
 import android.net.Uri
@@ -7,13 +7,10 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.data.model.Progress
-import com.seiko.player.util.VLCOptions
 import kotlinx.coroutines.*
 import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.RendererItem
 import org.videolan.libvlc.interfaces.ILibVLC
 import org.videolan.libvlc.interfaces.IMedia
-import org.videolan.libvlc.interfaces.IMediaList
 import org.videolan.libvlc.interfaces.IVLCVout
 import org.videolan.libvlc.util.DisplayManager
 import org.videolan.libvlc.util.VLCVideoLayout
@@ -22,15 +19,12 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 class PlayerController(
-    private val context: Context,
-    private val libVLC: ILibVLC
+    private val options: PlayerOptions
 ) : IPlayerController,
     IVLCVout.Callback,
     MediaPlayer.EventListener {
 
-    private val rendererDelegate = RendererDelegate(libVLC)
-
-    private var mediaPlayer = newMediaPlayer()
+    private var mediaPlayer: MediaPlayer? = null
 
     private val playbackState = AtomicInteger(PlaybackStateCompat.STATE_NONE)
 
@@ -40,21 +34,12 @@ class PlayerController(
     var pausable = false
     private var lastTime = 0L
 
-    private var mediaPlayerEventListener: MediaPlayerEventListener? = null
-
-    /**
-     * Render
-     */
-    suspend fun init() {
-        rendererDelegate.start()
-    }
-
-//    override fun getMediaPlayer(): MediaPlayer {
-//        return mediaPlayer
-//    }
+    private var mediaPlayerEventListener: MediaPlayer.EventListener? = null
 
     override fun attachView(surfaceFrame: View, displayManager: DisplayManager?) {
         if (surfaceFrame !is VLCVideoLayout) return
+
+        val mediaPlayer = getMediaPlayer()
         val vlcVout = mediaPlayer.vlcVout
         if (vlcVout.areViewsAttached()) {
             vlcVout.detachViews()
@@ -64,23 +49,9 @@ class PlayerController(
     }
 
     override fun detachView() {
-        mediaPlayer.detachViews()
-    }
-
-    override fun getRendererItem(): RendererItem? {
-        return rendererDelegate.getRenderer()
-    }
-
-    fun isReleased(): Boolean {
-        return mediaPlayer.isReleased
-    }
-
-    fun isPlaying(): Boolean {
-        return playbackState.get() == PlaybackStateCompat.STATE_PLAYING
-    }
-
-    fun isVideoPlaying(): Boolean {
-        return !mediaPlayer.isReleased && mediaPlayer.vlcVout.areViewsAttached()
+        if (isVideoPlaying()) {
+            mediaPlayer!!.detachViews()
+        }
     }
 
     fun canSwitchToVideo(): Boolean {
@@ -88,8 +59,8 @@ class PlayerController(
     }
 
     fun getVideoTracksCount(): Int {
-        return if (!mediaPlayer.isReleased && mediaPlayer.hasMedia()) {
-            mediaPlayer.videoTracksCount
+        return if (!isReleased() && hasMedia()) {
+            mediaPlayer!!.videoTracksCount
         } else 0
     }
 
@@ -113,90 +84,96 @@ class PlayerController(
         lastTime = 0L
     }
 
-    fun expand(): IMediaList? {
-        return mediaPlayer.media?.let {
-            mediaPlayer.setEventListener(null)
-            val items = it.subItems()
-            it.release()
-            mediaPlayer.setEventListener(this@PlayerController)
-            items
-        }
-    }
+//    fun expand(): IMediaList? {
+//        return mediaPlayer.media?.let {
+//            mediaPlayer.setEventListener(null)
+//            val items = it.subItems()
+//            it.release()
+//            mediaPlayer.setEventListener(this@PlayerController)
+//            items
+//        }
+//    }
 
     fun addSlaves(slaves: List<IMedia.Slave>) {
-        for (slave in slaves) {
-            mediaPlayer.addSlave(slave.type, Uri.parse(slave.uri), false)
+        mediaPlayer?.run {
+            for (slave in slaves) {
+                addSlave(slave.type, Uri.parse(slave.uri), false)
+            }
         }
     }
 
-    suspend fun startPlayback(media: IMedia, listener: MediaPlayerEventListener?, time: Long) {
-//        resetPlaybackState(time, media.duration)
-//        mediaPlayerEventListener = listener
-//        mediaPlayer.media = media
-//        mediaPlayer.play()
+    suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long) {
         mediaPlayerEventListener = listener
         resetPlaybackState(time, media.duration)
-        mediaPlayer.setEventListener(null)
+        val mediaPlayer = getMediaPlayer()
+        mediaPlayer.setEventListener(this)
         withContext(Dispatchers.IO) {
-            if (!mediaPlayer.isReleased) {
+            if (!isReleased()) {
                 mediaPlayer.media = media.apply { parse() }
             }
         }
-        mediaPlayer.setEventListener(this)
-        if (!mediaPlayer.isReleased) {
-            mediaPlayer.setEqualizer(VLCOptions.getEqualizerSetFromSettings(context))
-            mediaPlayer.setVideoTitleDisplay(MediaPlayer.Position.Disable, 0)
-            mediaPlayer.play()
-        }
+        play()
+    }
+
+    override fun hasMedia(): Boolean {
+        return mediaPlayer?.hasMedia() == true
+    }
+
+    fun isPlaying(): Boolean {
+        return playbackState.get() == PlaybackStateCompat.STATE_PLAYING
+    }
+
+    fun isVideoPlaying(): Boolean {
+        return !isReleased() && mediaPlayer?.vlcVout?.areViewsAttached() == true
+    }
+
+    override fun isReleased(): Boolean {
+        return mediaPlayer == null || mediaPlayer!!.isReleased
     }
 
     override fun setRate(rate: Float, save: Boolean) {
-        if (mediaPlayer.isReleased) {
+        if (isReleased()) {
             return
         }
-        mediaPlayer.rate = rate
-        // save
+        mediaPlayer!!.rate = rate
     }
 
     override fun play(): Boolean {
-        if (mediaPlayer.hasMedia() && !mediaPlayer.isReleased) {
-            mediaPlayer.play()
+        if (hasMedia() && !isReleased()) {
+            Timber.d("play")
+            mediaPlayer!!.play()
             return true
         }
         return false
     }
 
     override fun pause(): Boolean {
-        if (isPlaying() && mediaPlayer.hasMedia() && pausable) {
-            mediaPlayer.pause()
+        if (isPlaying() && hasMedia() && pausable) {
+            Timber.d("pause")
+            mediaPlayer!!.pause()
             return true
         }
         return false
     }
 
     override fun stop(): Boolean {
-        if (mediaPlayer.hasMedia() && !mediaPlayer.isReleased) {
-            mediaPlayer.stop()
+        if (hasMedia() && !isReleased()) {
+            mediaPlayer!!.stop()
             return true
         }
         return false
     }
 
-    override fun restart() {
-        releasePlayer(mediaPlayer)
-        mediaPlayer = newMediaPlayer()
-    }
-
     override fun release() {
-        rendererDelegate.stop()
-        releasePlayer(mediaPlayer)
+        mediaPlayer?.let {
+            releasePlayer(it)
+            mediaPlayer = null
+        }
     }
 
     private fun releasePlayer(mediaPlayer: MediaPlayer) {
+        detachView()
         mediaPlayer.setEventListener(null)
-        if (isVideoPlaying()) {
-            mediaPlayer.vlcVout.detachViews()
-        }
         mediaPlayer.media?.run {
             setEventListener(null)
             release()
@@ -206,9 +183,16 @@ class PlayerController(
     }
 
     private fun newMediaPlayer(): MediaPlayer {
-        val mediaPlayer = MediaPlayer(libVLC)
+        val mediaPlayer = options.newMediaPlayer()
         mediaPlayer.vlcVout.addCallback(this)
         return mediaPlayer
+    }
+
+    private fun getMediaPlayer(): MediaPlayer {
+        if (mediaPlayer == null) {
+            mediaPlayer = newMediaPlayer()
+        }
+        return mediaPlayer!!
     }
 
     override fun onSurfacesCreated(vlcVout: IVLCVout?) {
@@ -250,7 +234,4 @@ class PlayerController(
         mediaPlayerEventListener?.onEvent(event)
     }
 
-    interface MediaPlayerEventListener {
-        fun onEvent(event: MediaPlayer.Event)
-    }
 }

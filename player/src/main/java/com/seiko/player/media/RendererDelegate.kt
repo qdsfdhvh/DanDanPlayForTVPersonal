@@ -1,10 +1,9 @@
-package com.seiko.player.service
+package com.seiko.player.media
 
 import com.seiko.player.util.extensions.retry
 import org.videolan.libvlc.RendererDiscoverer
 import org.videolan.libvlc.RendererItem
 import org.videolan.libvlc.interfaces.ILibVLC
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RendererDelegate(private val libVlc: ILibVLC) : RendererDiscoverer.EventListener {

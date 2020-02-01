@@ -1,4 +1,4 @@
-package com.seiko.player.service
+package com.seiko.player.media
 
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import java.util.concurrent.CopyOnWriteArrayList

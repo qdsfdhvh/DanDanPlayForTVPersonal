@@ -1,24 +1,11 @@
 package com.seiko.player.util.extensions
 
-import android.Manifest
 import android.annotation.TargetApi
 import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.content.ContextCompat
-import com.seiko.player.constants.ACTION_INIT
-import com.seiko.player.constants.EXTRA_FIRST_RUN
-import com.seiko.player.constants.EXTRA_PARSE
-import com.seiko.player.constants.EXTRA_UPGRADE
-import com.seiko.player.util.*
-import kotlinx.coroutines.*
 import org.videolan.libvlc.util.AndroidUtil
-import org.videolan.medialibrary.interfaces.Medialibrary
-import java.io.File
-import kotlin.coroutines.resume
 
 @TargetApi(Build.VERSION_CODES.O)
 fun Context.getPendingIntent(iPlay: Intent): PendingIntent {

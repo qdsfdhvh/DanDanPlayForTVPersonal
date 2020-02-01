@@ -1,4 +1,4 @@
-package com.seiko.player.service
+package com.seiko.player.media
 
 import android.view.View
 import org.videolan.libvlc.MediaPlayer
@@ -10,13 +10,19 @@ interface IPlayerController {
     /**
      * 播放器
      */
-//    fun getMediaPlayer(): MediaPlayer
-
     fun attachView(surfaceFrame: View, displayManager: DisplayManager?)
 
     fun detachView()
 
-    fun getRendererItem(): RendererItem?
+    /**
+     * 是否有播放源
+     */
+    fun hasMedia(): Boolean
+
+    /**
+     * 是否已经注销
+     */
+    fun isReleased(): Boolean
 
     /**
      * 调整播放速度
@@ -45,5 +51,4 @@ interface IPlayerController {
      */
     fun release()
 
-    fun restart()
 }

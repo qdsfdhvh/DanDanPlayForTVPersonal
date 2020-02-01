@@ -2,7 +2,7 @@ package com.seiko.player.di
 
 import android.content.Context
 import androidx.room.Room
-import com.seiko.player.constants.DB_NAME_DEFAULT
+import com.seiko.player.util.constants.DB_NAME_DEFAULT
 import com.seiko.player.data.db.PlayerDatabase
 import com.seiko.player.data.db.SlaveRepository
 import org.koin.android.ext.koin.androidContext

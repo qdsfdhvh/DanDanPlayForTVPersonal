@@ -2,35 +2,35 @@ package com.seiko.player.di
 
 import android.content.Context
 import com.seiko.player.data.db.SlaveRepository
-import com.seiko.player.service.PlayListManager
-import com.seiko.player.service.PlayerController
-import com.seiko.player.util.VLCOptions
+import com.seiko.player.data.prefs.PrefDataSource
+import com.seiko.player.media.PlayerListManager
+import com.seiko.player.media.PlayerController
+import com.seiko.player.media.PlayerOptions
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import org.videolan.libvlc.FactoryManager
-import org.videolan.libvlc.interfaces.ILibVLC
-import org.videolan.libvlc.interfaces.ILibVLCFactory
 
 val playModule = module {
-    single { createLibVlc(androidContext()) }
-    single { createPlayController(androidContext(), get()) }
-    single { createPlayListManager(androidContext(), get(), get(), get()) }
+    single { createPlayerOptions(androidContext(), get()) }
+    single { createPlayerController(get()) }
+    single { createPlayListManager(get(), get(), get()) }
 }
 
-private fun createLibVlc(context: Context): ILibVLC {
-    val libVLCFactory = FactoryManager.getFactory(ILibVLCFactory.factoryId) as ILibVLCFactory
-    return libVLCFactory.getFromOptions(context, VLCOptions.getLibOptions(context))
+private fun createPlayerOptions(context: Context, pref: PrefDataSource): PlayerOptions {
+    return PlayerOptions(context, pref)
 }
 
-private fun createPlayController(context: Context, libVLC: ILibVLC): PlayerController {
-    return PlayerController(context, libVLC)
+private fun createPlayerController(options: PlayerOptions): PlayerController {
+    return PlayerController(options)
 }
 
 private fun createPlayListManager(
-    context: Context,
-    libVLC: ILibVLC,
+    options: PlayerOptions,
     playerController: PlayerController,
     slaveRepository: SlaveRepository
-): PlayListManager {
-    return PlayListManager(context, libVLC, playerController, slaveRepository)
+): PlayerListManager {
+    return PlayerListManager(
+        options,
+        playerController,
+        slaveRepository
+    )
 }

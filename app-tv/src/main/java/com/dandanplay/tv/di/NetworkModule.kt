@@ -5,6 +5,8 @@ import com.dandanplay.tv.data.api.DanDanApiGenerator
 import com.dandanplay.tv.data.api.DanDanApiService
 import com.dandanplay.tv.data.api.ResDanDanApiGenerator
 import com.dandanplay.tv.data.api.ResDanDanApiService
+import com.dandanplay.tv.data.comments.DanDanApiRemoteDataSource
+import com.dandanplay.tv.data.comments.ResDanDanApiRemoteDataSource
 import com.dandanplay.tv.data.prefs.PrefDataSource
 import com.seiko.common.http.cookie.CookiesManager
 import okhttp3.OkHttpClient
@@ -15,6 +17,8 @@ import retrofit2.Converter
 internal val networkModule = module {
     single { createApiService(androidContext(), get(), get(), get(), get()) }
     single { createResApiService(get(), get()) }
+    single { createDanDanApiRemoteDataSource(get()) }
+    single { createResDanDanApiRemoteDataSource(get()) }
 }
 
 private fun createApiService(
@@ -40,4 +44,12 @@ private fun createResApiService(
         okHttpClient,
         converterFactory
     ).create()
+}
+
+private fun createDanDanApiRemoteDataSource(api: DanDanApiService): DanDanApiRemoteDataSource {
+    return DanDanApiRemoteDataSource(api)
+}
+
+private fun createResDanDanApiRemoteDataSource(api: ResDanDanApiService): ResDanDanApiRemoteDataSource {
+    return ResDanDanApiRemoteDataSource(api)
 }

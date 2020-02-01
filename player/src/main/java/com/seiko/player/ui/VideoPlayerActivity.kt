@@ -8,22 +8,14 @@ import com.seiko.common.router.Routes
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.player.R
 import com.seiko.player.databinding.PlayerBinding
-import com.seiko.player.service.PlayListManager
+import com.seiko.player.media.PlayerListManager
 import com.seiko.player.service.PlaybackService
-import com.seiko.player.util.VLCOptions
 import com.seiko.player.util.checkCpuCompatibility
-import com.seiko.player.util.getUri
 import org.koin.android.ext.android.inject
-import org.videolan.libvlc.FactoryManager
-import org.videolan.libvlc.Media
-import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.interfaces.ILibVLCFactory
-import org.videolan.libvlc.interfaces.IVLCVout
 import org.videolan.libvlc.util.DisplayManager
 import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
-import timber.log.Timber
 
 @Route(path = Routes.Player.PATH)
 class VideoPlayerActivity: FragmentActivity() {
@@ -31,8 +23,7 @@ class VideoPlayerActivity: FragmentActivity() {
     private lateinit var binding: PlayerBinding
     private lateinit var displayManager: DisplayManager
 
-    private val playListManager: PlayListManager by inject()
-    private var playbackStarted = false
+    private val playListManager: PlayerListManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,26 +32,24 @@ class VideoPlayerActivity: FragmentActivity() {
         binding = PlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupUI()
-    }
-
-    override fun onStart() {
-        super.onStart()
+        loadMedia()
     }
 
     override fun onResume() {
         super.onResume()
-        startPlayback()
         initUI()
+        playListManager.play()
     }
 
     override fun onPause() {
-        clearUI()
-        stopPlayback()
         super.onPause()
+        playListManager.pause()
+        clearUI()
     }
 
     override fun onStop() {
         super.onStop()
+        playListManager.stop()
     }
 
     override fun onDestroy() {
@@ -78,21 +67,8 @@ class VideoPlayerActivity: FragmentActivity() {
 
     }
 
-    private fun startPlayback() {
-        if (playbackStarted) return
-        playbackStarted = true
-        playListManager.attachView(binding.videoLayout, displayManager)
-        loadMedia()
-    }
-
-    private fun stopPlayback() {
-        if (!playbackStarted) return
-        playbackStarted = false
-        playListManager.detachView()
-        playListManager.stop(false)
-    }
-
     private fun initUI() {
+        playListManager.attachView(binding.videoLayout, displayManager)
         displayManager.setMediaRouterCallback()
         binding.root.keepScreenOn = true
     }
@@ -100,6 +76,7 @@ class VideoPlayerActivity: FragmentActivity() {
     private fun clearUI() {
         binding.root.keepScreenOn = false
         displayManager.removeMediaRouterCallback()
+        playListManager.detachView()
     }
 
     private fun loadMedia() {
@@ -115,7 +92,7 @@ class VideoPlayerActivity: FragmentActivity() {
                 media = MLServiceLocator.getAbstractMediaWrapper(videoUri)
             }
             media.addFlags(MediaWrapper.MEDIA_VIDEO)
-            PlaybackService.openMediaNoUi(this, media)
+            PlaybackService.openMedia(this, media)
         }
     }
 

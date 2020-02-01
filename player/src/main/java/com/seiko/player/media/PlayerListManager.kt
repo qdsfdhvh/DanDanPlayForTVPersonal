@@ -1,13 +1,9 @@
-package com.seiko.player.service
+package com.seiko.player.media
 
 import android.content.Context
-import android.net.Uri
-import android.support.v4.media.session.PlaybackStateCompat
-import androidx.annotation.MainThread
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.data.db.SlaveRepository
 import com.seiko.player.util.AppScope
-import com.seiko.player.util.VLCOptions
 import com.seiko.player.util.getUri
 import kotlinx.coroutines.*
 import org.videolan.libvlc.FactoryManager
@@ -15,25 +11,19 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.ILibVLC
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IMediaFactory
-import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
 import java.util.*
 
-class PlayListManager(
-    private val context: Context,
-    private val libVLC: ILibVLC,
+class PlayerListManager(
+    private val options: PlayerOptions,
     private val playerController: PlayerController,
     private val slaveRepository: SlaveRepository
 ) : IPlayerController by playerController {
 
     companion object {
         private const val TAG = "VLC/PlaylistManager"
-    }
-
-    private val mediaFactory by lazyAndroid {
-        FactoryManager.getFactory(IMediaFactory.factoryId) as IMediaFactory
     }
 
     private var mediaList = MediaWrapperList()
@@ -46,15 +36,13 @@ class PlayListManager(
 
     var currentIndex = -1
 
-    private val mediaPlayerEventListener = object : PlayerController.MediaPlayerEventListener {
-        override fun onEvent(event: MediaPlayer.Event) {
-            when(event.type) {
-                MediaPlayer.Event.Playing -> {
-                    Timber.d("MediaPlayer.Event.Playing")
-                }
-                MediaPlayer.Event.Paused -> {
-                    Timber.d("MediaPlayer.Event.Paused")
-                }
+    private val mediaPlayerEventListener = MediaPlayer.EventListener { event ->
+        when(event.type) {
+            MediaPlayer.Event.Playing -> {
+                Timber.d("MediaPlayer.Event.Playing")
+            }
+            MediaPlayer.Event.Paused -> {
+                Timber.d("MediaPlayer.Event.Paused")
             }
         }
     }
@@ -73,29 +61,18 @@ class PlayListManager(
         }
     }
 
-    init {
-        AppScope.launch {
-            playerController.init()
-        }
-    }
-
-    fun hasMedia(): Boolean {
+    override fun hasMedia(): Boolean {
         return mediaList.size() != 0
     }
 
-    fun stop(systemExit: Boolean = false) {
-//        clearABRepeat()
-        stopAfter = -1
-//        videoBackground = false
+    override fun release() {
         savePosition()
-        mediaList.setEventListener(null)
+        stopAfter = -1
         previous.clear()
-        if (systemExit) {
-            release()
-        } else {
-            restart()
-        }
+        mediaList.setEventListener(null)
         mediaList.clear()
+        playerController.release()
+        options.clear()
     }
 
     fun isValidPosition(position: Int): Boolean {
@@ -147,17 +124,17 @@ class PlayListManager(
             || isVideoPlaying
             || media.hasFlag(MediaWrapper.MEDIA_FORCE_AUDIO)
         ) {
-            var uri = withContext(Dispatchers.IO) { getUri(context, media.uri) }
+            var uri = withContext(Dispatchers.IO) { options.getRealUri(media.uri) }
             if (uri == null) {
                 skipMedia()
                 return false
             }
-            val title = media.getMetaLong(MediaWrapper.META_TITLE)
-            if (title > 0) uri = Uri.parse("$uri#$title")
-            val chapter = media.getMetaLong(MediaWrapper.META_CHAPTER)
-            if (chapter > 0) uri = Uri.parse("$uri:$chapter")
+//            val title = media.getMetaLong(MediaWrapper.META_TITLE)
+//            if (title > 0) uri = Uri.parse("$uri#$title")
+//            val chapter = media.getMetaLong(MediaWrapper.META_CHAPTER)
+//            if (chapter > 0) uri = Uri.parse("$uri:$chapter")
             val start = getStartTime(media)
-            val iMedia = mediaFactory.getFromUri(libVLC, uri)
+            val iMedia = options.getFromUri(uri)
             iMedia.addOption(":start-time=${start / 1000}")
 //            VLCOptions.setMediaOptions(iMedia, context, flags or media.flags)
             playerController.startPlayback(iMedia, mediaPlayerEventListener, start)
@@ -166,10 +143,6 @@ class PlayListManager(
 //            determinePrevAndNextIndices()
 //            service.onNewPlayback()
             return true
-        } else {
-            if (playerController.isPlaying()) {
-                playerController.stop()
-            }
         }
         return false
     }

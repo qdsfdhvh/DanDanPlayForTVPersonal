@@ -9,6 +9,7 @@ import com.seiko.common.util.closeAutoSizeDebug
 import com.seiko.common.util.timber.NanoDebugTree
 import com.seiko.player.delegate.VlcDelegate
 import com.seiko.player.di.playerModules
+import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -24,6 +25,9 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(NanoDebugTree())
         }
+
+        // 存储
+        MMKV.initialize(this)
 
         // 关闭AutoSize日志
         closeAutoSizeDebug()
