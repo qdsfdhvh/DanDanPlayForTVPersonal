@@ -8,19 +8,36 @@
     tools:background="@color/grey800">
     <include
         layout="@layout/player_control_ab_repeat"
-        android:id="@id/player_layout_ab_repeat"
+        android:id="@id/player_layout_control_ab_repeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        vlc:layout_constraintStart_toStartOf="@+id/player_layout_hub"
-        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_hub" />
+        android:visibility="gone"
+        tools:visibility="visible"
+        vlc:layout_constraintStart_toStartOf="@+id/player_layout_control_bottom"
+        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_control_bottom" />
     <include
         layout="@layout/player_control_bottom"
-        android:id="@id/player_layout_hub"
+        android:id="@id/player_layout_control_bottom"
         android:layout_width="@dimen/player_control_bottom_width"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         vlc:layout_constraintBottom_toBottomOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintEnd_toEndOf="parent"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@id/player_options_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/advanced_options_background"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        vlc:layout_constraintTop_toTopOf="parent"
+        vlc:layout_constraintBottom_toBottomOf="parent"
+        vlc:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/player_item_option"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

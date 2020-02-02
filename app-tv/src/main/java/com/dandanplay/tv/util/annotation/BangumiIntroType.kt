@@ -5,12 +5,7 @@ import androidx.annotation.IntDef
 /**
  * 相关作品、系列作品
  */
-@IntDef(
-    value = [
-        BangumiIntroType.RELATED,
-        BangumiIntroType.SIMILAR
-    ]
-)
+@IntDef(BangumiIntroType.RELATED, BangumiIntroType.SIMILAR)
 @Retention(AnnotationRetention.SOURCE)
 annotation class BangumiIntroType {
     companion object {

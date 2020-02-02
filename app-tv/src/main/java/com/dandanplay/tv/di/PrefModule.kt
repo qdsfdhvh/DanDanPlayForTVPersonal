@@ -5,7 +5,7 @@ import com.dandanplay.tv.data.prefs.PrefDataSourceImpl
 import com.dandanplay.tv.util.constants.PREFS_NAME_COOKIES
 import com.dandanplay.tv.util.constants.PREFS_NAME_DEFAULT
 import com.seiko.common.http.cookie.PersistentCookieStore
-import com.tencent.mmkv.MMKV
+import com.seiko.common.util.prefs.createMMKVPreferenceDataStore
 import org.koin.dsl.module
 
 internal val prefModule = module {
@@ -14,9 +14,17 @@ internal val prefModule = module {
 }
 
 private fun createCookieStore(): PersistentCookieStore {
-    return PersistentCookieStore(MMKV.mmkvWithID(PREFS_NAME_COOKIES))
+    return PersistentCookieStore(
+        createMMKVPreferenceDataStore(
+            PREFS_NAME_COOKIES
+        )
+    )
 }
 
 private fun createPrefDataSource(): PrefDataSource {
-    return PrefDataSourceImpl(MMKV.mmkvWithID(PREFS_NAME_DEFAULT))
+    return PrefDataSourceImpl(
+        createMMKVPreferenceDataStore(
+            PREFS_NAME_DEFAULT
+        )
+    )
 }

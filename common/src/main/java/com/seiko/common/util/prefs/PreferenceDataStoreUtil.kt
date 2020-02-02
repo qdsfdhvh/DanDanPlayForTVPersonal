@@ -1,91 +1,77 @@
-package com.seiko.common.util
+package com.seiko.common.util.prefs
 
-
-import android.os.Parcelable
-import com.tencent.mmkv.MMKV
+import androidx.preference.PreferenceDataStore
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-fun MMKV.int(key: String, defValue: Int = 0): ReadWriteProperty<Any, Int> {
+fun PreferenceDataStore.int(key: String, defValue: Int = 0): ReadWriteProperty<Any, Int> {
     return object : ReadWriteProperty<Any, Int> {
         override fun getValue(thisRef: Any, property: KProperty<*>): Int {
-            return decodeInt(key, defValue)
+            return getInt(key, defValue)
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Int) {
-            encode(key, value)
+            putInt(key, value)
         }
     }
 }
 
-fun MMKV.long(key: String, defValue: Long = 0): ReadWriteProperty<Any, Long> {
+fun PreferenceDataStore.long(key: String, defValue: Long = 0): ReadWriteProperty<Any, Long> {
     return object : ReadWriteProperty<Any, Long> {
         override fun getValue(thisRef: Any, property: KProperty<*>): Long {
-            return decodeLong(key, defValue)
+            return getLong(key, defValue)
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
-            encode(key, value)
+            putLong(key, value)
         }
     }
 }
 
-fun MMKV.float(key: String, defValue: Float = 0f): ReadWriteProperty<Any, Float> {
+fun PreferenceDataStore.float(key: String, defValue: Float = 0f): ReadWriteProperty<Any, Float> {
     return object : ReadWriteProperty<Any, Float> {
         override fun getValue(thisRef: Any, property: KProperty<*>): Float {
-            return decodeFloat(key, defValue)
+            return getFloat(key, defValue)
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Float) {
-            encode(key, value)
+            putFloat(key, value)
         }
     }
 }
 
-fun MMKV.boolean(key: String, defValue: Boolean = false): ReadWriteProperty<Any, Boolean> {
+fun PreferenceDataStore.boolean(key: String, defValue: Boolean = false): ReadWriteProperty<Any, Boolean> {
     return object : ReadWriteProperty<Any, Boolean> {
         override fun getValue(thisRef: Any, property: KProperty<*>): Boolean {
-            return decodeBool(key, defValue)
+            return getBoolean(key, defValue)
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) {
-            encode(key, value)
+            putBoolean(key, value)
         }
     }
 }
 
-fun MMKV.string(key: String, defValue: String = ""): ReadWriteProperty<Any, String> {
+fun PreferenceDataStore.string(key: String, defValue: String = ""): ReadWriteProperty<Any, String> {
     return object : ReadWriteProperty<Any, String> {
         override fun getValue(thisRef: Any, property: KProperty<*>): String {
-            return decodeString(key, defValue)
+            return getString(key, defValue)!!
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: String) {
-            encode(key, value)
+            putString(key, value)
         }
     }
 }
 
-fun MMKV.stringSet(key: String, defValue: Set<String> = emptySet()): ReadWriteProperty<Any, Set<String>> {
+fun PreferenceDataStore.stringSet(key: String, defValue: Set<String> = emptySet()): ReadWriteProperty<Any, Set<String>> {
     return object : ReadWriteProperty<Any, Set<String>> {
         override fun getValue(thisRef: Any, property: KProperty<*>): Set<String> {
-            return decodeStringSet(key, defValue)
+            return getStringSet(key, defValue) ?: mutableSetOf()
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Set<String>) {
-            encode(key, value)
-        }
-    }
-}
-
-inline fun <reified T: Parcelable> MMKV.parcelable(key: String, defValue: T): ReadWriteProperty<Any, T> {
-    return object : ReadWriteProperty<Any, T> {
-        override fun getValue(thisRef: Any, property: KProperty<*>): T {
-            return decodeParcelable(key, T::class.java, defValue)!!
-        }
-
-        override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
-            encode(key, value)
+            putStringSet(key, value)
         }
     }
 }

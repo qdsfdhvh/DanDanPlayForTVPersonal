@@ -3,7 +3,6 @@
     <attr name="rounded_background" format="reference" />
 
     <attr name="advanced_options_style" format="reference" />
-    <attr name="advanced_options_bg" format="reference"/>
 
     <declare-styleable name="MiniVisualizer">
         <attr name="bar_color" format="reference"/>

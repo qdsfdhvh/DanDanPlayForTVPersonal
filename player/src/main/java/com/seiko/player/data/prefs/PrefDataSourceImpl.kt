@@ -1,13 +1,13 @@
 package com.seiko.player.data.prefs
 
-import com.seiko.common.util.boolean
-import com.seiko.common.util.int
-import com.seiko.common.util.long
-import com.seiko.common.util.string
+import androidx.preference.PreferenceDataStore
+import com.seiko.common.util.prefs.boolean
+import com.seiko.common.util.prefs.int
+import com.seiko.common.util.prefs.long
+import com.seiko.common.util.prefs.string
 import com.seiko.player.util.constants.CHROMA_RV16
-import com.tencent.mmkv.MMKV
 
-class PrefDataSourceImpl(prefs: MMKV): PrefDataSource {
+class PrefDataSourceImpl(prefs: PreferenceDataStore): PrefDataSource {
     override var timeStretch by prefs.boolean("PREF_TIME_STRETCH", false)
     override var subtitlesEncoding by prefs.string("PREF_SUBTITLES_ENCODING", "")
     override var enableFrameSkip by prefs.boolean("PREF_ENABLE_FRAME_SKIP", false)

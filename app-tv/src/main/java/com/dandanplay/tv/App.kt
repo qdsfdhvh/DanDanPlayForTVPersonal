@@ -6,12 +6,11 @@ import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.dandanplay.tv.util.clearFrescoMemory
 import com.dandanplay.tv.util.initFresco
+import com.seiko.common.util.prefs.initMMKV
 import com.seiko.common.util.timber.NanoDebugTree
-import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
-
 
 class App : Application() {
 
@@ -28,7 +27,7 @@ class App : Application() {
         }
 
         // 存储
-        MMKV.initialize(this)
+        initMMKV()
 
         // 图片
         initFresco()

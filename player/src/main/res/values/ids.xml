@@ -2,8 +2,9 @@
 <resources>
     <item name="player_view_stub_hud" type="id"/>
 
-    <item name="player_layout_hub" type="id"/>
-    <item name="player_layout_ab_repeat" type="id"/>
+    <item name="player_layout_control_bottom" type="id"/>
+    <item name="player_layout_control_ab_repeat" type="id"/>
+    <item name="player_layout_control_options" type="id"/>
 
     <item name="player_container_hud" type="id"/>
 
@@ -22,4 +23,8 @@
     <item name="player_overlay_length" type="id"/>
     <item name="player_overlay_time_container" type="id"/>
     <item name="player_overlay_time" type="id"/>
+
+    <item name="player_options_list" type="id"/>
+    <item name="player_option_title" type="id"/>
+    <item name="player_option_icon" type="id"/>
 </resources>

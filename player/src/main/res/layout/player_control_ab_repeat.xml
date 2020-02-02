@@ -28,10 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/player_rounded_corners"
-    android:visibility="gone"
-    tools:visibility="visible">
-
+    android:background="@drawable/player_rounded_corners">
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="wrap_content"
@@ -44,7 +41,7 @@
         vlc:layout_constraintEnd_toStartOf="@+id/ab_repeat_add_marker"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintTop_toTopOf="parent"
-        vlc:srcCompat="@drawable/ic_abrepeat" />
+        vlc:srcCompat="@drawable/ic_ab_repeat" />
 
     <Button
         android:id="@+id/ab_repeat_add_marker"

@@ -1,18 +1,21 @@
 package com.seiko.player.media
 
 import android.view.View
+import androidx.lifecycle.LiveData
+import com.seiko.player.data.model.Progress
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.RendererItem
 import org.videolan.libvlc.util.DisplayManager
 
 interface IPlayerController {
 
-    /**
-     * 播放器
-     */
     fun attachView(surfaceFrame: View, displayManager: DisplayManager?)
 
     fun detachView()
+
+    fun addMediaPlayerEventListener(listener: MediaPlayer.EventListener)
+
+    fun removeMediaPlayerEventListener(listener: MediaPlayer.EventListener)
 
     /**
      * 是否有播放源
@@ -32,7 +35,8 @@ interface IPlayerController {
     fun setRate(rate: Float, save: Boolean)
 
     /**
-     * 跳转到
+     * 跳转
+     * @param position 百分比 0.11
      */
     fun seekTo(position: Float)
 

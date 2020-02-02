@@ -1,16 +1,16 @@
 package com.seiko.common.http.cookie
 
 import android.text.TextUtils
+import com.seiko.common.util.prefs.MmkvPreferenceDataStore
 import com.seiko.common.util.toHexString
 import com.seiko.common.util.toModBusByteArray
-import com.tencent.mmkv.MMKV
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import java.io.*
 
 private const val SEP = ","
 
-class PersistentCookieStore(private val prefs: MMKV) {
+class PersistentCookieStore(private val prefs: MmkvPreferenceDataStore) {
 
     private val cookies: HashMap<String, HashMap<String, Cookie>> = HashMap()
 
@@ -22,9 +22,9 @@ class PersistentCookieStore(private val prefs: MMKV) {
         val keys = prefs.allKeys()
         if (keys != null) {
             for (key in keys) {
-                cookieNames = TextUtils.split(prefs.decodeString(key).toString(), SEP)
+                cookieNames = TextUtils.split(prefs.getString(key, ""), SEP)
                 for (name in cookieNames) {
-                    encodedCookie = prefs.decodeString(name, null) ?: continue
+                    encodedCookie = prefs.getString(name, null) ?: continue
                     decodedCookie = decodeCookie(encodedCookie) ?: continue
                     if (!cookies.containsKey(key)) {
                         cookies[key] = HashMap()
@@ -57,8 +57,8 @@ class PersistentCookieStore(private val prefs: MMKV) {
         if (cookieHashMap == null || cookieHashMap.isEmpty()) return
 
         val encodeCookie = encodeCookie(cookie.toSerializable()) ?: return
-        prefs.encode(key, cookieHashMap.keys.joinToString(SEP))
-        prefs.encode(name, encodeCookie)
+        prefs.putString(key, cookieHashMap.keys.joinToString(SEP))
+        prefs.putString(name, encodeCookie)
     }
 
     fun add(host: String, token: String, cookieString: String) {
@@ -68,8 +68,8 @@ class PersistentCookieStore(private val prefs: MMKV) {
         }
         cookies[host]!![token] = cookie
 
-        prefs.encode(host, token)
-        prefs.encode(token, cookieString)
+        prefs.putString(host, token)
+        prefs.putString(token, cookieString)
     }
 
     fun remove(url: HttpUrl, cookie: Cookie): Boolean {
@@ -78,11 +78,11 @@ class PersistentCookieStore(private val prefs: MMKV) {
 
         if (cookies.containsKey(key) && cookies[key]?.containsKey(name) == true) {
             cookies[key]!!.remove(name)
-            prefs.removeValueForKey(name)
+            prefs.remove(name)
 
             if (!cookies.containsKey(key)) return true
             val cookieHashMap = cookies[key]!!
-            prefs.encode(key, cookieHashMap.keys.joinToString(SEP))
+            prefs.putString(key, cookieHashMap.keys.joinToString(SEP))
             return true
         }
         return false

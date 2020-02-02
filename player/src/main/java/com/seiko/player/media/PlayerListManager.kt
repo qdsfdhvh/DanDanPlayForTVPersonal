@@ -34,7 +34,7 @@ class PlayerListManager(
     var stopAfter = -1
     var savedTime = 0L
 
-    var currentIndex = -1
+    private var currentIndex = -1
 
     private val mediaPlayerEventListener = MediaPlayer.EventListener { event ->
         when(event.type) {
@@ -68,10 +68,10 @@ class PlayerListManager(
     override fun release() {
         savePosition()
         stopAfter = -1
+        playerController.release()
         previous.clear()
         mediaList.setEventListener(null)
         mediaList.clear()
-        playerController.release()
         options.clear()
     }
 
@@ -137,7 +137,7 @@ class PlayerListManager(
             val iMedia = options.getFromUri(uri)
             iMedia.addOption(":start-time=${start / 1000}")
 //            VLCOptions.setMediaOptions(iMedia, context, flags or media.flags)
-            playerController.startPlayback(iMedia, mediaPlayerEventListener, start)
+            playerController.startPlayback(iMedia, start)
             setSlaves(iMedia, media)
             newMedia = true
 //            determinePrevAndNextIndices()

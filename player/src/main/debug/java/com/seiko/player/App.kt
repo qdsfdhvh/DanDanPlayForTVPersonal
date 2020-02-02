@@ -6,10 +6,10 @@ import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.di.commonModules
 import com.seiko.common.util.closeAutoSizeDebug
+import com.seiko.common.util.prefs.initMMKV
 import com.seiko.common.util.timber.NanoDebugTree
 import com.seiko.player.di.playerModules
 import com.seiko.player.media.initVlc
-import com.tencent.mmkv.MMKV
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -27,7 +27,7 @@ class App : Application() {
         }
 
         // 存储
-        MMKV.initialize(this)
+        initMMKV()
 
         // 关闭AutoSize日志
         closeAutoSizeDebug()
@@ -43,7 +43,7 @@ class App : Application() {
 
         // 注解
         startKoin {
-            //            androidLogger()
+            // androidLogger()
             androidContext(this@App)
 
             // Library暂时无法注入，手动添加module

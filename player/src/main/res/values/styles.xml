@@ -29,7 +29,6 @@
         <item name="android:navigationBarColor">@color/status_bar_transparency</item>
 
         <item name="advanced_options_style">@style/Theme.MaterialComponents.Dialog</item>
-        <item name="advanced_options_bg">@drawable/advanced_options_background</item>
     </style>
 
     <style name="VLC.TextView" parent="android:Widget.TextView">

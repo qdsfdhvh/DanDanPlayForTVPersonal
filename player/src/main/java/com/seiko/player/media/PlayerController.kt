@@ -4,10 +4,14 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.data.model.Progress
+import com.seiko.player.util.runOnMainThread
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.actor
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.ILibVLC
 import org.videolan.libvlc.interfaces.IMedia
@@ -28,13 +32,14 @@ class PlayerController(
 
     private val playbackState = AtomicInteger(PlaybackStateCompat.STATE_NONE)
 
-    val progress by lazyAndroid { MutableLiveData<Progress>().apply { value = Progress() } }
+//    private val progress by lazyAndroid { MutableLiveData<Progress>().apply { value = Progress() } }
 
-    var seekable = false
-    var pausable = false
-    private var lastTime = 0L
+    private var seekable = false
+    private var pausable = false
 
-    private var mediaPlayerEventListener: MediaPlayer.EventListener? = null
+//    private var mediaPlayerEventListener: MediaPlayer.EventListener? = null
+
+    private val mediaListeners = ArrayList<MediaPlayer.EventListener>()
 
     override fun attachView(surfaceFrame: View, displayManager: DisplayManager?) {
         if (surfaceFrame !is VLCVideoLayout) return
@@ -54,6 +59,18 @@ class PlayerController(
         }
     }
 
+    override fun addMediaPlayerEventListener(listener: MediaPlayer.EventListener) {
+        if (!mediaListeners.contains(listener)) {
+            mediaListeners.add(listener)
+        }
+    }
+
+    override fun removeMediaPlayerEventListener(listener: MediaPlayer.EventListener) {
+        if (mediaListeners.contains(listener)) {
+            mediaListeners.remove(listener)
+        }
+    }
+
     fun canSwitchToVideo(): Boolean {
         return getVideoTracksCount() > 0
     }
@@ -64,24 +81,26 @@ class PlayerController(
         } else 0
     }
 
-    private fun updateProgress(newTime: Long = -1L, newLength: Long = -1L) {
-//        progress.value = progress.value?.apply {
-//            if (newTime != -1L) time = newTime
-//            if (newLength != -1L) length = newLength
-//        }
-    }
+//    private fun updateProgress(newTime: Long = -1L, newLength: Long = -1L) {
+//        runOnMainThread(Runnable {
+//            progress.value = progress.value?.apply {
+//                if (newTime != -1L) time = newTime
+//                if (newLength != -1L) length = newLength
+//            }
+//        })
+//    }
 
     private fun resetPlaybackState(time: Long, duration: Long) {
         seekable = true
         pausable = true
-        lastTime = time
-        updateProgress(time, duration)
+//        lastTime = time
+//        updateProgress(time, duration)
     }
 
     private fun setPlaybackStopped() {
         playbackState.lazySet(PlaybackStateCompat.STATE_STOPPED)
-        updateProgress(0L, 0L)
-        lastTime = 0L
+//        updateProgress(0L, 0L)
+//        lastTime = 0L
     }
 
 //    fun expand(): IMediaList? {
@@ -102,8 +121,7 @@ class PlayerController(
         }
     }
 
-    suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long) {
-        mediaPlayerEventListener = listener
+    suspend fun startPlayback(media: IMedia, time: Long) {
         resetPlaybackState(time, media.duration)
         val mediaPlayer = getMediaPlayer()
         mediaPlayer.setEventListener(this)
@@ -172,8 +190,8 @@ class PlayerController(
     }
 
     override fun release() {
-        mediaPlayer?.let {
-            releasePlayer(it)
+        if (mediaPlayer != null) {
+            releasePlayer(mediaPlayer!!)
             mediaPlayer = null
         }
     }
@@ -181,10 +199,7 @@ class PlayerController(
     private fun releasePlayer(mediaPlayer: MediaPlayer) {
         detachView()
         mediaPlayer.setEventListener(null)
-        mediaPlayer.media?.run {
-            setEventListener(null)
-            release()
-        }
+        mediaPlayer.media?.release()
         mediaPlayer.release()
         setPlaybackStopped()
     }
@@ -227,18 +242,13 @@ class PlayerController(
             MediaPlayer.Event.SeekableChanged -> {
                 seekable = event.seekable
             }
-            MediaPlayer.Event.LengthChanged -> {
-                updateProgress(newLength = event.lengthChanged)
-            }
-            MediaPlayer.Event.TimeChanged -> {
-                val time = event.timeChanged
-                if (abs(time - lastTime) > 950L) {
-                    updateProgress(newTime = time)
-                    lastTime = time
-                }
-            }
+//            MediaPlayer.Event.LengthChanged -> {
+//                updateProgress(newLength = event.lengthChanged)
+//            }
         }
-        mediaPlayerEventListener?.onEvent(event)
+        if (mediaListeners.isNotEmpty()) {
+            mediaListeners.forEach { it.onEvent(event) }
+        }
     }
 
 }

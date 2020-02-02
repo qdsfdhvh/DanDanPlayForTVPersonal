@@ -23,7 +23,10 @@ class PlayerOptions(
 ) {
 
     fun clear() {
-        libVLC = null
+        if (libVLC != null) {
+            libVLC!!.release()
+            libVLC = null
+        }
     }
 
     fun newMediaPlayer(): MediaPlayer {
