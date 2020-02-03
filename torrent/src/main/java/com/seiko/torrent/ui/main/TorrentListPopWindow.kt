@@ -34,12 +34,12 @@ class TorrentListPopWindow(context: Context, item: TorrentListItem) : PopupWindo
         binding = TorrentPopListBinding.inflate(LayoutInflater.from(context), null, false)
         contentView = binding.root
 
-        if (item.stateCode in PLAY_CODES) {
-            binding.torrentBtnPlay.visibility = View.VISIBLE
-            binding.torrentBtnPlay.text = context.getString(R.string.torrent_btn_play)
-        } else {
-            binding.torrentBtnPlay.visibility = View.GONE
-        }
+//        if (item.stateCode in PLAY_CODES) {
+//            binding.torrentBtnPlay.visibility = View.VISIBLE
+//            binding.torrentBtnPlay.text = context.getString(R.string.torrent_btn_play)
+//        } else {
+//            binding.torrentBtnPlay.visibility = View.GONE
+//        }
         binding.torrentBtnPause.text = if (item.stateCode == TorrentStateCode.PAUSED) {
             context.getString(R.string.torrent_btn_resume)
         } else {

@@ -1,8 +1,9 @@
 package com.seiko.player.util.constants
 
 /**
- * 字幕下载域名
+ * 域名
  */
+internal const val DANDAN_API_BASE_URL = "https://api.acplay.net/"
 internal const val SUBTITLE_BASE_URL = "https://dandanplay.com/"
 
 /**
@@ -24,6 +25,9 @@ internal const val MAX_VIDEO_SEEK = 1000
  * 无效值
  */
 internal const val INVALID_VALUE = -1
+
+
+const val INTENT_TYPE_VIDEO = "video"
 
 // StartActivity
 const val PREF_FIRST_RUN = "first_run"

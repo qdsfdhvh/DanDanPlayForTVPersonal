@@ -4,7 +4,7 @@ import android.os.Environment
 import java.io.File
 
 /**
- * DanDan域名
+ * 域名
  */
 internal const val DANDAN_API_BASE_URL = "https://api.acplay.net/"
 internal const val DANDAN_RES_BASE_URL = "http://res.acplay.net/"

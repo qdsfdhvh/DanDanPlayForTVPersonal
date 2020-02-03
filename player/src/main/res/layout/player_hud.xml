@@ -6,16 +6,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/grey800">
-    <include
-        layout="@layout/player_control_ab_repeat"
-        android:id="@id/player_layout_control_ab_repeat"
-        android:layout_width="wrap_content"
+    <!--左上角进度条-->
+    <LinearLayout
+        android:id="@id/player_tip_layout"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
+        android:orientation="vertical"
+        android:background="@drawable/player_rounded_corners"
+        vlc:layout_constraintTop_toTopOf="parent"
+        vlc:layout_constraintStart_toStartOf="parent"
+        android:visibility="visible"
         tools:visibility="visible"
-        vlc:layout_constraintStart_toStartOf="@+id/player_layout_control_bottom"
-        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_control_bottom" />
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:padding="6dp">
+        <TextView
+            android:id="@id/player_tip_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:nextFocusUp="@id/ab_repeat_add_marker"
+            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+            android:textSize="16sp"
+            tools:text="12:30/25:00" />
+        <SeekBar
+            android:id="@id/player_tip_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layoutDirection="ltr"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progressDrawable="@drawable/po_seekbar_video_tip"
+            android:splitTrack="false"
+            android:thumb="@drawable/seekbar_thumb_null"
+            tools:progress="50"
+            tools:max="100"/>
+    </LinearLayout>
+    <!-- A-B 循环 -->
+<!--    <include-->
+<!--        layout="@layout/player_control_ab_repeat"-->
+<!--        android:id="@id/player_layout_control_ab_repeat"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:visibility="gone"-->
+<!--        tools:visibility="visible"-->
+<!--        vlc:layout_constraintStart_toStartOf="@+id/player_layout_control_bottom"-->
+<!--        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_control_bottom" />-->
+    <!-- 底部控制 -->
     <include
         layout="@layout/player_control_bottom"
         android:id="@id/player_layout_control_bottom"
@@ -27,6 +66,7 @@
         vlc:layout_constraintBottom_toBottomOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintEnd_toEndOf="parent"/>
+    <!-- 右侧配置 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@id/player_options_list"
         android:layout_width="wrap_content"

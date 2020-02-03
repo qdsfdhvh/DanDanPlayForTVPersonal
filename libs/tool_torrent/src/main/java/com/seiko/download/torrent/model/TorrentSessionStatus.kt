@@ -7,6 +7,9 @@ import org.libtorrent4j.TorrentHandle
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class TorrentSessionStatus private constructor(
     val hash: String,
+    val title: String,
+    val downloadPath: String,
+    val dateAdded: Long,
     val error: String,
 
     @TorrentStateCode val state: Int,
@@ -29,6 +32,9 @@ class TorrentSessionStatus private constructor(
             torrentHandle: TorrentHandle
         ): TorrentSessionStatus = TorrentSessionStatus(
             hash = task.hash,
+            title = task.name,
+            downloadPath = task.downloadPath,
+            dateAdded = task.addedDate,
             error = task.error,
             state = torrentHandle.getStateCode(),
 

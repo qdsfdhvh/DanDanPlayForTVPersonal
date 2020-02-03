@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.activity.addCallback
+import androidx.activity.requireDispatchKeyEventDispatcher
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
@@ -34,15 +36,6 @@ private val PERMISSIONS = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 
-
-/**
- * 详情、文件
- */
-private const val NUM_FRAGMENTS = 2
-
-private const val INFO_FRAG_POS = 0
-private const val FILES_FRAG_POS = 1
-
 class AddTorrentFragment : Fragment()
     , OnItemClickListener
     , View.OnClickListener {
@@ -50,7 +43,6 @@ class AddTorrentFragment : Fragment()
     companion object {
         const val TAG = "AddTorrentFragment"
         private const val ARGS_TORRENT_URI = "ARGS_TORRENT_URI"
-        private const val ARGS_ADD_TAB_SELECTED_POSITION = "ARGS_ADD_TAB_SELECTED_POSITION"
 
         fun newInstance(uri: Uri): AddTorrentFragment {
             val bundle = Bundle()
@@ -62,8 +54,6 @@ class AddTorrentFragment : Fragment()
         }
     }
 
-//    private val args by navArgs<AddTorrentFragmentArgs>()
-
     private val uri by lazyAndroid {
         arguments!!.getParcelable<Uri>(ARGS_TORRENT_URI)!!
     }
@@ -71,10 +61,6 @@ class AddTorrentFragment : Fragment()
     private val viewModel by viewModel<AddTorrentViewModel>()
 
     private lateinit var binding: TorrentFragmentAddBinding
-
-
-    private lateinit var tabAdapter: TabTitleAdapter
-    private var tabSelectPosition = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = TorrentFragmentAddBinding.inflate(inflater, container, false)
@@ -84,52 +70,20 @@ class AddTorrentFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkSelectPosition(savedInstanceState)
         bindViewModel()
         checkPermissions()
-    }
-
-    override fun onDestroyView() {
-        binding.torrentTab.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
-        super.onDestroyView()
+        registerKeyEvent()
     }
 
     /**
-     * 保存视图状态
+     * 绑定按键监听到Activity
      */
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ARGS_ADD_TAB_SELECTED_POSITION, tabSelectPosition)
-    }
-
-    private fun checkSelectPosition(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ARGS_ADD_TAB_SELECTED_POSITION)) {
-                tabSelectPosition = savedInstanceState.getInt(ARGS_ADD_TAB_SELECTED_POSITION)
-            }
-        }
-        if (tabSelectPosition >= 0) {
-            tabAdapter.setSelectPosition(tabSelectPosition)
-        }
+    private fun registerKeyEvent() {
+        requireDispatchKeyEventDispatcher().getDispatchKeyEventDispatcher()
+            .addCallback(this, this::dispatchKeyEvent)
     }
 
     private fun setupUI() {
-        tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
-            tab.setText(when(position) {
-                INFO_FRAG_POS -> getString(R.string.torrent_info)
-                FILES_FRAG_POS -> getString(R.string.torrent_files)
-                else -> ""
-            })
-        }
-        tabAdapter.setOnItemClickListener(this)
-        binding.torrentTab.setPadding(25, 0, 25, 0)
-        binding.torrentTab.setItemSpacing(25)
-        binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
-        binding.torrentTab.adapter = tabAdapter
-
-        // ViewPager2
-        binding.torrentViewPager.adapter = AddTorrentPagerAdapter(this)
-
         binding.torrentBtnCenter.setOnClickListener(this)
         binding.torrentBtnCenter.requestFocus()
     }
@@ -139,7 +93,6 @@ class AddTorrentFragment : Fragment()
             when(result) {
                 is Result.Success -> updateStateUI(result.data)
                 is Result.Error -> handleException(result.exception)
-
             }
         }
         viewModel.loadData()
@@ -205,27 +158,14 @@ class AddTorrentFragment : Fragment()
         }
     }
 
-    /**
-     * Item选择监听回调
-     */
-    private val mItemSelectedListener : OnChildViewHolderSelectedListener by lazyAndroid {
-        object : OnChildViewHolderSelectedListener() {
-            override fun onChildViewHolderSelected(
-                parent: RecyclerView?,
-                child: RecyclerView.ViewHolder?,
-                position: Int,
-                subposition: Int
-            ) {
-                when(parent) {
-                    binding.torrentTab -> {
-                        if (tabSelectPosition == position) return
-                        tabSelectPosition = position
-                        tabAdapter.setSelectPosition(position)
-                        binding.torrentViewPager.currentItem = position
-                    }
-                }
+    private fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+        if (event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!binding.torrentBtnCenter.hasFocus()) {
+                binding.torrentBtnCenter.requestFocus()
+                return true
             }
         }
+        return false
     }
 
     /************************************************
@@ -257,22 +197,6 @@ class AddTorrentFragment : Fragment()
         }
     }
 
-}
-
-/**
- * Fragment Pager
- */
-private class AddTorrentPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-
-    override fun getItemCount(): Int = NUM_FRAGMENTS
-
-    override fun createFragment(position: Int): Fragment {
-        return when(position) {
-            INFO_FRAG_POS -> TorrentAddInfoFragment.newInstance()
-            FILES_FRAG_POS -> TorrentAddFilesFragment.newInstance()
-            else -> throw RuntimeException("Can't create fragment with position=$position.")
-        }
-    }
 }
 
 /**

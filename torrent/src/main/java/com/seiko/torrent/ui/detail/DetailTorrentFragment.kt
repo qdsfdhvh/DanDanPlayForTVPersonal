@@ -23,8 +23,8 @@ import timber.log.Timber
 private const val NUM_FRAGMENTS = 6
 
 private const val INFO_FRAG_POS = 0
-private const val STATE_FRAG_POS = 1
-private const val FILES_FRAG_POS = 2
+private const val FILES_FRAG_POS = 1
+private const val STATE_FRAG_POS = 2
 private const val TRACKERS_FRAG_POS = 3
 private const val PEERS_FRAG_POS = 4
 private const val PIECES_FRAG_POS = 5
@@ -86,8 +86,8 @@ class DetailTorrentFragment : Fragment()
         tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
             tab.setText(when(position) {
                 INFO_FRAG_POS -> getString(R.string.torrent_info)
-                STATE_FRAG_POS -> getString(R.string.torrent_state)
                 FILES_FRAG_POS -> getString(R.string.torrent_files)
+                STATE_FRAG_POS -> getString(R.string.torrent_state)
                 TRACKERS_FRAG_POS -> getString(R.string.torrent_trackers)
                 PEERS_FRAG_POS -> getString(R.string.torrent_peers)
                 PIECES_FRAG_POS -> getString(R.string.torrent_pieces)
@@ -161,8 +161,8 @@ private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(frag
     override fun createFragment(position: Int): Fragment {
         return when(position) {
             INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
-            STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
             FILES_FRAG_POS -> DetailTorrentFilesFragment.newInstance()
+            STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
             TRACKERS_FRAG_POS -> DetailTorrentTrackersFragment.newInstance()
             PEERS_FRAG_POS -> DetailTorrentPeersFragment.newInstance()
             PIECES_FRAG_POS -> DetailTorrentPiecesFragment.newInstance()

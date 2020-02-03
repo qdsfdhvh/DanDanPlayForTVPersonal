@@ -7,16 +7,16 @@
     android:layout_height="wrap_content"
     android:background="@color/black_50"
     android:padding="12dp">
-    <Button
-        style="@style/AppButton"
-        android:id="@id/torrent_btn_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="播放"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/torrent_btn_pause"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+<!--    <Button-->
+<!--        style="@style/AppButton"-->
+<!--        android:id="@id/torrent_btn_play"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        tools:text="播放"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/torrent_btn_pause"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
     <Button
         style="@style/AppButton"
         android:id="@id/torrent_btn_pause"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         tools:text="播放"
-        app:layout_constraintTop_toBottomOf="@id/torrent_btn_play"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/torrent_btn_delete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

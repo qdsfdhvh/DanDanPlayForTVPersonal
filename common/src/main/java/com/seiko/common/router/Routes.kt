@@ -27,6 +27,9 @@ object Routes {
      */
     object Player {
         const val PATH = "/player/playerManagerActivity"
+
+        const val ARGS_VIDEO_URI = "ARGS_VIDEO_URI"
+        const val ARGS_VIDEO_TITLE = "ARGS_VIDEO_TITLE"
     }
 
     /**

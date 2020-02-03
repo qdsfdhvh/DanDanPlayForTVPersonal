@@ -1,17 +1,19 @@
 package com.seiko.torrent.download
 
+import androidx.lifecycle.LiveData
 import com.seiko.common.data.Result
 import com.seiko.download.torrent.model.MagnetInfo
 import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus
 import com.seiko.download.torrent.model.TorrentTask
+import org.libtorrent4j.TorrentStatus
 
 interface Downloader {
 
     /**
      * 重启已有的种子任务
      */
-    suspend fun restoreDownloads()
+    suspend fun restoreDownloads(tasks: Collection<TorrentTask>)
 
     /**
      * 解析磁力
@@ -40,15 +42,15 @@ interface Downloader {
      */
     fun pauseResumeTorrent(hash: String)
 
-    /**
-     * 监听目标种子的进度
-     */
-    fun onProgressChanged(hash: String, function: (item: TorrentSessionStatus) -> Unit)
+//    /**
+//     * 监听目标种子的进度
+//     */
+//    fun onProgressChanged(hash: String, function: (item: TorrentSessionStatus) -> Unit)
 
-    /**
-     * 注销 监听目标种子的进度
-     */
-    fun disposeDownload(hash: String)
+//    /**
+//     * 注销 监听目标种子的进度
+//     */
+//    fun disposeDownload(hash: String)
 
     /**
      * 释放资源
@@ -60,4 +62,5 @@ interface Downloader {
      */
     fun getTorrentMetaInfo(hash: String): TorrentMetaInfo?
 
+    fun getTorrentStateMap(): LiveData<MutableMap<String, TorrentSessionStatus>>
 }

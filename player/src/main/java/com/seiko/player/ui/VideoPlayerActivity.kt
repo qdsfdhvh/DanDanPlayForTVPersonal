@@ -92,6 +92,7 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom = binding.playerViewStubHud.playerLayoutControlBottom
         setContentView(binding.root)
         setupUI()
+        setVideoUri()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -103,22 +104,23 @@ class VideoPlayerActivity: FragmentActivity()
     override fun onResume() {
         super.onResume()
         initUI()
-//        if (!isPlaying()) {
-//            binding.playerVideoViewIjk.start()
-//        }
+        play()
     }
 
     override fun onPause() {
         clearUI()
-        if (isPlaying()) {
-            binding.playerVideoViewIjk.pause()
-        }
+        pause()
         super.onPause()
     }
 
     override fun onStop() {
         super.onStop()
         binding.playerVideoViewIjk.stopPlayback()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun setupUI() {
@@ -128,6 +130,8 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom.playerBtnOverlayAdvFunction.setOnClickListener(this)
         bindingControlBottom.playerOverlaySeekbar.setOnSeekBarChangeListener(this)
         bindingControlBottom.playerOverlaySeekbar.max = MAX_VIDEO_SEEK
+        // 左上角进度
+        binding.playerViewStubHud.playerTipProgress.max = MAX_VIDEO_SEEK
         // 右侧配置
         binding.playerViewStubHud.playerOptionsList.layoutManager = LinearLayoutManager(this)
         binding.playerViewStubHud.playerOptionsList.adapter = optionsAdapter
@@ -140,32 +144,6 @@ class VideoPlayerActivity: FragmentActivity()
         binding.playerVideoViewIjk.setOnInfoListener(this)
         binding.playerVideoViewIjk.setOnErrorListener(this)
 
-    }
-
-    fun syncProgress(): Long {
-        if (isDragging) {
-            return 0
-        }
-
-        val videoView = binding.playerVideoViewIjk
-        // 视频播放的当前进度
-        val position = videoView.currentPosition.toLong()
-        // 视频总的时长
-        val duration = videoView.duration.toLong()
-
-        if (duration > 0) {
-            // 转换为 Seek 显示的进度值
-            val pos = MAX_VIDEO_SEEK * position / duration
-            bindingControlBottom.playerOverlaySeekbar.progress = pos.toInt()
-            // 获取缓冲的进度百分比，并显示在 Seek 的次进度
-            val percent = videoView.bufferPercentage
-            bindingControlBottom.playerOverlaySeekbar.secondaryProgress = percent * 10
-        }
-        // 更新播放时间
-        bindingControlBottom.playerOverlayTime.text = Tools.millisToString(position)
-        bindingControlBottom.playerOverlayLength.text = Tools.millisToString(duration)
-        // 返回当前播放进度
-        return position
     }
 
     private fun initUI() {
@@ -185,9 +163,8 @@ class VideoPlayerActivity: FragmentActivity()
         val videoView = binding.playerVideoViewIjk
         videoView.setVideoURI(param.videoUri)
         videoView.seekTo(0)
-        if (!isPlaying()) {
-            videoView.start()
-        }
+        Timber.d(param.videoUri.toString())
+        play()
     }
 
     /**
@@ -200,7 +177,7 @@ class VideoPlayerActivity: FragmentActivity()
                 handler.optionsShow(type = PlayerOption.PlayerOptionType.MEDIA_TRACKS)
             }
             R.id.player_btn_overlay_play -> {
-                toast("播放/暂停")
+                handler.setVideoPlay()
             }
             R.id.player_btn_overlay_adv_function -> {
                 handler.overlayShow(false)
@@ -268,7 +245,7 @@ class VideoPlayerActivity: FragmentActivity()
         isDragging = false
         // 跳转到目标位置
         if (mTargetPosition != INVALID_VALUE) {
-            binding.playerVideoViewIjk.seekTo(mTargetPosition)
+            handler.seekTo(mTargetPosition)
             mTargetPosition = INVALID_VALUE
         }
         // 继续更新进度
@@ -276,10 +253,94 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
+     * 播放/暂停
+     */
+    internal fun setVideoPlay() {
+        if (isPlaying()) pause() else play()
+    }
+
+    /**
+     * 跳转
+     * @param position 具体位置
+     */
+    internal fun seekTo(position: Int?) {
+        if (position != null && position >= 0) {
+            binding.playerVideoViewIjk.seekTo(position)
+        }
+    }
+
+    /**
+     * 快进/快退
+     * @param delta 快进or快退时间
+     */
+    internal fun seekDelta(delta: Int?) {
+        if (delta == null || delta == 0) return
+
+        val videoView = binding.playerVideoViewIjk
+        // 视频播放的当前进度
+        val position = videoView.currentPosition.toLong()
+        // 视频总的时长
+        val duration = videoView.duration.toLong()
+
+        val deltaPosition = position + delta
+        if (deltaPosition > duration || deltaPosition < 0) return
+        binding.playerVideoViewIjk.seekTo(deltaPosition.toInt())
+    }
+
+    /**
+     * 更新进度
+     */
+    internal fun updateProgress(): Long {
+        val videoView = binding.playerVideoViewIjk
+
+        // 视频总的时长
+        val duration = videoView.duration.toLong()
+        if (duration <= 0) return duration
+
+        // 视频播放的当前进度
+        val position = videoView.currentPosition.toLong()
+        // 转换为 Seek 显示的进度值
+        val pos = MAX_VIDEO_SEEK * position / duration
+        // 获取缓冲的进度百分比，并显示在 Seek 的次进度
+        val percent = videoView.bufferPercentage
+
+        bindingControlBottom.playerOverlaySeekbar.progress = pos.toInt()
+        bindingControlBottom.playerOverlaySeekbar.secondaryProgress = percent * 10
+
+        // 更新播放时间
+        val timeFormat = Tools.millisToString(position)
+        val lengthFormat = Tools.millisToString(duration)
+        bindingControlBottom.playerOverlayTime.text = timeFormat
+        bindingControlBottom.playerOverlayLength.text =lengthFormat
+        updateTipProgress()
+        // 返回当前播放进度
+        return position
+    }
+
+    /**
+     * 更新左上角进度
+     */
+    private fun updateTipProgress() {
+        val videoView = binding.playerVideoViewIjk
+        // 视频总的时长
+        val duration = videoView.duration.toLong()
+        if (duration <= 0) return
+        // 视频播放的当前进度
+        val position = videoView.currentPosition.toLong()
+        // 转换为 Seek 显示的进度值
+        val pos = MAX_VIDEO_SEEK * position / duration
+        // 左上角进度
+        val timeFormat = Tools.millisToString(position)
+        val lengthFormat = Tools.millisToString(duration)
+        binding.playerViewStubHud.playerTipTime.text = "%s/%s".format(timeFormat, lengthFormat)
+        binding.playerViewStubHud.playerTipProgress.progress = pos.toInt()
+    }
+
+    /**
      * 点击屏幕，切换控制相关界面的显示/隐藏
      */
     internal fun setControlShow() {
-        if (checkControlShow()) {
+        if (hideControlView()) {
             return
         }
         // 切换 底部控制界面
@@ -335,20 +396,21 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
-     * 检测是否有控制界面显示
+     * 隐藏控制界面
      */
-    private fun checkControlShow(): Boolean {
+    private fun hideControlView(): Boolean {
+        var hasShow = false
         // 控制界面显示中，隐藏
         if (isOverlayShow) {
             setOverlayShow(false)
-            return true
+            hasShow = true
         }
         // 右侧配置界面显示中，隐藏
         if (isOptionsShow) {
             setOptionsShow(false)
-            return true
+            hasShow = true
         }
-        return false
+        return hasShow
     }
 
     /**
@@ -358,18 +420,16 @@ class VideoPlayerActivity: FragmentActivity()
         return touchDelegate.onTouchEvent(event) || super.onTouchEvent(event)
     }
 
-    /**
-     * 按键
-     */
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return keyDownDelegate.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+        Timber.d("onKeyDown")
+        return super.onKeyDown(keyCode, event)
     }
 
     /**
      * 返回
      */
     override fun onBackPressed() {
-        if (checkControlShow()) {
+        if (hideControlView()) {
             return
         }
 
@@ -409,6 +469,8 @@ class VideoPlayerActivity: FragmentActivity()
             }
             MediaPlayerParams.STATE_COMPLETED -> {
                 Timber.d("STATE_COMPLETED")
+                // 播放完成后退出
+                finish()
             }
         }
         return true
@@ -422,6 +484,29 @@ class VideoPlayerActivity: FragmentActivity()
         return false
     }
 
+    /**
+     * 播放
+     */
+    private fun play() {
+        if (!isPlaying()) {
+            binding.playerVideoViewIjk.start()
+            bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_pause_player)
+        }
+    }
+
+    /**
+     * 暂停
+     */
+    private fun pause() {
+        if (isPlaying()) {
+            binding.playerVideoViewIjk.pause()
+            bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_play_player)
+        }
+    }
+
+    /**
+     * 是否正在播放
+     */
     fun isPlaying(): Boolean {
         return binding.playerVideoViewIjk.isPlaying
     }

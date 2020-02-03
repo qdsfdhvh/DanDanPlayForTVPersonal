@@ -6,9 +6,10 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
+import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.util.getFileName
-import com.seiko.player.util.getRealFilePath
+import com.seiko.player.util.FileUtil
+import com.seiko.player.util.constants.INTENT_TYPE_VIDEO
 import timber.log.Timber
 
 @Route(path = Routes.Player.PATH)
@@ -27,41 +28,47 @@ class StartActivity : FragmentActivity() {
 
     private fun resume() {
         val openIntent = intent
-        val action = openIntent?.action
-
-        var videoPath: String? = null
-
-        if (Intent.ACTION_VIEW == action) {
-            startPlayback(openIntent)
-            //获取视频地址
-            val data = intent.data
-            if (data != null) {
-                videoPath = getRealFilePath(this, data)
-            }
-        }
-
-        if (videoPath.isNullOrEmpty()) {
+        if (openIntent == null) {
             finish()
             return
         }
 
-        val videoTitle = getFileName(videoPath) ?: ""
+        var videoUri: Uri? = null
+        var videoTitle: String? = null
+
+        //外部打开
+        if (Intent.ACTION_VIEW == openIntent.action) {
+            if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
+                toast("Bad Intent：$openIntent")
+                finish()
+                return
+            }
+
+            // 获取真实地址
+            val data = intent.data
+            if (data != null) {
+                val videoPath = FileUtil.getRealFilePath(this, data)
+                videoUri = Uri.parse(videoPath)
+                videoTitle = FileUtil.getFileName(videoPath)
+            }
+
+        } else {
+            videoUri = openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
+            videoTitle = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
+        }
+
+        Timber.d(videoUri.toString())
+        Timber.d(videoTitle)
+
+        if (videoUri == null) {
+            finish()
+            return
+        }
 
         VideoPlayerActivity.launch(this, PlayParam(
-            videoTitle = videoTitle,
-            videoUri = Uri.parse(videoPath)
+            videoUri = videoUri
         ))
         finish()
-    }
-
-
-    private fun startPlayback(intent: Intent) {
-        when {
-            intent.type?.startsWith("video") == true -> {
-                startActivity(intent.setClass(this, VideoPlayerActivity::class.java))
-                finish()
-            }
-        }
     }
 
 }

@@ -31,7 +31,6 @@ import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.seiko.torrent.R
 import com.seiko.torrent.util.constants.INFINITY_SYMBOL
 import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.download.Downloader
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback
@@ -39,9 +38,7 @@ import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.properties.Delegates
 
-class TorrentListAdapter(
-    private val downloader: Downloader
-) : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), UpdatableAdapter {
+class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), UpdatableAdapter {
 
 //    companion object {
 //        private const val ARGS_SELECT_POSITION = "ARGS_SELECT_POSITION"
@@ -72,10 +69,6 @@ class TorrentListAdapter(
 
     override fun onPayload(holder: ItemViewHolder, bundle: Bundle) = holder.payload(bundle)
 
-    override fun onViewAttachedToWindow(holder: ItemViewHolder) = holder.attach()
-
-    override fun onViewDetachedFromWindow(holder: ItemViewHolder) = holder.detach()
-
     fun isSelectHash(hash: String): Boolean {
         return hash == currentOpenTorrent.get()
     }
@@ -99,28 +92,28 @@ class TorrentListAdapter(
             binding.root.setOnClickListener(this)
         }
 
-        fun attach() {
-            Timber.d("attach: $this")
-            val position = adapterPosition
-            if (position >= 0) {
-                val item = items[position]
-                val hash = item.hash
-                downloader.onProgressChanged(hash) { progress ->
-                    item.update(progress)
-                    bind(item)
-                }
-            }
-        }
-
-        fun detach() {
-            Timber.d("detach: $this")
-            val position = adapterPosition
-            if (position >= 0) {
-                val item = items[position]
-                val hash = item.hash
-                downloader.disposeDownload(hash)
-            }
-        }
+//        fun attach() {
+//            Timber.d("attach: $this")
+//            val position = adapterPosition
+//            if (position >= 0) {
+//                val item = items[position]
+//                val hash = item.hash
+//                downloader.onProgressChanged(hash) { progress ->
+//                    item.update(progress)
+//                    bind(item)
+//                }
+//            }
+//        }
+//
+//        fun detach() {
+//            Timber.d("detach: $this")
+//            val position = adapterPosition
+//            if (position >= 0) {
+//                val item = items[position]
+//                val hash = item.hash
+//                downloader.disposeDownload(hash)
+//            }
+//        }
 
         /**
          * 标题
@@ -151,29 +144,56 @@ class TorrentListAdapter(
         /**
          * 进度条
          */
-        private fun setTorrentProgress(progress: Int) {
-            binding.torrentProgress.progress = progress
+        private fun setTorrentProgress(progress: Float) {
+            binding.torrentProgress.progress = progress.toInt()
         }
 
         /**
          * 下载精度 100M/200M • 98% • 00:50:12
          */
-        private fun setTorrentDownloadCounter(counter: String) {
-           binding.torrentDownloadCounter.text = counter
+        private fun setTorrentDownloadCounter(
+            progress: Float,
+            receivedBytes: Long,
+            totalBytes: Long,
+            ETA: Long
+        ) {
+            val totalBytesFormat = Formatter.formatFileSize(binding.root.context, totalBytes)
+            val receivedBytesFormat = if (progress.compareTo(100) == 0) {
+                totalBytesFormat
+            } else {
+                Formatter.formatFileSize(binding.root.context, receivedBytes)
+            }
+            val eta = when(ETA) {
+                -1L -> "\u2022 $INFINITY_SYMBOL"
+                0L -> ""
+                else -> "\u2022 ${DateUtils.formatElapsedTime(ETA)}"
+            }
+
+            binding.torrentDownloadCounter.text = binding.root.context.getString(
+                R.string.torrent_download_counter_ETA_template).format(
+                receivedBytesFormat,
+                totalBytesFormat,
+                if (totalBytes == 0L) 0F else progress, eta
+            )
         }
 
         /**
          * 下载上传速度 ↓ 200KB/s | ↑ 100KB/s
          */
-        private fun setTorrentSpeed(speed: String) {
-            binding.torrentDownloadUploadSpeed.text = speed
+        private fun setTorrentSpeed(downloadSpeed: Long, uploadSpeed: Long) {
+            binding.torrentDownloadUploadSpeed.text = binding.root.context.getString(
+                R.string.torrent_download_upload_speed_template).format(
+                Formatter.formatFileSize(binding.root.context, downloadSpeed),
+                Formatter.formatFileSize(binding.root.context, uploadSpeed)
+            )
         }
 
         /**
          * 用户连接数 0/94
          */
-        private fun setTorrentPeers(peers: String) {
-            binding.torrentPeers.text = peers
+        private fun setTorrentPeers(peers: Int, totalPeers: Int) {
+            binding.torrentPeers.text = binding.root.context.getString(
+                R.string.torrent_peers_template).format(peers, totalPeers)
         }
 
         private fun setPauseButtonState(pause: Boolean) {
@@ -201,49 +221,14 @@ class TorrentListAdapter(
         }
 
         private fun bind(item: TorrentListItem) {
-            setTorrentTitle(item.name)
+            setTorrentTitle(item.title)
             setTorrentState(item.stateCode)
-            setTorrentProgress(item.progress.toInt())
-
-            val totalBytes = Formatter.formatFileSize(binding.root.context, item.totalBytes)
-            val receivedBytes = if (item.progress.compareTo(100) == 0) {
-                totalBytes
-            } else {
-                Formatter.formatFileSize(binding.root.context, item.receivedBytes)
-            }
-            val eta = when(item.ETA) {
-                -1L -> "\u2022 $INFINITY_SYMBOL"
-                0L -> ""
-                else -> "\u2022 ${DateUtils.formatElapsedTime(item.ETA)}"
-            }
-
-            setTorrentDownloadCounter(binding.root.context.getString(
-                R.string.torrent_download_counter_ETA_template).format(
-                    receivedBytes,
-                    totalBytes,
-                    if (item.totalBytes == 0L) 0F else item.progress, eta
-                )
-            )
-
-            setTorrentSpeed(binding.root.context.getString(
-                R.string.torrent_download_upload_speed_template).format(
-                    Formatter.formatFileSize(binding.root.context, item.downloadSpeed),
-                    Formatter.formatFileSize(binding.root.context, item.uploadSpeed)
-                )
-            )
-
-            setTorrentPeers(binding.root.context.getString(
-                R.string.torrent_peers_template).format(
-                    item.peers,
-                    item.totalPeers
-                )
-            )
-
             setPauseButtonState(item.stateCode == TorrentStateCode.PAUSED)
+            setTorrentProgress(item.progress)
+            setTorrentDownloadCounter(item.progress, item.receivedBytes, item.totalBytes, item.ETA)
+            setTorrentSpeed(item.downloadSpeed, item.uploadSpeed)
+            setTorrentPeers(item.peers, item.totalPeers)
             setTorrentError(item.error)
-
-//            val currentHash = currentOpenTorrent.get()
-//            binding.root.isSelected = currentHash != null && item.hash == currentHash
         }
 
         override fun onClick(v: View?) {
@@ -260,14 +245,35 @@ class TorrentListAdapter(
         }
 
         fun payload(bundle: Bundle) {
-//            if (bundle.containsKey(ARGS_SELECT_POSITION)) {
-//                binding.root.isSelected = bundle.getBoolean(ARGS_SELECT_POSITION)
-//            }
             if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_TITLE)) {
                 setTorrentTitle(bundle.getString(TorrentListItemDiffCallback.ARGS_TORRENT_TITLE)!!)
             }
             if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_STATE)) {
-                setTorrentState(bundle.getInt(TorrentListItemDiffCallback.ARGS_TORRENT_STATE))
+                val stateCode = bundle.getInt(TorrentListItemDiffCallback.ARGS_TORRENT_STATE)
+                setTorrentState(stateCode)
+                setPauseButtonState(stateCode == TorrentStateCode.PAUSED)
+            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_PROGRESS)) {
+                Timber.d("update progress")
+                val progress = bundle.getFloat(TorrentListItemDiffCallback.ARGS_TORRENT_PROGRESS)
+                val receivedBytes = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_RECEIVED_BYTES)
+                val totalBytes = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_TOTAL_BYTES)
+                val eta = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_ETA)
+                setTorrentProgress(progress)
+                setTorrentDownloadCounter(progress, receivedBytes, totalBytes, eta)
+            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_DOWNLOAD_SPEED)) {
+                val downloadSpeed = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_DOWNLOAD_SPEED)
+                val uploadSpeed = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_UPLOAD_SPEED)
+                setTorrentSpeed(downloadSpeed, uploadSpeed)
+            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_PEERS)) {
+                val peers = bundle.getInt(TorrentListItemDiffCallback.ARGS_TORRENT_PEERS)
+                val totalPeers = bundle.getInt(TorrentListItemDiffCallback.ARGS_TORRENT_TOTAL_PEERS)
+                setTorrentPeers(peers, totalPeers)
+            }
+            if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_ERROR)) {
+                setTorrentError(bundle.getString(TorrentListItemDiffCallback.ARGS_TORRENT_ERROR))
             }
         }
     }

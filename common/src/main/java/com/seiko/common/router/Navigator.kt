@@ -1,14 +1,15 @@
 package com.seiko.common.router
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.core.LogisticsCenter
+import com.alibaba.android.arouter.exception.NoRouteFoundException
 import com.alibaba.android.arouter.facade.callback.NavigationCallback
-import com.alibaba.android.arouter.facade.service.PretreatmentService
 import com.alibaba.android.arouter.launcher.ARouter
-import timber.log.Timber
+
 
 object Navigator {
 
@@ -50,7 +51,36 @@ object Navigator {
         fragment.startActivityForResult(intent, requestCode)
     }
 
-    fun navToPlayer(activity: Activity, uri: Uri, title: String) {
+    /**
+     * 跳转播放
+     */
+    fun navToPlayer(fragment: Fragment, videoUri: Uri, videoTitle: String) {
+        val postcard = ARouter.getInstance().build(Routes.Player.PATH)
+            .withParcelable(Routes.Player.ARGS_VIDEO_URI, videoUri)
+            .withString(Routes.Player.ARGS_VIDEO_TITLE, videoTitle)
 
+        try {
+            LogisticsCenter.completion(postcard)
+        } catch (e: NoRouteFoundException) {
+            // 没有注册界面，调用系统播放器
+            navToSystemPlayer(fragment.requireContext(), videoUri)
+            return
+        }
+
+        val intent = Intent(fragment.requireContext(), postcard.destination)
+        intent.putExtras(postcard.extras)
+
+        fragment.startActivity(intent)
+    }
+
+    /**
+     * 调用系统播放器
+     */
+    fun navToSystemPlayer(context: Context, videoUri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+//        val headers = arrayOf("Cookie", cookie)
+//        intent.putExtra("headers", headers)
+        intent.setDataAndType(videoUri, "video/*")
+        context.startActivity(intent)
     }
 }

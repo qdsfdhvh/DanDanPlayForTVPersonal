@@ -51,10 +51,9 @@ class TorrentListFragment : Fragment()
     private var torrentsListState: Parcelable? = null
 
     private val viewModel: MainViewModel by sharedViewModel()
-    private val downloader: Downloader by inject()
 
     private lateinit var binding: TorrentFragmentListBinding
-    private var adapter: TorrentListAdapter? = null
+    private lateinit var adapter: TorrentListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = TorrentFragmentListBinding.inflate(inflater, container, false)
@@ -77,24 +76,6 @@ class TorrentListFragment : Fragment()
         viewModel.loadData(false)
     }
 
-    /**
-     * 确保adapter运行 onViewAttachedToWindow/onViewDetachedFromWindow
-     */
-    override fun onResume() {
-        super.onResume()
-        binding.torrentList.adapter = adapter
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.torrentList.adapter = null
-    }
-
-    override fun onDestroyView() {
-        adapter = null
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         unRegisterEventBus()
         super.onDestroy()
@@ -112,8 +93,9 @@ class TorrentListFragment : Fragment()
     }
 
     private fun setupUI() {
-        adapter = TorrentListAdapter(downloader)
-        adapter!!.setOnItemClickListener(this)
+        adapter = TorrentListAdapter()
+        adapter.setOnItemClickListener(this)
+        binding.torrentList.adapter = adapter
 //        binding.torrentList.addItemDecoration(RecyclerViewDividerDecoration(requireContext(),
 //            R.drawable.torrent_table_mode_divider))
         binding.torrentList.setItemSpacing(25)
@@ -124,8 +106,7 @@ class TorrentListFragment : Fragment()
 
     private fun bindViewModel() {
         viewModel.torrentItems.observe(this::getLifecycle) {
-            Timber.d("torrent size = ${it.size}")
-            adapter!!.items = it
+            adapter.items = it
         }
 //        viewModel.torrentItem.observe(this::getLifecycle) { item ->
 ////            adapter!!.markAsOpen(item?.hash)
@@ -143,7 +124,7 @@ class TorrentListFragment : Fragment()
                             toast("播放")
                         }
                         R.id.torrent_btn_pause -> {
-                            downloader.pauseResumeTorrent(item.hash)
+                            viewModel.pauseResumeTorrent(item.hash)
                             popWindow.dismiss()
                         }
                         R.id.torrent_btn_delete -> {
@@ -152,7 +133,7 @@ class TorrentListFragment : Fragment()
                         }
                     }
                 }
-                popWindow.binding.torrentBtnPlay.setOnClickListener(listener)
+//                popWindow.binding.torrentBtnPlay.setOnClickListener(listener)
                 popWindow.binding.torrentBtnPause.setOnClickListener(listener)
                 popWindow.binding.torrentBtnDelete.setOnClickListener(listener)
                 popWindow.show(holder.itemView)
@@ -197,7 +178,7 @@ class TorrentListFragment : Fragment()
                 Timber.d("Get Torrent Added: ${event.torrent.hash}")
 //                val item = TorrentListItem(event.torrent)
 //                adapter.addItem(item)
-                viewModel.loadData(true)
+//                viewModel.loadData(true)
             }
             is PostEvent.TorrentRemoved -> {
 //                val hash = event.hash
@@ -206,7 +187,7 @@ class TorrentListFragment : Fragment()
 //                    viewModel.setTorrentHash(null)
 //                }
                 Timber.d("Get Torrent Removed: ${event.hash}")
-                viewModel.loadData(true)
+//                viewModel.loadData(true)
             }
         }
     }

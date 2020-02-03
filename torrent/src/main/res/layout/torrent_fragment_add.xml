@@ -30,22 +30,50 @@
         app:layout_constraintBottom_toBottomOf="@id/torrent_tab"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/torrent_tab"/>
-    <androidx.leanback.widget.HorizontalGridView
+    <View
         android:id="@id/torrent_tab"
         android:layout_width="0dp"
         android:layout_height="@dimen/torrent_status_bar_height"
-        app:focusOutEnd="true"
-        app:focusOutFront="true"
         app:layout_constraintTop_toBottomOf="@id/fetch_magnet_progress"
-        app:layout_constraintBottom_toTopOf="@id/torrent_view_pager"
+        app:layout_constraintBottom_toTopOf="@id/torrent_container_add"
         app:layout_constraintStart_toEndOf="@id/torrent_btn_center"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@id/torrent_view_pager"
+        app:layout_constraintEnd_toStartOf="@id/torrent_container_file"/>
+<!--    <androidx.leanback.widget.HorizontalGridView-->
+<!--        android:id="@id/torrent_tab"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/torrent_status_bar_height"-->
+<!--        app:focusOutEnd="true"-->
+<!--        app:focusOutFront="true"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/fetch_magnet_progress"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/torrent_container_add"-->
+<!--        app:layout_constraintStart_toEndOf="@id/torrent_btn_center"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        android:id="@id/torrent_view_pager"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/torrent_tab"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@id/torrent_container_add"
+        android:name="com.seiko.torrent.ui.add.TorrentAddInfoFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/torrent_container_file"
         app:layout_constraintTop_toBottomOf="@id/torrent_tab"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@id/torrent_container_file"
+        android:name="com.seiko.torrent.ui.add.TorrentAddFilesFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHorizontal_weight="6"
+        app:layout_constraintStart_toEndOf="@id/torrent_container_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

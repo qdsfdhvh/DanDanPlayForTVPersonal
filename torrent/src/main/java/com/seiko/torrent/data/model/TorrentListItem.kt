@@ -27,9 +27,11 @@ import com.seiko.download.torrent.model.TorrentTask
  */
 data class TorrentListItem(
     var hash: String = "",
-    var name: String = "",
-    var downloadPath: String = "",
+    var title: String = "",
     var stateCode: Int = TorrentStateCode.STOPPED,
+    var downloadPath: String = "",
+    var dateAdded: Long = 0L,
+    var error: String = "",
     var progress: Float = 0F,
     var receivedBytes: Long = 0L,
     var uploadedBytes: Long = 0L,
@@ -37,25 +39,26 @@ data class TorrentListItem(
     var downloadSpeed: Long = 0L,
     var uploadSpeed: Long = 0L,
     var ETA: Long = 0L,
-    var dateAdded: Long = 0L,
     var totalPeers: Int = 0,
-    var peers: Int = 0,
-    var error: String = ""
+    var peers: Int = 0
 ) : Comparable<TorrentListItem> {
 
-    constructor(task: TorrentTask) : this(
-        hash = task.hash,
-        name = task.name,
-        downloadPath = task.downloadPath,
-        dateAdded = task.addedDate,
-        error = task.error
-    )
+//    constructor(task: TorrentTask) : this(
+//        hash = task.hash,
+//        title = task.name,
+//        downloadPath = task.downloadPath,
+//        dateAdded = task.addedDate,
+//        error = task.error
+//    )
 
     constructor(state: TorrentSessionStatus) : this(
         hash = state.hash,
-//        name = state.name,
-        error = state.error,
+        title = state.title,
         stateCode = state.state,
+        downloadPath = state.downloadPath,
+        dateAdded = state.dateAdded,
+        error = state.error,
+
         progress = state.progress,
         receivedBytes = state.receivedBytes,
         uploadedBytes = state.uploadedBytes,
@@ -94,17 +97,18 @@ data class TorrentListItem(
         if (other !is TorrentListItem) return false
         return hash == other.hash
                 && stateCode == other.stateCode
-//                && progress == other.progress
-//                && receivedBytes == other.receivedBytes
-//                && uploadedBytes == other.uploadedBytes
-//                && totalBytes == other.totalBytes
-//                && downloadSpeed == other.downloadSpeed
-//                && uploadSpeed == other.uploadSpeed
-//                && ETA == other.ETA
-//                && totalPeers == other.totalPeers
-//                && peers == other.peers
                 && downloadPath == other.downloadPath
                 && dateAdded == other.dateAdded
                 && error == other.error
+
+                && progress == other.progress
+                && receivedBytes == other.receivedBytes
+                && uploadedBytes == other.uploadedBytes
+                && totalBytes == other.totalBytes
+                && downloadSpeed == other.downloadSpeed
+                && uploadSpeed == other.uploadSpeed
+                && ETA == other.ETA
+                && totalPeers == other.totalPeers
+                && peers == other.peers
     }
 }

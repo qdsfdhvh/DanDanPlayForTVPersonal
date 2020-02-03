@@ -10,9 +10,4 @@ import com.seiko.torrent.service.TorrentTaskService
 @Route(path = Routes.Torrent.PATH)
 class TorrentMainActivity : FragmentActivity(R.layout.torrent_activity_main) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        TorrentTaskService.restoreDownloads(this)
-    }
-
 }

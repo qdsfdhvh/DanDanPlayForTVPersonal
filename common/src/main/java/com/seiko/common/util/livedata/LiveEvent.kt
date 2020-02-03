@@ -1,6 +1,5 @@
-package com.seiko.player.util.livedata
+package com.seiko.common.util.livedata
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.Nullable
 import androidx.lifecycle.LifecycleOwner

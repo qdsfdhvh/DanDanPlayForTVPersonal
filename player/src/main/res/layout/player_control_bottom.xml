@@ -27,7 +27,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
             android:textColor="@color/orange500"
             android:textSize="16sp"
-            android:text="00:00"
             tools:text="0:32" />
     </FrameLayout>
 
@@ -47,7 +46,6 @@
             android:nextFocusUp="@id/ab_repeat_add_marker"
             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
             android:textSize="16sp"
-            android:text="00:00"
             tools:text="56:37" />
     </FrameLayout>
 

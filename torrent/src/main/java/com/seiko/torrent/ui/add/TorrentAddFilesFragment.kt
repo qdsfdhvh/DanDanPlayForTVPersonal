@@ -33,11 +33,8 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private lateinit var binding: TorrentFragmentAddFilesBinding
 
-    private val adapter by lazyAndroid {
-        DownloadableFilesAdapter()
-    }
+    private val adapter by lazyAndroid { DownloadableFilesAdapter() }
 
-    private lateinit var layoutManager: LinearLayoutManager
     private var currentDir: BencodeFileTree? = null
 
     override fun onCreateView(
@@ -62,8 +59,6 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private fun setupUI() {
         adapter.setOnItemClickListener(this)
-        layoutManager = LinearLayoutManager(requireContext())
-        binding.fileList.layoutManager = layoutManager
         binding.fileList.fixItemAnim()
         binding.fileList.adapter = adapter
         setFileSize(0, 0)

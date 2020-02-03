@@ -32,4 +32,5 @@
     <item name="torrent_container_btn" type="id"/>
     <item name="torrent_container_list" type="id"/>
     <item name="torrent_container_detail" type="id"/>
+    <item name="torrent_container_file" type="id"/>
 </resources>

@@ -17,7 +17,6 @@ import timber.log.Timber
 class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope by MainScope() {
 
     companion object {
-        private const val ACTION_RESTORE_DOWNLOAD = "ACTION_RESTORE_DOWNLOAD"
         private const val ACTION_ADD_TORRENT = "ACTION_ADD_TORRENT"
         private const val ACTION_DEL_TORRENT = "ACTION_DEL_TORRENT"
         private const val ACTION_SHUT_DOWN = "ACTION_SHUT_DOWN"
@@ -25,16 +24,6 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
         private const val EXTRA_ADD_TORRENT_PARAMS = "EXTRA_ADD_TORRENT_PARAMS"
         private const val EXTRA_DEL_HASH = "EXTRA_DEL_HASH"
         private const val EXTRA_WITH_FILE = "EXTRA_WITH_FILE"
-
-        /**
-         * 重启已有的种子任务
-         */
-        @JvmStatic
-        fun restoreDownloads(context: Context) {
-            val intent = Intent(context, TorrentTaskService::class.java)
-            intent.action = ACTION_RESTORE_DOWNLOAD
-            context.startService(intent)
-        }
 
         /**
          * 添加种子任务
@@ -74,9 +63,6 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
     override fun onHandleIntent(intent: Intent?) {
         if (intent == null) return
         when(intent.action) {
-            ACTION_RESTORE_DOWNLOAD -> {
-                restoreDownloads()
-            }
             ACTION_ADD_TORRENT -> {
                 if (intent.hasExtra(EXTRA_ADD_TORRENT_PARAMS)) {
                     val params: AddTorrentParams = intent.getParcelableExtra(EXTRA_ADD_TORRENT_PARAMS)!!
@@ -97,13 +83,6 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
     }
 
     private val downloader: Downloader by inject()
-
-    /**
-     * 重启已有的种子任务
-     */
-    private fun restoreDownloads() = runBlocking(coroutineContext) {
-        downloader.restoreDownloads()
-    }
 
     /**
      * 添加 种子任务

@@ -32,7 +32,7 @@ interface UpdatableAdapter {
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return diffCallback.areItemsTheSame(oldItems[oldItemPosition], newItems[newItemPosition])
+                return diffCallback.areContentsTheSame(oldItems[oldItemPosition], newItems[newItemPosition])
             }
 
             override fun getOldListSize() = oldItems.size
@@ -60,7 +60,7 @@ interface UpdatableAdapter {
                 }
 
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return diffCallback.areItemsTheSame(oldItems[oldItemPosition], newItems[newItemPosition])
+                    return diffCallback.areContentsTheSame(oldItems[oldItemPosition], newItems[newItemPosition])
                 }
 
                 override fun getOldListSize() = oldItems.size

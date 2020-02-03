@@ -18,6 +18,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     @SuppressLint("RestrictedApi")
     private val dispatchKeyEventDispatcher = DispatchKeyEventDispatcher { event ->
+        // 当软键盘弹出时，关闭软键盘。
         if (event?.action == KeyEvent.ACTION_DOWN
             && event.keyCode == KeyEvent.KEYCODE_BACK
         ) {
@@ -45,9 +46,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         TorrentService.get().shutDown(this)
     }
 
-    /**
-     * 当软键盘弹出时，关闭软键盘。
-     */
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
         return getDispatchKeyEventDispatcher().dispatchKeyEvent(event)
     }
