@@ -9,7 +9,6 @@ import com.seiko.common.util.closeAutoSizeDebug
 import com.seiko.common.util.prefs.initMMKV
 import com.seiko.common.util.timber.NanoDebugTree
 import com.seiko.player.di.playerModules
-import com.seiko.player.media.initVlc
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -49,7 +48,5 @@ class App : Application() {
             // Library暂时无法注入，手动添加module
             modules(commonModules + playerModules)
         }
-
-        initVlc()
     }
 }

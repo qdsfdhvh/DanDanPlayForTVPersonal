@@ -4,8 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.seiko.common.router.Routes
+import com.seiko.player.data.model.PlayParam
+import com.seiko.player.util.getFileName
+import com.seiko.player.util.getRealFilePath
 import timber.log.Timber
 
+@Route(path = Routes.Player.PATH)
 class StartActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,28 +26,32 @@ class StartActivity : FragmentActivity() {
     }
 
     private fun resume() {
-        val intent = intent
-        val action = intent?.action
+        val openIntent = intent
+        val action = openIntent?.action
+
+        var videoPath: String? = null
 
         if (Intent.ACTION_VIEW == action) {
-            startPlayback(intent)
-        } else if (Intent.ACTION_SEND == action) {
-            val cd = intent.clipData
-            val item = if (cd != null && cd.itemCount > 0) {
-                cd.getItemAt(0)
-            } else null
-            if (item != null) {
-                var uri = item.uri
-                if (uri == null && item.text != null) {
-                    uri = Uri.parse(item.text.toString())
-                }
-                if (uri != null) {
-//                    PlaybackService.openMediaNoUi(this, uri)
-                    finish()
-                    return
-                }
+            startPlayback(openIntent)
+            //获取视频地址
+            val data = intent.data
+            if (data != null) {
+                videoPath = getRealFilePath(this, data)
             }
         }
+
+        if (videoPath.isNullOrEmpty()) {
+            finish()
+            return
+        }
+
+        val videoTitle = getFileName(videoPath) ?: ""
+
+        VideoPlayerActivity.launch(this, PlayParam(
+            videoTitle = videoTitle,
+            videoUri = Uri.parse(videoPath)
+        ))
+        finish()
     }
 
 

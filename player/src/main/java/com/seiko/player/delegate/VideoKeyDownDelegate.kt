@@ -1,7 +1,6 @@
 package com.seiko.player.delegate
 
 import android.view.KeyEvent
-import com.seiko.player.media.IPlayerController
 import com.seiko.player.ui.VideoPlayerHandler
 
 class VideoKeyDownDelegate(private val handler: VideoPlayerHandler) {

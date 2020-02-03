@@ -3,12 +3,10 @@ package com.seiko.player.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
-import com.seiko.player.media.PlayerListManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
-import org.videolan.medialibrary.interfaces.media.MediaWrapper
 
 class PlaybackService : IntentService("PlaybackService"), CoroutineScope by MainScope() {
 
@@ -22,22 +20,22 @@ class PlaybackService : IntentService("PlaybackService"), CoroutineScope by Main
         private const val EXTRA_LOAD_MEDIA_LIST = "EXTRA_LOAD_MEDIA_LIST"
         private const val EXTRA_LOAD_MEDIA_POSITION = "EXTRA_LOAD_MEDIA_POSITION"
 
-        @JvmStatic
-        fun openMedia(context: Context, media: MediaWrapper) {
-            val intent = Intent(context, PlaybackService::class.java)
-            intent.action = ACTION_LOAD_MEDIA
-            intent.putExtra(EXTRA_LOAD_MEDIA, media)
-            context.startService(intent)
-        }
-
-        @JvmStatic
-        fun openMediaList(context: Context, list: List<MediaWrapper>, position: Int) {
-            val intent = Intent(context, PlaybackService::class.java)
-            intent.action = ACTION_LOAD_MEDIA_LIST
-            intent.putParcelableArrayListExtra(EXTRA_LOAD_MEDIA_LIST, ArrayList(list))
-            intent.putExtra(EXTRA_LOAD_MEDIA_POSITION, position)
-            context.startService(intent)
-        }
+//        @JvmStatic
+//        fun openMedia(context: Context, media: MediaWrapper) {
+//            val intent = Intent(context, PlaybackService::class.java)
+//            intent.action = ACTION_LOAD_MEDIA
+//            intent.putExtra(EXTRA_LOAD_MEDIA, media)
+//            context.startService(intent)
+//        }
+//
+//        @JvmStatic
+//        fun openMediaList(context: Context, list: List<MediaWrapper>, position: Int) {
+//            val intent = Intent(context, PlaybackService::class.java)
+//            intent.action = ACTION_LOAD_MEDIA_LIST
+//            intent.putParcelableArrayListExtra(EXTRA_LOAD_MEDIA_LIST, ArrayList(list))
+//            intent.putExtra(EXTRA_LOAD_MEDIA_POSITION, position)
+//            context.startService(intent)
+//        }
 
         @JvmStatic
         fun exitPlay(context: Context) {
@@ -48,24 +46,24 @@ class PlaybackService : IntentService("PlaybackService"), CoroutineScope by Main
 
     }
 
-    private val playListManager: PlayerListManager by inject()
+//    private val playListManager: PlayerListManager by inject()
 
     override fun onHandleIntent(intent: Intent?) {
         when(intent?.action) {
             ACTION_LOAD_MEDIA -> {
-                val media: MediaWrapper = intent.getParcelableExtra(EXTRA_LOAD_MEDIA)!!
-                load(listOf(media), 0)
+//                val media: MediaWrapper = intent.getParcelableExtra(EXTRA_LOAD_MEDIA)!!
+//                load(listOf(media), 0)
             }
             ACTION_LOAD_MEDIA_LIST -> {
-                val mediaList: List<MediaWrapper> = intent.getParcelableArrayListExtra(EXTRA_LOAD_MEDIA_LIST)!!
-                val position = intent.getIntExtra(EXTRA_LOAD_MEDIA_POSITION, 0)
-                load(mediaList, position)
+//                val mediaList: List<MediaWrapper> = intent.getParcelableArrayListExtra(EXTRA_LOAD_MEDIA_LIST)!!
+//                val position = intent.getIntExtra(EXTRA_LOAD_MEDIA_POSITION, 0)
+//                load(mediaList, position)
             }
         }
     }
 
-    private fun load(mediaList: List<MediaWrapper>, position: Int) = runBlocking(coroutineContext) {
-        playListManager.load(mediaList, position)
-    }
+//    private fun load(mediaList: List<MediaWrapper>, position: Int) = runBlocking(coroutineContext) {
+//        playListManager.load(mediaList, position)
+//    }
 
 }

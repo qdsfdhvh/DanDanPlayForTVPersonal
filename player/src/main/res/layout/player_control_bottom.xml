@@ -66,6 +66,9 @@
         android:progressDrawable="@drawable/po_seekbar_video"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_thumb"
+        tools:progress="50"
+        tools:secondaryProgress="69"
+        tools:max="100"
         vlc:layout_constraintEnd_toEndOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintTop_toBottomOf="@id/player_overlay_time_container" />

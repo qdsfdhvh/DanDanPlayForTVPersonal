@@ -1,12 +1,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.seiko.player">
     <application>
-        <!--播放器中介-->
+
+        <!--中转-->
         <activity
+            android:name=".ui.StartActivity"
             android:label="@string/player_app_name"
-            android:name=".ui.VideoPlayerActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="fullSensor">
+            android:theme="@style/Theme.VLC.Transparent.NoUI">
         </activity>
+
+        <!--播放器-->
+        <activity
+            android:name=".ui.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
+            android:exported="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.VLC.Player">
+        </activity>
+
+        <service android:name=".service.PlaybackService"/>
+
     </application>
 </manifest>

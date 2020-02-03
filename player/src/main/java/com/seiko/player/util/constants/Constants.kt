@@ -15,8 +15,15 @@ internal const val DB_NAME_DEFAULT = "Seiko_Player_Database"
  */
 internal const val PREFS_NAME_DEFAULT = "Seiko_Player_Prefs"
 
+/**
+ * 进度条最大值
+ */
+internal const val MAX_VIDEO_SEEK = 1000
 
-internal const val CHROMA_RV16 = "RV16"
+/**
+ * 无效值
+ */
+internal const val INVALID_VALUE = -1
 
 // StartActivity
 const val PREF_FIRST_RUN = "first_run"

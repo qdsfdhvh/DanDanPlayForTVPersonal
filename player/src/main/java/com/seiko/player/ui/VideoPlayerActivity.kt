@@ -1,69 +1,62 @@
 package com.seiko.player.ui
 
-import android.net.Uri
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import android.view.*
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
 import android.widget.SeekBar
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.player.R
+import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.model.PlayerOption
 import com.seiko.player.databinding.PlayerActivityVideoBinding
 import com.seiko.player.databinding.PlayerControlBottomBinding
 import com.seiko.player.delegate.VideoKeyDownDelegate
 import com.seiko.player.delegate.VideoTouchDelegate
-import com.seiko.player.service.PlaybackService
-import com.seiko.player.media.checkCpuCompatibility
-import com.seiko.player.ui.adapter.*
-import com.seiko.player.vm.PlayerViewModel
+import com.seiko.player.ijkplayer.media.MediaPlayerParams
+import com.seiko.player.media.player.MediaPlayerCreatorFactory
+import com.seiko.player.ui.adapter.OptionsAdapter
+import com.seiko.player.util.Tools
+import com.seiko.player.util.constants.INVALID_VALUE
+import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.viewModel
-import org.videolan.libvlc.util.DisplayManager
-import org.videolan.medialibrary.MLServiceLocator
-import org.videolan.medialibrary.Tools
-import org.videolan.medialibrary.interfaces.Medialibrary
-import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
-import java.lang.ref.WeakReference
+import tv.danmaku.ijk.media.player.IMediaPlayer
 
-//private const val ID_PLAY_AS_AUDIO = 0
-//private const val ID_SLEEP = 1
-//private const val ID_JUMP_TO = 2
-private const val ID_AUDIO_TRACK = 31
-private const val ID_AUDIO_DELAY = 32
-//private const val ID_SPU_DELAY = 4
-//private const val ID_CHAPTER_TITLE = 5
-private const val ID_PLAYBACK_SPEED = 6
-//private const val ID_EQUALIZER = 7
-//private const val ID_SAVE_PLAYLIST = 8
-//private const val ID_POPUP_VIDEO = 9
-//private const val ID_REPEAT = 10
-//private const val ID_SHUFFLE = 11
-//private const val ID_PASS_THROUGH = 12
-private const val ID_AB_REPEAT = 13
-//private const val ID_OVERLAY_SIZE = 14
-//private const val ID_VIDEO_STATS = 15
-
-@Route(path = Routes.Player.PATH)
 class VideoPlayerActivity: FragmentActivity()
     , View.OnClickListener
     , OnItemClickListener
-    , SeekBar.OnSeekBarChangeListener {
+    , SeekBar.OnSeekBarChangeListener
+    , IMediaPlayer.OnPreparedListener
+    , IMediaPlayer.OnInfoListener
+    , IMediaPlayer.OnErrorListener {
+
+    companion object {
+
+        private const val ARGS_VIDEO_PARAMS = "ARGS_VIDEO_PARAMS"
+
+        private const val ID_AUDIO_TRACK = 31
+        private const val ID_AUDIO_DELAY = 32
+        private const val ID_PLAYBACK_SPEED = 6
+        private const val ID_AB_REPEAT = 13
+
+        fun launch(context: Context, param: PlayParam) {
+            val intent = Intent(context, VideoPlayerActivity::class.java)
+            intent.putExtra(ARGS_VIDEO_PARAMS, param)
+            context.startActivity(intent)
+        }
+    }
 
     private lateinit var binding: PlayerActivityVideoBinding
     private lateinit var bindingControlBottom: PlayerControlBottomBinding
-
-    private lateinit var displayManager: DisplayManager
 
     private val handler by lazyAndroid { VideoPlayerHandler(this) }
     private val keyDownDelegate by lazyAndroid { VideoKeyDownDelegate(handler) }
@@ -71,49 +64,61 @@ class VideoPlayerActivity: FragmentActivity()
 
     private val optionsAdapter by lazyAndroid { OptionsAdapter(this) }
 
-    private val viewModel: PlayerViewModel by viewModel()
+    private val mediaPlayerFactory: MediaPlayerCreatorFactory by inject()
 
+    /**
+     * 底部控制界面是否显示中
+     */
     private var isOverlayShow = false
+
+    /**
+     * 右侧配置界面是否显示中
+     */
     private var isOptionsShow = false
+
+    /**
+     * 目标进度
+     */
+    private var mTargetPosition = INVALID_VALUE
+
+    /**
+     * 是否在拖动进度条
+     */
+    internal var isDragging = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkCpuCompatibility()
-        initDisplayManager()
         binding = PlayerActivityVideoBinding.inflate(layoutInflater)
         bindingControlBottom = binding.playerViewStubHud.playerLayoutControlBottom
         setContentView(binding.root)
         setupUI()
-        bindViewModel()
-        loadMedia()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        setVideoUri()
     }
 
     override fun onResume() {
         super.onResume()
         initUI()
-        viewModel.play()
+//        if (!isPlaying()) {
+//            binding.playerVideoViewIjk.start()
+//        }
     }
 
     override fun onPause() {
-        super.onPause()
-        viewModel.pause()
         clearUI()
+        if (isPlaying()) {
+            binding.playerVideoViewIjk.pause()
+        }
+        super.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel.stop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        displayManager.release()
-        viewModel.release()
-    }
-
-    private fun initDisplayManager() {
-        displayManager = DisplayManager(this, null,
-            false, false, false)
+        binding.playerVideoViewIjk.stopPlayback()
     }
 
     private fun setupUI() {
@@ -122,51 +127,66 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom.playerBtnOverlayPlay.setOnClickListener(this)
         bindingControlBottom.playerBtnOverlayAdvFunction.setOnClickListener(this)
         bindingControlBottom.playerOverlaySeekbar.setOnSeekBarChangeListener(this)
+        bindingControlBottom.playerOverlaySeekbar.max = MAX_VIDEO_SEEK
         // 右侧配置
         binding.playerViewStubHud.playerOptionsList.layoutManager = LinearLayoutManager(this)
         binding.playerViewStubHud.playerOptionsList.adapter = optionsAdapter
         optionsAdapter.setOnItemClickListener(this)
+        // 播放器
+        val creator = mediaPlayerFactory.getCreator(MediaPlayerCreatorFactory.Type.IJK_PLAYER)
+        binding.playerVideoViewIjk.setIsUsingSurfaceRenders(false)
+        binding.playerVideoViewIjk.setMediaPlayerCreator(creator)
+        binding.playerVideoViewIjk.setOnPreparedListener(this)
+        binding.playerVideoViewIjk.setOnInfoListener(this)
+        binding.playerVideoViewIjk.setOnErrorListener(this)
+
     }
 
-    private fun bindViewModel() {
-        viewModel.progress.observe(this::getLifecycle) { progress ->
-            bindingControlBottom.playerOverlayTime.text = Tools.millisToString(progress.time)
-            bindingControlBottom.playerOverlayLength.text = Tools.millisToString(progress.length)
-            bindingControlBottom.playerOverlaySeekbar.progress = if (progress.length == 0L)
-                0 else (progress.time * 100 / progress.length).toInt()
-            bindingControlBottom.playerOverlaySeekbar.max = 100
+    fun syncProgress(): Long {
+        if (isDragging) {
+            return 0
         }
+
+        val videoView = binding.playerVideoViewIjk
+        // 视频播放的当前进度
+        val position = videoView.currentPosition.toLong()
+        // 视频总的时长
+        val duration = videoView.duration.toLong()
+
+        if (duration > 0) {
+            // 转换为 Seek 显示的进度值
+            val pos = MAX_VIDEO_SEEK * position / duration
+            bindingControlBottom.playerOverlaySeekbar.progress = pos.toInt()
+            // 获取缓冲的进度百分比，并显示在 Seek 的次进度
+            val percent = videoView.bufferPercentage
+            bindingControlBottom.playerOverlaySeekbar.secondaryProgress = percent * 10
+        }
+        // 更新播放时间
+        bindingControlBottom.playerOverlayTime.text = Tools.millisToString(position)
+        bindingControlBottom.playerOverlayLength.text = Tools.millisToString(duration)
+        // 返回当前播放进度
+        return position
     }
 
     private fun initUI() {
-        viewModel.attachView(binding.videoLayout, displayManager)
-        displayManager.setMediaRouterCallback()
         binding.root.keepScreenOn = true
     }
 
     private fun clearUI() {
         binding.root.keepScreenOn = false
-        displayManager.removeMediaRouterCallback()
-        viewModel.detachView()
     }
 
     /**
      * 读取播放源
      */
-    private fun loadMedia() {
-        val intent = intent
-        var videoUri: Uri? = null
-        if (intent.data != null) {
-            videoUri = intent.data
-        }
-
-        if (videoUri != null) {
-            var media = Medialibrary.getInstance().getMedia(videoUri)
-            if (media == null) {
-                media = MLServiceLocator.getAbstractMediaWrapper(videoUri)
-            }
-            media.addFlags(MediaWrapper.MEDIA_VIDEO)
-            PlaybackService.openMedia(this, media)
+    private fun setVideoUri() {
+        val intent = intent ?: return
+        val param: PlayParam = intent.getParcelableExtra(ARGS_VIDEO_PARAMS) ?: return
+        val videoView = binding.playerVideoViewIjk
+        videoView.setVideoURI(param.videoUri)
+        videoView.seekTo(0)
+        if (!isPlaying()) {
+            videoView.start()
         }
     }
 
@@ -196,19 +216,23 @@ class VideoPlayerActivity: FragmentActivity()
         when(item) {
             is PlayerOption -> {
                 when(item.id) {
+                    // 点击 回放速度
                     ID_PLAYBACK_SPEED -> {
                         toast("回放速度")
                         handler.optionsShow(false)
                     }
+                    // 点击 A-B 循环
                     ID_AB_REPEAT -> {
                         toast("A-B 循环")
                         handler.optionsShow(false)
                     }
+                    // 点击 音频轨
                     ID_AUDIO_TRACK -> {
                         toast("音频轨")
                         handler.optionsShow(false)
 
                     }
+                    // 点击 音频延迟
                     ID_AUDIO_DELAY -> {
                         toast("音频延迟")
                         handler.optionsShow(false)
@@ -218,18 +242,37 @@ class VideoPlayerActivity: FragmentActivity()
         }
     }
 
+    /**
+     * 用户拖动进度条中...
+     */
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        if (fromUser) {
-            viewModel.seekTo(progress)
-        }
+        if (!fromUser) return
+        // 计算跳转位置
+        val duration = binding.playerVideoViewIjk.duration
+        mTargetPosition = progress * duration / MAX_VIDEO_SEEK
     }
 
+    /**
+     * 用户开始拖动进度条
+     */
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
+        isDragging = true
+        // 停止更新进度
+        handler.stopUpdateProgress()
     }
 
+    /**
+     * 用户停止拖动进度条
+     */
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
+        isDragging = false
+        // 跳转到目标位置
+        if (mTargetPosition != INVALID_VALUE) {
+            binding.playerVideoViewIjk.seekTo(mTargetPosition)
+            mTargetPosition = INVALID_VALUE
+        }
+        // 继续更新进度
+        handler.startUpdateProgress()
     }
 
     /**
@@ -341,70 +384,46 @@ class VideoPlayerActivity: FragmentActivity()
         }
     }
 
-}
+    /**
+     * 播放器解析事件回调
+     */
+    override fun onPrepared(mp: IMediaPlayer?) {
 
-class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMainLooper()) {
-
-    companion object {
-        private const val SET_CONTROL_SHOW = 10
-        private const val SET_OVERLAY_SHOW = 11
-        private const val SET_OPTIONS_SHOW = 12
     }
 
-    private val activity = WeakReference(activity)
-
-    override fun handleMessage(msg: Message) {
-        when(msg.what) {
-            SET_CONTROL_SHOW -> {
-                activity.get()?.setControlShow()
+    /**
+     * 播放器播放事件回调
+     */
+    override fun onInfo(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
+        when(what) {
+            IMediaPlayer.MEDIA_INFO_BUFFERING_START -> {
+                Timber.d("MEDIA_INFO_BUFFERING_START")
             }
-            SET_OVERLAY_SHOW -> {
-                activity.get()?.setOverlayShow(msg.obj as? Boolean)
+            MediaPlayerParams.STATE_PLAYING -> {
+                Timber.d("STATE_PLAYING")
+                // 开始更新进度
+                handler.startUpdateProgress()
             }
-            SET_OPTIONS_SHOW -> {
-                activity.get()?.setOptionsShow(msg.obj as? Boolean, msg.arg1)
+            MediaPlayerParams.STATE_ERROR -> {
+                Timber.d("STATE_ERROR")
+            }
+            MediaPlayerParams.STATE_COMPLETED -> {
+                Timber.d("STATE_COMPLETED")
             }
         }
+        return true
     }
 
     /**
-     * 点击屏幕，切换控制相关界面的显示/隐藏
-     * @param delay 延时ms
+     * 播放器错误事件回调
      */
-    fun controlShow(delay: Long = ViewConfiguration.getDoubleTapTimeout().toLong()) {
-        removeMessages(SET_CONTROL_SHOW)
-        val msg = obtainMessage(SET_CONTROL_SHOW)
-        sendMessageDelayed(msg, delay)
+    override fun onError(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
+        Timber.d("onError what=$what, extra=$extra")
+        return false
     }
 
-    /**
-     * 显示/隐藏 底部控制界面
-     * @param show 是否显示，null时切换当前状态
-     * @param delay 延时ms
-     */
-    fun overlayShow(
-        show: Boolean? = null,
-        delay: Long = ViewConfiguration.getDoubleTapTimeout().toLong()
-    ) {
-        removeMessages(SET_OVERLAY_SHOW)
-        val msg = obtainMessage(SET_OVERLAY_SHOW, show)
-        sendMessageDelayed(msg, delay)
-    }
-
-    /**
-     * 显示/隐藏 右侧配置界面
-     * @param type 类型 字幕配置 or 其他配置
-     * @param show 是否显示，null时切换当前状态
-     * @param delay 延时ms
-     */
-    fun optionsShow(
-        show: Boolean? = null,
-        @PlayerOption.PlayerOptionType type: Int = -1,
-        delay: Long = ViewConfiguration.getDoubleTapTimeout().toLong()
-    ) {
-        removeMessages(SET_OPTIONS_SHOW)
-        val msg = obtainMessage(SET_OPTIONS_SHOW, type, -1, show)
-        sendMessageDelayed(msg, delay)
+    fun isPlaying(): Boolean {
+        return binding.playerVideoViewIjk.isPlaying
     }
 
 }

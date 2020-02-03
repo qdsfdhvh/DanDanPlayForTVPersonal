@@ -1,36 +1,26 @@
 package com.seiko.player.di
 
-import android.content.Context
-import com.seiko.player.data.db.SlaveRepository
 import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.media.PlayerListManager
-import com.seiko.player.media.PlayerController
-import com.seiko.player.media.PlayerOptions
-import org.koin.android.ext.koin.androidContext
+import com.seiko.player.media.player.AndroidMediaPlayerCreator
+import com.seiko.player.media.player.IjkMediaPlayerCreator
+import com.seiko.player.media.player.MediaPlayerCreatorFactory
+import com.seiko.player.media.player.MediaPlayerCreatorFactoryImpl
 import org.koin.dsl.module
 
 val playModule = module {
-    single { createPlayerOptions(androidContext(), get()) }
-    single { createPlayerController(get()) }
-    single { createPlayListManager(get(), get(), get()) }
+    single { createIjkMediaPlayerCreator(get()) }
+    single { createAndroidMediaPlayerCreator() }
+    single { createMediaPlayerFactory() }
 }
 
-private fun createPlayerOptions(context: Context, pref: PrefDataSource): PlayerOptions {
-    return PlayerOptions(context, pref)
+private fun createIjkMediaPlayerCreator(prefs: PrefDataSource): IjkMediaPlayerCreator {
+    return IjkMediaPlayerCreator(prefs)
 }
 
-private fun createPlayerController(options: PlayerOptions): PlayerController {
-    return PlayerController(options)
+private fun createAndroidMediaPlayerCreator(): AndroidMediaPlayerCreator {
+    return AndroidMediaPlayerCreator()
 }
 
-private fun createPlayListManager(
-    options: PlayerOptions,
-    playerController: PlayerController,
-    slaveRepository: SlaveRepository
-): PlayerListManager {
-    return PlayerListManager(
-        options,
-        playerController,
-        slaveRepository
-    )
+private fun createMediaPlayerFactory(): MediaPlayerCreatorFactory {
+    return MediaPlayerCreatorFactoryImpl()
 }

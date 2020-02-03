@@ -24,6 +24,8 @@
     <item name="player_overlay_time_container" type="id"/>
     <item name="player_overlay_time" type="id"/>
 
+    <item name="player_video_view_ijk" type="id"/>
+
     <item name="player_options_list" type="id"/>
     <item name="player_option_title" type="id"/>
     <item name="player_option_icon" type="id"/>

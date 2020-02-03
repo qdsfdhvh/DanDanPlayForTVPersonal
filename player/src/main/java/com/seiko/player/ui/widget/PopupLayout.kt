@@ -32,12 +32,9 @@ import android.view.*
 import android.widget.RelativeLayout
 import androidx.core.view.GestureDetectorCompat
 import com.seiko.player.R
-import org.videolan.libvlc.interfaces.IVLCVout
-import org.videolan.libvlc.util.AndroidUtil
 
 class PopupLayout : RelativeLayout, ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
 
-    private var vlcVout: IVLCVout? = null
     private var windowManager: WindowManager? = null
     private var gestureDetector: GestureDetectorCompat? = null
     private var scaleGestureDetector: ScaleGestureDetector? = null
@@ -65,10 +62,6 @@ class PopupLayout : RelativeLayout, ScaleGestureDetector.OnScaleGestureListener,
         init(context)
     }
 
-    fun setVLCVOut(vout: IVLCVout) {
-        vlcVout = vout
-        vlcVout!!.setWindowSize(popupWidth, popupHeight)
-    }
 
     /*
      * Remove layout from window manager
@@ -77,7 +70,6 @@ class PopupLayout : RelativeLayout, ScaleGestureDetector.OnScaleGestureListener,
         keepScreenOn = false
         windowManager!!.removeView(this)
         windowManager = null
-        vlcVout = null
     }
 
     fun setGestureDetector(gdc: GestureDetectorCompat) {
@@ -102,8 +94,6 @@ class PopupLayout : RelativeLayout, ScaleGestureDetector.OnScaleGestureListener,
         mLayoutParams.width = width
         mLayoutParams.height = height
         windowManager!!.updateViewLayout(this, mLayoutParams)
-        if (vlcVout != null)
-            vlcVout!!.setWindowSize(popupWidth, popupHeight)
     }
 
     private fun init(context: Context) {
@@ -114,7 +104,7 @@ class PopupLayout : RelativeLayout, ScaleGestureDetector.OnScaleGestureListener,
         val params = WindowManager.LayoutParams(
                 popupWidth,
                 popupHeight,
-                if (AndroidUtil.isOOrLater) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.OPAQUE)
 

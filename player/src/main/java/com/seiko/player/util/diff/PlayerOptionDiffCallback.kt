@@ -3,7 +3,6 @@ package com.seiko.player.util.diff
 import android.os.Bundle
 import androidx.leanback.widget.DiffCallback
 import com.seiko.player.data.model.PlayerOption
-import org.videolan.medialibrary.media.MediaLibraryItem
 
 class PlayerOptionDiffCallback : DiffCallback<PlayerOption>() {
 

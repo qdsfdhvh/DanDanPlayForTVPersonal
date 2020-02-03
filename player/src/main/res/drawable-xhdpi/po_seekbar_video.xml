@@ -9,14 +9,13 @@
             <solid android:color="@color/grey200" />
         </shape>
     </item>
-    <item
-        android:id="@android:id/secondaryProgress"
+    <item android:id="@android:id/secondaryProgress"
         android:gravity="center_vertical|fill_horizontal">
         <clip>
             <shape android:shape="rectangle">
                 <corners android:radius="1.5dp" />
                 <size android:height="3dp" />
-                <solid android:color="@color/grey200" />
+                <solid android:color="@color/orange200" />
             </shape>
         </clip>
     </item>

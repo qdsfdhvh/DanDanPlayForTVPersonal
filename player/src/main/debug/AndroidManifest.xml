@@ -55,7 +55,7 @@
             android:name="android.allow_multiple_resumed_activities"
             android:value="true" />
 
-
+        <!--启动 & 中转-->
         <activity
             android:name=".ui.StartActivity"
             android:theme="@style/Theme.VLC.Transparent.NoUI">
@@ -71,7 +71,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data
                     android:host="${applicationId}"
-                    android:scheme="vlc-launcher"/>
+                    android:scheme="seiko-player"/>
             </intent-filter>
 
             <!-- This filter captures protocols without type info -->
@@ -427,7 +427,7 @@
             </intent-filter>
         </activity>
 
-        <!--播放器中介-->
+        <!--播放器-->
         <activity
             android:name=".ui.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
@@ -437,10 +437,6 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.VLC.Player">
         </activity>
-
-        <activity
-            android:name=".ui.CompatErrorActivity"
-            android:theme="@style/Theme.VLC.Transparent"/>
 
         <service android:name=".service.PlaybackService"/>
 
