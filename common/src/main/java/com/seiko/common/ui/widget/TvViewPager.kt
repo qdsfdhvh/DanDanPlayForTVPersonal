@@ -14,7 +14,6 @@ class TvViewPager : ViewPager {
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
         // 禁止翻页,将权限交给leanback来执行.
-        // 禁止翻页,将权限交给leanback来执行.
         return if (event!!.keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
             || event.keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             false

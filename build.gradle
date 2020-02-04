@@ -4,7 +4,7 @@ buildscript {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url uri('./repo') } //本地maven仓库地址
+        maven { url uri('./repo') } // 本地maven仓库地址
     }
     dependencies {
         classpath dependence.libGradlePlugin

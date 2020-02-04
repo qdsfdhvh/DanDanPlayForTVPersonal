@@ -8,6 +8,7 @@ import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.FixBrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.dandanplay.tv.R
@@ -28,15 +29,13 @@ import com.seiko.common.util.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class HomeFragment : BrowseSupportFragment()
+class HomeFragment : FixBrowseSupportFragment()
     , OnItemViewClickedListener
     , View.OnClickListener {
 
     private val viewModel by viewModel<HomeViewModel>()
 
     private var adapterRows: SparseArray<AnimeRow<*>>? = null
-
-//    private lateinit var navController: NavController
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -57,9 +56,8 @@ class HomeFragment : BrowseSupportFragment()
     }
 
     override fun onDestroyView() {
-        adapterRows = null
-        adapter = null
         super.onDestroyView()
+        adapterRows = null
     }
 
     /**

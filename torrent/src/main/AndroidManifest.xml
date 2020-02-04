@@ -7,15 +7,15 @@
     <application>
         <activity
             android:name=".ui.TorrentMainActivity"
-            android:theme="@style/torrent_BaseTheme"
+            android:theme="@style/Theme.Torrent.Transparent"
             android:exported="true"
-            android:launchMode="singleInstance"
             android:screenOrientation="fullSensor"/>
 
         <activity
             android:label="@string/torrent_app_name"
             android:name=".ui.TorrentAddActivity"
-            android:theme="@style/torrent_BaseTheme"
+            android:theme="@style/Theme.Torrent.Transparent"
+            android:launchMode="singleTask"
             android:exported="true"
             android:screenOrientation="fullSensor"
             android:windowSoftInputMode="stateHidden">

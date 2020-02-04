@@ -8,12 +8,7 @@ import android.view.*
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import androidx.fragment.app.Fragment
-import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.alibaba.android.arouter.facade.Postcard
-import com.alibaba.android.arouter.facade.callback.NavCallback
-import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.extensions.checkPermissions
 import com.seiko.common.util.extensions.lazyAndroid
@@ -21,7 +16,6 @@ import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.data.Result
 import com.seiko.common.router.Navigator
-import com.seiko.common.router.Routes
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService

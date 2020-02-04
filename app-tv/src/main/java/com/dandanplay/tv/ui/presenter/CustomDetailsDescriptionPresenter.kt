@@ -88,6 +88,7 @@ class CustomDetailsDescriptionPresenter : Presenter() {
         }
 
         private var mPreDrawListener: ViewTreeObserver.OnPreDrawListener? = null
+
         fun addPreDrawListener() {
             if (mPreDrawListener != null) {
                 return

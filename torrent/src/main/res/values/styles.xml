@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="torrent_BaseTheme" parent="Theme.AppCompat.NoActionBar">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ResourceName">
+    <style name="Theme.Torrent.Transparent" parent="Theme.AppCompat.NoActionBar">
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="torrent_BaseTheme.TorrentInfoText" parent="android:TextAppearance.Widget.TextView">
+    <style name="Theme.Torrent.InfoText" parent="android:TextAppearance.Widget.TextView">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textIsSelectable">true</item>

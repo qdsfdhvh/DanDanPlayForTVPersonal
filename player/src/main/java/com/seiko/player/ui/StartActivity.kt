@@ -18,7 +18,7 @@ class StartActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
-        resume()
+        checkIntent()
     }
 
     override fun onDestroy() {
@@ -26,7 +26,7 @@ class StartActivity : FragmentActivity() {
         Timber.d("onDestroy")
     }
 
-    private fun resume() {
+    private fun checkIntent() {
         val openIntent = intent
         if (openIntent == null) {
             finish()

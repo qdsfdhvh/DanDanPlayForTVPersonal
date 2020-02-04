@@ -1,6 +1,7 @@
 package com.seiko.torrent.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -25,17 +26,26 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkIntent()
+    }
 
-        val intent = intent
-        if (intent == null) {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        checkIntent()
+    }
+
+    private fun checkIntent() {
+        val openIntent = intent
+        if (openIntent == null) {
             Timber.w("Torrent Add Intent is Null.")
             finish()
             return
         }
 
         val uri: Uri = when {
-            intent.data != null -> {
-                intent.data!!
+            openIntent.data != null -> {
+                openIntent.data!!
             }
             else -> {
                 Timber.w("Torrent Add Uri is Null.")

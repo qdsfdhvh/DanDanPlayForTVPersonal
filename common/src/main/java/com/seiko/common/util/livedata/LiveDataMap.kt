@@ -42,6 +42,8 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
         }
     }
 
+
+
     suspend fun add(key: K, item: V) {
         withContext(Dispatchers.Main) {
             value = value.apply {
@@ -49,7 +51,6 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
                 put(key, item)
             }
         }
-
     }
 
     suspend fun remove(key: K) {

@@ -36,9 +36,8 @@ class ItemViewHolder(view: View) : DetailsOverviewLogoPresenter.ViewHolder(view)
         }
     }
 
-    private val logo: SimpleDraweeView = view.findViewById(R.id.details_overview_image)
-
     fun bind(item: BangumiDetailsEntity) {
-        logo.setImageURI(item.imageUrl)
+        (view.findViewById(R.id.details_overview_image) as SimpleDraweeView).setImageURI(item.imageUrl)
     }
+
 }

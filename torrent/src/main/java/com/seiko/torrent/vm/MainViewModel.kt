@@ -22,7 +22,7 @@ class MainViewModel(
      * 种子信息集合
      */
     val torrentItems: LiveData<List<TorrentListItem>> = Transformations.map(downloader.getTorrentStateMap()) { stateMap ->
-        stateMap.map { TorrentListItem(it.value) }.sortedBy { it.dateAdded }
+        stateMap.map { TorrentListItem(it.value) }.sortedByDescending { it.dateAdded }
     }
 
     private val _torrentItem = MutableLiveData<TorrentListItem>()
@@ -37,20 +37,8 @@ class MainViewModel(
 
     fun loadData(force: Boolean) = viewModelScope.launch {
         if (!force && torrentItems.value != null) return@launch
-
         val tasks = torrentRepo.getTorrents()
-        val loadList = ArrayList<TorrentTask>(tasks.size)
-        for (task in tasks) {
-            if (!task.downloadingMetadata && !File(task.source).exists()) {
-                Timber.d("Torrent doesn't exists: $task")
-                torrentRepo.deleteTorrent(task.hash)
-            } else {
-                loadList.add(task)
-            }
-        }
-
-        downloader.restoreDownloads(loadList)
-//        _torrentItems.value = loadList
+        downloader.restoreDownloads(tasks)
     }
 
     fun setTorrentHash(item: TorrentListItem?) {
@@ -64,7 +52,6 @@ class MainViewModel(
 
     override fun onCleared() {
         super.onCleared()
-//        _torrentItems.value = null
         _torrentItem.value = null
     }
 

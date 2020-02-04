@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.core.LogisticsCenter
 import com.alibaba.android.arouter.exception.NoRouteFoundException
 import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.launcher.ARouter
+import timber.log.Timber
 
 
 object Navigator {
@@ -29,7 +30,7 @@ object Navigator {
 
         val intent = Intent(activity, postcard.destination)
         intent.data = uri
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
 
         activity.startActivity(intent)
@@ -45,10 +46,11 @@ object Navigator {
 
         val intent = Intent(fragment.requireContext(), postcard.destination)
         intent.data = uri
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
 
         fragment.startActivityForResult(intent, requestCode)
+        Timber.d("navToAddTorrent")
     }
 
     /**

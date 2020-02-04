@@ -17,10 +17,6 @@ class CustomFullWidthDetailsOverviewRowPresenter(
         initialState = STATE_FULL
     }
 
-//    override fun getLayoutResourceId(): Int {
-//        return R.layout.app_lb_fullwidth_details_overview
-//    }
-
     override fun onLayoutLogo(viewHolder: ViewHolder, oldState: Int, logoChanged: Boolean) {
         val imageView = viewHolder.logoViewHolder.view
         val lp = imageView.layoutParams as ViewGroup.MarginLayoutParams

@@ -4,8 +4,7 @@ import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.download.torrent.extensions.*
 import org.libtorrent4j.TorrentHandle
 
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-class TorrentSessionStatus private constructor(
+class TorrentSessionStatus(
     val hash: String,
     val title: String,
     val downloadPath: String,
@@ -13,20 +12,31 @@ class TorrentSessionStatus private constructor(
     val error: String,
 
     @TorrentStateCode val state: Int,
-    val downloadRate: Long,
-    val uploadRate: Long,
-    val progress: Float,
-    val receivedBytes: Long,
-    val uploadedBytes: Long,
-    val totalBytes: Long,
-    val connectPeers: Int,
-    val totalPeers: Int,
-    val connectedSeeds: Int,
-    val totalSeeds: Int,
-    val eta: Long
+    var downloadRate: Long = 0,
+    var uploadRate: Long = 0,
+    var progress: Float = 0f,
+    var receivedBytes: Long = 0,
+    var uploadedBytes: Long = 0,
+    var totalBytes: Long = 0,
+    var connectPeers: Int = 0,
+    var totalPeers: Int = 0,
+    var connectedSeeds: Int = 0,
+    var totalSeeds: Int = 0,
+    var eta: Long = 0
 ) {
 
-    internal companion object {
+    companion object {
+        fun createInstance(
+            task: TorrentTask
+        ): TorrentSessionStatus = TorrentSessionStatus(
+            hash = task.hash,
+            title = task.name,
+            downloadPath = task.downloadPath,
+            dateAdded = task.addedDate,
+            error = task.error,
+            state = TorrentStateCode.UNKNOWN
+        )
+
         fun createInstance(
             task: TorrentTask,
             torrentHandle: TorrentHandle

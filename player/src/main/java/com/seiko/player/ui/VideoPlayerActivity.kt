@@ -373,7 +373,7 @@ class VideoPlayerActivity: FragmentActivity()
         if (show == isOptionsShow) return
         if (show ?: !isOptionsShow) {
             isOptionsShow = true
-            optionsAdapter.items = when(type) {
+            optionsAdapter.submitList(when(type) {
                 PlayerOption.PlayerOptionType.ADVANCED -> {
                     listOf(
                         PlayerOption(type, ID_PLAYBACK_SPEED, R.drawable.ic_speed, getString(R.string.playback_speed)),
@@ -387,7 +387,7 @@ class VideoPlayerActivity: FragmentActivity()
                     )
                 }
                 else -> emptyList()
-            }
+            })
             binding.playerViewStubHud.playerOptionsList.visibility = View.VISIBLE
         } else {
             isOptionsShow = false
@@ -421,8 +421,7 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Timber.d("onKeyDown")
-        return super.onKeyDown(keyCode, event)
+        return keyDownDelegate.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
     }
 
     /**

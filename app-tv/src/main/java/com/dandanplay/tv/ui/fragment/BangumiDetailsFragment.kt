@@ -5,21 +5,22 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
+import androidx.leanback.app.FixDetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.palette.graphics.Palette
 import com.dandanplay.tv.R
-import com.seiko.common.ui.dialog.setLoadFragment
-import com.dandanplay.tv.ui.presenter.*
-import com.dandanplay.tv.data.model.EpisodesListRow
-import com.dandanplay.tv.vm.BangumiDetailViewModel
-import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
-import com.seiko.common.util.toast.toast
 import com.dandanplay.tv.data.db.model.BangumiDetailsEntity
 import com.dandanplay.tv.data.db.model.BangumiEpisodeEntity
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
+import com.dandanplay.tv.data.model.EpisodesListRow
+import com.dandanplay.tv.ui.presenter.*
+import com.dandanplay.tv.vm.BangumiDetailViewModel
+import com.seiko.common.data.ResultData
+import com.seiko.common.data.Status
+import com.seiko.common.ui.dialog.setLoadFragment
+import com.seiko.common.util.toast.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -27,13 +28,12 @@ import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class BangumiDetailsFragment : DetailsSupportFragment()
+class BangumiDetailsFragment : FixDetailsSupportFragment()
     , CoroutineScope by MainScope()
     , OnItemViewClickedListener
     , OnActionClickedListener {
 
     private val args by navArgs<BangumiDetailsFragmentArgs>()
-
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
     private var mPresenterSelector: ClassPresenterSelector? = null
@@ -47,23 +47,18 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
+        onItemViewClickedListener = null
         mPresenterSelector = null
         mAdapter = null
         mActionAdapter = null
-        super.onDestroyView()
         cancel()
     }
-
-//    override fun onDestroy() {
-//        cancel()
-//        super.onDestroy()
-//    }
 
     /**
      * 生成相关UI
      */
     private fun setupUI() {
-//        if (adapter != null) return
         mPresenterSelector = ClassPresenterSelector()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this

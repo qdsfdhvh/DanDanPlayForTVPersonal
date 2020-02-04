@@ -90,8 +90,7 @@ class BangumiAreaFragment : Fragment(),
      * 注销Item选择监听
      */
     override fun onDestroyView() {
-//        binding.gridSeason.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
-//        binding.gridBangumi.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
+        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
     }
 
@@ -145,10 +144,8 @@ class BangumiAreaFragment : Fragment(),
         bangumiAdapter.setOnItemClickListener(this)
         // 自动计算count，由于用到了width，需要等界面绘制完，因此在post里运行
         binding.gridBangumi.post {
-            val top =
-                getPercentHeightSize(ITEM_TOP_PADDING_PX)
-            val right =
-                getPercentWidthSize(ITEM_RIGHT_PADDING_PX)
+            val top = getPercentHeightSize(ITEM_TOP_PADDING_PX)
+            val right = getPercentWidthSize(ITEM_RIGHT_PADDING_PX)
             binding.gridBangumi.addItemDecoration(SpaceItemDecoration(top, right))
 
             // recView宽度，item宽度
@@ -161,6 +158,9 @@ class BangumiAreaFragment : Fragment(),
 
             binding.gridBangumi.setNumColumns(count)
             binding.gridBangumi.setOnChildViewHolderSelectedListener(mItemSelectedListener)
+            val pool = RecyclerView.RecycledViewPool()
+            pool.setMaxRecycledViews(0, 100)
+            binding.gridBangumi.setRecycledViewPool(pool)
 
             binding.gridBangumi.adapter = bangumiAdapter
         }
@@ -188,14 +188,13 @@ class BangumiAreaFragment : Fragment(),
                 setLoadFragment(false)
                 val seasons = data.data ?: emptyList()
 
-                seasonAdapter.items = seasons
+                seasonAdapter.submitList(seasons)
 
                 if (seasons.isNotEmpty()) {
                     var position = seasonSelectedPosition
                     if (position == -1 || position >= seasons.size) {
                         position = 0
                     }
-                    Timber.d("Season Position = $position")
                     viewModel.getBangumiListWithSeason(seasons[position], false)
                 }
             }
@@ -216,7 +215,7 @@ class BangumiAreaFragment : Fragment(),
             }
             Status.SUCCESSFUL -> {
                 binding.progress.visibility = View.GONE
-                bangumiAdapter.items = data.data ?: emptyList()
+                bangumiAdapter.submitList(data.data)
             }
         }
     }
@@ -302,7 +301,7 @@ private class AreaHandler(fragment: BangumiAreaFragment) : Handler() {
         private const val HANDLER_WHAT_SEASON = 100
     }
 
-    private val fragment = WeakReference(fragment)
+    private val reference = WeakReference(fragment)
 
     fun send(item: BangumiSeason) {
         removeMessages(HANDLER_WHAT_SEASON)
@@ -312,10 +311,11 @@ private class AreaHandler(fragment: BangumiAreaFragment) : Handler() {
     }
 
     override fun handleMessage(msg: Message) {
+        val fragment = reference.get() ?: return
         when(msg.what) {
             HANDLER_WHAT_SEASON -> {
                 val item = msg.obj as? BangumiSeason ?: return
-                fragment.get()?.getBangumiListWithSeason(item)
+                fragment.getBangumiListWithSeason(item)
             }
         }
     }

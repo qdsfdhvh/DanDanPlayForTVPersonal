@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/torrent_container_detail"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     <androidx.leanback.widget.HorizontalGridView
@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toTopOf="@id/torrent_view_pager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <androidx.viewpager2.widget.ViewPager2
+    <com.seiko.common.ui.widget.TvViewPager
         android:id="@id/torrent_view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -23,26 +23,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-<!--    <com.github.clans.fab.FloatingActionButton-->
-<!--        android:id="@id/torrent_btn_save"-->
-<!--        android:layout_width="56dp"-->
-<!--        android:layout_height="56dp"-->
-<!--        android:layout_gravity="center|bottom"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:transitionName="fab"-->
-<!--        android:elevation="6dp"-->
-<!--        android:padding="14dp"-->
-<!--        android:scaleType="fitCenter"-->
-<!--        android:stateListAnimator="@animator/torrent_fab_anim"-->
-<!--        android:visibility="gone"-->
-<!--        android:src="@drawable/ic_save_white_24dp"-->
-<!--        android:contentDescription="@string/save"-->
-<!--        android:focusable="true"-->
-<!--        app:fab_colorNormal="@color/torrent_accent"-->
-<!--        app:fab_colorPressed="@color/torrent_accent_dark"-->
-<!--        app:fab_colorRipple="@color/torrent_accent_light"-->
-<!--        tools:visibility="visible"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

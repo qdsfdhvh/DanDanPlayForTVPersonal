@@ -6,9 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
@@ -22,8 +22,8 @@ import timber.log.Timber
 
 private const val NUM_FRAGMENTS = 6
 
-private const val INFO_FRAG_POS = 0
-private const val FILES_FRAG_POS = 1
+private const val FILES_FRAG_POS = 0
+private const val INFO_FRAG_POS = 1
 private const val STATE_FRAG_POS = 2
 private const val TRACKERS_FRAG_POS = 3
 private const val PEERS_FRAG_POS = 4
@@ -85,8 +85,8 @@ class DetailTorrentFragment : Fragment()
     private fun setupUI() {
         tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
             tab.setText(when(position) {
-                INFO_FRAG_POS -> getString(R.string.torrent_info)
                 FILES_FRAG_POS -> getString(R.string.torrent_files)
+                INFO_FRAG_POS -> getString(R.string.torrent_info)
                 STATE_FRAG_POS -> getString(R.string.torrent_state)
                 TRACKERS_FRAG_POS -> getString(R.string.torrent_trackers)
                 PEERS_FRAG_POS -> getString(R.string.torrent_peers)
@@ -129,7 +129,6 @@ class DetailTorrentFragment : Fragment()
             ) {
                 when(parent) {
                     binding.torrentTab -> {
-                        Timber.d("select position = $position")
                         if (tabSelectPosition == position) return
                         tabSelectPosition = position
                         tabAdapter.setSelectPosition(position)
@@ -154,14 +153,14 @@ class DetailTorrentFragment : Fragment()
 
 }
 
-private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+private class DetailPagerAdapter(fragment: Fragment) : FragmentPagerAdapter(fragment.childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    override fun getItemCount(): Int = NUM_FRAGMENTS
+    override fun getCount(): Int = NUM_FRAGMENTS
 
-    override fun createFragment(position: Int): Fragment {
+    override fun getItem(position: Int): Fragment {
         return when(position) {
-            INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
             FILES_FRAG_POS -> DetailTorrentFilesFragment.newInstance()
+            INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
             STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
             TRACKERS_FRAG_POS -> DetailTorrentTrackersFragment.newInstance()
             PEERS_FRAG_POS -> DetailTorrentPeersFragment.newInstance()
@@ -169,5 +168,22 @@ private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(frag
             else -> throw RuntimeException("Can't create fragment with position=$position.")
         }
     }
-
 }
+
+//private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+//
+//    override fun getItemCount(): Int = NUM_FRAGMENTS
+//
+//    override fun createFragment(position: Int): Fragment {
+//        return when(position) {
+//            FILES_FRAG_POS -> DetailTorrentFilesFragment.newInstance()
+//            INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
+//            STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
+//            TRACKERS_FRAG_POS -> DetailTorrentTrackersFragment.newInstance()
+//            PEERS_FRAG_POS -> DetailTorrentPeersFragment.newInstance()
+//            PIECES_FRAG_POS -> DetailTorrentPiecesFragment.newInstance()
+//            else -> throw RuntimeException("Can't create fragment with position=$position.")
+//        }
+//    }
+//
+//}

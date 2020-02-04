@@ -11,7 +11,6 @@ dependencies {
     // UI
 //    api dependence.libAppCompat
     api dependence.libConstraintlayout
-    api dependence.libViewPager2
 
     // TV UI
     api dependence.libLeanback

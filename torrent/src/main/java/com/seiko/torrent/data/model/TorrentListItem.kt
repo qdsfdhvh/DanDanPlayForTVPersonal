@@ -43,13 +43,13 @@ data class TorrentListItem(
     var peers: Int = 0
 ) : Comparable<TorrentListItem> {
 
-//    constructor(task: TorrentTask) : this(
-//        hash = task.hash,
-//        title = task.name,
-//        downloadPath = task.downloadPath,
-//        dateAdded = task.addedDate,
-//        error = task.error
-//    )
+    constructor(task: TorrentTask) : this(
+        hash = task.hash,
+        title = task.name,
+        downloadPath = task.downloadPath,
+        dateAdded = task.addedDate,
+        error = task.error
+    )
 
     constructor(state: TorrentSessionStatus) : this(
         hash = state.hash,

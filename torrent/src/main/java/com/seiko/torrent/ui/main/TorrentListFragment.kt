@@ -61,11 +61,6 @@ class TorrentListFragment : Fragment()
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        registerEventBus()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
@@ -74,11 +69,6 @@ class TorrentListFragment : Fragment()
     override fun onStart() {
         super.onStart()
         viewModel.loadData(false)
-    }
-
-    override fun onDestroy() {
-        unRegisterEventBus()
-        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,8 +86,6 @@ class TorrentListFragment : Fragment()
         adapter = TorrentListAdapter()
         adapter.setOnItemClickListener(this)
         binding.torrentList.adapter = adapter
-//        binding.torrentList.addItemDecoration(RecyclerViewDividerDecoration(requireContext(),
-//            R.drawable.torrent_table_mode_divider))
         binding.torrentList.setItemSpacing(25)
         binding.torrentList.setPadding(12, 25, 12, 25)
         binding.torrentList.setOnChildViewHolderSelectedListener(mItemSelectedListener)
@@ -105,12 +93,7 @@ class TorrentListFragment : Fragment()
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItems.observe(this::getLifecycle) {
-            adapter.items = it
-        }
-//        viewModel.torrentItem.observe(this::getLifecycle) { item ->
-////            adapter!!.markAsOpen(item?.hash)
-//        }
+        viewModel.torrentItems.observe(this::getLifecycle, adapter::submitList)
     }
 
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
@@ -158,36 +141,14 @@ class TorrentListFragment : Fragment()
             ) {
                 when(parent) {
                     binding.torrentList -> {
-                        val item = adapter!!.get(position) ?: return
-                        if (adapter!!.isSelectHash(item.hash)) {
+                        val item = adapter.get(position) ?: return
+                        if (adapter.isSelectHash(item.hash)) {
                             viewModel.setTorrentHash(null)
                         } else {
                             viewModel.setTorrentHash(item)
                         }
                     }
                 }
-            }
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onReceive(event: PostEvent) {
-        when(event) {
-            is PostEvent.TorrentAdded -> {
-                Timber.d("Get Torrent Added: ${event.torrent.hash}")
-//                val item = TorrentListItem(event.torrent)
-//                adapter.addItem(item)
-//                viewModel.loadData(true)
-            }
-            is PostEvent.TorrentRemoved -> {
-//                val hash = event.hash
-//                adapter.deleteItem(hash)
-//                if (adapter.isSelectHash(hash)) {
-//                    viewModel.setTorrentHash(null)
-//                }
-                Timber.d("Get Torrent Removed: ${event.hash}")
-//                viewModel.loadData(true)
             }
         }
     }

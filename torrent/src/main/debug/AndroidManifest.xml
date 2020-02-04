@@ -26,7 +26,7 @@
 
         <activity android:name=".DebugActivity"
             android:launchMode="singleTask"
-            android:theme="@style/torrent_BaseTheme">
+            android:theme="@style/Theme.Torrent.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -38,12 +38,12 @@
         </activity>
 
         <activity android:name=".ui.TorrentMainActivity"
-            android:theme="@style/torrent_BaseTheme"/>
+            android:theme="@style/Theme.Torrent.Transparent"/>
 
         <activity
             android:label="@string/torrent_app_name"
             android:name=".ui.TorrentAddActivity"
-            android:theme="@style/torrent_BaseTheme"
+            android:theme="@style/Theme.Torrent.Transparent"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

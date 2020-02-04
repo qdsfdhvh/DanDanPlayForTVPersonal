@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dandanplay.tv.databinding.ItemBangumiSeasonBinding
 import com.dandanplay.tv.util.diff.BangumiSeasonDiffCallback
-import com.seiko.common.ui.adapter.BaseAdapter
 import com.dandanplay.tv.data.model.api.BangumiSeason
+import com.seiko.common.ui.adapter.BaseListAdapter
 
-class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
+class BangumiSeasonAdapter : BaseListAdapter<BangumiSeason, BangumiSeasonAdapter.ViewHolder>(BangumiSeasonDiffCallback()) {
 
     companion object {
         private const val ARGS_SELECT_POSITION = "ARGS_SELECT_POSITION"
@@ -17,27 +17,26 @@ class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
 
     private var selectPosition = 0
 
-    var items: List<BangumiSeason> = emptyList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+//    var items: List<BangumiSeason> = emptyList()
+//        set(value) {
+//            field = value
+//            notifyDataSetChanged()
+//        }
 
     fun get(position: Int): BangumiSeason? {
-        if (position < 0 || position >= items.size) return null
-        return items[position]
+        if (position < 0 || position >= itemCount) return null
+        return getItem(position)
     }
 
-    override fun getItemCount(): Int = items.size
+//    override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemBangumiSeasonBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemBangumiSeasonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], position)
+        holder.bind(position)
     }
 
     override fun onPayload(holder: ViewHolder, bundle: Bundle) {
@@ -70,12 +69,13 @@ class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
             binding.root.setOnClickListener {
                 val position = adapterPosition
                 if (position != -1) {
-                    listener?.onClick(this, items[position], position)
+                    listener?.onClick(this, getItem(position), position)
                 }
             }
         }
 
-        fun bind(item: BangumiSeason, position: Int) {
+        fun bind(position: Int) {
+            val item = getItem(position)
             binding.title.text = item.seasonName
             binding.root.isSelected = selectPosition == position
         }
@@ -85,7 +85,6 @@ class BangumiSeasonAdapter : BaseAdapter<BangumiSeasonAdapter.ViewHolder>() {
                 binding.title.text = bundle.getString(BangumiSeasonDiffCallback.ARGS_ANIME_TITLE)
             }
             if (bundle.containsKey(ARGS_SELECT_POSITION)) {
-                // cardView
                 itemView.isSelected = bundle.getBoolean(ARGS_SELECT_POSITION)
             }
         }

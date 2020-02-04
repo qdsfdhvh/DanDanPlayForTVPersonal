@@ -33,12 +33,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     /**
      * PS: Navigation在返回时，Fragment的View会重新绘制。
      */
-    private lateinit var navController: NavController
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        navController = findNavController(R.id.nav_controller)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

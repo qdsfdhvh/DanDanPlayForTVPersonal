@@ -1,39 +1,23 @@
 package com.dandanplay.tv.ui.adapter
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.leanback.widget.BaseCardView
 import androidx.recyclerview.widget.RecyclerView
-import com.dandanplay.tv.databinding.ItemBangumiRelatedBinding
 import com.dandanplay.tv.util.diff.BangumiIntroEntityDiffCallback
-import com.dandanplay.tv.util.getBangumiStatus
-import com.dandanplay.tv.util.loadImage
 import com.seiko.common.util.scaleAnimator
-import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.common.ui.adapter.BaseAdapter
-import com.seiko.common.ui.adapter.UpdatableAdapter
 import com.dandanplay.tv.data.db.model.BangumiIntroEntity
 import com.dandanplay.tv.ui.card.BangumiIntroEntityCardView
-import kotlin.properties.Delegates
+import com.seiko.common.ui.adapter.BaseListAdapter
 
-class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewHolder>(),
-    UpdatableAdapter,
+class BangumiRelateAdapter : BaseListAdapter<BangumiIntroEntity, BangumiRelateAdapter.BangumiRelateViewHolder>(BangumiIntroEntityDiffCallback()),
     View.OnFocusChangeListener {
 
-    private val diffCallback by lazyAndroid { BangumiIntroEntityDiffCallback() }
-
-    var items: List<BangumiIntroEntity> by Delegates.observable(emptyList()) { _, old, new ->
-        update(old, new, diffCallback)
-    }
-
     fun get(position: Int): BangumiIntroEntity? {
-        if (position < 0 || position >= items.size) return null
-        return items[position]
+        if (position < 0 || position >= itemCount) return null
+        return getItem(position)
     }
 
-    override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BangumiRelateViewHolder {
         val cardView = BangumiIntroEntityCardView(parent.context)
@@ -42,7 +26,7 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
     }
 
     override fun onBindViewHolder(holder: BangumiRelateViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
     override fun onPayload(holder: BangumiRelateViewHolder, bundle: Bundle) {
@@ -66,7 +50,7 @@ class BangumiRelateAdapter : BaseAdapter<BangumiRelateAdapter.BangumiRelateViewH
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != -1) {
-                listener?.onClick(this, items[position], position)
+                listener?.onClick(this, getItem(position), position)
             }
         }
 

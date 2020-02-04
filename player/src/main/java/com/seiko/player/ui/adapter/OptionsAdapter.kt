@@ -5,28 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.seiko.common.ui.adapter.BaseAdapter
-import com.seiko.common.ui.adapter.UpdatableAdapter
-import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.ui.adapter.BaseListAdapter
 import com.seiko.player.data.model.PlayerOption
 import com.seiko.player.databinding.PlayerItemOptionBinding
-import com.seiko.player.util.AppScope
 import com.seiko.player.util.diff.PlayerOptionDiffCallback
-import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
 
-class OptionsAdapter(context: Context) : BaseAdapter<OptionsAdapter.OptionsViewHolder>(), UpdatableAdapter {
+class OptionsAdapter(context: Context) : BaseListAdapter<PlayerOption, OptionsAdapter.OptionsViewHolder>(PlayerOptionDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
-    private val diffCallback by lazyAndroid { PlayerOptionDiffCallback() }
-
-    var items: List<PlayerOption> by Delegates.observable(emptyList()) { _, old, new ->
-        update(old, new, diffCallback, false)
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OptionsViewHolder {
         val binding = PlayerItemOptionBinding.inflate(inflater, parent, false)
@@ -51,13 +37,13 @@ class OptionsAdapter(context: Context) : BaseAdapter<OptionsAdapter.OptionsViewH
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position >= 0) {
-                    listener?.onClick(this, items[position], position)
+                    listener?.onClick(this, getItem(position), position)
                 }
             }
         }
 
         fun bind(position: Int) {
-            val item = items[position]
+            val item = getItem(position)
             binding.playerOptionTitle.text = item.title
             binding.playerOptionIcon.setImageResource(item.icon)
         }

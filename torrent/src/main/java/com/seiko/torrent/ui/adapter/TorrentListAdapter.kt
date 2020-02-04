@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2016-2018 Yaroslav Pronin <proninyaroslav@mail.ru>
- *
- * This file is part of LibreTorrent.
- *
- * LibreTorrent is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * LibreTorrent is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with LibreTorrent.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.seiko.torrent.ui.adapter
 
 import android.os.Bundle
@@ -26,38 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import com.seiko.common.ui.adapter.BaseAdapter
-import com.seiko.common.ui.adapter.UpdatableAdapter
+import com.seiko.common.ui.adapter.BaseListAdapter
 import com.seiko.torrent.R
 import com.seiko.torrent.util.constants.INFINITY_SYMBOL
 import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.download.torrent.constants.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.properties.Delegates
 
-class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), UpdatableAdapter {
-
-//    companion object {
-//        private const val ARGS_SELECT_POSITION = "ARGS_SELECT_POSITION"
-//    }
-
-    private val diffCallback = TorrentListItemDiffCallback()
-
-    var items: List<TorrentListItem> by Delegates.observable(emptyList()) { _, old, new ->
-        update(old, new, diffCallback)
-    }
+class TorrentListAdapter : BaseListAdapter<TorrentListItem, TorrentListAdapter.ItemViewHolder>(TorrentListItemDiffCallback()) {
 
     private val currentOpenTorrent = AtomicReference<String>()
 
     fun get(position: Int): TorrentListItem? {
-        if (position < 0 || position >= items.size) return null
-        return items[position]
+        if (position < 0 || position >= itemCount) return null
+        return getItem(position)
     }
-
-    override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding = TorrentItemListBinding.inflate(
@@ -91,29 +58,6 @@ class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), Upd
             binding.root.onFocusChangeListener = this
             binding.root.setOnClickListener(this)
         }
-
-//        fun attach() {
-//            Timber.d("attach: $this")
-//            val position = adapterPosition
-//            if (position >= 0) {
-//                val item = items[position]
-//                val hash = item.hash
-//                downloader.onProgressChanged(hash) { progress ->
-//                    item.update(progress)
-//                    bind(item)
-//                }
-//            }
-//        }
-//
-//        fun detach() {
-//            Timber.d("detach: $this")
-//            val position = adapterPosition
-//            if (position >= 0) {
-//                val item = items[position]
-//                val hash = item.hash
-//                downloader.disposeDownload(hash)
-//            }
-//        }
 
         /**
          * 标题
@@ -216,7 +160,7 @@ class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), Upd
         }
 
         fun bind(position: Int) {
-            val item = items[position]
+            val item = getItem(position)
             bind(item)
         }
 
@@ -235,13 +179,12 @@ class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), Upd
             if (v == null) return
             val position = adapterPosition
             if (position < 0) return
-            listener?.onClick(this, items[position], position)
+            listener?.onClick(this, getItem(position), position)
         }
 
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (v == null) return
             binding.root.isSelected = hasFocus
-            Timber.d("$adapterPosition, hasFocus=$hasFocus")
         }
 
         fun payload(bundle: Bundle) {
@@ -254,7 +197,6 @@ class TorrentListAdapter : BaseAdapter<TorrentListAdapter.ItemViewHolder>(), Upd
                 setPauseButtonState(stateCode == TorrentStateCode.PAUSED)
             }
             if (bundle.containsKey(TorrentListItemDiffCallback.ARGS_TORRENT_PROGRESS)) {
-                Timber.d("update progress")
                 val progress = bundle.getFloat(TorrentListItemDiffCallback.ARGS_TORRENT_PROGRESS)
                 val receivedBytes = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_RECEIVED_BYTES)
                 val totalBytes = bundle.getLong(TorrentListItemDiffCallback.ARGS_TORRENT_TOTAL_BYTES)

@@ -29,6 +29,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
 @ExperimentalCoroutinesApi
@@ -55,21 +56,10 @@ class DownloadManager(
      */
     private lateinit var torrentEngine: TorrentEngine
 
-//    /**
-//     * 下载进度通道
-//     *  ConflatedChannel：只有最近的被发送的元素会被保留
-//     */
-//    private val downloadMap = ConcurrentHashMap<String, EventData<TorrentSessionStatus>>()
-
     /**
      * 磁力信息通道
      */
     private val magnetMap = ConcurrentHashMap<String, EventData<TorrentMetaInfo>>()
-
-//    /**
-//     * 种子变化回调
-//     */
-//    private var torrentChangeListener: OnTorrentChangeListener? = null
 
     /**
      * 是否已经初始化
@@ -118,6 +108,11 @@ class DownloadManager(
 
         if (isAlreadyRunning.compareAndSet(false, true)) {
             startEngine()
+            val maps = HashMap<String, TorrentSessionStatus>(tasks.size)
+            for (task in tasks) {
+                maps[task.hash] = TorrentSessionStatus.createInstance(task)
+            }
+            torrentStatesMap.value = maps
             torrentEngine.restoreDownloads(tasks)
         }
     }
@@ -199,10 +194,6 @@ class DownloadManager(
         val id = torrentRepo.deleteTorrent(hash)
         Timber.d("deleteTorrent: $hash, $id")
         torrentEngine.removeTorrent(hash, withFile)
-//        downloadMap[hash]?.let {
-//            it.cancel()
-//            downloadMap.remove(hash)
-//        }
     }
 
     /**
@@ -245,28 +236,10 @@ class DownloadManager(
      */
     override fun release() {
         if (isAlreadyRunning.compareAndSet(true, false)) {
-//            for (event in downloadMap.values) {
-//                event.cancel()
-//            }
-//            torrentChangeListener = null
             closeEngine()
         }
     }
 
-//    /**
-//     * 停止某个种子的监听
-//     */
-//    override fun disposeDownload(hash: String) {
-//        downloadMap[hash]?.set(null)
-//    }
-//
-//    /**
-//     * 监听某个种子的状态
-//     */
-//    @ObsoleteCoroutinesApi
-//    override fun onProgressChanged(hash: String, function: (item: TorrentSessionStatus) -> Unit) {
-//        downloadMap.safeGetEvent(hash).set(function)
-//    }
 
     /**
      * 获取已有的种子信息
