@@ -1,7 +1,6 @@
-package com.seiko.player.media.player
+package com.seiko.player.media.creator
 
 import androidx.annotation.IntDef
-import tv.danmaku.ijk.media.player.IMediaPlayer
 
 interface MediaPlayerCreatorFactory {
 

@@ -1,8 +1,7 @@
-package com.seiko.player.media.player
+package com.seiko.player.media.creator
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import tv.danmaku.ijk.media.player.IMediaPlayer
 
 class MediaPlayerCreatorFactoryImpl : MediaPlayerCreatorFactory, KoinComponent {
 

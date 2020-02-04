@@ -1,4 +1,4 @@
-package com.seiko.player.ijkplayer.media;
+package com.seiko.player.media.ijkplayer;
 
 public class MediaPlayerParams {
 

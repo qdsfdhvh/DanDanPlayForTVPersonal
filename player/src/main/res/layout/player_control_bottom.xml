@@ -9,26 +9,34 @@
     android:paddingTop="@dimen/overlay_padding_top"
     android:paddingBottom="@dimen/overlay_padding_bottom">
 
-    <FrameLayout
-        android:id="@id/player_overlay_time_container"
-        android:layout_width="wrap_content"
+<!--    <FrameLayout-->
+<!--        android:id="@id/player_overlay_time_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        vlc:layout_constraintHorizontal_chainStyle="spread_inside"-->
+<!--        vlc:layout_constraintStart_toStartOf="parent"-->
+<!--        vlc:layout_constraintTop_toTopOf="parent">-->
+<!--        -->
+<!--    </FrameLayout>-->
+
+    <TextView
+        android:id="@id/player_overlay_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        vlc:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="6dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:nextFocusUp="@id/ab_repeat_add_marker"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:maxLines="2"
+        tools:text="[梦蓝字幕组]Crayonshinchan 蜡笔小新[1020][2020.01.11][三角关系棒 变成蜻蜓的野原广志 内裤物语][720P][AVC][GB_JP][MP4].mp4"
         vlc:layout_constraintStart_toStartOf="parent"
-        vlc:layout_constraintTop_toTopOf="parent">
-        <TextView
-            android:id="@id/player_overlay_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:nextFocusUp="@id/ab_repeat_add_marker"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
-            android:textColor="@color/orange500"
-            android:textSize="16sp"
-            tools:text="0:32" />
-    </FrameLayout>
+        vlc:layout_constraintTop_toTopOf="parent"
+        vlc:layout_constraintEnd_toStartOf="@id/player_overlay_length_container"/>
 
     <FrameLayout
         android:id="@id/player_overlay_length_container"
@@ -36,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         vlc:layout_constraintEnd_toEndOf="parent"
-        vlc:layout_constraintTop_toTopOf="parent">
+        vlc:layout_constraintBottom_toBottomOf="@id/player_overlay_title">
         <TextView
             android:id="@id/player_overlay_length"
             android:layout_width="wrap_content"
@@ -46,7 +54,7 @@
             android:nextFocusUp="@id/ab_repeat_add_marker"
             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
             android:textSize="16sp"
-            tools:text="56:37" />
+            tools:text="00:32/56:37" />
     </FrameLayout>
 
     <SeekBar
@@ -69,55 +77,55 @@
         tools:max="100"
         vlc:layout_constraintEnd_toEndOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
-        vlc:layout_constraintTop_toBottomOf="@id/player_overlay_time_container" />
+        vlc:layout_constraintTop_toBottomOf="@id/player_overlay_title" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@id/player_ab_repeat_marker_guideline_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        vlc:layout_constraintBottom_toTopOf="@id/player_overlay_seekbar"
-        vlc:layout_constraintEnd_toEndOf="@id/player_overlay_seekbar"
-        vlc:layout_constraintStart_toStartOf="@id/player_overlay_seekbar">
-        <androidx.constraintlayout.widget.Guideline
-            style="@style/VLC.ImageButton"
-            android:id="@id/player_ab_repeat_marker_guideline_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:layout_constraintGuide_percent="0.2"/>
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@id/player_ab_repeat_marker_guideline_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:layout_constraintGuide_percent="0.4"/>
-        <ImageView
-            style="@style/VLC.ImageButton"
-            android:id="@id/player_ab_repeat_marker_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_name"
-            android:visibility="invisible"
-            vlc:layout_constraintStart_toStartOf="@id/player_ab_repeat_marker_guideline_a"
-            vlc:layout_constraintEnd_toEndOf="@id/player_ab_repeat_marker_guideline_a"
-            vlc:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_ab_repeat_marker" />
-        <ImageView
-            style="@style/VLC.ImageButton"
-            android:id="@id/player_ab_repeat_marker_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_marginStart="100dp"
-            android:contentDescription="@string/app_name"
-            android:visibility="invisible"
-            vlc:layout_constraintStart_toStartOf="@id/player_ab_repeat_marker_guideline_b"
-            vlc:layout_constraintEnd_toEndOf="@id/player_ab_repeat_marker_guideline_b"
-            vlc:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_ab_repeat_marker" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@id/player_ab_repeat_marker_guideline_container"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:paddingLeft="8dp"-->
+<!--        android:paddingRight="8dp"-->
+<!--        vlc:layout_constraintBottom_toTopOf="@id/player_overlay_seekbar"-->
+<!--        vlc:layout_constraintEnd_toEndOf="@id/player_overlay_seekbar"-->
+<!--        vlc:layout_constraintStart_toStartOf="@id/player_overlay_seekbar">-->
+<!--        <androidx.constraintlayout.widget.Guideline-->
+<!--            style="@style/VLC.ImageButton"-->
+<!--            android:id="@id/player_ab_repeat_marker_guideline_a"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            tools:layout_constraintGuide_percent="0.2"/>-->
+<!--        <androidx.constraintlayout.widget.Guideline-->
+<!--            android:id="@id/player_ab_repeat_marker_guideline_b"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            tools:layout_constraintGuide_percent="0.4"/>-->
+<!--        <ImageView-->
+<!--            style="@style/VLC.ImageButton"-->
+<!--            android:id="@id/player_ab_repeat_marker_a"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:contentDescription="@string/app_name"-->
+<!--            android:visibility="invisible"-->
+<!--            vlc:layout_constraintStart_toStartOf="@id/player_ab_repeat_marker_guideline_a"-->
+<!--            vlc:layout_constraintEnd_toEndOf="@id/player_ab_repeat_marker_guideline_a"-->
+<!--            vlc:layout_constraintTop_toTopOf="parent"-->
+<!--            android:src="@drawable/ic_ab_repeat_marker" />-->
+<!--        <ImageView-->
+<!--            style="@style/VLC.ImageButton"-->
+<!--            android:id="@id/player_ab_repeat_marker_b"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            tools:layout_marginStart="100dp"-->
+<!--            android:contentDescription="@string/app_name"-->
+<!--            android:visibility="invisible"-->
+<!--            vlc:layout_constraintStart_toStartOf="@id/player_ab_repeat_marker_guideline_b"-->
+<!--            vlc:layout_constraintEnd_toEndOf="@id/player_ab_repeat_marker_guideline_b"-->
+<!--            vlc:layout_constraintTop_toTopOf="parent"-->
+<!--            android:src="@drawable/ic_ab_repeat_marker" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <ImageView
         style="@style/VLC.ImageButton"

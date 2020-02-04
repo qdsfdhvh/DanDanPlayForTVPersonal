@@ -21,8 +21,8 @@ import com.seiko.player.databinding.PlayerActivityVideoBinding
 import com.seiko.player.databinding.PlayerControlBottomBinding
 import com.seiko.player.delegate.VideoKeyDownDelegate
 import com.seiko.player.delegate.VideoTouchDelegate
-import com.seiko.player.ijkplayer.media.MediaPlayerParams
-import com.seiko.player.media.player.MediaPlayerCreatorFactory
+import com.seiko.player.media.ijkplayer.MediaPlayerParams
+import com.seiko.player.media.creator.MediaPlayerCreatorFactory
 import com.seiko.player.ui.adapter.OptionsAdapter
 import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.INVALID_VALUE
@@ -143,15 +143,6 @@ class VideoPlayerActivity: FragmentActivity()
         binding.playerVideoViewIjk.setOnPreparedListener(this)
         binding.playerVideoViewIjk.setOnInfoListener(this)
         binding.playerVideoViewIjk.setOnErrorListener(this)
-
-    }
-
-    private fun initUI() {
-        binding.root.keepScreenOn = true
-    }
-
-    private fun clearUI() {
-        binding.root.keepScreenOn = false
     }
 
     /**
@@ -161,10 +152,19 @@ class VideoPlayerActivity: FragmentActivity()
         val intent = intent ?: return
         val param: PlayParam = intent.getParcelableExtra(ARGS_VIDEO_PARAMS) ?: return
         val videoView = binding.playerVideoViewIjk
+        bindingControlBottom.playerOverlayTitle.text = param.videoTitle
         videoView.setVideoURI(param.videoUri)
         videoView.seekTo(0)
         Timber.d(param.videoUri.toString())
         play()
+    }
+
+    private fun initUI() {
+        binding.root.keepScreenOn = true
+    }
+
+    private fun clearUI() {
+        binding.root.keepScreenOn = false
     }
 
     /**
@@ -310,8 +310,7 @@ class VideoPlayerActivity: FragmentActivity()
         // 更新播放时间
         val timeFormat = Tools.millisToString(position)
         val lengthFormat = Tools.millisToString(duration)
-        bindingControlBottom.playerOverlayTime.text = timeFormat
-        bindingControlBottom.playerOverlayLength.text =lengthFormat
+        bindingControlBottom.playerOverlayLength.text ="%s/%s".format(timeFormat, lengthFormat)
         updateTipProgress()
         // 返回当前播放进度
         return position
@@ -465,6 +464,15 @@ class VideoPlayerActivity: FragmentActivity()
             }
             MediaPlayerParams.STATE_ERROR -> {
                 Timber.d("STATE_ERROR")
+                if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+                    DialogSelectFragment.Builder()
+                        .setTitle("无限异常，无法播放视频。")
+                        .hideCancel()
+                        .setConfirmText(getString(R.string.shutdown))
+                        .setConfirmClickListener { finish() }
+                        .build()
+                        .show(supportFragmentManager)
+                }
             }
             MediaPlayerParams.STATE_COMPLETED -> {
                 Timber.d("STATE_COMPLETED")

@@ -1,6 +1,5 @@
-package com.seiko.player.media.player
+package com.seiko.player.media.creator
 
-import com.seiko.player.media.player.MediaPlayerCreator
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer
 import tv.danmaku.ijk.media.player.IMediaPlayer
 

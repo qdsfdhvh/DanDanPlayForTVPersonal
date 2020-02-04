@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.seiko.player.ijkplayer.media;
+package com.seiko.player.media.ijkplayer;
 
 import android.annotation.TargetApi;
 import android.content.Context;

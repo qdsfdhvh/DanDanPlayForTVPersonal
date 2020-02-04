@@ -90,9 +90,9 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
     private fun addTorrent(params: AddTorrentParams) = runBlocking(coroutineContext) {
         val task = params.toTask()
         when(val result = downloader.addTorrent(task, params.fromMagnet)) {
-//            is Result.Success -> {
-//                EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
-//            }
+            is Result.Success -> {
+                EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
+            }
             is Result.Error -> {
                 Timber.e(result.exception)
                 toast(result.exception.message)

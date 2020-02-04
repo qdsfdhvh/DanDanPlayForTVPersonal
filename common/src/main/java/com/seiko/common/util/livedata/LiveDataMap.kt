@@ -61,5 +61,7 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
         }
     }
 
+    fun contains(key: K) = value.contains(key)
+
     fun get(key: K): V? = value[key]
 }

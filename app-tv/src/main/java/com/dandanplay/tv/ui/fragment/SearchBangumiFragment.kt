@@ -24,6 +24,7 @@ import com.seiko.common.util.toast.toast
 import com.dandanplay.tv.data.db.model.ResMagnetItemEntity
 import com.dandanplay.tv.data.model.api.SearchAnimeDetails
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,

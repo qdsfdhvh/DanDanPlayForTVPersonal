@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.seiko.player.ijkplayer.media;
+package com.seiko.player.media.ijkplayer;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -69,6 +69,7 @@ public interface IRenderView {
     Bitmap getVideoScreenshot();
 
     interface ISurfaceHolder {
+
         void bindToMediaPlayer(IMediaPlayer mp);
 
         @NonNull

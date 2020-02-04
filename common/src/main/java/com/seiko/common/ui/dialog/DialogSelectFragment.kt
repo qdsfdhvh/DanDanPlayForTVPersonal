@@ -1,12 +1,9 @@
 package com.seiko.common.ui.dialog
 
 import android.os.Bundle
-import android.util.TypedValue.COMPLEX_UNIT_SP
-import android.util.TypedValue.applyDimension
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.FragmentManager
 import com.seiko.common.databinding.DialogSelectFragmentBinding
 
@@ -33,6 +30,11 @@ class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             }
             if (bundle.containsKey(ARGS_CANCEL_TEXT)) {
                 binding.btnCancel.text = bundle.getString(ARGS_CANCEL_TEXT)
+            }
+            if (bundle.containsKey(ARGS_HIDE_CANCEL)) {
+                if (bundle.getBoolean(ARGS_HIDE_CANCEL, false)) {
+                    binding.btnCancel.visibility = View.GONE
+                }
             }
         }
 
@@ -91,6 +93,11 @@ class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             return this
         }
 
+        fun hideCancel(): Builder {
+            bundle.putBoolean(ARGS_HIDE_CANCEL, true)
+            return this
+        }
+
         fun build(): DialogSelectFragment {
             val fragment = DialogSelectFragment()
             fragment.arguments = bundle
@@ -102,12 +109,10 @@ class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
     companion object {
         const val TAG = "SelectDialogFragment"
 
-        private const val SMALL = 0
-        private const val LARGE = 1
-
         private const val ARGS_TITLE = "ARGS_TITLE"
         private const val ARGS_CONFIRM_TEXT = "ARGS_CONFIRM_TEXT"
         private const val ARGS_CANCEL_TEXT = "ARGS_CANCEL_TEXT"
+        private const val ARGS_HIDE_CANCEL = "ARGS_HIDE_CANCEL"
     }
 
 }

@@ -66,7 +66,8 @@ class StartActivity : FragmentActivity() {
         }
 
         VideoPlayerActivity.launch(this, PlayParam(
-            videoUri = videoUri
+            videoUri = videoUri,
+            videoTitle = videoTitle ?:  ""
         ))
         finish()
     }

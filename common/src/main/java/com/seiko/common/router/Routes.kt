@@ -37,6 +37,7 @@ object Routes {
      */
     object Service {
         const val TORRENT_INFO = "/service/torrentInfo"
+        const val APP_TV_INFO = "/service/app-tv"
     }
 
 

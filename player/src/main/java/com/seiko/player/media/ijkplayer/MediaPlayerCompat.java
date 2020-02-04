@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.seiko.player.ijkplayer.media;
+package com.seiko.player.media.ijkplayer;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;

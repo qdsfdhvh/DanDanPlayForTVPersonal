@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--画面-->
-    <com.seiko.player.ijkplayer.IjkVideoView
+    <com.seiko.player.media.ijkplayer.IjkVideoView
         android:id="@id/player_video_view_ijk"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

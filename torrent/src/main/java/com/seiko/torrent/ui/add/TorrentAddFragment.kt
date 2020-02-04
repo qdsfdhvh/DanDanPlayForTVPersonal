@@ -1,6 +1,9 @@
 package com.seiko.torrent.ui.add
 
 import android.Manifest
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -130,7 +133,7 @@ class AddTorrentFragment : Fragment()
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(holder.itemView.id) {
             R.id.container -> {
-                toast("position = $position")
+//                toast("position = $position")
             }
         }
     }
@@ -140,9 +143,8 @@ class AddTorrentFragment : Fragment()
             R.id.torrent_btn_center -> {
                 when (val result = viewModel.buildTorrentTask()) {
                     is Result.Success -> {
+                        // 添加任务，添加完成后悔发送通知，TorrentAddActivity接收通知后会关闭
                         TorrentTaskService.addTorrent(requireActivity(), result.data)
-                        Navigator.navToTorrent(requireActivity())
-                        requireActivity().finish()
                     }
                     is Result.Error -> {
                         toast(result.exception.message)

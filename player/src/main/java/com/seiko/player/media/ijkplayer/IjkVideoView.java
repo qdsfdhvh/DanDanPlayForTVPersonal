@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.seiko.player.ijkplayer;
+package com.seiko.player.media.ijkplayer;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -37,14 +37,7 @@ import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
 
-import com.seiko.player.ijkplayer.media.FileMediaDataSource;
-import com.seiko.player.ijkplayer.media.IMediaController;
-import com.seiko.player.ijkplayer.media.IRenderView;
-import com.seiko.player.ijkplayer.media.MediaPlayerCompat;
-import com.seiko.player.ijkplayer.media.MediaPlayerParams;
-import com.seiko.player.ijkplayer.media.SurfaceRenderView;
-import com.seiko.player.ijkplayer.media.TextureRenderView;
-import com.seiko.player.media.player.MediaPlayerCreator;
+import com.seiko.player.media.creator.MediaPlayerCreator;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +47,6 @@ import java.util.Map;
 import timber.log.Timber;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.TextureMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 

@@ -1,4 +1,4 @@
-package com.seiko.player.media.player
+package com.seiko.player.media.creator
 
 import com.seiko.player.data.prefs.PrefDataSource
 import tv.danmaku.ijk.media.player.IMediaPlayer
