@@ -16,3 +16,5 @@ key.properties
 
 app-bl
 componentrelease
+
+gradlew*

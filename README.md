@@ -1,8 +1,17 @@
 # 弹弹Play For TV Personal
 
-> 通过弹弹Play的开源API所开发的android tv端app，个人用。
+> 通过弹弹Play的开源API所开发的android TV端app，个人使用；学习协程、koin、组件化...，同时用来在TV端看~~19年10月番~~ ~~20年1月番~~ 20年4月番。
 
-## 架构相关
+## 项目截图
+
+![Home](./screen/device-2020-02-04-145554.png)
+![Area](./screen/device-2020-02-04-145451.png)
+![TimeLine](./screen/device-2020-02-04-145416.png)
+![Detail1](./screen/device-2020-02-04-145718.png)
+![Detail2](./screen/device-2020-02-04-145736.png)
+![Torrent](./screen/device-2020-02-04-145341.png)
+
+## Clean架构
 
 CleanArchitecture
 Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)。  
@@ -16,10 +25,6 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 视频观看:
 [Bilibili - Kotlin 语言帮助开发者更好的构建应用](https://www.bilibili.com/video/av70762038)
 
-## 项目截图
-
-![SCREEN](./screen/device-2019-10-28-193951.png)
-
 ## 第三方库
 
 ### 参考
@@ -28,13 +33,11 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [KotlinAndroid](https://github.com/guofudong/KotlinAndroid)
 
-### 1. 网络请求
+### 1. 使用工具
 
 * [okhttp](https://github.com/square/okhttp)
 
 * [retrofit](https://github.com/square/retrofi)
-
-### 2. 工具
 
 * [Koin](https://github.com/InsertKoinIO/koin)
 
@@ -52,7 +55,7 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [okio](https://github.com/square/okio)
 
-### 3. Torrent相关
+### 2. Torrent相关
 
 * [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
 
@@ -60,7 +63,7 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [libretorrent](https://github.com/proninyaroslav/libretorrent)
 
-### 4. 播放器相关
+### 3. 播放器相关
 
 * [Exoplayer](https://github.com/google/ExoPlayer)
 
@@ -70,7 +73,7 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
 
-### 5. TV
+### 4. TV
 
 * [UKIKU](https://github.com/jordyamc/UKIKU)
 
