@@ -1,6 +1,7 @@
-include ':app-tv',
-        ':torrent',
-        ':player',
+include ':app',
+        ':module-tv',
+        ':module-torrent',
+        ':module-player',
         ':common',
 
         ':libs:thunder',

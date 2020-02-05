@@ -30,7 +30,7 @@ class CompileSwitch implements Plugin<Project> {
             throw new RuntimeException(module + "中的gradle.properties文件中必须配置isRunAlone属性，来指定是否可以独立运行")
         }
 
-        //对于isRunAlone==true的情况需要根据实际情况修改其值，
+        // 对于isRunAlone==true的情况需要根据实际情况修改其值，
         // 但如果是false，则不用修改，该module作为一个lib，运行module:assembleRelease则发布aar到中央仓库
         boolean isRunAlone = Boolean.parseBoolean((project.properties.get("isRunAlone")))
         String mainmodulename = project.rootProject.property("mainmodulename")
@@ -60,11 +60,11 @@ class CompileSwitch implements Plugin<Project> {
                     }
                 }
             }
-            System.out.println("apply plugin is " + 'com.android.application')
             if (assembleTask.isAssemble && module == compilemodule) {
+                System.out.println("apply plugin is " + 'com.android.application')
                 // 运行的是app，自动去依赖其他业务模块的jar包（jar包自动生成在componentrelease文件中）
                 compileComponents(assembleTask, project)
-                project.android.registerTransform(new CompileCodeTransform(project,isMainModule))
+                project.android.registerTransform(new CompileCodeTransform(project, isMainModule))
             }
         } else {
             //不能独立运行，设置为library，并且生成jar放在componentrelease文件下，以供App运行时去依赖
@@ -88,6 +88,7 @@ class CompileSwitch implements Plugin<Project> {
                     }
                 }
             }
+
         }
 
     }

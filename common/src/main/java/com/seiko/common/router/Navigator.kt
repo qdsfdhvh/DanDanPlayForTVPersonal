@@ -15,6 +15,13 @@ import timber.log.Timber
 object Navigator {
 
     /**
+     * 跳转到DanDan数据展示页面
+     */
+    fun navToPlayTV(activity: Activity) {
+        ARouter.getInstance().build(Routes.DanDanPlay.PATH_TV).navigation(activity)
+    }
+
+    /**
      * 跳转种子页面
      */
     fun navToTorrent(activity: Activity, callback: NavigationCallback? = null) {
@@ -56,16 +63,17 @@ object Navigator {
     /**
      * 跳转播放
      */
-    fun navToPlayer(fragment: Fragment, videoUri: Uri, videoTitle: String) {
+    fun navToPlayer(fragment: Fragment, videoUri: Uri, videoTitle: String, hash: String? = null) {
         val postcard = ARouter.getInstance().build(Routes.Player.PATH)
             .withParcelable(Routes.Player.ARGS_VIDEO_URI, videoUri)
             .withString(Routes.Player.ARGS_VIDEO_TITLE, videoTitle)
+            .withString(Routes.Player.ARGS_VIDEO_HASH, hash)
 
         try {
             LogisticsCenter.completion(postcard)
         } catch (e: NoRouteFoundException) {
             // 没有注册界面，调用系统播放器
-            navToSystemPlayer(fragment.requireContext(), videoUri)
+            navToSystemPlayer(fragment.requireContext(), videoUri, hash)
             return
         }
 
@@ -78,11 +86,14 @@ object Navigator {
     /**
      * 调用系统播放器
      */
-    fun navToSystemPlayer(context: Context, videoUri: Uri) {
+    fun navToSystemPlayer(context: Context, videoUri: Uri, hash: String? = null) {
         val intent = Intent(Intent.ACTION_VIEW)
 //        val headers = arrayOf("Cookie", cookie)
 //        intent.putExtra("headers", headers)
         intent.setDataAndType(videoUri, "video/*")
+        if (!hash.isNullOrEmpty()) {
+            intent.putExtra(Routes.Player.ARGS_VIDEO_HASH, hash)
+        }
         context.startActivity(intent)
     }
 }

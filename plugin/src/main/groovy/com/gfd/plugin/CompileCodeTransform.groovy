@@ -15,12 +15,12 @@ class CompileCodeTransform extends Transform {
 
     CompileCodeTransform(Project project,boolean isMainModule) {
         this.project = project
-        if (isMainModule) {
+//        if (isMainModule) {
             if (!project.hasProperty("applicationName")) {
                 throw new RuntimeException("you should set applicationName in app gradle.properties")
             }
             applicationName = project.properties.get("applicationName").toString()
-        }
+//        }
     }
 
     @Override

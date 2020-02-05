@@ -1,0 +1,55 @@
+apply plugin: 'com.gfd.comswitch'
+//apply plugin: 'com.android.library'
+apply plugin: 'androidx.navigation.safeargs'
+
+apply from: rootProject.file('libbase.gradle')
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+}
+
+android {
+//    resourcePrefix "app_"
+    buildTypes {
+        debug {
+            resValue("string", "PORT_NUMBER", "8080")
+        }
+    }
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v8a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+    }
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(':libs:thunder')
+    kapt dependence.libArouterCompiler
+    kapt dependence.libRoomCompiler
+
+    // navigation
+    implementation dependence.libNavigationFragmentKtx
+    implementation dependence.libNavigationUiKtx
+
+    // Image
+    // 2.0.0 CloseableReference: Finalized without closing
+    // @see https://github.com/facebook/fresco/issues/2445
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+    // 图片取色
+    implementation 'androidx.palette:palette:1.0.0'
+
+    // WorkManger
+    implementation "androidx.work:work-runtime-ktx:2.3.0"
+
+    // 内存泄漏
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+
+    // Database Debug 8080
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+}

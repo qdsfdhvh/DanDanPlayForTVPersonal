@@ -11,9 +11,9 @@ import com.seiko.common.router.Routes
 interface TorrentService : IProvider {
 
     companion object {
-        fun get(): TorrentService {
+        fun get(): TorrentService? {
             return ARouter.getInstance().build(Routes.Service.TORRENT_INFO)
-                .navigation() as TorrentService
+                .navigation() as? TorrentService
         }
     }
 

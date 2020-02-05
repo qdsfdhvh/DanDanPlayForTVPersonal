@@ -11,12 +11,16 @@ import com.alibaba.android.arouter.launcher.ARouter
  */
 object Routes {
 
+    object DanDanPlay {
+        const val PATH_TV = "/dandanplay/tv"
+    }
+
     /**
      * 种子下载
      */
     object Torrent {
-        const val PATH = "/torrent/torrentActivity"
-        const val PATH_ADD = "/torrent/torrentAddActivity"
+        const val PATH = "/torrent/main"
+        const val PATH_ADD = "/torrent/add"
 
         const val RESULT_KEY_ADD_SUCCESS = "addSuccess"
         const val RESULT_KEY_ADD_HASH = "addHash"
@@ -26,18 +30,19 @@ object Routes {
      * 播放器
      */
     object Player {
-        const val PATH = "/player/playerManagerActivity"
+        const val PATH = "/player/start"
 
-        const val ARGS_VIDEO_URI = "ARGS_VIDEO_URI"
-        const val ARGS_VIDEO_TITLE = "ARGS_VIDEO_TITLE"
+        const val ARGS_VIDEO_URI = "videoUri"
+        const val ARGS_VIDEO_TITLE = "videoTitle"
+        const val ARGS_VIDEO_HASH = "hash"
     }
 
     /**
      * 服务
      */
     object Service {
-        const val TORRENT_INFO = "/service/torrentInfo"
-        const val APP_TV_INFO = "/service/app-tv"
+        const val TORRENT_INFO = "/torrent/service"
+        const val APP_TV_INFO = "/apptv/service"
     }
 
 

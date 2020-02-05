@@ -41,10 +41,3 @@ fun getPercentHeightSize(value: Int): Int {
         res / designHeight + 1
     }
 }
-
-/**
- * 关闭AutoSize日志
- */
-fun closeAutoSizeDebug() {
-    AutoSizeConfig.getInstance().setLog(false)
-}

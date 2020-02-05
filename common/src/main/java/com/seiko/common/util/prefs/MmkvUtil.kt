@@ -8,7 +8,7 @@ import com.tencent.mmkv.MMKV
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-fun Application.initMMKV() {
+internal fun Application.initMMKV() {
     MMKV.initialize(this)
 }
 

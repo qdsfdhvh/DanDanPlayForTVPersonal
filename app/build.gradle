@@ -1,0 +1,73 @@
+apply plugin: 'com.gfd.comswitch'
+
+//apply from: rootProject.file('releaseinfo.gradle')
+apply from: rootProject.file('libbase.gradle')
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    throw new GradleException("Could not find key.properties!")
+}
+
+android {
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        release {
+            minifyEnabled true  // 混淆编译
+            shrinkResources true // 混淆编译
+            zipAlignEnabled true // zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    //自定义输出apk名字
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                if (variant.getBuildType().getName() == 'release') {
+                    outputFileName = new File("app_v" + variant.versionName + "_" +
+                            new Date().format("yyyy-MM-dd_HH", TimeZone.getTimeZone("UTC")) + "_" +
+                            variant.getBuildType().getName() + ".apk")
+                }
+            }
+    }
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v8a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+    }
+}
+
+dependencies {
+    implementation project(':common')
+}
