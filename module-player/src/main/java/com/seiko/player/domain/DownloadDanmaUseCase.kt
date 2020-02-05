@@ -32,11 +32,11 @@ class DownloadDanmaUseCase : KoinComponent {
 
         Timber.d("episodeId = $episodeId")
 
-        var bean: DanmaDownloadBean?
+        var bean: DanmaDownloadBean? = null
         try {
             bean = danmaRepository.getDanmaDownloadBean(episodeId)
         } catch (e: Exception) {
-            return Result.Error(e)
+            Timber.e(e)
         }
 
         if (bean != null) {
@@ -46,6 +46,7 @@ class DownloadDanmaUseCase : KoinComponent {
 
         val start = System.currentTimeMillis()
         try {
+//            val requestBody = "".toRequestBody("application/octet-stream".toMediaType())
             bean = api.downloadDanma(episodeId)
             danmaRepository.saveDanmaDownloadBean(Danma(
                 videoPath = param.videoUri.toString(),

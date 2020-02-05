@@ -13,11 +13,6 @@ kapt {
 
 android {
 //    resourcePrefix "app_"
-    buildTypes {
-        debug {
-            resValue("string", "PORT_NUMBER", "8080")
-        }
-    }
     packagingOptions {
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/armeabi-v8a/libc++_shared.so'
@@ -46,10 +41,4 @@ dependencies {
 
     // WorkManger
     implementation "androidx.work:work-runtime-ktx:2.3.0"
-
-    // 内存泄漏
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
-
-    // Database Debug 8080
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

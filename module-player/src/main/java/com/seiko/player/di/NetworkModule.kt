@@ -7,9 +7,12 @@ import org.koin.dsl.module
 import retrofit2.Converter
 
 internal val networkModule = module {
-    single { createDanDanCommentApiService(get()) }
+    single { createDanDanCommentApiService(get(), get()) }
 }
 
-private fun createDanDanCommentApiService(okHttpClient: OkHttpClient): DanDanCommentApiService {
-    return DanDanCommentApiGenerator(okHttpClient).create()
+private fun createDanDanCommentApiService(
+    okHttpClient: OkHttpClient,
+    converterFactory: Converter.Factory
+): DanDanCommentApiService {
+    return DanDanCommentApiGenerator(okHttpClient, converterFactory).create()
 }

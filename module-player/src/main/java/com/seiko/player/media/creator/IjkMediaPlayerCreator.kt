@@ -1,6 +1,7 @@
 package com.seiko.player.media.creator
 
 import com.seiko.player.data.prefs.PrefDataSource
+import com.seiko.player.media.ijkplayer.MediaPlayerCreator
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import tv.danmaku.ijk.media.player.TextureMediaPlayer

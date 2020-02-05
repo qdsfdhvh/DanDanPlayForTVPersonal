@@ -12,14 +12,14 @@
         android:layout_weight="1"
         fresco:placeholderImageScaleType="centerCrop"/>
     <TextView
-        style="@style/AppTextStyle.Title"
+        style="@style/DanDanTvTextStyle.Title"
         android:id="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         tools:text="暗黑破坏神在身边"/>
     <TextView
-        style="@style/AppTextStyle.Chapter"
+        style="@style/DanDanTvTextStyle.Chapter"
         android:id="@id/chapter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

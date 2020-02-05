@@ -13,11 +13,6 @@ kapt {
 
 android {
     resourcePrefix "torrent_"
-    buildTypes {
-        debug {
-            resValue("string", "PORT_NUMBER", "8081")
-        }
-    }
 }
 
 this.beforeEvaluate {
@@ -35,7 +30,4 @@ dependencies {
 
     // UI
     implementation 'androidx.cardview:cardview:1.0.0'
-
-    // Database Debug
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

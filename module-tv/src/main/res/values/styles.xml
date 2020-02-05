@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DefaultDialogFragmentStyle" parent="Theme.AppCompat.Dialog">
+    <style name="DanDanTvTheme" parent="Theme.Leanback">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="imageCardViewInfoAreaStyle">@style/DanDanTvTheme.CardViewTitleStyle</item>
+        <item name="imageCardViewTitleStyle">@style/DanDanTvTheme.CardViewInfoStyle</item>
+        <item name="imageCardViewStyle">@style/DanDanTvTheme.CardView</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="DanDanTvTheme.CardViewTitleStyle" parent="Widget.Leanback.ImageCardView.TitleStyle">
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
+    <style name="DanDanTvTheme.CardViewInfoStyle" parent="Widget.Leanback.ImageCardView.InfoAreaStyle">
+        <item name="android:background">@color/tv_card_content_dark</item>
+    </style>
+
+    <style name="DanDanTvTheme.CardView" parent="Widget.Leanback.ImageCardViewStyle">
+        <item name="cardType">infoUnderWithExtra</item>
+        <item name="infoVisibility">always</item>
+    </style>
+
+    <style name="DanDanTvTheme.DialogFragmentStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -9,21 +38,21 @@
         <item name="colorControlNormal">@color/white</item>
     </style>
 
-    <style name="AppTextStyle">
+    <style name="DanDanTvTextStyle">
         <item name="android:textSize">14sp</item>
     </style>
-    <style name="AppTextStyle.Min" parent="AppTextStyle">
+    <style name="DanDanTvTextStyle.Min" parent="DanDanTvTextStyle">
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="AppTextStyle.Title" parent="AppTextStyle">
+    <style name="DanDanTvTextStyle.Title" parent="DanDanTvTextStyle">
         <item name="android:lines">2</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
-    <style name="AppTextStyle.Chapter" parent="AppTextStyle.Min">
+    <style name="DanDanTvTextStyle.Chapter" parent="DanDanTvTextStyle.Min">
         <item name="android:textColor">?attr/colorAccent</item>
         <item name="android:padding">4dp</item>
     </style>

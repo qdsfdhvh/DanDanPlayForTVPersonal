@@ -1,6 +1,7 @@
 package com.seiko.player.media.creator
 
 import androidx.annotation.IntDef
+import com.seiko.player.media.ijkplayer.MediaPlayerCreator
 
 interface MediaPlayerCreatorFactory {
 

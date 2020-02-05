@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toStartOf="@id/torrent_container_detail"/>
 
     <ImageButton
-        style="@style/AppButton.ImgButton"
+        style="@style/CommonTheme.ImageButton"
         android:id="@id/torrent_btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="@id/torrent_container_btn"/>
 
     <ImageButton
-        style="@style/AppButton.ImgButton"
+        style="@style/CommonTheme.ImageButton"
         android:id="@id/torrent_btn_open_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

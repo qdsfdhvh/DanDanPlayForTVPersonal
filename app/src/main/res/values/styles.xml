@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="SplashTheme" parent="@style/BaseTheme">
+    <style name="SplashTheme" parent="Theme.LeanbackBase">
         <item name="android:windowBackground">@drawable/background_splash_default</item>
     </style>
 </resources>

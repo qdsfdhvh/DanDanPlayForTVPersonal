@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/AppParentLayout">
+    style="@style/CommonTheme.ParentLayout">
     <androidx.leanback.widget.BrowseFrameLayout
         android:id="@id/grid_frame"
         android:focusable="true"

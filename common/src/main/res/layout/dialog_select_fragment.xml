@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppParentLayout.Dialog"
+    style="@style/CommonTheme.DialogLayout"
     android:orientation="vertical"
     tools:context="com.seiko.common.ui.dialog.DialogSelectFragment">
     <TextView
@@ -16,7 +16,7 @@
         android:textColor="@color/white"
         android:textSize="24sp" />
     <Button
-        style="@style/AppButton.Dialog"
+        style="@style/CommonTheme.DialogButton"
         android:id="@id/btn_confirm"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:layout_marginBottom="12dp"
         tools:text="确认"/>
     <Button
-        style="@style/AppButton.Dialog"
+        style="@style/CommonTheme.DialogButton"
         android:id="@id/btn_cancel"
         android:layout_width="260dp"
         android:layout_height="wrap_content"

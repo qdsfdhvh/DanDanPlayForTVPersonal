@@ -42,7 +42,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-    <style name="VLC.ImageButton" parent="AppButton.ImgButton">
+    <style name="VLC.ImageButton" parent="CommonTheme.ImageButton">
         <item name="android:tint">@color/player_button_hint_tv</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:padding">2dp</item>

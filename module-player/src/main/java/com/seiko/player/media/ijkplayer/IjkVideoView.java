@@ -37,8 +37,6 @@ import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
 
-import com.seiko.player.media.creator.MediaPlayerCreator;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;

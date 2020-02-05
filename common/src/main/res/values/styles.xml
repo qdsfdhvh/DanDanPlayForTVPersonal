@@ -1,62 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BaseTheme" parent="Theme.Leanback">
-        <item name="colorPrimary">@color/colorPrimary</item>
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="imageCardViewInfoAreaStyle">@style/VLCardViewInfoStyle</item>
-        <item name="imageCardViewTitleStyle">@style/VLCardViewTitleStyle</item>
-        <item name="imageCardViewStyle">@style/VLCardView</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
 
-    <style name="VLCardViewTitleStyle" parent="Widget.Leanback.ImageCardView.TitleStyle">
-        <item name="android:scrollHorizontally">true</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">marquee</item>
-    </style>
+    <style name="CommonTheme"/>
 
-    <style name="VLCardViewInfoStyle" parent="Widget.Leanback.ImageCardView.InfoAreaStyle">
-        <item name="android:background">@color/tv_card_content_dark</item>
-    </style>
-
-    <style name="VLCardView" parent="Widget.Leanback.ImageCardViewStyle">
-        <item name="cardType">infoUnderWithExtra</item>
-        <item name="infoVisibility">always</item>
-    </style>
-
-    <style name="BaseTheme.HeaderText" parent="android:TextAppearance.Widget.TextView">
-        <item name="android:textColor">?attr/colorAccent</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="AppParentLayout">
+    <style name="CommonTheme.ParentLayout" parent="CommonTheme">
         <item name="android:id">@id/container</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
     </style>
-    <style name="AppParentLayout.Dialog" parent="AppParentLayout">
+    <style name="CommonTheme.DialogLayout" parent="CommonTheme.ParentLayout">
         <item name="android:gravity">center</item>
         <item name="android:background">@color/black_30</item>
     </style>
 
-    <style name="AppButton">
+    <style name="CommonTheme.Button">
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:background">@drawable/button_focusable_selector</item>
     </style>
-    <style name="AppButton.Dialog" parent="AppButton">
+    <style name="CommonTheme.DialogButton" parent="CommonTheme.Button">
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">8dp</item>
     </style>
-    <style name="AppButton.ImgButton" parent="AppButton">
+    <style name="CommonTheme.ImageButton" parent="CommonTheme.Button">
         <item name="android:tint">@color/white</item>
         <item name="android:padding">12dp</item>
     </style>

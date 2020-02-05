@@ -13,7 +13,9 @@ class DanmaRepository(private val danmaDao: DanmaDao) {
 
     suspend fun getDanmaDownloadBean(episodeId: Int): DanmaDownloadBean? {
         if (episodeId < 0) return null
-        return danmaDao.getEpisodeId(episodeId)?.danma
+        val bean = danmaDao.getEpisodeId(episodeId)
+        if (bean == null || bean.danma.count == 0) return null
+        return bean.danma
     }
 
 }

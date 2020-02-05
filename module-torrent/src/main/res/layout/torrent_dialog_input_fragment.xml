@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/AppParentLayout.Dialog"
+    style="@style/CommonTheme.DialogLayout"
     tools:context="com.seiko.torrent.ui.dialog.DialogInputFragment">
     <EditText
         android:id="@id/torrent_edit"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="@id/btn_confirm"
         app:layout_constraintEnd_toEndOf="@id/btn_cancel"/>
     <Button
-        style="@style/AppButton.Dialog"
+        style="@style/CommonTheme.DialogButton"
         android:id="@id/btn_confirm"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_cancel"/>
     <Button
-        style="@style/AppButton.Dialog"
+        style="@style/CommonTheme.DialogButton"
         android:id="@id/btn_cancel"
         android:layout_width="260dp"
         android:layout_height="wrap_content"

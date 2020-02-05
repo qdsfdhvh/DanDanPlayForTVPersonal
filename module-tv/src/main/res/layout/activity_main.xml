@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppParentLayout"
+    style="@style/CommonTheme.ParentLayout"
     tools:context=".ui.MainActivity">
     <fragment
         android:id="@id/nav_controller"

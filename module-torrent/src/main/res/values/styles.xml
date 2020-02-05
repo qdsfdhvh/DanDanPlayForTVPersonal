@@ -2,10 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ResourceName">
     <style name="Theme.Torrent.Transparent" parent="Theme.AppCompat.NoActionBar">
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-<!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -18,4 +14,11 @@
         <item name="android:textIsSelectable">true</item>
     </style>
 
+    <style name="Theme.Torrent.HeaderText" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

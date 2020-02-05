@@ -17,16 +17,16 @@ data class Danma(
     var id: Long = 0,
 
     // 视频地址
-    val videoPath: String,
+    var videoPath: String = "",
 
     // 种子hash
-    val hash: String,
+    var hash: String = "",
 
     // 集数id
-    val episodeId: Int,
+    var episodeId: Int = -1,
 
     // 弹幕数据
-    val danma: DanmaDownloadBean,
+    var danma: DanmaDownloadBean = DanmaDownloadBean(),
 
     // 下载时间
     var downloadDate: Long = 0

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppParentLayout"
+    style="@style/CommonTheme.ParentLayout"
     tools:context="com.seiko.torrent.ui.add.AddTorrentFragment">
     <ProgressBar
         android:id="@+id/fetch_magnet_progress"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <ImageButton
-        style="@style/AppButton.ImgButton"
+        style="@style/CommonTheme.ImageButton"
         android:id="@id/torrent_btn_center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

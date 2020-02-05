@@ -7,7 +7,7 @@ include ':app',
         ':libs:thunder',
         ':libs:tool_torrent',
         ':libs:file_picker',
-        ':libs:live_plot_graph',
+//        ':libs:live_plot_graph',
 
         ':plugin'
 rootProject.name='DanDanPlayForTV'

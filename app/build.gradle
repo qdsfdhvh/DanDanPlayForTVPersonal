@@ -38,6 +38,7 @@ android {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.release
+            resValue("string", "PORT_NUMBER", "8080")
         }
         release {
             minifyEnabled true  // 混淆编译
@@ -70,4 +71,10 @@ android {
 
 dependencies {
     implementation project(':common')
+
+    // Database Debug
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
+    // 内存泄漏
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 }

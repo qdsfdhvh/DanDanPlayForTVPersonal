@@ -23,11 +23,17 @@ import com.seiko.player.delegate.VideoKeyDownDelegate
 import com.seiko.player.delegate.VideoTouchDelegate
 import com.seiko.player.media.ijkplayer.MediaPlayerParams
 import com.seiko.player.media.creator.MediaPlayerCreatorFactory
+import com.seiko.player.media.danmaku.DanmakuContextCreator
+import com.seiko.player.media.danmaku.JsonDanmakuParser
 import com.seiko.player.ui.adapter.OptionsAdapter
 import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.INVALID_VALUE
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.vm.PlayerViewModel
+import master.flame.danmaku.controller.DrawHandler
+import master.flame.danmaku.danmaku.model.BaseDanmaku
+import master.flame.danmaku.danmaku.model.DanmakuTimer
+import master.flame.danmaku.danmaku.model.android.DanmakuContext
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -59,9 +65,11 @@ class VideoPlayerActivity: FragmentActivity()
 
     private val viewModel: PlayerViewModel by viewModel()
     private val mediaPlayerFactory: MediaPlayerCreatorFactory by inject()
+    private val danmakuContextCreator: DanmakuContextCreator by inject()
 
     private lateinit var binding: PlayerActivityVideoBinding
     private lateinit var bindingControlBottom: PlayerControlBottomBinding
+    private lateinit var danmakuContext: DanmakuContext
 
     private val handler by lazyAndroid { VideoPlayerHandler(this) }
     private val keyDownDelegate by lazyAndroid { VideoKeyDownDelegate(handler) }
@@ -95,6 +103,7 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom = binding.playerViewStubHud.playerLayoutControlBottom
         setContentView(binding.root)
         setupUI()
+        bindViewModel()
         setVideoUri()
     }
 
@@ -119,6 +128,7 @@ class VideoPlayerActivity: FragmentActivity()
     override fun onStop() {
         super.onStop()
         binding.playerVideoViewIjk.stopPlayback()
+        binding.playerDanmakuView.release()
     }
 
     override fun onDestroy() {
@@ -140,12 +150,40 @@ class VideoPlayerActivity: FragmentActivity()
         binding.playerViewStubHud.playerOptionsList.adapter = optionsAdapter
         optionsAdapter.setOnItemClickListener(this)
         // 播放器
-        val creator = mediaPlayerFactory.getCreator(MediaPlayerCreatorFactory.Type.IJK_PLAYER)
+        val creator = mediaPlayerFactory.getCreator(MediaPlayerCreatorFactory.Type.EXO_PLAYER)
         binding.playerVideoViewIjk.setIsUsingSurfaceRenders(false)
         binding.playerVideoViewIjk.setMediaPlayerCreator(creator)
         binding.playerVideoViewIjk.setOnPreparedListener(this)
         binding.playerVideoViewIjk.setOnInfoListener(this)
         binding.playerVideoViewIjk.setOnErrorListener(this)
+        // 弹幕
+        danmakuContext = danmakuContextCreator.create()
+        binding.playerDanmakuView.setCallback(object : DrawHandler.Callback {
+            override fun updateTimer(timer: DanmakuTimer?) {
+
+            }
+
+            override fun drawingFinished() {
+
+            }
+
+            override fun danmakuShown(danmaku: BaseDanmaku?) {
+
+            }
+
+            override fun prepared() {
+                binding.playerDanmakuView.start(binding.playerVideoViewIjk.currentPosition.toLong())
+            }
+        })
+    }
+
+    private fun bindViewModel() {
+        viewModel.danma.observe(this::getLifecycle) { danma ->
+            val parser = JsonDanmakuParser(danma)
+            binding.playerDanmakuView.prepare(parser, danmakuContext)
+            binding.playerDanmakuView.showFPS(true)
+            binding.playerDanmakuView.enableDanmakuDrawingCache(true)
+        }
     }
 
     /**
@@ -159,6 +197,7 @@ class VideoPlayerActivity: FragmentActivity()
         videoView.setVideoURI(param.videoUri)
         videoView.seekTo(0)
         play()
+        // 尝试下载弹幕字幕
         viewModel.downloadTracker(param)
     }
 
@@ -269,6 +308,7 @@ class VideoPlayerActivity: FragmentActivity()
     internal fun seekTo(position: Int?) {
         if (position != null && position >= 0) {
             binding.playerVideoViewIjk.seekTo(position)
+            binding.playerDanmakuView.seekTo(position.toLong())
         }
     }
 
@@ -288,6 +328,7 @@ class VideoPlayerActivity: FragmentActivity()
         val deltaPosition = position + delta
         if (deltaPosition > duration || deltaPosition < 0) return
         binding.playerVideoViewIjk.seekTo(deltaPosition.toInt())
+        binding.playerDanmakuView.seekTo(deltaPosition)
     }
 
     /**
@@ -497,6 +538,14 @@ class VideoPlayerActivity: FragmentActivity()
      * 播放
      */
     private fun play() {
+        playVideo()
+        playDanma()
+    }
+
+    /**
+     * 播放视频
+     */
+    private fun playVideo() {
         if (!isPlaying()) {
             binding.playerVideoViewIjk.start()
             bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_pause_player)
@@ -504,12 +553,40 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
+     * 播放弹幕
+     */
+    private fun playDanma() {
+        val danmakuView = binding.playerDanmakuView
+        if (danmakuView.isPrepared && danmakuView.isPaused) {
+            danmakuView.resume()
+        }
+    }
+
+    /**
      * 暂停
      */
     private fun pause() {
+        pauseVideo()
+        pauseDanma()
+    }
+
+    /**
+     * 暂停视频
+     */
+    private fun pauseVideo() {
         if (isPlaying()) {
             binding.playerVideoViewIjk.pause()
             bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_play_player)
+        }
+    }
+
+    /**
+     * 暂停弹幕
+     */
+    private fun pauseDanma() {
+        val danmakuView = binding.playerDanmakuView
+        if (danmakuView.isPrepared && !danmakuView.isPaused) {
+            danmakuView.pause()
         }
     }
 

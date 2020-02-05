@@ -27,7 +27,7 @@
         <!--主界面-->
         <activity android:name=".ui.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/BaseTheme"
+            android:theme="@style/DanDanTvTheme"
             android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

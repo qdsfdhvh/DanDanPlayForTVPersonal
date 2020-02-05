@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false" />
+    <!--弹幕-->
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@id/player_danmaku_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <!--控制-->
     <include
         layout="@layout/player_hud"
