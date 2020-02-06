@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
@@ -20,11 +19,11 @@ import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.io.File
 
-class DetailTorrentFilesFragment : Fragment(), DetailTorrentFilesAdapter.OnItemClickListener {
+class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemClickListener {
 
     companion object {
-        fun newInstance(): DetailTorrentFilesFragment {
-            return DetailTorrentFilesFragment()
+        fun newInstance(): TorrentDetailFilesFragment {
+            return TorrentDetailFilesFragment()
         }
     }
 
@@ -32,7 +31,7 @@ class DetailTorrentFilesFragment : Fragment(), DetailTorrentFilesAdapter.OnItemC
 
     private lateinit var binding: TorrentFragmentDetailFileBinding
 
-    private val adapter by lazyAndroid { DetailTorrentFilesAdapter() }
+    private val adapter by lazyAndroid { TorrentDetailFilesAdapter() }
 
     private var currentDir: BencodeFileTree? = null
     private var fileTree: BencodeFileTree? = null

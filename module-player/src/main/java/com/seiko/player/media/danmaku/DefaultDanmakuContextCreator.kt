@@ -7,7 +7,7 @@ class DefaultDanmakuContextCreator : DanmakuContextCreator {
 
     override fun create(): DanmakuContext {
         val danmakuContext = DanmakuContext.create()
-        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 2F)
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3f)
             //设置防弹幕重叠
 //            .preventOverlapping()
             //合并重复弹幕
@@ -16,8 +16,8 @@ class DefaultDanmakuContextCreator : DanmakuContextCreator {
             .setScrollSpeedFactor(1.2f)
             //弹幕文字大小
             .setScaleTextSize(1.8f)
-            //弹幕文字透明度
-            .setDanmakuTransparency(0.8f)
+//            //弹幕文字透明度
+//            .setDanmakuTransparency(0.8f)
             //是否显示滚动弹幕
             .setR2LDanmakuVisibility(true)
             //是否显示顶部弹幕

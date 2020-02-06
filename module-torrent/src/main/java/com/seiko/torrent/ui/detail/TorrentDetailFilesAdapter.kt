@@ -29,7 +29,7 @@ import com.seiko.torrent.data.model.filetree.FileNode
 import com.seiko.torrent.databinding.TorrentItemInfoFileBinding
 import java.util.*
 
-class DetailTorrentFilesAdapter : RecyclerView.Adapter<DetailTorrentFilesAdapter.ViewHolder>() {
+class TorrentDetailFilesAdapter : RecyclerView.Adapter<TorrentDetailFilesAdapter.ViewHolder>() {
 
     private var files: MutableList<BencodeFileTree> = ArrayList()
 

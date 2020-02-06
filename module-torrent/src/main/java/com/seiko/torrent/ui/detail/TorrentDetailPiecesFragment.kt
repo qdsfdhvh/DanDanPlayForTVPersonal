@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.seiko.torrent.databinding.TorrentFragmentDetailPiecesBinding
 
-class DetailTorrentPiecesFragment : Fragment() {
+class TorrentDetailPiecesFragment : Fragment() {
     companion object {
-        fun newInstance(): DetailTorrentPiecesFragment {
-            return DetailTorrentPiecesFragment()
+        fun newInstance(): TorrentDetailPiecesFragment {
+            return TorrentDetailPiecesFragment()
         }
     }
 

@@ -18,7 +18,6 @@ import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 private const val NUM_FRAGMENTS = 6
 
@@ -29,11 +28,16 @@ private const val TRACKERS_FRAG_POS = 3
 private const val PEERS_FRAG_POS = 4
 private const val PIECES_FRAG_POS = 5
 
-class DetailTorrentFragment : Fragment()
+class TorrentDetailFragment : Fragment()
     , OnItemClickListener {
 
     companion object {
+        const val TAG = "TorrentDetailFragment"
         private const val ARGS_DETAIL_TAB_SELECTED_POSITION = "ARGS_DETAIL_TAB_SELECTED_POSITION"
+
+        fun newInstance(): TorrentDetailFragment {
+            return TorrentDetailFragment()
+        }
     }
 
     private val viewModel: MainViewModel by sharedViewModel()
@@ -159,12 +163,12 @@ private class DetailPagerAdapter(fragment: Fragment) : FragmentPagerAdapter(frag
 
     override fun getItem(position: Int): Fragment {
         return when(position) {
-            FILES_FRAG_POS -> DetailTorrentFilesFragment.newInstance()
-            INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
-            STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
-            TRACKERS_FRAG_POS -> DetailTorrentTrackersFragment.newInstance()
-            PEERS_FRAG_POS -> DetailTorrentPeersFragment.newInstance()
-            PIECES_FRAG_POS -> DetailTorrentPiecesFragment.newInstance()
+            FILES_FRAG_POS -> TorrentDetailFilesFragment.newInstance()
+            INFO_FRAG_POS -> TorrentDetailInfoFragment.newInstance()
+            STATE_FRAG_POS -> TorrentDetailStateFragment.newInstance()
+            TRACKERS_FRAG_POS -> TorrentDetailTrackersFragment.newInstance()
+            PEERS_FRAG_POS -> TorrentDetailPeersFragment.newInstance()
+            PIECES_FRAG_POS -> TorrentDetailPiecesFragment.newInstance()
             else -> throw RuntimeException("Can't create fragment with position=$position.")
         }
     }

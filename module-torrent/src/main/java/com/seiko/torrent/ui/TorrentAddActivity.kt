@@ -24,8 +24,8 @@ import timber.log.Timber
 
 
 @Route(path = Routes.Torrent.PATH_ADD)
-class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add),
-    DispatchKeyEventDispatcherOwner {
+class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
+    , DispatchKeyEventDispatcherOwner {
 
     @SuppressLint("RestrictedApi")
     private val dispatchKeyEventDispatcher = DispatchKeyEventDispatcher { event ->
@@ -75,7 +75,9 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add),
     private fun openAddFragment(uri: Uri) {
         if (supportFragmentManager.findFragmentByTag(AddTorrentFragment.TAG) == null) {
             supportFragmentManager.commit {
-                add(R.id.torrent_container_add, AddTorrentFragment.newInstance(uri))
+                add(R.id.torrent_container_add,
+                    AddTorrentFragment.newInstance(uri),
+                    AddTorrentFragment.TAG)
             }
         }
     }

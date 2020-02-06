@@ -65,6 +65,8 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [hedera-wallet-android](https://github.com/hashgraph/hedera-wallet-android/tree/master)
 
+* [IJKPlayer-android](https://github.com/DyncKathline/IJKPlayer-android)
+
 ### common
 
 * [okhttp](https://github.com/square/okhttp)

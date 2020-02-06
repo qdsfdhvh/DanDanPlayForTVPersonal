@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailStateBinding
 
-class DetailTorrentStateFragment : Fragment() {
+class TorrentDetailStateFragment : Fragment() {
 
     companion object {
-        fun newInstance(): DetailTorrentStateFragment {
-            return DetailTorrentStateFragment()
+        fun newInstance(): TorrentDetailStateFragment {
+            return TorrentDetailStateFragment()
         }
     }
 

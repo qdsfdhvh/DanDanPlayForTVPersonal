@@ -14,11 +14,11 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DetailTorrentInfoFragment : Fragment() {
+class TorrentDetailInfoFragment : Fragment() {
 
     companion object {
-        fun newInstance(): DetailTorrentInfoFragment {
-            return DetailTorrentInfoFragment()
+        fun newInstance(): TorrentDetailInfoFragment {
+            return TorrentDetailInfoFragment()
         }
     }
 

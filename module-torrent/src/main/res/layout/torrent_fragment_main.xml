@@ -38,9 +38,8 @@
         app:layout_constraintBottom_toBottomOf="@id/torrent_btn_add"
         app:layout_constraintStart_toEndOf="@id/torrent_btn_add"/>
 
-    <androidx.fragment.app.FragmentContainerView
+    <FrameLayout
         android:id="@id/torrent_container_list"
-        android:name="com.seiko.torrent.ui.main.TorrentListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout="@layout/torrent_fragment_list"
@@ -49,9 +48,8 @@
         app:layout_constraintStart_toStartOf="@id/torrent_container_btn"
         app:layout_constraintEnd_toEndOf="@id/torrent_container_btn"/>
 
-    <androidx.fragment.app.FragmentContainerView
+    <FrameLayout
         android:id="@id/torrent_container_detail"
-        android:name="com.seiko.torrent.ui.detail.DetailTorrentFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout="@layout/torrent_fragment_detail"

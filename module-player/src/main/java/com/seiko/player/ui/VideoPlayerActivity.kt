@@ -137,6 +137,7 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     private fun setupUI() {
+//        binding.playerRoot.setOnKeyInterceptListener()
         // 底部控制
         bindingControlBottom.playerBtnOverlayTracks.setOnClickListener(this)
         bindingControlBottom.playerBtnOverlayPlay.setOnClickListener(this)

@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.toast.toast
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentMainBinding
+import com.seiko.torrent.ui.detail.TorrentDetailFragment
 import com.seiko.torrent.ui.dialog.DialogInputFragment
 import com.seiko.torrent.util.buildTorrentUri
 import kotlinx.coroutines.GlobalScope
@@ -58,6 +60,28 @@ class TorrentMainFragment : Fragment(), View.OnClickListener {
         binding.torrentBtnAdd.setOnClickListener(this)
         binding.torrentBtnOpenFile.setOnClickListener(this)
         binding.torrentBtnAdd.requestFocus()
+        openTorrentListFragment()
+        openTorrentDetailFragment()
+    }
+
+    private fun openTorrentListFragment() {
+        if (childFragmentManager.findFragmentByTag(TorrentListFragment.TAG) == null) {
+            childFragmentManager.commit {
+                add(R.id.torrent_container_list,
+                    TorrentListFragment.newInstance(),
+                    TorrentListFragment.TAG)
+            }
+        }
+    }
+
+    private fun openTorrentDetailFragment() {
+        if (childFragmentManager.findFragmentByTag(TorrentDetailFragment.TAG) == null) {
+            childFragmentManager.commit {
+                add(R.id.torrent_container_detail,
+                    TorrentDetailFragment.newInstance(),
+                    TorrentDetailFragment.TAG)
+            }
+        }
     }
 
     private fun bindViewModel() {
