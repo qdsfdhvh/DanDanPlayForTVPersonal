@@ -4,12 +4,13 @@
 
 ## 项目截图
 
-![Home](./screen/device-2020-02-04-145554.png)
-![Area](./screen/device-2020-02-04-145451.png)
-![TimeLine](./screen/device-2020-02-04-145416.png)
-![Detail1](./screen/device-2020-02-04-145718.png)
-![Detail2](./screen/device-2020-02-04-145736.png)
-![Torrent](./screen/device-2020-02-04-145341.png)
+![Home](./screen/device-2020-02-04-145554.webp)
+![Area](./screen/device-2020-02-04-145451.webp)
+![TimeLine](./screen/device-2020-02-04-145416.webp)
+![Detail1](./screen/device-2020-02-04-145718.webp)
+![Detail2](./screen/device-2020-02-04-145736.webp)
+![Torrent](./screen/device-2020-02-04-145341.webp)
+![Player](./screen/device-2020-02-06-210626.webp)
 
 ## Clean架构
 

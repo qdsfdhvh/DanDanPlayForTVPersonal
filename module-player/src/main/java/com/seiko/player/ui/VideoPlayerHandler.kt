@@ -15,9 +15,9 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         private const val SET_CONTROL_SHOW = 10
         private const val SET_OVERLAY_SHOW = 11
         private const val SET_OPTIONS_SHOW = 12
-        private const val SET_VIDEO_PLAY = 13
         private const val SET_VIDEO_SEEK = 14
         private const val SET_VIDEO_SEEK_DELTA = 15
+        private const val SET_VIDEO_PLAY = 16
     }
 
     private val reference = WeakReference(activity)
@@ -27,7 +27,7 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         when(msg.what) {
             MSG_UPDATE_SEEK -> {
                 val pos = activity.updateProgress()
-                if (!activity.isDragging && activity.isPlaying()) {
+                if (activity.isPlaying()) {
                     val obtainMsg = obtainMessage(MSG_UPDATE_SEEK)
                     sendMessageDelayed(obtainMsg, 1000 - (pos % 1000))
                 }
@@ -39,16 +39,13 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
                 activity.setOverlayShow(msg.obj as? Boolean)
             }
             SET_OPTIONS_SHOW -> {
-                activity.setOptionsShow(msg.obj as? Boolean, msg.arg1)
-            }
-            SET_VIDEO_PLAY -> {
-                activity.setVideoPlay()
+                activity.setOptionsShow(msg.obj as? Boolean)
             }
             SET_VIDEO_SEEK -> {
-                activity.seekTo(msg.obj as? Int)
+                activity.seekTo(msg.obj as? Long)
             }
             SET_VIDEO_SEEK_DELTA -> {
-                activity.seekDelta(msg.obj as? Int)
+                activity.seekDelta(msg.obj as? Long)
             }
         }
     }
@@ -56,8 +53,9 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
     /**
      * 开始更新进度条
      */
-    fun startUpdateProgress() {
-        sendEmptyMessage(MSG_UPDATE_SEEK)
+    fun startUpdateProgress(delay: Long = 0) {
+        removeMessages(MSG_UPDATE_SEEK)
+        sendEmptyMessageDelayed(MSG_UPDATE_SEEK, delay)
     }
 
     /**
@@ -68,26 +66,21 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
     }
 
     /**
-     * 播放/暂停
-     */
-    fun setVideoPlay() {
-        sendEmptyMessage(SET_VIDEO_PLAY)
-    }
-
-    /**
      * 跳转
      * @param position 具体位置
+     * @param delay 延时ms
      */
-    fun seekTo(position: Int) {
+    fun seekTo(position: Long, delay: Long = 400) {
+        removeMessages(SET_VIDEO_SEEK)
         val msg = obtainMessage(SET_VIDEO_SEEK, position)
-        sendMessage(msg)
+        sendMessageDelayed(msg, delay)
     }
 
     /**
      * 快进/快退
      * @param delta 快进or快退时间
      */
-    fun seekDelta(delta: Int) {
+    fun seekDelta(delta: Long) {
         val msg = obtainMessage(SET_VIDEO_SEEK_DELTA, delta)
         sendMessageDelayed(msg, ViewConfiguration.getDoubleTapTimeout().toLong())
     }
@@ -116,17 +109,15 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
 
     /**
      * 显示/隐藏 右侧配置界面
-     * @param type 类型 字幕配置 or 其他配置
      * @param show 是否显示，null时切换当前状态
      * @param delay 延时ms
      */
     fun optionsShow(
         show: Boolean? = null,
-        @PlayerOption.PlayerOptionType type: Int = -1,
         delay: Long = ViewConfiguration.getDoubleTapTimeout().toLong()
     ) {
         removeMessages(SET_OPTIONS_SHOW)
-        val msg = obtainMessage(SET_OPTIONS_SHOW, type, -1, show)
+        val msg = obtainMessage(SET_OPTIONS_SHOW, show)
         sendMessageDelayed(msg, delay)
     }
 

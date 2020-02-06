@@ -17,6 +17,7 @@
 package com.seiko.player.media.ijkplayer;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -48,7 +49,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
-public class IjkVideoView extends FrameLayout implements MediaController.MediaPlayerControl {
+@SuppressLint("LogNotTimber")
+public class IjkVideoView extends FrameLayout {
     private String TAG = "IjkVideoView";
     // settable by the client
     private Uri mUri;
@@ -75,13 +77,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private int mVideoTargetRotationDegree;
     // add,原始的Matrix
     private Matrix mOriginalMatrix;
-    private IMediaController mMediaController;
+//    private IMediaController mMediaController;
     private IMediaPlayer.OnCompletionListener mOnCompletionListener;
     private IMediaPlayer.OnPreparedListener mOnPreparedListener;
     private int mCurrentBufferPercentage;
     private IMediaPlayer.OnErrorListener mOnErrorListener;
     private IMediaPlayer.OnInfoListener mOnInfoListener;
-    private int mSeekWhenPrepared;  // recording the seek position while preparing
+    private long mSeekWhenPrepared;  // recording the seek position while preparing
     private boolean mCanPause = true;
     private boolean mCanSeekBack = true;
     private boolean mCanSeekForward = true;
@@ -463,7 +465,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             // we don't set the target state here either, but preserve the
             // target state that was there before.
             mCurrentState = MediaPlayerParams.STATE_PREPARING;
-            attachMediaController();
+//            attachMediaController();
         } catch (IOException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = MediaPlayerParams.STATE_ERROR;
@@ -480,23 +482,23 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         }
     }
 
-    public void setMediaController(IMediaController controller) {
-        if (mMediaController != null) {
-            mMediaController.hide();
-        }
-        mMediaController = controller;
-        attachMediaController();
-    }
+//    public void setMediaController(IMediaController controller) {
+//        if (mMediaController != null) {
+//            mMediaController.hide();
+//        }
+//        mMediaController = controller;
+//        attachMediaController();
+//    }
 
-    private void attachMediaController() {
-        if (mMediaPlayer != null && mMediaController != null) {
-            mMediaController.setMediaPlayer(this);
-            View anchorView = this.getParent() instanceof View ?
-                    (View) this.getParent() : this;
-            mMediaController.setAnchorView(anchorView);
-            mMediaController.setEnabled(isInPlaybackState());
-        }
-    }
+//    private void attachMediaController() {
+//        if (mMediaPlayer != null && mMediaController != null) {
+//            mMediaController.setMediaPlayer(this);
+//            View anchorView = this.getParent() instanceof View ?
+//                    (View) this.getParent() : this;
+//            mMediaController.setAnchorView(anchorView);
+//            mMediaController.setEnabled(isInPlaybackState());
+//        }
+//    }
 
     IMediaPlayer.OnVideoSizeChangedListener mSizeChangedListener =
             new IMediaPlayer.OnVideoSizeChangedListener() {
@@ -528,13 +530,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             if (mOnPreparedListener != null) {
                 mOnPreparedListener.onPrepared(mMediaPlayer);
             }
-            if (mMediaController != null) {
-                mMediaController.setEnabled(true);
-            }
+//            if (mMediaController != null) {
+//                mMediaController.setEnabled(true);
+//            }
             mVideoWidth = mp.getVideoWidth();
             mVideoHeight = mp.getVideoHeight();
 
-            int seekToPosition = mSeekWhenPrepared;  // mSeekWhenPrepared may be changed after seekTo() call
+            long seekToPosition = mSeekWhenPrepared;  // mSeekWhenPrepared may be changed after seekTo() call
             if (seekToPosition != 0) {
                 seekTo(seekToPosition);
             }
@@ -550,15 +552,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                         // start the video here instead of in the callback.
                         if (mTargetState == MediaPlayerParams.STATE_PLAYING) {
                             start();
-                            if (mMediaController != null) {
-                                mMediaController.show();
-                            }
+//                            if (mMediaController != null) {
+//                                mMediaController.show();
+//                            }
                         } else if (!isPlaying() &&
                                 (seekToPosition != 0 || getCurrentPosition() > 0)) {
-                            if (mMediaController != null) {
-                                // Show the media controls when we're paused into a video and make 'em stick.
-                                mMediaController.show(0);
-                            }
+//                            if (mMediaController != null) {
+//                                // Show the media controls when we're paused into a video and make 'em stick.
+//                                mMediaController.show(0);
+//                            }
                         }
                     }
                 }
@@ -579,9 +581,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     mCurrentState = MediaPlayerParams.STATE_COMPLETED;
                     mTargetState = MediaPlayerParams.STATE_COMPLETED;
                     _notifyMediaStatus();
-                    if (mMediaController != null) {
-                        mMediaController.hide();
-                    }
+//                    if (mMediaController != null) {
+//                        mMediaController.hide();
+//                    }
                     if (mOnCompletionListener != null) {
                         mOnCompletionListener.onCompletion(mMediaPlayer);
                     }
@@ -652,9 +654,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     mCurrentState = MediaPlayerParams.STATE_ERROR;
                     mTargetState = MediaPlayerParams.STATE_ERROR;
                     _notifyMediaStatus();
-                    if (mMediaController != null) {
-                        mMediaController.hide();
-                    }
+//                    if (mMediaController != null) {
+//                        mMediaController.hide();
+//                    }
 
                     /* If an error handler has been supplied, use it and finish. */
                     if (mOnErrorListener != null) {
@@ -847,70 +849,70 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (isInPlaybackState() && mMediaController != null) {
-            toggleMediaControlsVisibility();
-        }
+//        if (isInPlaybackState() && mMediaController != null) {
+//            toggleMediaControlsVisibility();
+//        }
         return false;
     }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
-        if (isInPlaybackState() && mMediaController != null) {
-            toggleMediaControlsVisibility();
-        }
+//        if (isInPlaybackState() && mMediaController != null) {
+//            toggleMediaControlsVisibility();
+//        }
         return false;
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean isKeyCodeSupported = keyCode != KeyEvent.KEYCODE_BACK &&
-                keyCode != KeyEvent.KEYCODE_VOLUME_UP &&
-                keyCode != KeyEvent.KEYCODE_VOLUME_DOWN &&
-                keyCode != KeyEvent.KEYCODE_VOLUME_MUTE &&
-                keyCode != KeyEvent.KEYCODE_MENU &&
-                keyCode != KeyEvent.KEYCODE_CALL &&
-                keyCode != KeyEvent.KEYCODE_ENDCALL;
-        if (isInPlaybackState() && isKeyCodeSupported && mMediaController != null) {
-            if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK ||
-                    keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
-                if (mMediaPlayer.isPlaying()) {
-                    pause();
-                    mMediaController.show();
-                } else {
-                    start();
-                    mMediaController.hide();
-                }
-                return true;
-            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
-                if (!mMediaPlayer.isPlaying()) {
-                    start();
-                    mMediaController.hide();
-                }
-                return true;
-            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP
-                    || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {
-                if (mMediaPlayer.isPlaying()) {
-                    pause();
-                    mMediaController.show();
-                }
-                return true;
-            } else {
-                toggleMediaControlsVisibility();
-            }
-        }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        boolean isKeyCodeSupported = keyCode != KeyEvent.KEYCODE_BACK &&
+//                keyCode != KeyEvent.KEYCODE_VOLUME_UP &&
+//                keyCode != KeyEvent.KEYCODE_VOLUME_DOWN &&
+//                keyCode != KeyEvent.KEYCODE_VOLUME_MUTE &&
+//                keyCode != KeyEvent.KEYCODE_MENU &&
+//                keyCode != KeyEvent.KEYCODE_CALL &&
+//                keyCode != KeyEvent.KEYCODE_ENDCALL;
+//        if (isInPlaybackState() && isKeyCodeSupported && mMediaController != null) {
+//            if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK ||
+//                    keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+//                if (mMediaPlayer.isPlaying()) {
+//                    pause();
+//                    mMediaController.show();
+//                } else {
+//                    start();
+//                    mMediaController.hide();
+//                }
+//                return true;
+//            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
+//                if (!mMediaPlayer.isPlaying()) {
+//                    start();
+//                    mMediaController.hide();
+//                }
+//                return true;
+//            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP
+//                    || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {
+//                if (mMediaPlayer.isPlaying()) {
+//                    pause();
+//                    mMediaController.show();
+//                }
+//                return true;
+//            } else {
+//                toggleMediaControlsVisibility();
+//            }
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
-        return super.onKeyDown(keyCode, event);
-    }
+//    private void toggleMediaControlsVisibility() {
+//        if (mMediaController.isShowing()) {
+//            mMediaController.hide();
+//        } else {
+//            mMediaController.show();
+//        }
+//    }
 
-    private void toggleMediaControlsVisibility() {
-        if (mMediaController.isShowing()) {
-            mMediaController.hide();
-        } else {
-            mMediaController.show();
-        }
-    }
-
-    @Override
+//    @Override
     public void start() {
         if (isInPlaybackState()) {
             mMediaPlayer.start();
@@ -920,7 +922,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         mTargetState = MediaPlayerParams.STATE_PLAYING;
     }
 
-    @Override
+//    @Override
     public void pause() {
         if (isInPlaybackState()) {
             if (mMediaPlayer.isPlaying()) {
@@ -940,25 +942,25 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         start();
     }
 
-    @Override
-    public int getDuration() {
+//    @Override
+    public long getDuration() {
         if (isInPlaybackState()) {
-            return (int) mMediaPlayer.getDuration();
+            return mMediaPlayer.getDuration();
         }
 
         return -1;
     }
 
-    @Override
-    public int getCurrentPosition() {
+//    @Override
+    public long getCurrentPosition() {
         if (isInPlaybackState()) {
-            return (int) mMediaPlayer.getCurrentPosition();
+            return  mMediaPlayer.getCurrentPosition();
         }
         return 0;
     }
 
-    @Override
-    public void seekTo(int msec) {
+//    @Override
+    public void seekTo(long msec) {
         if (isInPlaybackState()) {
             mSeekStartTime = System.currentTimeMillis();
             mMediaPlayer.seekTo(msec);
@@ -968,12 +970,12 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         }
     }
 
-    @Override
+//    @Override
     public boolean isPlaying() {
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
 
-    @Override
+//    @Override
     public int getBufferPercentage() {
         if (mMediaPlayer != null) {
             return mCurrentBufferPercentage;
@@ -988,22 +990,22 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 mCurrentState != MediaPlayerParams.STATE_PREPARING);
     }
 
-    @Override
+//    @Override
     public boolean canPause() {
         return mCanPause;
     }
 
-    @Override
+//    @Override
     public boolean canSeekBackward() {
         return mCanSeekBack;
     }
 
-    @Override
+//    @Override
     public boolean canSeekForward() {
         return mCanSeekForward;
     }
 
-    @Override
+//    @Override
     public int getAudioSessionId() {
         return 0;
     }

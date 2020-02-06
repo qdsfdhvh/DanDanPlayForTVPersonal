@@ -30,7 +30,6 @@ this.beforeEvaluate {
 
 dependencies {
     implementation project(':common')
-//    implementation project(':libs:live_plot_graph')
 
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
@@ -39,7 +38,7 @@ dependencies {
     implementation "com.google.android.material:material:1.2.0-alpha04"
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
-//    implementation 'com.google.android.exoplayer:extension-leanback:2.10.4'
+    implementation 'com.google.android.exoplayer:extension-leanback:2.10.4'
 //    implementation 'com.google.android.exoplayer:extension-rtmp:2.10.4'
     implementation 'com.google.android.exoplayer:extension-okhttp:2.10.4'
     // IjkPlayer

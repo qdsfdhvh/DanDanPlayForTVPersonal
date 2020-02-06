@@ -18,12 +18,10 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.d("onCreate")
-
+        // 日志
         if (BuildConfig.DEBUG) {
             Timber.plant(NanoDebugTree())
         }
-
         // 路由
         if (BuildConfig.DEBUG) {
             // 打印日志
@@ -32,16 +30,10 @@ class App : Application() {
             ARouter.openDebug()
         }
         ARouter.init(this)
-
         // 注解
         startKoin {
             androidContext(this@App)
         }
     }
-
-//    override fun onLowMemory() {
-//        super.onLowMemory()
-//        clearFrescoMemory()
-//    }
 
 }

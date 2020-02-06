@@ -129,7 +129,7 @@
 
     <ImageView
         style="@style/VLC.ImageButton"
-        android:id="@id/player_btn_overlay_tracks"
+        android:id="@id/player_btn_overlay_danma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_name"
@@ -137,7 +137,7 @@
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintTop_toTopOf="@id/player_btn_overlay_play"
         vlc:layout_constraintBottom_toBottomOf="@id/player_btn_overlay_play"
-        android:src="@drawable/ic_audio_track_player" />
+        android:src="@drawable/ic_danma" />
 
     <ImageView
         style="@style/VLC.ImageButton"

@@ -2,7 +2,7 @@ package com.seiko.player.ui
 
 //import android.net.Uri
 //import android.os.Bundle
-//import androidx.leanback.app.VideoSupportFragment
+import androidx.leanback.app.VideoSupportFragment
 //import androidx.leanback.app.VideoSupportFragmentGlueHost
 //import com.google.android.exoplayer2.ExoPlaybackException
 //import com.google.android.exoplayer2.ExoPlayer
@@ -19,7 +19,7 @@ package com.seiko.player.ui
 //import com.seiko.common.util.toast.toast
 //import com.seiko.player.ui.widget.PlaybackControlsGlue
 //
-//class ExoPlayerFragment : VideoSupportFragment() {
+class ExoPlayerFragment : VideoSupportFragment() {
 //
 ////    private val args by navArgs<PlayerManagerActivityArgs>()
 //
@@ -100,4 +100,4 @@ package com.seiko.player.ui
 //        }
 //    }
 //
-//}
+}

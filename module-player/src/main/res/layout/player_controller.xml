@@ -15,7 +15,7 @@
         android:background="@drawable/player_rounded_corners"
         vlc:layout_constraintTop_toTopOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:visibility="visible"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
@@ -54,6 +54,7 @@
 <!--        tools:visibility="visible"-->
 <!--        vlc:layout_constraintStart_toStartOf="@+id/player_layout_control_bottom"-->
 <!--        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_control_bottom" />-->
+    
     <!-- 底部控制 -->
     <include
         layout="@layout/player_control_bottom"

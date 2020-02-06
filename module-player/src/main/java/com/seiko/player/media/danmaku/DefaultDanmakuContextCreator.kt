@@ -11,7 +11,7 @@ class DefaultDanmakuContextCreator : DanmakuContextCreator {
             //设置防弹幕重叠
 //            .preventOverlapping()
             //合并重复弹幕
-//            .setDuplicateMergingEnabled(true)
+            .setDuplicateMergingEnabled(true)
             //弹幕滚动速度
             .setScrollSpeedFactor(1.2f)
             //弹幕文字大小
@@ -25,7 +25,7 @@ class DefaultDanmakuContextCreator : DanmakuContextCreator {
             //是否显示底部弹幕
             .setFBDanmakuVisibility(true)
             //同屏数量限制
-            .setMaximumVisibleSizeInScreen(1000)
+            .setMaximumVisibleSizeInScreen(100)
         return danmakuContext
     }
 

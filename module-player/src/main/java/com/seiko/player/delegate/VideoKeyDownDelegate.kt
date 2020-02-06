@@ -1,11 +1,16 @@
 package com.seiko.player.delegate
 
 import android.view.KeyEvent
+import androidx.leanback.widget.BaseGridView
 import com.seiko.player.data.model.PlayerOption
 import com.seiko.player.ui.VideoPlayerHandler
+import com.seiko.player.vm.PlayerViewModel
 import timber.log.Timber
 
-class VideoKeyDownDelegate(private val handler: VideoPlayerHandler) {
+class VideoKeyDownDelegate(
+    private val viewModel: PlayerViewModel,
+    private val handler: VideoPlayerHandler
+): BaseGridView.OnKeyInterceptListener {
 
     // ok 23
     // ↑ 19
@@ -13,11 +18,20 @@ class VideoKeyDownDelegate(private val handler: VideoPlayerHandler) {
     // ← 21
     // → 22
     // 菜单 82
-    fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onInterceptKeyEvent(event: KeyEvent?): Boolean {
         if (event == null) return false
+        val keyCode = event.keyCode
         Timber.d("keyCode=${event.keyCode}")
         when(keyCode) {
             KeyEvent.KEYCODE_BACK -> return false
+            KeyEvent.KEYCODE_DPAD_CENTER -> {
+                if (KeyEvent.ACTION_UP == event.action) {
+                    // 切换播放状态
+                    viewModel.setVideoPlay()
+                    return true
+                }
+                return false
+            }
             KeyEvent.KEYCODE_DPAD_UP -> {
                 return true
             }
@@ -34,29 +48,12 @@ class VideoKeyDownDelegate(private val handler: VideoPlayerHandler) {
                 return true
             }
             KeyEvent.KEYCODE_MENU -> {
-                handler.optionsShow(true, PlayerOption.PlayerOptionType.ADVANCED)
+                // 切换状态
+                handler.optionsShow()
                 return true
             }
-//            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
-//                handler.seekDelta(10000)
-//                return true
-//            }
-//            KeyEvent.KEYCODE_MEDIA_REWIND -> {
-//                handler.seekDelta(-10000)
-//                return true
-//            }
-//            KeyEvent.KEYCODE_BUTTON_R1 -> {
-//                handler.seekDelta(60000)
-//                return true
-//            }
-//            KeyEvent.KEYCODE_BUTTON_L1 -> {
-//                handler.seekDelta(-60000)
-//                return true
-//            }
             else -> return false
         }
     }
-
-
 
 }

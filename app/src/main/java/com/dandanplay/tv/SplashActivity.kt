@@ -17,7 +17,7 @@ class SplashActivity : FragmentActivity(R.layout.activity_splash) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
         lifecycleScope.launch {
-            delay(400)
+            delay(800)
             Navigator.navToPlayTV(this@SplashActivity)
             finish()
         }

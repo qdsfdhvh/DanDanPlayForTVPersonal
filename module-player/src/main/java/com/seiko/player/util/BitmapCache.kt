@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.collection.LruCache
 import com.seiko.player.BuildConfig
-import com.seiko.player.util.extensions.readableSize
 import timber.log.Timber
 
 object BitmapCache {
@@ -19,7 +18,7 @@ object BitmapCache {
         val cacheSize = Runtime.getRuntime().maxMemory() / 5
 
         if (BuildConfig.DEBUG) {
-            Timber.tag(TAG).i("LRUCache size set to %s", cacheSize.readableSize())
+            Timber.tag(TAG).i("LRUCache size set to %s", Tools.sizeToString(cacheSize))
         }
 
         mMemCache = object : LruCache<String, Bitmap>(cacheSize.toInt()) {

@@ -4,11 +4,4 @@
 
     <attr name="advanced_options_style" format="reference" />
 
-    <declare-styleable name="MiniVisualizer">
-        <attr name="bar_color" format="reference"/>
-    </declare-styleable>
-
-    <declare-styleable name="HalfCircleView">
-        <attr name="is_left" format="boolean"/>
-    </declare-styleable>
 </resources>

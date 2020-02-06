@@ -14,6 +14,7 @@ class PrefDataSourceImpl(prefs: PreferenceDataStore): PrefDataSource {
     override var mIsUsingDetachedSurfaceTextureView by prefs.boolean("PREF_USING_DETACH_SURFACE_TEXTURE_VIEW", false)
     override var mIsUsingSurfaceRenders by prefs.boolean("PREF_IS_USING_SURFACE_RENDERS", false)
     override var mPixelFormat by prefs.string("PREF_PIXEL_FORMAT", "")
+    override var showDanma by prefs.boolean("PREF_OPEN_DANMA", true)
 
 //    override var timeStretch by prefs.boolean("PREF_TIME_STRETCH", false)
 //    override var subtitlesEncoding by prefs.string("PREF_SUBTITLES_ENCODING", "")
