@@ -55,6 +55,11 @@ class TorrentListFragment : Fragment()
     private lateinit var binding: TorrentFragmentListBinding
     private lateinit var adapter: TorrentListAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("Navigator - onCreate")
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = TorrentFragmentListBinding.inflate(inflater, container, false)
         setupUI()
@@ -63,11 +68,13 @@ class TorrentListFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("Navigator - onViewCreated")
         bindViewModel()
     }
 
     override fun onStart() {
         super.onStart()
+        Timber.d("Navigator - onStart")
         viewModel.loadData(false)
     }
 

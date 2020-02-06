@@ -24,6 +24,7 @@
 
 package com.seiko.common.util.livedata
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,28 +37,23 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
         return super.getValue() ?: emptyMap
     }
 
+    @MainThread
     suspend fun clear() {
-        withContext(Dispatchers.Main) {
-            value = value.apply { clear() }
-        }
+        value = value.apply { clear() }
     }
 
-
-
-    suspend fun add(key: K, item: V) {
-        withContext(Dispatchers.Main) {
-            value = value.apply {
+    @MainThread
+    fun add(key: K, item: V) {
+        value = value.apply {
 //                remove(key)
-                put(key, item)
-            }
+            put(key, item)
         }
     }
 
-    suspend fun remove(key: K) {
-        withContext(Dispatchers.Main) {
-            if (value.containsKey(key)) {
-                value = value.apply { remove(key) }
-            }
+    @MainThread
+    fun remove(key: K) {
+        if (value.containsKey(key)) {
+            value = value.apply { remove(key) }
         }
     }
 

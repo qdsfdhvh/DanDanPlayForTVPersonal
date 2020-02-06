@@ -77,7 +77,7 @@ class DialogInputFragment : BaseDialogFragment()
     }
 
     fun dismissDialog() {
-        dismissDialog(TAG)
+        dismiss()
     }
 
     class Builder {

@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.databinding.ItemBangumiEpisodeBinding
-import com.seiko.common.ui.card.AbsBindingCardView
+import com.seiko.common.ui.card.AbsCardView
 
-class BangumiEpisodeCardView(context: Context) : AbsBindingCardView<BangumiEpisodeEntity>(context) {
+class BangumiEpisodeCardView(context: Context) : AbsCardView<BangumiEpisodeEntity>(context) {
 
     private lateinit var binding: ItemBangumiEpisodeBinding
 

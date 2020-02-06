@@ -18,6 +18,7 @@ object Navigator {
      * 跳转到DanDan数据展示页面
      */
     fun navToPlayTV(activity: Activity) {
+//        Timber.d("Navigator - navToPlayTV")
         ARouter.getInstance().build(Routes.DanDanPlay.PATH_TV).navigation(activity)
     }
 
@@ -25,6 +26,7 @@ object Navigator {
      * 跳转种子页面
      */
     fun navToTorrent(activity: Activity, callback: NavigationCallback? = null) {
+        Timber.d("Navigator - navToTorrent")
         ARouter.getInstance().build(Routes.Torrent.PATH).navigation(activity, callback)
     }
 
@@ -32,6 +34,7 @@ object Navigator {
      * 跳转种子信息页面
      */
     fun navToAddTorrent(activity: Activity, uri: Uri) {
+        Timber.d("Navigator - navToAddTorrent")
         val postcard = ARouter.getInstance().build(Routes.Torrent.PATH_ADD)
         LogisticsCenter.completion(postcard)
 

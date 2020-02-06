@@ -34,6 +34,7 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("onCreate")
         checkIntent()
         registerEventBus()
     }
@@ -41,6 +42,7 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add),
     override fun onDestroy() {
         super.onDestroy()
         unRegisterEventBus()
+        Timber.d("onDestroy")
     }
 
     override fun onNewIntent(intent: Intent?) {

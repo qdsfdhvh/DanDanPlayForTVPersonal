@@ -10,7 +10,6 @@
     </style>
     <style name="CommonTheme.DialogLayout" parent="CommonTheme.ParentLayout">
         <item name="android:gravity">center</item>
-        <item name="android:background">@color/black_30</item>
     </style>
 
     <style name="CommonTheme.Button">

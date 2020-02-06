@@ -9,16 +9,22 @@ import com.seiko.tv.data.comments.DanDanApiRemoteDataSource
 import com.seiko.tv.data.comments.ResDanDanApiRemoteDataSource
 import com.seiko.tv.data.prefs.PrefDataSource
 import com.seiko.common.http.cookie.CookiesManager
+import com.seiko.common.http.cookie.PersistentCookieStore
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Converter
 
 internal val networkModule = module {
+    single { createCookieManager(get()) }
     single { createApiService(androidContext(), get(), get(), get(), get()) }
     single { createResApiService(get(), get()) }
     single { createDanDanApiRemoteDataSource(get()) }
     single { createResDanDanApiRemoteDataSource(get()) }
+}
+
+private fun createCookieManager(cookieStore: PersistentCookieStore): CookiesManager {
+    return CookiesManager(cookieStore)
 }
 
 private fun createApiService(

@@ -85,7 +85,7 @@ class DownloadManager(
      * 关闭引擎
      */
     private fun closeEngine() {
-        runBlocking { torrentStatesMap.clear() }
+        runBlocking(Dispatchers.Main) { torrentStatesMap.clear() }
         downloadScope.cancel()
         magnetMap.clear()
         torrentEngine.setCallback(null)
@@ -116,8 +116,10 @@ class DownloadManager(
         for (task in newTask) {
             maps[task.hash] = TorrentSessionStatus.createInstance(task)
         }
-        torrentStatesMap.value = maps
         torrentEngine.restoreDownloads(newTask)
+        withContext(Dispatchers.Main) {
+            torrentStatesMap.value = maps
+        }
     }
 
     /**
@@ -267,13 +269,19 @@ class DownloadManager(
         }
     }
 
+    private suspend fun updateUI(hash: String, status: TorrentSessionStatus) {
+        withContext(Dispatchers.Main) {
+            torrentStatesMap.add(hash, status)
+        }
+    }
+
     /**
      * 种子任务已添加
      */
     override fun onTorrentAdded(hash: String) {
         downloadScope.launch {
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 
@@ -281,7 +289,7 @@ class DownloadManager(
      * 种子任务已删除
      */
     override fun onTorrentRemoved(hash: String) {
-        downloadScope.launch {
+        downloadScope.launch(Dispatchers.Main) {
             torrentStatesMap.remove(hash)
         }
     }
@@ -292,7 +300,7 @@ class DownloadManager(
     override fun onTorrentStateChanged(hash: String) {
         downloadScope.launch {
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 
@@ -307,7 +315,7 @@ class DownloadManager(
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
             downloadTask.task = task
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 
@@ -322,7 +330,7 @@ class DownloadManager(
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
             downloadTask.task = task
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 
@@ -339,7 +347,7 @@ class DownloadManager(
 
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
             downloadTask.task = task
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 
@@ -356,7 +364,7 @@ class DownloadManager(
             val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
             downloadTask.task = task
             downloadTask.pause()
-            torrentStatesMap.add(hash, downloadTask.status)
+            updateUI(hash, downloadTask.status)
         }
     }
 

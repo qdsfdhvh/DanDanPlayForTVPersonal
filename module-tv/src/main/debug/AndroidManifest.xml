@@ -23,7 +23,6 @@
         android:icon="@mipmap/ic_launcher"
         android:banner="@mipmap/ic_launcher"
         tools:ignore="GoogleAppIndexingWarning">
-
         <!--主界面-->
         <activity android:name=".ui.MainActivity"
             android:launchMode="singleTask"

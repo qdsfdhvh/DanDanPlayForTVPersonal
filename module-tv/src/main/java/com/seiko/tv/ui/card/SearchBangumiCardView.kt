@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.tv.databinding.ItemBangumiRelatedBinding
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
-import com.seiko.common.ui.card.AbsBindingCardView
+import com.seiko.common.ui.card.AbsCardView
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 import com.seiko.tv.util.loadImage
 
-class SearchBangumiCardView(context: Context) : AbsBindingCardView<SearchAnimeDetails>(context) {
+class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(context) {
 
     private lateinit var binding: ItemBangumiRelatedBinding
 

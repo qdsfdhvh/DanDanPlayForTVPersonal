@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.tv.databinding.ItemMainMyBinding
-import com.seiko.common.ui.card.AbsBindingCardView
+import com.seiko.common.ui.card.AbsCardView
 
-class MainMyCardView(context: Context) : AbsBindingCardView<HomeSettingBean>(context) {
+class MainMyCardView(context: Context) : AbsCardView<HomeSettingBean>(context) {
 
     private lateinit var binding: ItemMainMyBinding
 

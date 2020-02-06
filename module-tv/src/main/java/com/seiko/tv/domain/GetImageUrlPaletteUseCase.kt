@@ -38,12 +38,12 @@ class GetImageUrlPaletteUseCase : KoinComponent {
                         continuation.resume(null)
                         return
                     }
-                    Palette.Builder(bitmap).clearFilters().generate { palette ->
-                        continuation.resume(palette)
-                    }
+
+                    val palette = Palette.Builder(bitmap).generate()
+                    continuation.resume(palette)
                 }
 
-                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
                     continuation.resume(null)
                 }
             }

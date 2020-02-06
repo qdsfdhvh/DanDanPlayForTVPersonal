@@ -18,6 +18,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Timber.d("onCreate")
 
         if (BuildConfig.DEBUG) {
             Timber.plant(NanoDebugTree())
@@ -34,7 +35,6 @@ class App : Application() {
 
         // 注解
         startKoin {
-//            androidLogger()
             androidContext(this@App)
         }
     }

@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.databinding.ItemSearchMagnetBinding
-import com.seiko.common.ui.card.AbsBindingCardView
+import com.seiko.common.ui.card.AbsCardView
 
-class SearchMagnetCardView(context: Context) : AbsBindingCardView<ResMagnetItemEntity>(context) {
+class SearchMagnetCardView(context: Context) : AbsCardView<ResMagnetItemEntity>(context) {
 
     private lateinit var binding: ItemSearchMagnetBinding
 

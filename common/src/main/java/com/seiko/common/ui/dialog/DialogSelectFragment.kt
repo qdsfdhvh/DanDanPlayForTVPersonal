@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.seiko.common.databinding.DialogSelectFragmentBinding
 
-class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
+class DialogSelectFragment : BaseDialogFragment() {
 
     private var onConfirm: (() -> Unit)? = null
 
@@ -38,21 +38,14 @@ class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
             }
         }
 
-//        binding.btnConfirm.textSize = customTextSize(LARGE)
-//        binding.btnCancel.textSize = customTextSize(SMALL)
         binding.btnConfirm.requestFocus()
-        binding.btnConfirm.setOnClickListener { onConfirm?.invoke() }
+        binding.btnConfirm.setOnClickListener {
+            dismiss()
+            onConfirm?.invoke()
+        }
         binding.btnCancel.setOnClickListener { dismiss() }
-
-        binding.btnConfirm.onFocusChangeListener = this
-        binding.btnCancel.onFocusChangeListener = this
     }
 
-    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-//        if (v is Button) {
-//            v.textSize = customTextSize(if (hasFocus) LARGE else SMALL)
-//        }
-    }
 
     private fun setConfirmClickListener(listener: (() -> Unit)?) {
         onConfirm = listener
@@ -61,13 +54,6 @@ class DialogSelectFragment : BaseDialogFragment(), View.OnFocusChangeListener {
     fun show(manager: FragmentManager) {
         show(manager, TAG)
     }
-
-//    private fun customTextSize(type: Int): Float {
-//        return when (type) {
-//            SMALL -> applyDimension(COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
-//            else -> applyDimension(COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
-//        }
-//    }
 
     class Builder {
         private val bundle = Bundle()

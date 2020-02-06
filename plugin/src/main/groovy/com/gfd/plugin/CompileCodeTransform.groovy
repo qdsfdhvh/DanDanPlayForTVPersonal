@@ -119,7 +119,7 @@ class CompileCodeTransform extends Transform {
 
     private static String getAutoLoadComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder()
-        for (CtClass ctClass : activators) {
+        for (CtClass ctClass : activators.sort()) {
             autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this);")
         }
         return autoLoadComCode.toString()

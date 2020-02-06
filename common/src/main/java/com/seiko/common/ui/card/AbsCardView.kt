@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.leanback.widget.BaseCardView
 
-abstract class AbsBindingCardView<T> : BaseCardView {
+abstract class AbsCardView<T> : BaseCardView {
 
     constructor(context: Context) : super(context) {
         initLayout(context)

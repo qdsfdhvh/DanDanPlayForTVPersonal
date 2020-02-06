@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.tv.databinding.ItemBangumiRelatedBinding
 import com.seiko.tv.util.getBangumiStatus
-import com.seiko.common.ui.card.AbsBindingCardView
+import com.seiko.common.ui.card.AbsCardView
 import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.tv.util.diff.BangumiIntroEntityDiffCallback
 import com.seiko.tv.util.loadImage
 
-class BangumiIntroEntityCardView(context: Context) : AbsBindingCardView<BangumiIntroEntity>(context) {
+class BangumiIntroEntityCardView(context: Context) : AbsCardView<BangumiIntroEntity>(context) {
 
     private lateinit var binding: ItemBangumiRelatedBinding
 

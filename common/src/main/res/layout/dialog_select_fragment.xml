@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
-        android:gravity="center_horizontal"
         tools:text="你真的确认退出应用吗？"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -20,7 +19,6 @@
         android:id="@id/btn_confirm"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="12dp"
         tools:text="确认"/>
@@ -29,7 +27,6 @@
         android:id="@id/btn_cancel"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="24dp"
         tools:text="取消">

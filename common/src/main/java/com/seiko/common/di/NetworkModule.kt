@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit
 
 internal val networkModule = module {
     single { createCache(androidContext()) }
-    single { createCookieManager(get()) }
     single { createSingleHttpClient(get()) }
     single { createConverterFactory(get()) }
 }
@@ -24,10 +23,6 @@ internal val networkModule = module {
 private fun createCache(context: Context): Cache {
     val file = File(context.cacheDir, "HttpResponseCache")
     return Cache(file, 10 * 1024 * 1024)
-}
-
-private fun createCookieManager(cookieStore: PersistentCookieStore): CookiesManager {
-    return CookiesManager(cookieStore)
 }
 
 private fun createSingleHttpClient(cache: Cache): OkHttpClient {

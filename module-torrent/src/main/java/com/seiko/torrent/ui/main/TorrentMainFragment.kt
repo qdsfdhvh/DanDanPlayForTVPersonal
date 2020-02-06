@@ -18,6 +18,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import news.androidtv.filepicker.TvFilePicker
+import timber.log.Timber
 
 class TorrentMainFragment : Fragment(), View.OnClickListener {
 
@@ -32,6 +33,11 @@ class TorrentMainFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: TorrentFragmentMainBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("Navigator - onCreate")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,6 +50,7 @@ class TorrentMainFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("Navigator - onViewCreated")
         bindViewModel()
     }
 

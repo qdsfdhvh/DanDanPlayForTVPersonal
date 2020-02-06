@@ -8,8 +8,10 @@ import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.download.OnTorrentChangeListener
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 
@@ -37,8 +39,10 @@ class MainViewModel(
 
     fun loadData(force: Boolean) = viewModelScope.launch {
         if (!force && torrentItems.value != null) return@launch
-        val tasks = torrentRepo.getTorrents()
-        downloader.restoreDownloads(tasks)
+        withContext(Dispatchers.Default) {
+            val tasks = torrentRepo.getTorrents()
+            downloader.restoreDownloads(tasks)
+        }
     }
 
     fun setTorrentHash(item: TorrentListItem?) {
