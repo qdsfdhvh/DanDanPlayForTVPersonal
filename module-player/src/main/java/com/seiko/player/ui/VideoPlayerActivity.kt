@@ -414,8 +414,8 @@ class VideoPlayerActivity: FragmentActivity()
     private fun seekToDelay(position: Long) {
         // 停止更新进度条/ 500ms后跳转目标位置 / 1500ms后继续更新进度条
 //        handler.stopUpdateProgress()
-        handler.seekTo(position, 500)
-        handler.startUpdateProgress(1500)
+        handler.seekTo(position, 600)
+        handler.startUpdateProgress(1600)
     }
 
     /**
@@ -582,6 +582,7 @@ class VideoPlayerActivity: FragmentActivity()
             }
         } else {
             when(keyCode) {
+                // ok键
                 KeyEvent.KEYCODE_DPAD_CENTER -> {
                     if (KeyEvent.ACTION_UP == event.action) {
                         // 切换播放状态

@@ -106,7 +106,8 @@ class DownloadManager(
     override suspend fun restoreDownloads(tasks: Collection<TorrentTask>) {
         if (tasks.isEmpty()) return
 
-        val newTask = tasks.filter { !torrentStatesMap.contains(it.hash) }
+        val map = torrentStatesMap.value
+        val newTask = tasks.filter { !map.contains(it.hash) }
         if (newTask.isEmpty()) return
 
         if (isAlreadyRunning.compareAndSet(false, true)) {
@@ -118,7 +119,7 @@ class DownloadManager(
         }
         torrentEngine.restoreDownloads(newTask)
         withContext(Dispatchers.Main) {
-            torrentStatesMap.value = maps
+            torrentStatesMap.addAll(maps)
         }
     }
 

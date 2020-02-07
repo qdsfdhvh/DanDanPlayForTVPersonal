@@ -51,6 +51,13 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
     }
 
     @MainThread
+    fun addAll(map: Map<K, V>) {
+        value = value.apply {
+            putAll(map)
+        }
+    }
+
+    @MainThread
     fun remove(key: K) {
         if (value.containsKey(key)) {
             value = value.apply { remove(key) }
