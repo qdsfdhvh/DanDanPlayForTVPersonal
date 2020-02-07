@@ -188,6 +188,9 @@ class HomeFragment : FixBrowseSupportFragment()
                     ID_DOWNLOAD -> {
                         Navigator.navToTorrent(requireActivity())
                     }
+                    ID_SETTING -> {
+                        toast("待施工")
+                    }
                 }
             }
         }

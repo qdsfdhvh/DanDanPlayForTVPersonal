@@ -12,6 +12,7 @@ import com.seiko.common.util.toast.toast
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.data.model.filetree.FileNode
 import com.seiko.torrent.databinding.TorrentFragmentDetailFileBinding
+import com.seiko.torrent.util.FileUtil
 import com.seiko.torrent.util.extensions.fixItemAnim
 import com.seiko.torrent.util.extensions.toFileTree
 import com.seiko.torrent.vm.MainViewModel
@@ -32,9 +33,6 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
     private lateinit var binding: TorrentFragmentDetailFileBinding
 
     private val adapter by lazyAndroid { TorrentDetailFilesAdapter() }
-
-    private var currentDir: BencodeFileTree? = null
-    private var fileTree: BencodeFileTree? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,60 +65,23 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
             if (info == null) {
                 return@observe
             }
-            fileTree = info.fileList.toFileTree()
-            currentDir = fileTree
-            adapter.setFiles(getChildren(currentDir))
+            adapter.setFileTree(info.fileList.toFileTree())
         }
     }
 
     override fun onItemClicked(node: BencodeFileTree) {
-        when {
-            node.name == BencodeFileTree.PARENT_DIR -> {
-                backToParent()
-            }
-            node.type == FileNode.Type.DIR -> {
-                chooseDir(node)
-            }
-            node.type == FileNode.Type.FILE -> {
-                val item = viewModel.torrentItem.value ?: return
-                val file = File(item.downloadPath, node.path)
-                if (!file.exists()) {
-                    toast("文件不存在：${file.absolutePath}")
-                    return
-                }
-                Timber.d(file.absolutePath)
-                Navigator.navToPlayer(this, Uri.fromFile(file), node.name, item.hash)
-            }
+        val item = viewModel.torrentItem.value ?: return
+        val file = File(item.downloadPath, node.path)
+        val filePath = file.absolutePath
+        if (!file.exists()) {
+            toast("文件不存在：${filePath}")
+            return
         }
-    }
-
-    private fun chooseDir(node: BencodeFileTree) {
-        val fileTree = fileTree ?: return
-        currentDir = if (node.isFile) fileTree else node
-        adapter.setFiles(getChildren(currentDir))
-    }
-
-    private fun backToParent() {
-        val dir = currentDir ?: return
-        currentDir = dir.parent
-        adapter.setFiles(getChildren(currentDir))
-    }
-
-    private fun getChildren(node: BencodeFileTree?): List<BencodeFileTree> {
-        if (node == null || node.isFile) {
-            return emptyList()
+        if (!FileUtil.isMediaFile(filePath)) {
+            toast("非视频文件：${filePath}")
+            return
         }
-
-        val currentDir = currentDir ?: return emptyList()
-
-        val children = ArrayList<BencodeFileTree>()
-        if (currentDir != fileTree && currentDir.parent != null) {
-            children.add(0, BencodeFileTree(
-                BencodeFileTree.PARENT_DIR, 0L,
-                FileNode.Type.DIR, currentDir.parent)
-            )
-        }
-        children.addAll(currentDir.children)
-        return children
+        Navigator.navToPlayer(this, Uri.fromFile(file), node.name, item.hash)
     }
+
 }

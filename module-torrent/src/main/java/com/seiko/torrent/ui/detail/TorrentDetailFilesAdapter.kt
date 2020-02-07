@@ -31,9 +31,62 @@ import java.util.*
 
 class TorrentDetailFilesAdapter : RecyclerView.Adapter<TorrentDetailFilesAdapter.ViewHolder>() {
 
-    private var files: MutableList<BencodeFileTree> = ArrayList()
+    private var currentDir: BencodeFileTree? = null
+    private var fileTree: BencodeFileTree? = null
+    private var files = ArrayList<BencodeFileTree>()
 
-    fun setFiles(list: Collection<BencodeFileTree>) {
+    /**
+     * 修改文件书
+     */
+    fun setFileTree(fileTree: BencodeFileTree) {
+        this.fileTree = fileTree
+        currentDir = fileTree
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 选择目录
+     */
+    private fun chooseDir(node: BencodeFileTree) {
+        val fileTree = fileTree ?: return
+        currentDir = if (node.isFile) fileTree else node
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 返回上一层目录
+     */
+    private fun backToParent() {
+        val dir = currentDir ?: return
+        currentDir = dir.parent
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 获得此目录下载的信息
+     */
+    private fun getChildren(node: BencodeFileTree?): List<BencodeFileTree> {
+        if (node == null || node.isFile) {
+            return emptyList()
+        }
+
+        val currentDir = currentDir ?: return emptyList()
+
+        val children = ArrayList<BencodeFileTree>()
+        if (currentDir != fileTree && currentDir.parent != null) {
+            children.add(0, BencodeFileTree(
+                BencodeFileTree.PARENT_DIR, 0L,
+                FileNode.Type.DIR, currentDir.parent)
+            )
+        }
+        children.addAll(currentDir.children)
+        return children
+    }
+
+    /**
+     * 切换当前显示的文件目录
+     */
+    private fun setFiles(list: Collection<BencodeFileTree>) {
         if (files.isNotEmpty()) {
             files.clear()
         }
@@ -107,8 +160,18 @@ class TorrentDetailFilesAdapter : RecyclerView.Adapter<TorrentDetailFilesAdapter
             val position = adapterPosition
             if (position < 0) return
 
-            val file = files[position]
-            listener?.onItemClicked(file)
+            val node = files[position]
+            when {
+                node.name == BencodeFileTree.PARENT_DIR -> {
+                    backToParent()
+                }
+                node.type == FileNode.Type.DIR -> {
+                    chooseDir(node)
+                }
+                node.type == FileNode.Type.FILE -> {
+                    listener?.onItemClicked(node)
+                }
+            }
         }
 
     }

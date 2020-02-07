@@ -18,6 +18,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    // 签名配置信息
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -49,7 +50,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    //自定义输出apk名字
+    // 自定义输出apk名字
     applicationVariants.all {
         variant ->
             variant.outputs.all {

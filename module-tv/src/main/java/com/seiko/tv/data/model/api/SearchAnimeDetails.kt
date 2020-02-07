@@ -18,7 +18,7 @@ data class SearchAnimeDetails(
     var episodeCount: Int = 0,
     var imageUrl: String = "",
     var isFavorited: Boolean = false,
-    var rating: Int = 0,
+    var rating: Float = 0f,
     var startDate: String = "",
     var type: String = "",
     var typeDescription: String = ""

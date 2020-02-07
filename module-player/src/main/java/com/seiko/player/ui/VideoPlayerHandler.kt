@@ -16,7 +16,7 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         private const val SET_OVERLAY_SHOW = 11
         private const val SET_OPTIONS_SHOW = 12
         private const val SET_VIDEO_SEEK = 14
-        private const val SET_VIDEO_SEEK_DELTA = 15
+//        private const val SET_VIDEO_SEEK_DELTA = 15
         private const val SET_VIDEO_PLAY = 16
     }
 
@@ -44,9 +44,9 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
             SET_VIDEO_SEEK -> {
                 activity.seekTo(msg.obj as? Long)
             }
-            SET_VIDEO_SEEK_DELTA -> {
-                activity.seekDelta(msg.obj as? Long)
-            }
+//            SET_VIDEO_SEEK_DELTA -> {
+//                activity.seekDelta(msg.obj as? Long)
+//            }
         }
     }
 
@@ -58,12 +58,12 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         sendEmptyMessageDelayed(MSG_UPDATE_SEEK, delay)
     }
 
-    /**
-     * 停止更新进度条
-     */
-    fun stopUpdateProgress() {
-        removeMessages(MSG_UPDATE_SEEK)
-    }
+//    /**
+//     * 停止更新进度条
+//     */
+//    fun stopUpdateProgress() {
+//        removeMessages(MSG_UPDATE_SEEK)
+//    }
 
     /**
      * 跳转
@@ -76,14 +76,14 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         sendMessageDelayed(msg, delay)
     }
 
-    /**
-     * 快进/快退
-     * @param delta 快进or快退时间
-     */
-    fun seekDelta(delta: Long) {
-        val msg = obtainMessage(SET_VIDEO_SEEK_DELTA, delta)
-        sendMessageDelayed(msg, ViewConfiguration.getDoubleTapTimeout().toLong())
-    }
+//    /**
+//     * 快进/快退
+//     * @param delta 快进or快退时间
+//     */
+//    fun seekDelta(delta: Long) {
+//        val msg = obtainMessage(SET_VIDEO_SEEK_DELTA, delta)
+//        sendMessageDelayed(msg, ViewConfiguration.getDoubleTapTimeout().toLong())
+//    }
 
     /**
      * 点击屏幕，切换控制相关界面的显示/隐藏

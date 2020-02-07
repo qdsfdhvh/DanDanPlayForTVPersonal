@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2016 Yaroslav Pronin <proninyaroslav@mail.ru>
- *
- * This file is part of LibreTorrent.
- *
- * LibreTorrent is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * LibreTorrent is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with LibreTorrent.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.seiko.torrent.ui.add
 
 import android.text.format.Formatter
@@ -29,14 +11,67 @@ import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.data.model.filetree.FileNode
 import java.util.*
 
-/*
- * The adapter for representation of downloadable files in a file tree view.
- */
 class DownloadableFilesAdapter : RecyclerView.Adapter<DownloadableFilesAdapter.ViewHolder>() {
 
-    private var files: MutableList<BencodeFileTree> = ArrayList()
 
-    fun setFiles(list: Collection<BencodeFileTree>) {
+    private var currentDir: BencodeFileTree? = null
+    private var fileTree: BencodeFileTree? = null
+    private var files = ArrayList<BencodeFileTree>()
+
+    fun getFileTree() = fileTree
+
+    /**
+     * 修改文件书
+     */
+    fun setFileTree(fileTree: BencodeFileTree) {
+        this.fileTree = fileTree
+        currentDir = fileTree
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 选择目录
+     */
+    private fun chooseDir(node: BencodeFileTree) {
+        val fileTree = fileTree ?: return
+        currentDir = if (node.isFile) fileTree else node
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 返回上一层目录
+     */
+    private fun backToParent() {
+        val dir = currentDir ?: return
+        currentDir = dir.parent
+        setFiles(getChildren(currentDir))
+    }
+
+    /**
+     * 获得此目录下载的信息
+     */
+    private fun getChildren(node: BencodeFileTree?): List<BencodeFileTree> {
+        if (node == null || node.isFile) {
+            return emptyList()
+        }
+
+        val currentDir = currentDir ?: return emptyList()
+
+        val children = ArrayList<BencodeFileTree>()
+        if (currentDir != fileTree && currentDir.parent != null) {
+            children.add(0, BencodeFileTree(
+                BencodeFileTree.PARENT_DIR, 0L,
+                FileNode.Type.DIR, currentDir.parent)
+            )
+        }
+        children.addAll(currentDir.children)
+        return children
+    }
+
+    /**
+     * 切换当前显示的文件目录
+     */
+    private fun setFiles(list: Collection<BencodeFileTree>) {
         if (files.isNotEmpty()) {
             files.clear()
         }
@@ -114,13 +149,18 @@ class DownloadableFilesAdapter : RecyclerView.Adapter<DownloadableFilesAdapter.V
             val position = adapterPosition
             if (position < 0) return
 
-            val file = files[position]
-            if (file.type == FileNode.Type.FILE) {
-                /* Check file if it clicked */
-                binding.torrentFileSelected.isChecked = !binding.torrentFileSelected.isChecked
-                listener?.onItemCheckedChanged(file, binding.torrentFileSelected.isChecked)
-            } else {
-                listener?.onItemClicked(file)
+            val node = files[position]
+            when {
+                node.name == BencodeFileTree.PARENT_DIR -> {
+                    backToParent()
+                }
+                node.type == FileNode.Type.DIR -> {
+                    chooseDir(node)
+                }
+                node.type == FileNode.Type.FILE -> {
+                    binding.torrentFileSelected.isChecked = !binding.torrentFileSelected.isChecked
+                    listener?.onItemCheckedChanged(node, binding.torrentFileSelected.isChecked)
+                }
             }
         }
 

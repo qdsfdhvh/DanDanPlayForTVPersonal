@@ -4,7 +4,7 @@ import com.seiko.tv.data.prefs.PrefDataSource
 import com.seiko.tv.data.prefs.PrefDataSourceImpl
 import com.seiko.tv.util.constants.PREFS_NAME_COOKIES
 import com.seiko.tv.util.constants.PREFS_NAME_DEFAULT
-import com.seiko.common.http.cookie.PersistentCookieStore
+import com.seiko.tv.util.http.cookie.PersistentCookieStore
 import com.seiko.common.util.prefs.createMMKVPreferenceDataStore
 import org.koin.dsl.module
 

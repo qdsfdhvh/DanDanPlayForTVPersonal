@@ -40,11 +40,11 @@ class VideoKeyDownDelegate(
                 return true
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                handler.seekDelta(-10000)
+//                handler.seekDelta(-10000)
                 return true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                handler.seekDelta(10000)
+//                handler.seekDelta(10000)
                 return true
             }
             KeyEvent.KEYCODE_MENU -> {

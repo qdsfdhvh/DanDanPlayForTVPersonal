@@ -49,6 +49,7 @@ class TabTitleAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(position)
         tabConfigurationStrategy.invoke(holder, position)
     }
 
@@ -76,14 +77,18 @@ class TabTitleAdapter(
                     if (position <= 0) {
                         return
                     }
-                    listener?.onClick(this, "", position)
+                    listener?.onClick(this, 0, position)
                 }
             }
         }
 
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (v == null) return
-            binding.root.isSelected = selectPosition == adapterPosition
+            bind(adapterPosition)
+        }
+
+        fun bind(position: Int) {
+            binding.root.isSelected = selectPosition == position
         }
 
         fun setText(text: CharSequence) {

@@ -1,4 +1,4 @@
-package com.seiko.common.http.cookie
+package com.seiko.tv.util.http.cookie
 
 import okhttp3.Cookie
 import okhttp3.CookieJar

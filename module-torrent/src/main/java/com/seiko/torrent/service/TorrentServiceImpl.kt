@@ -20,13 +20,14 @@ class TorrentServiceImpl : TorrentService, KoinComponent {
 
     override fun findDownloadPaths(hash: String): List<String> {
         Timber.d("搜索hash: $hash 的下载文件路径。")
-
+        // 测试
         val dataDir: File by inject(named(TORRENT_DOWNLOAD_DIR))
         return listOf(dataDir.absolutePath)
     }
 
     override fun findDownloadPaths(hashSet: Set<String>): List<String> {
         Timber.d("搜索hashSet: $hashSet 的下载文件路径。")
+        // 测试
         return listOf("BBB")
     }
 

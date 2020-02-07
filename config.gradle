@@ -11,7 +11,6 @@ versions.koin = "2.0.1"
 versions.room = "2.2.3"
 versions.arouter_api = "1.5.0"
 versions.arouter_compiler = "1.2.2"
-versions.libtorrent4j = "1.2.2.0"
 
 /*******************************************************************
  *                          Build Version                          *
@@ -53,12 +52,6 @@ ext {
             'libRoomRuntime' : "androidx.room:room-runtime:${versions.room}",
             'libRoomCompiler': "androidx.room:room-compiler:${versions.room}",
             'libRoomKtx'     : "androidx.room:room-ktx:${versions.room}",
-
-            'libtorrent4j'       : "org.libtorrent4j:libtorrent4j:${versions.libtorrent4j}",
-            'libtorrent4j_arm'   : "org.libtorrent4j:libtorrent4j-android-arm:${versions.libtorrent4j}",
-            'libtorrent4j_arm_64': "org.libtorrent4j:libtorrent4j-android-arm64:${versions.libtorrent4j}",
-            'libtorrent4j_x86'   : "org.libtorrent4j:libtorrent4j-android-x86:${versions.libtorrent4j}",
-            'libtorrent4j_x86_64': "org.libtorrent4j:libtorrent4j-android-x86_64:${versions.libtorrent4j}",
 
             'libArouter'        : "com.alibaba:arouter-api:${versions.arouter_api}",
             'libArouterCompiler': "com.alibaba:arouter-compiler:${versions.arouter_compiler}"

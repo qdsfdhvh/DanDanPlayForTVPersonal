@@ -51,6 +51,9 @@ class VideoPlayerActivity: FragmentActivity()
     companion object {
         private const val ARGS_VIDEO_PARAMS = "ARGS_VIDEO_PARAMS"
 
+        /**
+         * 配置界面按键Id
+         */
         private const val ID_AUDIO_TRACK = 31
         private const val ID_AUDIO_DELAY = 32
         private const val ID_PLAYBACK_SPEED = 6
@@ -69,13 +72,25 @@ class VideoPlayerActivity: FragmentActivity()
         /**
          * 显示按钮2s后自动关闭
          */
-        private const val DELAY_HIDE_CONTROL_TIME = 2000L
+        private const val DELAY_HIDE_CONTROL_TIME = 3000L
 
         fun launch(context: Context, param: PlayParam) {
             val intent = Intent(context, VideoPlayerActivity::class.java)
             intent.putExtra(ARGS_VIDEO_PARAMS, param)
             context.startActivity(intent)
         }
+    }
+
+    /**
+     * 右侧配置界面数据
+     */
+    private val optionList: List<PlayerOption> by lazyAndroid {
+        listOf(
+            PlayerOption(ID_AUDIO_TRACK, R.drawable.ic_audiotrack_w, getString(R.string.ctx_player_audio_track)),
+            PlayerOption(ID_AUDIO_DELAY, R.drawable.ic_audiodelay_w, getString(R.string.audio_delay)),
+            PlayerOption(ID_PLAYBACK_SPEED, R.drawable.ic_speed, getString(R.string.playback_speed)),
+            PlayerOption(ID_AB_REPEAT, R.drawable.ic_ab_repeat, getString(R.string.ab_repeat))
+        )
     }
 
     private val viewModel: PlayerViewModel by viewModel()
@@ -87,7 +102,7 @@ class VideoPlayerActivity: FragmentActivity()
     private lateinit var danmakuContext: DanmakuContext
 
     private val handler by lazyAndroid { VideoPlayerHandler(this) }
-    private val keyDownDelegate by lazyAndroid { VideoKeyDownDelegate(viewModel, handler) }
+//    private val keyDownDelegate by lazyAndroid { VideoKeyDownDelegate(viewModel, handler) }
     private val touchDelegate by lazyAndroid { VideoTouchDelegate(handler) }
 
     private val optionsAdapter by lazyAndroid { OptionsAdapter(this) }
@@ -154,10 +169,10 @@ class VideoPlayerActivity: FragmentActivity()
             } else if (deltaPosition < 0) {
                 deltaPosition = 0
             }
+            // 更新左上角进度条
+            updateTipProgress(position)
             // 记录位置
             mTargetPosition = deltaPosition
-            // 跳转
-            seekToDelay(mTargetPosition)
         }
     }
     private val seekDeltaRunnable = SeekDeltaRunnable()
@@ -236,7 +251,9 @@ class VideoPlayerActivity: FragmentActivity()
             }
 
             override fun prepared() {
-                binding.playerDanmakuView.start(binding.playerVideoViewIjk.currentPosition)
+                runOnUiThread {
+                    binding.playerDanmakuView.start(binding.playerVideoViewIjk.currentPosition)
+                }
             }
         })
     }
@@ -277,7 +294,7 @@ class VideoPlayerActivity: FragmentActivity()
         viewModel.danma.observe(this::getLifecycle) { danma ->
             val parser = JsonDanmakuParser(danma)
             binding.playerDanmakuView.prepare(parser, danmakuContext)
-            binding.playerDanmakuView.showFPS(true)
+//            binding.playerDanmakuView.showFPS(true)
             binding.playerDanmakuView.enableDanmakuDrawingCache(true)
         }
         viewModel.showDanma.observe(this::getLifecycle) { isShowDanma ->
@@ -360,18 +377,6 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
-     * 延时跳转
-     */
-    private fun seekToDelay(position: Long) {
-        // 更新左上角进度条
-        updateTipProgress(position)
-        // 停止更新进度条/ 600ms后跳转目标位置 / 1200ms后继续更新进度条
-        handler.stopUpdateProgress()
-        handler.seekTo(position, 800)
-        handler.startUpdateProgress(1400)
-    }
-
-    /**
      * 用户拖动进度条中...
      */
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -404,6 +409,16 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
+     * 延时跳转
+     */
+    private fun seekToDelay(position: Long) {
+        // 停止更新进度条/ 500ms后跳转目标位置 / 1500ms后继续更新进度条
+//        handler.stopUpdateProgress()
+        handler.seekTo(position, 500)
+        handler.startUpdateProgress(1500)
+    }
+
+    /**
      * 跳转
      * @param position 具体位置
      */
@@ -416,7 +431,7 @@ class VideoPlayerActivity: FragmentActivity()
      * 快进/快退
      * @param delta 快进or快退时间
      */
-    internal fun seekDelta(delta: Long?) {
+    private fun seekDelta(delta: Long?) {
         if (delta == null || delta == 0L) return
         seekDeltaRunnable.delta = delta
         binding.root.post(seekDeltaRunnable)
@@ -509,18 +524,6 @@ class VideoPlayerActivity: FragmentActivity()
     }
 
     /**
-     * 右侧配置界面数据
-     */
-    private val optionList: List<PlayerOption> by lazyAndroid {
-        listOf(
-            PlayerOption(ID_AUDIO_TRACK, R.drawable.ic_audiotrack_w, getString(R.string.ctx_player_audio_track)),
-            PlayerOption(ID_AUDIO_DELAY, R.drawable.ic_audiodelay_w, getString(R.string.audio_delay)),
-            PlayerOption(ID_PLAYBACK_SPEED, R.drawable.ic_speed, getString(R.string.playback_speed)),
-            PlayerOption(ID_AB_REPEAT, R.drawable.ic_ab_repeat, getString(R.string.ab_repeat))
-        )
-    }
-
-    /**
      * 显示/隐藏 右侧配置界面
      * @param show 是否显示，null时切换当前状态
      */
@@ -549,13 +552,89 @@ class VideoPlayerActivity: FragmentActivity()
     @SuppressLint("RestrictedApi")
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
         if (event == null) return false
-        if (!isControlViewShow() && keyDownDelegate.onInterceptKeyEvent(event)) {
-            return true
+
+        val keyCode = event.keyCode
+        Timber.d("keyCode=${event.keyCode}")
+
+        // 控制界面是否显示
+        if (isControlViewShow()) {
+            when(keyCode) {
+                // 四个方向键 延长控制界面显示
+                KeyEvent.KEYCODE_DPAD_UP,
+                KeyEvent.KEYCODE_DPAD_LEFT,
+                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    if (KeyEvent.ACTION_DOWN == event.action) {
+                        handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+//                        return true
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    if (KeyEvent.ACTION_DOWN == event.action) {
+                        // ↓键特殊，如果是播放按钮获得焦点，按下直接关闭控制界面
+                        if (bindingControlBottom.playerBtnOverlayPlay.isFocused) {
+                            handler.overlayShow(false)
+                        } else {
+                            handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+                        }
+//                        return true
+                    }
+                }
+            }
         } else {
-            // 控制按钮显示，每次按下按键都重置延时关闭
-            if (isOverlayShow && event.action == KeyEvent.ACTION_DOWN) {
-                Timber.d("延时关闭Controller")
-                handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+            when(keyCode) {
+                KeyEvent.KEYCODE_DPAD_CENTER -> {
+                    if (KeyEvent.ACTION_UP == event.action) {
+                        // 切换播放状态
+                        viewModel.setVideoPlay()
+                        return true
+                    }
+                    return false
+                }
+                // ↑键： TODO 显示/隐藏 播放列表
+                KeyEvent.KEYCODE_DPAD_UP -> {
+                    return true
+                }
+                // ↓键 显示 底部控制界面
+                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    if (KeyEvent.ACTION_UP == event.action) {
+                        handler.overlayShow(true)
+                        return true
+                    }
+                }
+                // →键： 快退10秒
+                KeyEvent.KEYCODE_DPAD_LEFT -> {
+                    when(event.action) {
+                        KeyEvent.ACTION_DOWN -> {
+                            // 移动
+                            seekDelta(-10000)
+                        }
+                        KeyEvent.ACTION_UP -> {
+                            // 跳转
+                            seekToDelay(mTargetPosition)
+                        }
+                    }
+                    return true
+                }
+                // ←键： 快进10秒
+                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    when(event.action) {
+                        KeyEvent.ACTION_DOWN -> {
+                            // 移动
+                            seekDelta(10000)
+                        }
+                        KeyEvent.ACTION_UP -> {
+                            // 跳转
+                            seekToDelay(mTargetPosition)
+                        }
+                    }
+                    return true
+                }
+                // 菜单键： 显示/ 隐藏 菜单
+                KeyEvent.KEYCODE_MENU -> {
+                    // 切换状态
+                    handler.optionsShow()
+                    return true
+                }
             }
         }
         return super.dispatchKeyEvent(event)

@@ -35,8 +35,6 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private val adapter by lazyAndroid { DownloadableFilesAdapter() }
 
-    private var currentDir: BencodeFileTree? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,18 +65,13 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
     private fun bindViewModel() {
         // 磁力信息
         viewModel.fileTree.observe(this::getLifecycle) { fileTree ->
-            currentDir = fileTree
-            adapter.setFiles(getChildren(currentDir))
+            adapter.setFileTree(fileTree)
             updateFileSize()
         }
     }
 
     override fun onItemClicked(node: BencodeFileTree) {
-        if (node.name == BencodeFileTree.PARENT_DIR) {
-            backToParent()
-        } else if (node.type == FileNode.Type.DIR) {
-            chooseDir(node)
-        }
+
     }
 
     override fun onItemCheckedChanged(node: BencodeFileTree, selected: Boolean) {
@@ -94,38 +87,8 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
     }
 
     private fun updateFileSize() {
-        val fileTree = viewModel.fileTree.value ?: return
+        val fileTree = adapter.getFileTree() ?: return
         setFileSize(fileTree.selectedFileSize(), fileTree.size())
-    }
-
-    private fun chooseDir(node: BencodeFileTree) {
-        val fileTree = viewModel.fileTree.value ?: return
-        currentDir = if (node.isFile) fileTree else node
-        adapter.setFiles(getChildren(currentDir))
-    }
-
-    private fun backToParent() {
-        val dir = currentDir ?: return
-        currentDir = dir.parent
-        adapter.setFiles(getChildren(currentDir))
-    }
-
-    private fun getChildren(node: BencodeFileTree?): List<BencodeFileTree> {
-        if (node == null || node.isFile) {
-            return emptyList()
-        }
-
-        val currentDir = currentDir ?: return emptyList()
-
-        val children = ArrayList<BencodeFileTree>()
-        if (currentDir != viewModel.fileTree && currentDir.parent != null) {
-            children.add(0, BencodeFileTree(
-                BencodeFileTree.PARENT_DIR, 0L,
-                FileNode.Type.DIR, currentDir.parent)
-            )
-        }
-        children.addAll(currentDir.children)
-        return children
     }
 
 }

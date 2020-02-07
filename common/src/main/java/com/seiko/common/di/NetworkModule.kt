@@ -1,8 +1,6 @@
 package com.seiko.common.di
 
 import android.content.Context
-import com.seiko.common.http.cookie.CookiesManager
-import com.seiko.common.http.cookie.PersistentCookieStore
 import com.squareup.moshi.Moshi
 import okhttp3.Cache
 import okhttp3.OkHttpClient

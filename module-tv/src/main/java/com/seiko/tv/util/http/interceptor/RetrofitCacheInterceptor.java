@@ -1,4 +1,4 @@
-package com.seiko.common.http.interceptor;
+package com.seiko.tv.util.http.interceptor;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

@@ -8,8 +8,8 @@ import com.seiko.tv.data.api.ResDanDanApiService
 import com.seiko.tv.data.comments.DanDanApiRemoteDataSource
 import com.seiko.tv.data.comments.ResDanDanApiRemoteDataSource
 import com.seiko.tv.data.prefs.PrefDataSource
-import com.seiko.common.http.cookie.CookiesManager
-import com.seiko.common.http.cookie.PersistentCookieStore
+import com.seiko.tv.util.http.cookie.CookiesManager
+import com.seiko.tv.util.http.cookie.PersistentCookieStore
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module

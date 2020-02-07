@@ -3,6 +3,8 @@ package com.seiko.player.media.danmaku
 import android.graphics.Color
 import android.text.TextUtils
 import com.seiko.player.data.model.DanmaDownloadBean
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import master.flame.danmaku.danmaku.model.*
 import master.flame.danmaku.danmaku.model.IDanmakus.ST_BY_TIME
 import master.flame.danmaku.danmaku.model.android.DanmakuFactory
@@ -34,34 +36,36 @@ class JsonDanmakuParser(private val danma: DanmaDownloadBean) : BaseDanmakuParse
     // 6:用户hash
     // 7:弹幕id
     override fun parse(): IDanmakus {
-        val danmaku = Danmakus(ST_BY_TIME, false, mContext.baseComparator)
-        var item: BaseDanmaku
-        danma.comments.forEachIndexed { index, comment ->
-            // {"cid":1580802879,"p":"187.10,1,16777215,[BiliBili]204e7d20","m":"握手言核"}
-            // 187.10,1,25,16777215,[BiliBili]204e7d20,0,0,0
-            val values = comment.p.split(SEP)
-            if (values.isNotEmpty()) {
-                val time = ((values[0].toFloatOrNull() ?: 0f) * 1000) // 出现时间
-                val type: Int = values[1].toIntOrNull() ?: 1 // 弹幕类型
-                val textSize = 25f // 字体大小
-                val color = -0x1000000 or (values[2].toIntOrNull() ?: 0) // 颜色
+        return runBlocking(Dispatchers.Default) {
+            val danmaku = Danmakus(ST_BY_TIME, false, mContext.baseComparator)
+            var item: BaseDanmaku
+            danma.comments.forEachIndexed { index, comment ->
+                // {"cid":1580802879,"p":"187.10,1,16777215,[BiliBili]204e7d20","m":"握手言核"}
+                // 187.10,1,25,16777215,[BiliBili]204e7d20,0,0,0
+                val values = comment.p.split(SEP)
+                if (values.isNotEmpty()) {
+                    val time = ((values[0].toFloatOrNull() ?: 0f) * 1000) // 出现时间
+                    val type: Int = values[1].toIntOrNull() ?: 1 // 弹幕类型
+                    val textSize = 25f // 字体大小
+                    val color = -0x1000000 or (values[2].toIntOrNull() ?: 0) // 颜色
 
-                item = mContext.mDanmakuFactory.createDanmaku(type, mContext) ?: return@forEachIndexed
-                item.time = time.toLong()
-                item.textSize = textSize * (mDispDensity - 0.6f)
-                item.textColor = color
-                item.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
-                item.index = index
-                parseDanmaText(item, comment.m)
-                if (item.duration != null) {
-                    item.timer = timer
-                    item.flags = mContext.mGlobalFlagValues
-                    val lock: Any = danmaku.obtainSynchronizer()
-                    synchronized(lock) { danmaku.addItem(item) }
+                    item = mContext.mDanmakuFactory.createDanmaku(type, mContext) ?: return@forEachIndexed
+                    item.time = time.toLong()
+                    item.textSize = textSize * (mDispDensity - 0.6f)
+                    item.textColor = color
+                    item.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
+                    item.index = index
+                    parseDanmaText(item, comment.m)
+                    if (item.duration != null) {
+                        item.timer = timer
+                        item.flags = mContext.mGlobalFlagValues
+                        val lock: Any = danmaku.obtainSynchronizer()
+                        synchronized(lock) { danmaku.addItem(item) }
+                    }
                 }
             }
+            danmaku
         }
-        return danmaku
     }
 
     override fun setDisplayer(disp: IDisplayer?): BaseDanmakuParser? {

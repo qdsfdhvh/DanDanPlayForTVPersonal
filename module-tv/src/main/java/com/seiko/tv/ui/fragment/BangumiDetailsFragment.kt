@@ -32,17 +32,30 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     , OnItemViewClickedListener
     , OnActionClickedListener {
 
+    companion object {
+        private const val ID_RATING = 1L
+        private const val ID_FAVOURITE = 2L
+    }
+
     private val args by navArgs<BangumiDetailsFragmentArgs>()
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
     private var mPresenterSelector: ClassPresenterSelector? = null
     private var mAdapter: ArrayObjectAdapter? = null
     private var mActionAdapter: ArrayObjectAdapter? = null
+    private var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter? = null
+
+    private var mDetailsOverviewPrevState = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         bindViewModel()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Timber.d("onSaveInstanceState")
     }
 
     override fun onDestroyView() {
@@ -51,6 +64,8 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         mPresenterSelector = null
         mAdapter = null
         mActionAdapter = null
+        mDetailsOverviewPrevState = mDescriptionRowPresenter?.mPreviousState ?: -1
+        mDescriptionRowPresenter = null
         cancel()
     }
 
@@ -100,7 +115,6 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         if (pair == null) return
         val details = pair.first
         val palette = pair.second
-//        mAdapter.clear()
         setupDetailsOverviewRowPresenter(palette)
         setupDetailsOverviewRow(details)
         setupEpisodesRows(details.episodes)
@@ -115,20 +129,21 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     private fun setupDetailsOverviewRowPresenter(palette: Palette?) {
         val logoPresenter = CustomDetailsOverviewLogoPresenter()
         val descriptionPresenter = CustomDetailsDescriptionPresenter()
-        val descriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
-        descriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
+        mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
+        mDescriptionRowPresenter!!.setViewHolderState(mDetailsOverviewPrevState)
+        mDescriptionRowPresenter!!.onActionClickedListener = this@BangumiDetailsFragment
         val swatch = palette?.darkMutedSwatch
         if (swatch != null) {
             descriptionPresenter.setColor(swatch.titleTextColor, swatch.bodyTextColor)
-            descriptionRowPresenter.backgroundColor = swatch.rgb
+            mDescriptionRowPresenter!!.backgroundColor = swatch.rgb
             val hsv = FloatArray(3)
             val color = swatch.rgb
             Color.colorToHSV(color, hsv)
             hsv[2] *= 0.8f
-            descriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
+            mDescriptionRowPresenter!!.actionsBackgroundColor = Color.HSVToColor(hsv)
             mAdapter!!.notifyItemRangeChanged(0, 1)
         }
-        mPresenterSelector!!.addClassPresenter(DetailsOverviewRow::class.java, descriptionRowPresenter)
+        mPresenterSelector!!.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
     }
 
     /**
@@ -241,11 +256,6 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
                 )
             }
         }
-    }
-
-    companion object {
-        private const val ID_RATING = 1L
-        private const val ID_FAVOURITE = 2L
     }
 
 }

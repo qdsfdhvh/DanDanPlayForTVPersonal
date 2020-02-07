@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.ViewGroup
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.common.ui.presenter.BasePresenter
 
 class MainAreaPresenter : BasePresenter() {
 

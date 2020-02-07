@@ -3,7 +3,6 @@ package com.seiko.tv.ui.presenter
 import android.os.Bundle
 import android.view.ViewGroup
 import com.seiko.tv.ui.card.SearchBangumiCardView
-import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 
 class SearchBangumiPresenter : BasePresenter() {

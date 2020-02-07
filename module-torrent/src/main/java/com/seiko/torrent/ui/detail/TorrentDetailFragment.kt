@@ -19,14 +19,14 @@ import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
-private const val NUM_FRAGMENTS = 6
+private const val NUM_FRAGMENTS = 2
 
 private const val FILES_FRAG_POS = 0
 private const val INFO_FRAG_POS = 1
-private const val STATE_FRAG_POS = 2
-private const val TRACKERS_FRAG_POS = 3
-private const val PEERS_FRAG_POS = 4
-private const val PIECES_FRAG_POS = 5
+//private const val STATE_FRAG_POS = 2
+//private const val TRACKERS_FRAG_POS = 3
+//private const val PEERS_FRAG_POS = 4
+//private const val PIECES_FRAG_POS = 5
 
 class TorrentDetailFragment : Fragment()
     , OnItemClickListener {
@@ -91,10 +91,10 @@ class TorrentDetailFragment : Fragment()
             tab.setText(when(position) {
                 FILES_FRAG_POS -> getString(R.string.torrent_files)
                 INFO_FRAG_POS -> getString(R.string.torrent_info)
-                STATE_FRAG_POS -> getString(R.string.torrent_state)
-                TRACKERS_FRAG_POS -> getString(R.string.torrent_trackers)
-                PEERS_FRAG_POS -> getString(R.string.torrent_peers)
-                PIECES_FRAG_POS -> getString(R.string.torrent_pieces)
+//                STATE_FRAG_POS -> getString(R.string.torrent_state)
+//                TRACKERS_FRAG_POS -> getString(R.string.torrent_trackers)
+//                PEERS_FRAG_POS -> getString(R.string.torrent_peers)
+//                PIECES_FRAG_POS -> getString(R.string.torrent_pieces)
                 else -> ""
             })
         }
@@ -165,29 +165,11 @@ private class DetailPagerAdapter(fragment: Fragment) : FragmentPagerAdapter(frag
         return when(position) {
             FILES_FRAG_POS -> TorrentDetailFilesFragment.newInstance()
             INFO_FRAG_POS -> TorrentDetailInfoFragment.newInstance()
-            STATE_FRAG_POS -> TorrentDetailStateFragment.newInstance()
-            TRACKERS_FRAG_POS -> TorrentDetailTrackersFragment.newInstance()
-            PEERS_FRAG_POS -> TorrentDetailPeersFragment.newInstance()
-            PIECES_FRAG_POS -> TorrentDetailPiecesFragment.newInstance()
+//            STATE_FRAG_POS -> TorrentDetailStateFragment.newInstance()
+//            TRACKERS_FRAG_POS -> TorrentDetailTrackersFragment.newInstance()
+//            PEERS_FRAG_POS -> TorrentDetailPeersFragment.newInstance()
+//            PIECES_FRAG_POS -> TorrentDetailPiecesFragment.newInstance()
             else -> throw RuntimeException("Can't create fragment with position=$position.")
         }
     }
 }
-
-//private class DetailPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-//
-//    override fun getItemCount(): Int = NUM_FRAGMENTS
-//
-//    override fun createFragment(position: Int): Fragment {
-//        return when(position) {
-//            FILES_FRAG_POS -> DetailTorrentFilesFragment.newInstance()
-//            INFO_FRAG_POS -> DetailTorrentInfoFragment.newInstance()
-//            STATE_FRAG_POS -> DetailTorrentStateFragment.newInstance()
-//            TRACKERS_FRAG_POS -> DetailTorrentTrackersFragment.newInstance()
-//            PEERS_FRAG_POS -> DetailTorrentPeersFragment.newInstance()
-//            PIECES_FRAG_POS -> DetailTorrentPiecesFragment.newInstance()
-//            else -> throw RuntimeException("Can't create fragment with position=$position.")
-//        }
-//    }
-//
-//}

@@ -4,16 +4,25 @@ import android.view.ViewGroup
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
+import androidx.leanback.widget.RowPresenter
+import timber.log.Timber
 
 class CustomFullWidthDetailsOverviewRowPresenter(
     detailsPresenter: Presenter,
     logoPresenter: DetailsOverviewLogoPresenter
 ) : FullWidthDetailsOverviewRowPresenter(detailsPresenter, logoPresenter) {
 
-    private var mPreviousState = STATE_FULL
+    var mPreviousState = STATE_FULL
 
     init {
         initialState = STATE_FULL
+    }
+
+    fun setViewHolderState(prevState: Int) {
+        if (prevState != -1) {
+            mPreviousState = if (prevState == STATE_FULL) STATE_HALF else STATE_FULL
+            initialState = prevState
+        }
     }
 
     override fun onLayoutLogo(viewHolder: ViewHolder, oldState: Int, logoChanged: Boolean) {

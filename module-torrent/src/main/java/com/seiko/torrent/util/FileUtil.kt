@@ -28,7 +28,7 @@ object FileUtil {
         return if (lastPoi == -1 || lastSep >= lastPoi) "" else filePath.substring(lastPoi + 1)
     }
 
-    public fun isMediaFile(fileName: String): Boolean {
+    fun isMediaFile(fileName: String): Boolean {
         return when(getFileExtension(fileName).toLowerCase(Locale.US)) {
             "3gp",
             "avi",
