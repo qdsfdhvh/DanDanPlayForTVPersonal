@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.torrent">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,15 +10,17 @@
             android:name=".ui.TorrentMainActivity"
             android:theme="@style/Theme.Torrent.Transparent"
             android:exported="true"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity"/>
 
         <activity
             android:name=".ui.TorrentAddActivity"
             android:theme="@style/Theme.Torrent.Transparent"
             android:launchMode="singleTask"
             android:exported="true"
-            android:screenOrientation="fullSensor"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

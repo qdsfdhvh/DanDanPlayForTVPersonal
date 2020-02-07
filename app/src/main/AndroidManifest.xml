@@ -22,12 +22,14 @@
         android:supportsRtl="true"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true"
+        android:largeHeap="true"
         tools:targetApi="n"
         tools:ignore="GoogleAppIndexingWarning">
         <!--主界面-->
         <activity android:name=".SplashActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

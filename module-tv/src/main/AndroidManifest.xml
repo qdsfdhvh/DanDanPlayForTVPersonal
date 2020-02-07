@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.tv">
 
     <uses-feature
@@ -20,7 +21,8 @@
         <activity android:name=".ui.MainActivity"
             android:launchMode="singleTask"
             android:theme="@style/DanDanTvTheme"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>

@@ -46,7 +46,7 @@ class MainViewModel(
     }
 
     fun setTorrentHash(item: TorrentListItem?) {
-        if (item == _torrentItem.value) return
+        if (item?.hash == _torrentItem.value?.hash) return
         _torrentItem.value = item
     }
 

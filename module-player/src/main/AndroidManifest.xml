@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.player">
     <application>
 
@@ -16,8 +17,9 @@
             android:exported="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleTask"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.VLC.Player">
+            android:theme="@style/Theme.VLC.Player"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
         </activity>
 
         <service android:name=".service.PlaybackService"/>
