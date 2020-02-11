@@ -8,13 +8,15 @@ import com.seiko.common.data.Result
 import com.seiko.player.data.model.DanmaDownloadBean
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.domain.DownloadDanmaUseCase
+import com.seiko.player.domain.GetDanmaUseCase
+import com.seiko.player.domain.GetSubtitleUserCase
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class PlayerViewModel(
     private val prefDataSource: PrefDataSource,
-    private val downloadDanma: DownloadDanmaUseCase
+    private val getDanma: GetDanmaUseCase,
+    private val getSubtitle: GetSubtitleUserCase
 ) : ViewModel() {
 
     /**
@@ -22,6 +24,12 @@ class PlayerViewModel(
      */
     private val _danma = MutableLiveData<DanmaDownloadBean>()
     val danma: LiveData<DanmaDownloadBean> = _danma
+
+    /**
+     * 字幕路径
+     */
+    private val _subtitlePath = MutableLiveData<String>()
+    val subtitlePath: LiveData<String> = _subtitlePath
 
     /**
      * 播放状态
@@ -40,9 +48,17 @@ class PlayerViewModel(
      * 下载视频 弹幕、字幕
      */
     fun downloadTracker(param: PlayParam) = viewModelScope.launch {
-        when(val result = downloadDanma.invoke(param)) {
+        when(val result = getDanma.invoke(param)) {
             is Result.Success -> {
                 _danma.value = result.data
+            }
+            is Result.Error -> {
+                Timber.e(result.exception)
+            }
+        }
+        when(val result = getSubtitle.invoke(param)) {
+            is Result.Success -> {
+                _subtitlePath.value = result.data
             }
             is Result.Error -> {
                 Timber.e(result.exception)

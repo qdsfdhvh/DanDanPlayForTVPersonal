@@ -11,7 +11,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
-class DownloadDanmaUseCase : KoinComponent {
+class GetDanmaUseCase : KoinComponent {
 
     private val api: DanDanCommentApiService by inject()
     private val danmaRepository: DanmaRepository by inject()

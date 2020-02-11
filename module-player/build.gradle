@@ -37,10 +37,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha04"
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
-    implementation 'com.google.android.exoplayer:extension-leanback:2.10.4'
-//    implementation 'com.google.android.exoplayer:extension-rtmp:2.10.4'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.10.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
+    implementation 'com.google.android.exoplayer:extension-leanback:2.11.1'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.11.1'
+    implementation project(':libs:exoplayer_ffmpeg')
     // IjkPlayer
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
@@ -50,4 +50,6 @@ dependencies {
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
     implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
     implementation 'com.github.ctiao:ndkbitmap-x86:0.9.21'
+    // 编码检测
+    implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
 }

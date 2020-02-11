@@ -5,6 +5,8 @@ import com.seiko.player.data.prefs.PrefDataSource
 import com.seiko.player.media.creator.*
 import com.seiko.player.media.danmaku.DanmakuContextCreator
 import com.seiko.player.media.danmaku.DefaultDanmakuContextCreator
+import com.seiko.player.media.subtitle.ISubtitleEngine
+import com.seiko.player.media.subtitle.SubtitleEngine
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -15,6 +17,7 @@ val playModule = module {
     single { createAndroidMediaPlayerCreator() }
     single { createMediaPlayerFactory() }
     single { createDanmakuContextCreator() }
+    single { createSubtitleEngine() }
 }
 
 private fun createIjkMediaPlayerCreator(prefs: PrefDataSource): IjkMediaPlayerCreator {
@@ -35,4 +38,8 @@ private fun createMediaPlayerFactory(): MediaPlayerCreatorFactory {
 
 private fun createDanmakuContextCreator(): DanmakuContextCreator {
     return DefaultDanmakuContextCreator()
+}
+
+private fun createSubtitleEngine(): ISubtitleEngine {
+    return SubtitleEngine()
 }

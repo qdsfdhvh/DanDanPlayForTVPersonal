@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.OnItemClickListener
@@ -20,16 +21,18 @@ import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.model.PlayerOption
 import com.seiko.player.databinding.PlayerActivityVideoBinding
 import com.seiko.player.databinding.PlayerControlBottomBinding
-import com.seiko.player.delegate.VideoKeyDownDelegate
 import com.seiko.player.delegate.VideoTouchDelegate
 import com.seiko.player.media.ijkplayer.MediaPlayerParams
 import com.seiko.player.media.creator.MediaPlayerCreatorFactory
 import com.seiko.player.media.danmaku.DanmakuContextCreator
 import com.seiko.player.media.danmaku.JsonDanmakuParser
+import com.seiko.player.media.subtitle.ISubtitleEngine
+import com.seiko.player.media.subtitle.model.Subtitle
 import com.seiko.player.ui.adapter.OptionsAdapter
 import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.vm.PlayerViewModel
+import kotlinx.coroutines.launch
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.danmaku.model.BaseDanmaku
 import master.flame.danmaku.danmaku.model.DanmakuTimer
@@ -43,10 +46,7 @@ import kotlin.math.abs
 class VideoPlayerActivity: FragmentActivity()
     , View.OnClickListener
     , OnItemClickListener
-    , SeekBar.OnSeekBarChangeListener
-    , IMediaPlayer.OnPreparedListener
-    , IMediaPlayer.OnInfoListener
-    , IMediaPlayer.OnErrorListener {
+    , SeekBar.OnSeekBarChangeListener {
 
     companion object {
         private const val ARGS_VIDEO_PARAMS = "ARGS_VIDEO_PARAMS"
@@ -96,6 +96,7 @@ class VideoPlayerActivity: FragmentActivity()
     private val viewModel: PlayerViewModel by viewModel()
     private val mediaPlayerFactory: MediaPlayerCreatorFactory by inject()
     private val danmakuContextCreator: DanmakuContextCreator by inject()
+    private val subtitleEngine: ISubtitleEngine by inject()
 
     private lateinit var binding: PlayerActivityVideoBinding
     private lateinit var bindingControlBottom: PlayerControlBottomBinding
@@ -207,6 +208,7 @@ class VideoPlayerActivity: FragmentActivity()
         super.onStop()
         binding.playerVideoViewIjk.stopPlayback()
         binding.playerDanmakuView.release()
+        subtitleEngine.release()
     }
 
     override fun onDestroy() {
@@ -232,9 +234,43 @@ class VideoPlayerActivity: FragmentActivity()
         val creator = mediaPlayerFactory.getCreator(MediaPlayerCreatorFactory.Type.EXO_PLAYER)
         binding.playerVideoViewIjk.setIsUsingSurfaceRenders(false)
         binding.playerVideoViewIjk.setMediaPlayerCreator(creator)
-        binding.playerVideoViewIjk.setOnPreparedListener(this)
-        binding.playerVideoViewIjk.setOnInfoListener(this)
-        binding.playerVideoViewIjk.setOnErrorListener(this)
+        binding.playerVideoViewIjk.setOnPreparedListener {
+            binding.playerVideoViewIjk.seekTo(0)
+            viewModel.play()
+        }
+        binding.playerVideoViewIjk.setOnInfoListener { mp: IMediaPlayer?, what: Int, extra: Int ->
+            when(what) {
+                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> {
+                    Timber.d("MEDIA_INFO_BUFFERING_START")
+                }
+                MediaPlayerParams.STATE_PLAYING -> {
+                    // 绑定播放器到字幕引擎
+                    subtitleEngine.bindToMediaPlayer(mp)
+                    // 开始更新进度
+                    handler.startUpdateProgress()
+                }
+                MediaPlayerParams.STATE_ERROR -> {
+                    if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+                        DialogSelectFragment.Builder()
+                            .setTitle("无限异常，无法播放视频。")
+                            .hideCancel()
+                            .setConfirmText(getString(R.string.shutdown))
+                            .setConfirmClickListener { finish() }
+                            .build()
+                            .show(supportFragmentManager)
+                    }
+                }
+                MediaPlayerParams.STATE_COMPLETED -> {
+                    // 播放完成后退出
+                    finish()
+                }
+            }
+            return@setOnInfoListener true
+        }
+        binding.playerVideoViewIjk.setOnErrorListener { mp: IMediaPlayer?, what: Int, extra: Int ->
+            Timber.d("onError what=$what, extra=$extra")
+            return@setOnErrorListener false
+        }
         // 弹幕
         danmakuContext = danmakuContextCreator.create()
         binding.playerDanmakuView.setCallback(object : DrawHandler.Callback {
@@ -251,8 +287,20 @@ class VideoPlayerActivity: FragmentActivity()
             }
 
             override fun prepared() {
-                runOnUiThread {
+                lifecycleScope.launch {
                     binding.playerDanmakuView.start(binding.playerVideoViewIjk.currentPosition)
+                }
+            }
+        })
+        // 字幕
+        subtitleEngine.setOnSubtitleListener(object : ISubtitleEngine.OnSubtitleListener {
+            override fun onSubtitlePrepared() {
+                subtitleEngine.start()
+            }
+
+            override fun onSubtitleChanged(subtitle: Subtitle?) {
+                lifecycleScope.launch {
+                    binding.playerSubtitleView.setSubtitle(subtitle)
                 }
             }
         })
@@ -274,6 +322,8 @@ class VideoPlayerActivity: FragmentActivity()
                 if (danmakuView.isPrepared && danmakuView.isPaused) {
                     danmakuView.resume()
                 }
+                // 字幕
+                subtitleEngine.start()
                 // 屏幕常亮
                 binding.root.keepScreenOn = true
             } else {
@@ -287,6 +337,8 @@ class VideoPlayerActivity: FragmentActivity()
                 if (danmakuView.isPrepared && !danmakuView.isPaused) {
                     danmakuView.pause()
                 }
+                // 字幕
+                subtitleEngine.stop()
                 // 取消屏幕常亮
                 binding.root.keepScreenOn = false
             }
@@ -294,8 +346,8 @@ class VideoPlayerActivity: FragmentActivity()
         viewModel.danma.observe(this::getLifecycle) { danma ->
             val parser = JsonDanmakuParser(danma)
             binding.playerDanmakuView.prepare(parser, danmakuContext)
-//            binding.playerDanmakuView.showFPS(true)
             binding.playerDanmakuView.enableDanmakuDrawingCache(true)
+//            binding.playerDanmakuView.showFPS(true)
         }
         viewModel.showDanma.observe(this::getLifecycle) { isShowDanma ->
             if (isShowDanma) {
@@ -306,6 +358,7 @@ class VideoPlayerActivity: FragmentActivity()
                 bindingControlBottom.playerBtnOverlayDanma.isSelected = false
             }
         }
+        viewModel.subtitlePath.observe(this::getLifecycle, subtitleEngine::setSubtitlePath)
         viewModel.loadData()
     }
 
@@ -398,7 +451,7 @@ class VideoPlayerActivity: FragmentActivity()
 
     /**
      * 用户停止拖动进度条
-     * TODO TV端不触发，待招原因
+     * TODO TV端不触发，待找原因
      */
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
 //        Timber.d("onStopTrackingTouch")
@@ -658,56 +711,6 @@ class VideoPlayerActivity: FragmentActivity()
                 .build()
                 .show(supportFragmentManager)
         }
-    }
-
-    /**
-     * 播放器解析事件回调
-     */
-    override fun onPrepared(mp: IMediaPlayer?) {
-        binding.playerVideoViewIjk.seekTo(0)
-        viewModel.play()
-    }
-
-    /**
-     * 播放器播放事件回调
-     */
-    override fun onInfo(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
-        when(what) {
-            IMediaPlayer.MEDIA_INFO_BUFFERING_START -> {
-                Timber.d("MEDIA_INFO_BUFFERING_START")
-            }
-            MediaPlayerParams.STATE_PLAYING -> {
-                Timber.d("STATE_PLAYING")
-                // 开始更新进度
-                handler.startUpdateProgress()
-            }
-            MediaPlayerParams.STATE_ERROR -> {
-                Timber.d("STATE_ERROR")
-                if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
-                    DialogSelectFragment.Builder()
-                        .setTitle("无限异常，无法播放视频。")
-                        .hideCancel()
-                        .setConfirmText(getString(R.string.shutdown))
-                        .setConfirmClickListener { finish() }
-                        .build()
-                        .show(supportFragmentManager)
-                }
-            }
-            MediaPlayerParams.STATE_COMPLETED -> {
-                Timber.d("STATE_COMPLETED")
-                // 播放完成后退出
-                finish()
-            }
-        }
-        return true
-    }
-
-    /**
-     * 播放器错误事件回调
-     */
-    override fun onError(mp: IMediaPlayer?, what: Int, extra: Int): Boolean {
-        Timber.d("onError what=$what, extra=$extra")
-        return false
     }
 
     /**

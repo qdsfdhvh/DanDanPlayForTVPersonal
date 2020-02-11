@@ -56,8 +56,8 @@ class StartActivity : FragmentActivity() {
             videoUri = openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
         }
 
-        Timber.d(videoUri.toString())
-        Timber.d(videoTitle)
+//        Timber.d(videoUri.toString())
+//        Timber.d(videoTitle)
 
         if (videoUri == null) {
             finish()

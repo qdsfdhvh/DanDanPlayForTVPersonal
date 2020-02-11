@@ -791,7 +791,7 @@ public class IjkVideoView extends FrameLayout {
 
         @Override
         public void onSurfaceCreated(@NonNull IRenderView.ISurfaceHolder holder, int width, int height) {
-            Timber.d("onSurfaceCreated");
+//            Timber.d("onSurfaceCreated");
             if (holder.getRenderView() != mRenderView) {
                 Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
                 return;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="player_background">#c0141414</color>
+    <color name="player_background">#99141414</color><!--#c0141414-->
     <color name="player_background_invert">#c0ebebeb</color>
 
     <color name="material_blue">#2196f3</color>

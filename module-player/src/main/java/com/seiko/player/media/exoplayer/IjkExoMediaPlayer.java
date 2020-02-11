@@ -17,7 +17,6 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -34,14 +33,12 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.EventLogger;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.AbstractMediaPlayer;
@@ -56,16 +53,16 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
     private Context mAppContext;
     private SimpleExoPlayer mInternalPlayer;
     private EventLogger mEventLogger;
-    private DefaultRenderersFactory renderersFactory;
     private MediaSource mMediaSource;
     private DefaultTrackSelector mTrackSelector;
     private String mDataSource;
     private int mVideoWidth;
     private int mVideoHeight;
     private Surface mSurface;
+//    private SurfaceHolder mSurfaceHolder;
     private int lastReportedPlaybackState;
     private boolean lastReportedPlayWhenReady;
-    private boolean isPrepareing = true;
+    private boolean isPreparing = true;
     private boolean isBuffering = false;
     private boolean isLooping = false;
     /**
@@ -87,10 +84,6 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
 
     private int audioSessionId = C.AUDIO_SESSION_ID_UNSET;
 
-//    public IjkExoMediaPlayer(Context context) {
-//        mExoSourceManager = ExoSourceManager.newInstance(context);
-//    }
-
     public IjkExoMediaPlayer(Context context, ExoSourceManager exoSourceManager) {
         mAppContext = context.getApplicationContext();
         lastReportedPlaybackState = Player.STATE_IDLE;
@@ -103,6 +96,10 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
             setSurface(null);
         else
             setSurface(sh.getSurface());
+//        mSurfaceHolder = sh;
+//        if (mInternalPlayer != null) {
+//            mInternalPlayer.setVideoSurfaceHolder(mSurfaceHolder);
+//        }
     }
 
     @Override
@@ -142,31 +139,47 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
 
     @Override
     public void prepareAsync() throws IllegalStateException {
-        if (mInternalPlayer != null)
+        if (mInternalPlayer != null) {
             throw new IllegalStateException("can't prepare a prepared player");
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
-        mTrackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        mTrackSelector.setParameters(new DefaultTrackSelector.ParametersBuilder().build());
+        }
+
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        mTrackSelector = new DefaultTrackSelector(mAppContext, videoTrackSelectionFactory);
+        mTrackSelector.setParameters(new DefaultTrackSelector.ParametersBuilder(mAppContext).build());
 
         mEventLogger = new EventLogger(mTrackSelector);
 
-        boolean preferExtensionDecoders = true;
-        boolean useExtensionRenderers = true;//是否开启扩展
-        @DefaultRenderersFactory.ExtensionRendererMode int extensionRendererMode = useExtensionRenderers
-                ? (preferExtensionDecoders ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER
-                : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
-                : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
+//        boolean preferExtensionDecoders = true;
+//        boolean useExtensionRenderers = true; // 是否开启扩展
+//
+//        @DefaultRenderersFactory.ExtensionRendererMode
+//        int extensionRendererMode = useExtensionRenderers
+//                ? (preferExtensionDecoders ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER
+//                : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+//                : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
 
-        renderersFactory = new DefaultRenderersFactory(mAppContext, extensionRendererMode);
+        int extensionRendererMode = DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER;
+
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(mAppContext)
+                .setExtensionRendererMode(extensionRendererMode);
+
         DefaultLoadControl loadControl = new DefaultLoadControl();
-        mInternalPlayer = ExoPlayerFactory.newSimpleInstance(mAppContext, renderersFactory, mTrackSelector, loadControl, null);
+
+        mInternalPlayer = new SimpleExoPlayer.Builder(mAppContext, renderersFactory)
+                .setTrackSelector(mTrackSelector)
+                .setLoadControl(loadControl)
+                .build();
         mInternalPlayer.addListener(this);
         mInternalPlayer.addAnalyticsListener(this);
         mInternalPlayer.addAnalyticsListener(mEventLogger);
 
-        if (mSurface != null)
+        if (mSurface != null) {
             mInternalPlayer.setVideoSurface(mSurface);
+        }
+
+//        if (mSurfaceHolder != null) {
+//            mInternalPlayer.setVideoSurfaceHolder(mSurfaceHolder);
+//        }
 
         mInternalPlayer.prepare(mMediaSource);
         mInternalPlayer.setPlayWhenReady(false);
@@ -277,6 +290,7 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
         }
 
         mSurface = null;
+//        mSurfaceHolder = null;
         mDataSource = null;
         mVideoWidth = 0;
         mVideoHeight = 0;
@@ -493,11 +507,11 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
                 }
             }
 
-            if (isPrepareing) {
+            if (isPreparing) {
                 switch (playbackState) {
                     case Player.STATE_READY:
                         notifyOnPrepared();
-                        isPrepareing = false;
+                        isPreparing = false;
                         break;
                 }
             }
@@ -739,4 +753,5 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer implements Player.Eve
     public void onDrmKeysRemoved(EventTime eventTime) {
 
     }
+
 }

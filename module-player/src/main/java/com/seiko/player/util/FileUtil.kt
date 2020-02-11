@@ -101,9 +101,21 @@ object FileUtil {
      * @param filePath The path of file.
      * @return the name of file
      */
-    fun getFileName(filePath: String?): String? {
+    fun getFileName(filePath: String?): String {
         if (isSpace(filePath)) return ""
         val lastSep = filePath!!.lastIndexOf(File.separator)
         return if (lastSep == -1) filePath else filePath.substring(lastSep + 1)
+    }
+
+    fun getFileExt(filePath: String?): String {
+        if (isSpace(filePath)) return ""
+        val end = filePath!!.lastIndexOf('.')
+        return filePath.substring(end + 1)
+    }
+
+    fun getFileNotExt(filePath: String?): String {
+        if (isSpace(filePath)) return ""
+        val end = filePath!!.lastIndexOf('.')
+        return filePath.substring(0, end)
     }
 }

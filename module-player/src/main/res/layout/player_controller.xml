@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:vlc="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:background="@color/grey800">
+    android:layout_height="match_parent">
     <!--左上角进度条-->
     <LinearLayout
         android:id="@id/player_tip_layout"

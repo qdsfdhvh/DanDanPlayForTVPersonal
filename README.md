@@ -54,6 +54,8 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [libretorrent](https://github.com/proninyaroslav/libretorrent)
 
+* [libtorrent4j](https://github.com/aldenml/libtorrent4j)
+
 ### player
 
 * [Exoplayer](https://github.com/google/ExoPlayer)
@@ -64,9 +66,11 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
 
-* [hedera-wallet-android](https://github.com/hashgraph/hedera-wallet-android/tree/master)
-
 * [IJKPlayer-android](https://github.com/DyncKathline/IJKPlayer-android)
+
+* [SubtitleForAndroid](https://github.com/averyzhong/SubtitleForAndroid)
+
+* [MQPlayer](https://github.com/joffychim/MQPlayer)
 
 ### common
 
