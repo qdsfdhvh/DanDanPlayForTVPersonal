@@ -1,18 +1,17 @@
 package com.seiko.tv.vm
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.palette.graphics.Palette
 import com.seiko.tv.domain.GetImageUrlPaletteUseCase
-import com.seiko.common.data.ResultLiveData
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.common.data.Result
+import com.seiko.common.data.ResultData
 import com.seiko.tv.domain.SaveFavoriteBangumiDetailsUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
+import timber.log.Timber
 
 class BangumiDetailViewModel(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
@@ -20,63 +19,53 @@ class BangumiDetailViewModel(
     private val favoriteBangumiDetails: SaveFavoriteBangumiDetailsUseCase
 ) : ViewModel() {
 
-    val mainState =
-        ResultLiveData<Pair<BangumiDetailsEntity, Palette?>>()
+    /**
+     * 动漫id
+     */
+    val animeId = MutableLiveData<Long>()
 
     /**
-     * 番剧的搜索关键字
+     * 番剧信息
      */
-    private val searchKeyword: String
-        get() {
-            val details = mainState.value?.data ?: return ""
-            return details.first.searchKeyword
-        }
-
-    /**
-     * 番剧名称
-     */
-    val animeDetails: BangumiDetailsEntity?
-        get() {
-            val details = mainState.value?.data ?: return null
-            return details.first
-        }
-
-    /**
-     * 获得动画详情
-     */
-    fun getBangumiDetails(animeId: Long) = viewModelScope.launch {
-        mainState.showLoading()
-        val result = withContext(Dispatchers.IO) {
-            getBangumiDetails.invoke(animeId)
-        }
-        when(result) {
-            is Result.Error -> mainState.failed(result.exception)
-            is Result.Success -> {
-                val details = result.data
-                val palette = getImageUrlPalette.invoke(details.imageUrl)
-                mainState.success(details to palette)
+    private val bangumiDetails: LiveData<BangumiDetailsEntity> =  animeId.distinctUntilChanged().switchMap { animeId ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = getBangumiDetails.invoke(animeId)) {
+                is Result.Success -> {
+                    emit(result.data)
+                }
+                is Result.Error -> Timber.w(result.exception)
             }
+        }
+    }
+
+    /**
+     * 番剧信息 与 logo色调解析数据
+     */
+    val bangumiDetailsAndPalette: LiveData<Pair<BangumiDetailsEntity, Palette?>> = bangumiDetails.switchMap { details ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            val palette = getImageUrlPalette.invoke(details.imageUrl)
+            emit(details to palette)
         }
     }
 
     /**
      * 从标题(第一话 XXXXXX)中提取关键字
      */
-    fun getSearchKey(item: BangumiEpisodeEntity): String {
+    fun getSearchKey(searchKeyWord: String, item: BangumiEpisodeEntity): String {
         val infoArray = item.episodeTitle.split("\\s".toRegex())
         var episode = if (infoArray.isEmpty()) item.episodeTitle else infoArray[0]
         if (episode.startsWith("第") && episode.endsWith("话")) {
             val temp = episode.substring(1, episode.length - 1)
             episode =  temp
         }
-        return "$searchKeyword $episode"
+        return "$searchKeyWord $episode"
     }
 
     /**
      * 收藏
      */
     suspend fun setFavourite(): Boolean {
-        val anime = mainState.value?.data?.first ?: return false
+        val anime = bangumiDetails.value ?: return false
         anime.isFavorited = !anime.isFavorited
         favoriteBangumiDetails.invoke(anime)
         return anime.isFavorited

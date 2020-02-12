@@ -15,13 +15,13 @@ import org.koin.core.inject
  */
 class GetBangumiAirDayBeansUseCase : KoinComponent {
 
-    private val getBangumiListUseCase: GetBangumiListUseCase by inject()
+    private val getBangumiList: GetBangumiListUseCase by inject()
 
     /**
      * @param weekDay 已周几开头，输入0~6，假设输入二， 结果数据为：[周二、三、四、五、六、日、一]
      */
     suspend operator fun invoke(weekDay: Int): Result<List<AirDayBangumiBean>> {
-        when(val result = getBangumiListUseCase.invoke()) {
+        when(val result = getBangumiList.invoke()) {
             is Result.Success -> {
                 val beans: List<AirDayBangumiBean>
                 try {

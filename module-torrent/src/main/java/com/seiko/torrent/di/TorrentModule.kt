@@ -4,6 +4,11 @@ import android.content.ContentResolver
 import android.content.Context
 import android.os.Environment
 import com.seiko.download.torrent.TorrentEngineOptions
+import com.seiko.torrent.data.comments.TorrentRepository
+import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
+import com.seiko.torrent.domain.GetTorrentTrackersUseCase
+import com.seiko.torrent.download.DownloadManager
+import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.util.constants.TORRENT_CONFIG_DIR
 import com.seiko.torrent.util.constants.TORRENT_DATA_DIR
 import com.seiko.torrent.util.constants.TORRENT_DOWNLOAD_DIR
@@ -14,53 +19,29 @@ import org.koin.dsl.module
 import java.io.File
 
 internal val torrentModule = module {
-
+    // Torrent下载目录
     factory(named(TORRENT_DOWNLOAD_DIR)) { createTorrentDownloadDir() }
-
-    single(named(TORRENT_DATA_DIR)) {
-        createTorrentDataDir(
-            androidContext()
-        )
-    }
-
-    single(named(TORRENT_TEMP_DIR)) {
-        createTorrentTempDir(
-            get(named(TORRENT_DATA_DIR))
-        )
-    }
-
-    single(named(TORRENT_CONFIG_DIR)) {
-        createTorrentConfigDir(
-            get(named(TORRENT_DATA_DIR))
-        )
-    }
-
-    single { createContentResolver(androidContext()) }
-
-    single {
-        createTorrentSessionOptions(
-            get(
-                named(
-                    TORRENT_DATA_DIR
-                )
-            )
-        )
-    }
-
-//    single { createTorrentEngine(get()) }
-
-//    single { createTorrentHelper(get(), get(), get()) }
+    // Torrent文件目录
+    single(named(TORRENT_DATA_DIR)) { createTorrentDataDir(androidContext()) }
+    // Torrent临时目录
+    single(named(TORRENT_TEMP_DIR)) { createTorrentTempDir(get(named(TORRENT_DATA_DIR))) }
+    // Torrent参数配置路径(Trackers)
+    single(named(TORRENT_CONFIG_DIR)) { createTorrentConfigDir(get(named(TORRENT_DATA_DIR))) }
+    // Torrent引擎配置参数
+    single { TorrentEngineOptions(get(named(TORRENT_DATA_DIR))) }
+    // Torrent下载
+    single { createDownloader(get(), get(), get(), get()) }
 }
 
 /**
- * 种子下载目录
+ * Torrent下载目录
  */
 private fun createTorrentDownloadDir(): File {
     return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 }
 
 /**
- * Torrent文件路径
+ * Torrent文件目录
  */
 private fun createTorrentDataDir(context: Context): File {
     return context.getExternalFilesDir(null)!!
@@ -80,22 +61,13 @@ private fun createTorrentConfigDir(dataDir: File): File {
     return File(dataDir, "config")
 }
 
-private fun createContentResolver(context: Context): ContentResolver {
-    return context.contentResolver
+private fun createDownloader(options: TorrentEngineOptions,
+                             torrentRepo: TorrentRepository,
+                             getTorrentInfoFile: GetTorrentInfoFileUseCase,
+                             getTorrentTrackers: GetTorrentTrackersUseCase
+): Downloader {
+    return DownloadManager(options,
+        torrentRepo,
+        getTorrentInfoFile,
+        getTorrentTrackers)
 }
-
-private fun createTorrentSessionOptions(dataDir: File): TorrentEngineOptions {
-    return TorrentEngineOptions(
-        dataDir = dataDir
-    )
-}
-
-//private fun createTorrentEngine(options: TorrentEngineOptions): TorrentEngine {
-//    return TorrentEngine(options)
-//}
-
-//private fun createTorrentHelper(torrentEngine: TorrentEngine,
-//                                torrentRepository: TorrentRepository,
-//                                getTorrentInfo: GetTorrentInfoFileUseCase): TorrentHelper {
-//    return TorrentHelper(torrentEngine, torrentRepository, getTorrentInfo)
-//}

@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
     implementation 'com.google.android.exoplayer:extension-leanback:2.11.1'
     implementation 'com.google.android.exoplayer:extension-okhttp:2.11.1'
-    implementation project(':libs:exoplayer_ffmpeg')
+//    implementation project(':libs:exoplayer_ffmpeg') // only armv7a
     // IjkPlayer
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'

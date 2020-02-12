@@ -21,8 +21,6 @@ class ProviderApplication : IProviderApplication {
             repositoryModule,
             // 实例
             useCaseModule,
-            // 下载
-            downloadModule,
             // viewModel
             viewModelModule
         ))

@@ -13,20 +13,16 @@ import androidx.navigation.fragment.findNavController
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.common.ui.dialog.DialogSelectFragment
-import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.tv.ui.presenter.MainAreaPresenter
 import com.seiko.tv.ui.presenter.MainSettingPresenter
 import com.seiko.tv.data.model.AnimeRow
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
-import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class HomeFragment : FixBrowseSupportFragment()
     , OnItemViewClickedListener
@@ -47,8 +43,8 @@ class HomeFragment : FixBrowseSupportFragment()
         )
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupUI()
         setupRows()
         bindViewModel()
@@ -63,7 +59,6 @@ class HomeFragment : FixBrowseSupportFragment()
      * 生成相关UI
      */
     private fun setupUI() {
-//        navController = findNavController()
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         title = getString(R.string.app_name)
@@ -114,37 +109,14 @@ class HomeFragment : FixBrowseSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.weekBangumiList.observe(this::getLifecycle, this::updateUI)
+        viewModel.todayBangumiList.observe(this::getLifecycle) { bangumiList ->
+            adapterRows?.get(ROW_AREA)?.setList(bangumiList)
+        }
         viewModel.favoriteBangumiList.observe(this::getLifecycle) { favorites ->
             adapterRows?.get(ROW_FAVORITE)?.setList(favorites)
         }
         // 加载个人数据
         adapterRows?.get(ROW_SETTING)?.setList(leftItems)
-
-        // Navigation在退栈时,回重新调用onCreateView
-        viewModel.getBangumiList(false)
-        viewModel.getFavoriteBangumiList()
-    }
-
-    /**
-     * 加载'今日更新'数据
-     */
-    private fun updateUI(data: ResultData<List<HomeImageBean>>) {
-        when(data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                toast(data.error?.message)
-                Timber.e(data.error)
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                adapterRows?.get(ROW_AREA)?.setList(data.data)
-//                startEntranceTransition()
-            }
-        }
     }
 
     /**

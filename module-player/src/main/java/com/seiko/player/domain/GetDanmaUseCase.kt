@@ -4,7 +4,7 @@ import com.seiko.common.data.Result
 import com.seiko.common.service.AppTvService
 import com.seiko.player.data.api.DanDanCommentApiService
 import com.seiko.player.data.db.model.Danma
-import com.seiko.player.data.db.repo.DanmaRepository
+import com.seiko.player.data.comments.DanmaRepository
 import com.seiko.player.data.model.DanmaDownloadBean
 import com.seiko.player.data.model.PlayParam
 import org.koin.core.KoinComponent

@@ -1,16 +1,14 @@
 package com.seiko.tv.vm
 
 import androidx.lifecycle.*
-import com.seiko.common.data.ResultLiveData
-import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
+import androidx.paging.PagedList
 import com.seiko.tv.domain.bangumi.GetBangumiAirDayBeansUseCase
 import com.seiko.tv.domain.GetFavoriteBangumiListUseCase
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.common.data.Result
+import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
@@ -23,51 +21,28 @@ class HomeViewModel(
     /**
      * 每周更新
      */
-    private val _airDayBangumiList =
-        ResultLiveData<List<AirDayBangumiBean>>()
-    val airDayBangumiList: LiveData<ResultData<List<AirDayBangumiBean>>> = _airDayBangumiList
-    val weekBangumiList: LiveData<ResultData<List<HomeImageBean>>> = Transformations.map(_airDayBangumiList) { data ->
-        when(data.responseType) {
-            Status.SUCCESSFUL -> ResultData(
-                responseType = Status.SUCCESSFUL,
-                data = data.data!![0].bangumiList
-            )
-            else -> ResultData(
-                responseType = data.responseType,
-                error = data.error
-            )
+    val weekBangumiList: LiveData<List<AirDayBangumiBean>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
+            is Result.Success -> emit(result.data)
+            is Result.Error -> Timber.w(result.exception)
+        }
+    }
+
+    /**
+     * 今日更新
+     */
+    val todayBangumiList: LiveData<List<HomeImageBean>> = weekBangumiList.switchMap { data ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            val bangumiList = if (data.isNotEmpty()) data[0].bangumiList else emptyList()
+            emit(bangumiList)
         }
     }
 
     /**
      * 我的收藏
      */
-    private val _favoriteBangumiList = MutableLiveData<List<HomeImageBean>>()
-    val favoriteBangumiList: LiveData<List<HomeImageBean>> = _favoriteBangumiList
-
-    /**
-     * 获得当日更新动漫
-     */
-    fun getBangumiList(force: Boolean) = viewModelScope.launch {
-        if (!force && airDayBangumiList.value != null) return@launch
-        _airDayBangumiList.showLoading()
-        val result = withContext(Dispatchers.IO) {
-            getWeekBangumiList.invoke(getDayOfWeek())
-        }
-        when(result) {
-            is Result.Success -> _airDayBangumiList.success(result.data)
-            is Result.Error -> _airDayBangumiList.failed(result.exception)
-        }
-    }
-
-    /**
-     * 获得本地收藏
-     */
-    fun getFavoriteBangumiList() = viewModelScope.launch {
-        when(val result = getFavoriteBangumiList.invoke()) {
-            is Result.Success -> _favoriteBangumiList.value = result.data
-            is Result.Error -> Timber.w(result.exception)
-        }
+    val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        emitSource(getFavoriteBangumiList.invoke())
     }
 
     /**

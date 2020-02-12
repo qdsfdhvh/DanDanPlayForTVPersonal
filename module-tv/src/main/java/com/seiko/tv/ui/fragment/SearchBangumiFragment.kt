@@ -17,7 +17,6 @@ import com.seiko.tv.ui.card.SearchMagnetCardView
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
 import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
@@ -93,15 +92,15 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     private fun updateUI(data: ResultData<Boolean>) {
-        when(data.responseType) {
-            Status.LOADING -> {
+        when(data) {
+            is ResultData.Loading -> {
                 setLoadFragment(true)
             }
-            Status.ERROR -> {
+            is ResultData.Error -> {
                 setLoadFragment(false)
-                toast(data.error.toString())
+                toast(data.exception.toString())
             }
-            Status.SUCCESSFUL -> {
+            is ResultData.Success -> {
                 setLoadFragment(false)
             }
         }

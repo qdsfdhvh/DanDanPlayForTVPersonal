@@ -1,16 +1,18 @@
 package com.seiko.tv.data.db.dao
 
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 
+
 @Dao
 interface BangumiDetailsDao {
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC")
-    suspend fun all(): List<BangumiDetailsEntity>
+    fun all(): DataSource.Factory<Int, BangumiDetailsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun put(entity: BangumiDetailsEntity): Long

@@ -14,7 +14,6 @@ import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.tv.ui.presenter.SearchMagnetPresenter
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import com.seiko.common.util.extensions.checkPermissions
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
@@ -72,18 +71,17 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
      * 加载磁力搜索结果
      */
     private fun updateUI(data: ResultData<List<ResMagnetItemEntity>>) {
-        when(data.responseType) {
-            Status.LOADING -> {
+        when(data) {
+            is ResultData.Loading -> {
                 setLoadFragment(true)
             }
-            Status.ERROR -> {
+            is ResultData.Error -> {
                 setLoadFragment(false)
-                Timber.d(data.error)
-                toast(data.error.toString())
+                toast(data.exception.toString())
             }
-            Status.SUCCESSFUL -> {
+            is ResultData.Success -> {
                 setLoadFragment(false)
-                updateResults(data.data ?: return)
+                updateResults(data.data)
             }
         }
     }

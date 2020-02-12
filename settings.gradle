@@ -7,7 +7,7 @@ include ':app',
         ':libs:thunder',
         ':libs:tool_torrent',
         ':libs:file_picker',
-        ':libs:exoplayer_ffmpeg',
+//        ':libs:exoplayer_ffmpeg',
 
         ':plugin'
 rootProject.name='DanDanPlayForTV'

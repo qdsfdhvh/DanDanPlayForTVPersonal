@@ -12,10 +12,10 @@ private const val PAST_TIME = 3 * 24 * 60 * 60 * 1000L
 
 class DeleteCacheTorrentUseCase : KoinComponent {
 
-    private val prefHelper: PrefDataSource by inject()
+    private val prefs: PrefDataSource by inject()
 
     operator fun invoke() {
-        deleteDirTorrent(File(prefHelper.downloadFolder), PAST_TIME)
+        deleteDirTorrent(File(prefs.downloadFolder), PAST_TIME)
     }
 }
 

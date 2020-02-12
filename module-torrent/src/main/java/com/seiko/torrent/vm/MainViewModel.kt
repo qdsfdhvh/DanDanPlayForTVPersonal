@@ -2,18 +2,12 @@ package com.seiko.torrent.vm
 
 import androidx.lifecycle.*
 import com.seiko.download.torrent.model.TorrentMetaInfo
-import com.seiko.download.torrent.model.TorrentSessionStatus
-import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.download.Downloader
-import com.seiko.torrent.download.OnTorrentChangeListener
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.io.File
 
 class MainViewModel(
     private val downloader: Downloader,

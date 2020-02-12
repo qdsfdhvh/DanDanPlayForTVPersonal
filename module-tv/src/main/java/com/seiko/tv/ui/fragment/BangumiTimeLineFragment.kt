@@ -6,14 +6,10 @@ import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.tv.ui.presenter.MainAreaPresenter
 import com.seiko.tv.vm.HomeViewModel
-import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.common.util.toast.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
@@ -43,25 +39,27 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     }
 
     private fun bindViewModel() {
-        viewModel.airDayBangumiList.observe(this::getLifecycle, this::updateUI)
-        viewModel.getBangumiList(false)
+        viewModel.weekBangumiList.observe(this::getLifecycle) { bangumiList ->
+            updateAirDayBangumiList(bangumiList)
+        }
+//        viewModel.getBangumiList(false)
     }
 
-    private fun updateUI(data: ResultData<List<AirDayBangumiBean>>) {
-        when (data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                toast(data.error.toString())
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                updateAirDayBangumiList(data.data ?: return)
-            }
-        }
-    }
+//    private fun updateUI(data: ResultData<List<AirDayBangumiBean>>) {
+//        when (data.responseType) {
+//            Status.LOADING -> {
+//                setLoadFragment(true)
+//            }
+//            Status.ERROR -> {
+//                setLoadFragment(false)
+//                toast(data.error.toString())
+//            }
+//            Status.SUCCESSFUL -> {
+//                setLoadFragment(false)
+//                updateAirDayBangumiList(data.data ?: return)
+//            }
+//        }
+//    }
 
     private fun updateAirDayBangumiList(list: List<AirDayBangumiBean>) {
         var areaAdapter: ArrayObjectAdapter

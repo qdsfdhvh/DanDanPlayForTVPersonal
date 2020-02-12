@@ -1,57 +1,36 @@
 package com.seiko.common.data
 
-import androidx.annotation.IntDef
 import androidx.lifecycle.MutableLiveData
 
 /**
  * A generic wrapper class around data request
  */
-data class ResultData<T>(
-    var responseType: Int,
-    var data: T? = null,
-    var error: Exception? = null) {
+sealed class ResultData<out T : Any> {
+    data class Loading(val state: Int = 0): ResultData<Nothing>()
+    data class Success<out T : Any>(val data: T) : ResultData<T>()
+    data class Error(val exception: Exception?): ResultData<Nothing>()
+
     override fun toString(): String {
-        return "ResultData{" +
-                "responseType=$responseType" +
-                "error=$error" +
-                "}"
+        return when (this) {
+            is Loading -> "Loading[state=$state]"
+            is Success<*> -> "Success[data=$data]"
+            is Error -> "Error[exception=$exception]"
+        }
     }
 }
 
-@IntDef(
-    Status.SUCCESSFUL,
-    Status.ERROR,
-    Status.LOADING
-)
-@Retention(AnnotationRetention.SOURCE)
-annotation class Status {
-    companion object {
-        const val SUCCESSFUL = 0
-        const val ERROR = 1
-        const val LOADING = 2
-    }
-}
-
-class ResultLiveData<T> : MutableLiveData<ResultData<T>>() {
+class ResultLiveData< T: Any> : MutableLiveData<ResultData<T>>() {
 
     fun showLoading() {
-        value = ResultData(
-            responseType = Status.LOADING
-        )
+        value = ResultData.Loading()
     }
 
     fun success(data: T) {
-        value = ResultData(
-            responseType = Status.SUCCESSFUL,
-            data = data
-        )
+        value = ResultData.Success(data)
     }
 
     fun failed(error: Exception?) {
-        value = ResultData(
-            responseType = Status.ERROR,
-            error = error
-        )
+        value = ResultData.Error(error)
     }
 
 }

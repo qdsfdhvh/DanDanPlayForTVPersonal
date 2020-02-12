@@ -1,4 +1,4 @@
-package com.seiko.player.data.db.repo
+package com.seiko.player.data.comments
 
 import com.seiko.player.data.db.dao.DanmaDao
 import com.seiko.player.data.db.model.Danma

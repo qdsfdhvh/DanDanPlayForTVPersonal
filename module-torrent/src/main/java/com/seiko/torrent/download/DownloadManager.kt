@@ -13,10 +13,10 @@ import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
-import com.seiko.torrent.di.downloadModule
 import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.Flow
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.libtorrent4j.AddTorrentParams
@@ -35,15 +35,14 @@ import kotlin.concurrent.thread
 @ExperimentalCoroutinesApi
 class DownloadManager(
     private val options: TorrentEngineOptions,
-    private val torrentRepo: TorrentRepository
-) : Downloader, KoinComponent, TorrentEngineCallback {
+    private val torrentRepo: TorrentRepository,
+    private val getTorrentInfoFile: GetTorrentInfoFileUseCase,
+    private val getTorrentTrackers: GetTorrentTrackersUseCase
+) : Downloader, TorrentEngineCallback {
 
     companion object {
         private const val TAG = "DownloadManager"
     }
-
-    private val getTorrentInfoFile: GetTorrentInfoFileUseCase by inject()
-    private val getTorrentTrackers: GetTorrentTrackersUseCase by inject()
 
     /**
      * 种子信息传输用协程
@@ -113,6 +112,7 @@ class DownloadManager(
         if (isAlreadyRunning.compareAndSet(false, true)) {
             startEngine()
         }
+
         val maps = HashMap<String, TorrentSessionStatus>(newTask.size)
         for (task in newTask) {
             maps[task.hash] = TorrentSessionStatus.createInstance(task)
@@ -194,15 +194,6 @@ class DownloadManager(
     }
 
     /**
-     * 删除种子
-     */
-    override suspend fun deleteTorrent(hash: String, withFile: Boolean) {
-        val id = torrentRepo.deleteTorrent(hash)
-        Timber.d("deleteTorrent: $hash, $id")
-        torrentEngine.removeTorrent(hash, withFile)
-    }
-
-    /**
      * 解析磁力
      */
     override suspend fun fetchMagnet(source: String, function: (item: TorrentMetaInfo) -> Unit): MagnetInfo {
@@ -224,6 +215,17 @@ class DownloadManager(
     }
 
     /**
+     * 获取已有的种子信息
+     */
+    override fun getTorrentMetaInfo(hash: String): TorrentMetaInfo? {
+        if (!isAlreadyRunning.get()) return null
+        val task = torrentEngine.getDownloadTask(hash) ?: return null
+        val info = task.torrentInfo ?: return null
+        return TorrentMetaInfo(info)
+    }
+
+
+    /**
      * 重启/暂停 种子任务
      */
     override fun pauseResumeTorrent(hash: String) {
@@ -238,23 +240,21 @@ class DownloadManager(
     }
 
     /**
+     * 删除种子
+     */
+    override suspend fun deleteTorrent(hash: String, withFile: Boolean) {
+        val id = torrentRepo.deleteTorrent(hash)
+        Timber.d("deleteTorrent: $hash, $id")
+        torrentEngine.removeTorrent(hash, withFile)
+    }
+
+    /**
      * 停止所有种子
      */
     override fun release() {
         if (isAlreadyRunning.compareAndSet(true, false)) {
             closeEngine()
         }
-    }
-
-
-    /**
-     * 获取已有的种子信息
-     */
-    override fun getTorrentMetaInfo(hash: String): TorrentMetaInfo? {
-        if (!isAlreadyRunning.get()) return null
-        val task = torrentEngine.getDownloadTask(hash) ?: return null
-        val info = task.torrentInfo ?: return null
-        return TorrentMetaInfo(info)
     }
 
     override fun getTorrentStateMap(): LiveData<MutableMap<String, TorrentSessionStatus>> {

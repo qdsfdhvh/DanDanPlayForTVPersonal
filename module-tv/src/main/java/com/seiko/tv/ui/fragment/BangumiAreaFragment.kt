@@ -18,7 +18,6 @@ import com.seiko.tv.ui.adapter.BangumiSeasonAdapter
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.tv.vm.BangumiAreaViewModel
 import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import com.seiko.tv.ui.widget.SpaceItemDecoration
@@ -76,14 +75,6 @@ class BangumiAreaFragment : Fragment(),
         checkSelectPosition(savedInstanceState)
         bindViewModel()
         registerKeyEvent()
-    }
-
-    /**
-     * 请求季度合集 非强制
-     */
-    override fun onStart() {
-        super.onStart()
-        viewModel.getBangumiSeasons(false)
     }
 
     /**
@@ -167,53 +158,33 @@ class BangumiAreaFragment : Fragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiSeasons.observe(this::getLifecycle, this::updateSeasons)
-        viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
-    }
-
-    /**
-     * 加载季度合集
-     */
-    private fun updateSeasons(data: ResultData<List<BangumiSeason>>) {
-        when(data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                Timber.w(data.error)
-                toast(data.error.toString())
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                val seasons = data.data ?: emptyList()
-
-                seasonAdapter.submitList(seasons)
-
-                if (seasons.isNotEmpty()) {
-                    var position = seasonSelectedPosition
-                    if (position == -1 || position >= seasons.size) {
-                        position = 0
-                    }
-                    viewModel.getBangumiListWithSeason(seasons[position], false)
+        viewModel.bangumiSeasons.observe(this::getLifecycle) { seasons ->
+            seasonAdapter.submitList(seasons)
+            if (seasons.isNotEmpty()) {
+                var position = seasonSelectedPosition
+                if (position == -1 || position >= seasons.size) {
+                    position = 0
                 }
+                viewModel.season.value = seasons[position]
+//                viewModel.getBangumiListWithSeason(seasons[position], false)
             }
         }
+        viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
     }
 
     /**
      * 加载动漫合集
      */
     private fun updateBangumiList(data: ResultData<List<BangumiIntroEntity>>) {
-        when(data.responseType) {
-            Status.LOADING -> {
+        when(data) {
+            is ResultData.Loading -> {
                 binding.progress.visibility = View.VISIBLE
             }
-            Status.ERROR -> {
+            is ResultData.Error -> {
                 binding.progress.visibility = View.GONE
-                toast(data.error.toString())
+                toast(data.exception.toString())
             }
-            Status.SUCCESSFUL -> {
+            is ResultData.Success -> {
                 binding.progress.visibility = View.GONE
                 bangumiAdapter.submitList(data.data)
             }
@@ -264,8 +235,8 @@ class BangumiAreaFragment : Fragment(),
     /**
      * 请求动漫数据，Handler用
      */
-    fun getBangumiListWithSeason(item: BangumiSeason) {
-        viewModel.getBangumiListWithSeason(item, true)
+    fun getBangumiListWithSeason(season: BangumiSeason) {
+        viewModel.season.value = season
     }
 
     /**

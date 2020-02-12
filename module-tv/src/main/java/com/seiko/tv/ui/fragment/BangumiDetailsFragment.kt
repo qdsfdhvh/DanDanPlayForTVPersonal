@@ -17,7 +17,6 @@ import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.ui.presenter.*
 import com.seiko.tv.vm.BangumiDetailViewModel
 import com.seiko.common.data.ResultData
-import com.seiko.common.data.Status
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.toast.toast
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +45,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     private var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter? = null
 
     private var mDetailsOverviewPrevState = -1
+    private var searchKeyWord = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,30 +83,28 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.mainState.observe(this::getLifecycle, this::updateUI)
-        if (viewModel.mainState.value == null) {
-            viewModel.getBangumiDetails(args.animeId)
-        }
+        viewModel.bangumiDetailsAndPalette.observe(this::getLifecycle, this::updateDetails)
+        viewModel.animeId.value = args.animeId
     }
 
-    /**
-     * 加载'动漫详情'数据
-     */
-    private fun updateUI(data: ResultData<Pair<BangumiDetailsEntity, Palette?>>) {
-        when(data.responseType) {
-            Status.LOADING -> {
-                setLoadFragment(true)
-            }
-            Status.ERROR -> {
-                setLoadFragment(false)
-                toast(data.error.toString())
-            }
-            Status.SUCCESSFUL -> {
-                setLoadFragment(false)
-                updateDetails(data.data)
-            }
-        }
-    }
+//    /**
+//     * 加载'动漫详情'数据
+//     */
+//    private fun updateUI(data: ResultData<Pair<BangumiDetailsEntity, Palette?>>) {
+//        when(data) {
+//            is ResultData.Loading -> {
+//                setLoadFragment(true)
+//            }
+//            is ResultData.Error -> {
+//                setLoadFragment(false)
+//                toast(data.exception.toString())
+//            }
+//            is ResultData.Success -> {
+//                setLoadFragment(false)
+//                updateDetails(data.data)
+//            }
+//        }
+//    }
 
     /**
      * 更新动漫详情
@@ -121,6 +119,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         setupRelatedsRows(details.relateds)
         setupSimilarsRows(details.similars)
         prepareEntranceTransition()
+        searchKeyWord = details.searchKeyword
     }
 
     /**
@@ -240,11 +239,9 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is BangumiEpisodeEntity -> {
-                val details = viewModel.animeDetails ?: return
-                val keyword = viewModel.getSearchKey(item)
-
+                val keyword = viewModel.getSearchKey(searchKeyWord, item)
                 val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
-                action.animeId = details.animeId
+                action.animeId = args.animeId
                 action.episodeId = item.episodeId
                 findNavController().navigate(action)
             }

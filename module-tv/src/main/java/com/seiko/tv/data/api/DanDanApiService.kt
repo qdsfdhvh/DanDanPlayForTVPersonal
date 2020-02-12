@@ -58,7 +58,9 @@ internal interface DanDanApiService {
      * @param type 作品类型
      */
     @GET("/api/v2/search/anime")
-    suspend fun searchBangumiList(@Query("keyword") keyword: String,
-                                  @Query("type") type: String): SearchAnimeResponse
+    suspend fun searchBangumiList(
+        @Query("keyword") keyword: String,
+        @Query("type") type: String
+    ): SearchAnimeResponse
 
 }

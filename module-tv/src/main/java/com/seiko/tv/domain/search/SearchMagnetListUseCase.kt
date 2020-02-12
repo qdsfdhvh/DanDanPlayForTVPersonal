@@ -1,14 +1,14 @@
 package com.seiko.tv.domain.search
 
-import com.seiko.tv.data.repo.SearchRepository
+import com.seiko.tv.data.comments.SearchRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class SearchMagnetListUseCase : KoinComponent {
 
-    private val repository: SearchRepository by inject()
+    private val repo: SearchRepository by inject()
 
     suspend operator fun invoke(keyword: String, typeId: Int, subGroupId: Int)
-            = repository.searchMagnetList(keyword, typeId, subGroupId)
+            = repo.searchMagnetList(keyword, typeId, subGroupId)
 
 }

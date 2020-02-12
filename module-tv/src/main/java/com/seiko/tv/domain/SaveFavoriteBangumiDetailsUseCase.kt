@@ -1,8 +1,9 @@
 package com.seiko.tv.domain
 
 import com.seiko.common.data.Result
+import com.seiko.tv.data.comments.BangumiDetailsRepository
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
-import com.seiko.tv.data.repo.BangumiRepository
+import com.seiko.tv.data.comments.BangumiRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -11,13 +12,14 @@ import org.koin.core.inject
  */
 class SaveFavoriteBangumiDetailsUseCase : KoinComponent {
 
-    private val bangumiRepository: BangumiRepository by inject()
+    private val bangumiRepo: BangumiDetailsRepository by inject()
 
     suspend operator fun invoke(details: BangumiDetailsEntity): Result<Boolean> {
-        return if (details.isFavorited) {
-            bangumiRepository.insertBangumiDetails(details)
+        val success = if (details.isFavorited) {
+            bangumiRepo.saveBangumiDetails(details)
         } else {
-            bangumiRepository.deleteBangumiDetails(details.animeId)
+            bangumiRepo.removeBangumiDetails(details.animeId)
         }
+        return Result.Success(success)
     }
 }

@@ -18,6 +18,8 @@ class ProviderApplication : IProviderApplication {
             prefModule, dbModule, networkModule,
             // 实例
             useCaseModule,
+            // ...
+            repositoryModule,
             // 播放器
             playModule,
             // viewModel

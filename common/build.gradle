@@ -8,17 +8,15 @@ dependencies {
     // 屏幕适配
     implementation 'me.jessyan:autosize:1.1.2'
 
-    // UI
+    // Support
 //    api dependence.libAppCompat
     api dependence.libConstraintlayout
-
-    // TV UI
     api dependence.libLeanback
     api dependence.libLeanbackPreference
-
-    // fragment
     api dependence.libFragment
     api dependence.libFragmentKtx
+    api dependence.libLivedata
+    api dependence.libLivedataKtx
 
     // Log
     api 'com.jakewharton.timber:timber:4.7.1'

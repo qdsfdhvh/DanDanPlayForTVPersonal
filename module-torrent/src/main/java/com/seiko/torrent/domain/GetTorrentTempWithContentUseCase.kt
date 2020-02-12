@@ -1,6 +1,6 @@
 package com.seiko.torrent.domain
 
-import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import com.seiko.common.util.writeInputStream
 import com.seiko.common.data.Result
@@ -14,18 +14,15 @@ import java.util.*
 
 class GetTorrentTempWithContentUseCase : KoinComponent {
 
-    private val tempDir: File by inject(named(TORRENT_TEMP_DIR))
-
-    private val contentResolver: ContentResolver by inject()
-
     operator fun invoke(uri: Uri): Result<String> {
+        val tempDir: File by inject(named(TORRENT_TEMP_DIR))
         if (!tempDir.exists() && !tempDir.mkdirs()) {
             return Result.Error(FileNotFoundException("Temp dir not found"))
         }
 
         val contentTemp = File(tempDir, UUID.randomUUID().toString() + ".torrent")
-
-        contentTemp.writeInputStream(contentResolver.openInputStream(uri))
+        val context: Context by inject()
+        contentTemp.writeInputStream(context.contentResolver.openInputStream(uri))
         if (!contentTemp.exists()) {
             return Result.Error(IllegalArgumentException("Unknown path to the torrent file"))
         }

@@ -16,7 +16,8 @@ internal interface ResDanDanApiService {
     suspend fun searchMagnetList(
         @Query("keyword") keyword: String,
         @Query("type") typeId: String,
-        @Query("subgroup") subGroupId: String): ResMagnetSearchResponse
+        @Query("subgroup") subGroupId: String
+    ): ResMagnetSearchResponse
 
 
 

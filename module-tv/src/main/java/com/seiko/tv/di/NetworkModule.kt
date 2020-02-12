@@ -5,8 +5,6 @@ import com.seiko.tv.data.api.DanDanApiGenerator
 import com.seiko.tv.data.api.DanDanApiService
 import com.seiko.tv.data.api.ResDanDanApiGenerator
 import com.seiko.tv.data.api.ResDanDanApiService
-import com.seiko.tv.data.comments.DanDanApiRemoteDataSource
-import com.seiko.tv.data.comments.ResDanDanApiRemoteDataSource
 import com.seiko.tv.data.prefs.PrefDataSource
 import com.seiko.tv.util.http.cookie.CookiesManager
 import com.seiko.tv.util.http.cookie.PersistentCookieStore
@@ -19,8 +17,6 @@ internal val networkModule = module {
     single { createCookieManager(get()) }
     single { createApiService(androidContext(), get(), get(), get(), get()) }
     single { createResApiService(get(), get()) }
-    single { createDanDanApiRemoteDataSource(get()) }
-    single { createResDanDanApiRemoteDataSource(get()) }
 }
 
 private fun createCookieManager(cookieStore: PersistentCookieStore): CookiesManager {
@@ -50,12 +46,4 @@ private fun createResApiService(
         okHttpClient,
         converterFactory
     ).create()
-}
-
-private fun createDanDanApiRemoteDataSource(api: DanDanApiService): DanDanApiRemoteDataSource {
-    return DanDanApiRemoteDataSource(api)
-}
-
-private fun createResDanDanApiRemoteDataSource(api: ResDanDanApiService): ResDanDanApiRemoteDataSource {
-    return ResDanDanApiRemoteDataSource(api)
 }
