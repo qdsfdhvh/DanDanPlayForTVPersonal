@@ -58,12 +58,12 @@ class VideoPlayerHandler(activity: VideoPlayerActivity) : Handler(Looper.getMain
         sendEmptyMessageDelayed(MSG_UPDATE_SEEK, delay)
     }
 
-//    /**
-//     * 停止更新进度条
-//     */
-//    fun stopUpdateProgress() {
-//        removeMessages(MSG_UPDATE_SEEK)
-//    }
+    /**
+     * 停止更新进度条
+     */
+    fun stopUpdateProgress() {
+        removeMessages(MSG_UPDATE_SEEK)
+    }
 
     /**
      * 跳转

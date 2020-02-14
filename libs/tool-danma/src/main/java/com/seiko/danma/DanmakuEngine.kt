@@ -1,6 +1,7 @@
 package com.seiko.danma
 
 import com.seiko.danma.model.Danma
+import com.seiko.danma.util.log
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.controller.IDanmakuView
 import master.flame.danmaku.danmaku.model.BaseDanmaku
@@ -37,6 +38,7 @@ class DanmakuEngine(
     }
 
     override fun bindToMediaPlayer(mediaPlayer: IMediaPlayer?, danmaView: IDanmakuView) {
+        log("bindToMediaPlayer")
         this.mediaPlayer = mediaPlayer
         this.danmaView = danmaView
         danmaView.setDrawingThreadType(config.drawType)
@@ -101,6 +103,7 @@ class DanmakuEngine(
     }
 
     override fun prepared() {
+        log("prepared")
         danmaCallback?.prepared()
     }
 

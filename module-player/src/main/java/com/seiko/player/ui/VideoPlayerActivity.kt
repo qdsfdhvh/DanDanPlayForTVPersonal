@@ -234,21 +234,31 @@ class VideoPlayerActivity: FragmentActivity()
         binding.playerVideoViewIjk.setIsUsingSurfaceRenders(false)
         binding.playerVideoViewIjk.setMediaPlayerCreator(creator)
         binding.playerVideoViewIjk.setOnPreparedListener {
+            // 回到0点
             binding.playerVideoViewIjk.seekTo(0)
+            // 开始播放
             viewModel.play()
+        }
+        binding.playerVideoViewIjk.setOnSeekCompleteListener {
+            Timber.d("OnSeekComplete")
         }
         binding.playerVideoViewIjk.setOnInfoListener { mp: IMediaPlayer?, what: Int, extra: Int ->
             when(what) {
-                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> {
-                    Timber.d("MEDIA_INFO_BUFFERING_START")
-                }
-                MediaPlayerParams.STATE_PLAYING -> {
+                MediaPlayerParams.STATE_PREPARED -> {
+                    Timber.d("STATE_PREPARED")
                     // 绑定播放器到弹幕引擎
                     danmakuEngine.bindToMediaPlayer(mp, binding.playerDanmakuView)
                     // 绑定播放器到字幕引擎
                     subtitleEngine.bindToMediaPlayer(mp)
+                }
+                MediaPlayerParams.STATE_PLAYING -> {
+                    Timber.d("STATE_PLAYING")
                     // 开始更新进度
                     handler.startUpdateProgress()
+                }
+                MediaPlayerParams.STATE_PAUSED -> {
+                    Timber.d("STATE_PAUSED")
+                    handler.stopUpdateProgress()
                 }
                 MediaPlayerParams.STATE_ERROR -> {
                     if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
@@ -450,7 +460,7 @@ class VideoPlayerActivity: FragmentActivity()
         // 停止更新进度条/ 500ms后跳转目标位置 / 1500ms后继续更新进度条
 //        handler.stopUpdateProgress()
         handler.seekTo(position, 600)
-        handler.startUpdateProgress(1600)
+//        handler.startUpdateProgress(1600)
     }
 
     /**

@@ -84,6 +84,7 @@ public class IjkVideoView extends FrameLayout {
     private int mCurrentBufferPercentage;
     private IMediaPlayer.OnErrorListener mOnErrorListener;
     private IMediaPlayer.OnInfoListener mOnInfoListener;
+    private IMediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener;
     private long mSeekWhenPrepared;  // recording the seek position while preparing
     private boolean mCanPause = true;
     private boolean mCanSeekBack = true;
@@ -702,6 +703,9 @@ public class IjkVideoView extends FrameLayout {
         @Override
         public void onSeekComplete(IMediaPlayer mp) {
             mSeekEndTime = System.currentTimeMillis();
+            if (mOnSeekCompleteListener != null) {
+                mOnSeekCompleteListener.onSeekComplete(mp);
+            }
         }
     };
 
@@ -741,10 +745,14 @@ public class IjkVideoView extends FrameLayout {
      * Register a callback to be invoked when an informational event
      * occurs during playback or setup.
      *
-     * @param l The callback that will be run
+     * @param listener The callback that will be run
      */
-    public void setOnInfoListener(IMediaPlayer.OnInfoListener l) {
-        mOnInfoListener = l;
+    public void setOnInfoListener(IMediaPlayer.OnInfoListener listener) {
+        mOnInfoListener = listener;
+    }
+
+    public void setOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
+        mOnSeekCompleteListener = listener;
     }
 
     // REMOVED: mSHCallback
@@ -1077,5 +1085,9 @@ public class IjkVideoView extends FrameLayout {
     public float getSpeed() {
         IjkMediaPlayer ijkMediaPlayer = (IjkMediaPlayer) mMediaPlayer;
         return ijkMediaPlayer.getSpeed(1.0f);
+    }
+
+    public IMediaPlayer getMediaPlayer() {
+        return mMediaPlayer;
     }
 }

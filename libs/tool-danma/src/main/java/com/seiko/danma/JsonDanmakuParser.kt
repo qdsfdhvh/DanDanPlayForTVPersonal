@@ -3,6 +3,8 @@ package com.seiko.danma
 import android.graphics.Color
 import android.text.TextUtils
 import com.seiko.danma.model.Danma
+import com.seiko.danma.model.SingleDanma
+import com.seiko.danma.util.log
 import master.flame.danmaku.danmaku.model.*
 import master.flame.danmaku.danmaku.model.IDanmakus.ST_BY_TIME
 import master.flame.danmaku.danmaku.model.android.DanmakuFactory
@@ -12,11 +14,12 @@ import master.flame.danmaku.danmaku.util.DanmakuUtils
 import org.json.JSONArray
 import org.json.JSONException
 import java.lang.Float.parseFloat
+import kotlin.collections.ArrayList
 
 class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser() {
 
     companion object {
-        private const val SEP = ','
+        private const val SEP = ","
         private const val TRUE_STRING = "true"
     }
 
@@ -34,32 +37,7 @@ class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser(
     // 7:弹幕id
     override fun parse(): IDanmakus {
         val danmaku = Danmakus(ST_BY_TIME, false, mContext.baseComparator)
-        var item: BaseDanmaku
-        danmaList.forEachIndexed { index, comment ->
-            // {"cid":1580802879,"p":"187.10,1,16777215,[BiliBili]204e7d20","m":"握手言核"}
-            // 187.10,1,25,16777215,[BiliBili]204e7d20,0,0,0
-            val values = comment.p().split(SEP)
-            if (values.isNotEmpty()) {
-                val time = ((values[0].toFloatOrNull() ?: 0f) * 1000) // 出现时间
-                val type: Int = values[1].toIntOrNull() ?: 1 // 弹幕类型
-                val textSize = 25f // 字体大小
-                val color = -0x1000000 or (values[2].toIntOrNull() ?: 0) // 颜色
-
-                item = mContext.mDanmakuFactory.createDanmaku(type, mContext) ?: return@forEachIndexed
-                item.time = time.toLong()
-                item.textSize = textSize * (mDispDensity - 0.6f)
-                item.textColor = color
-                item.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
-                item.index = index
-                parseDanmaText(item, comment.m())
-                if (item.duration != null) {
-                    item.timer = timer
-                    item.flags = mContext.mGlobalFlagValues
-                    val lock: Any = danmaku.obtainSynchronizer()
-                    synchronized(lock) { danmaku.addItem(item) }
-                }
-            }
-        }
+        parseDanmaList(danmaku, danmaList)
         return danmaku
     }
 
@@ -68,6 +46,62 @@ class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser(
         mDispScaleX = mDispWidth / DanmakuFactory.BILI_PLAYER_WIDTH
         mDispScaleY = mDispHeight / DanmakuFactory.BILI_PLAYER_HEIGHT
         return this
+    }
+
+    private fun parseDanmaList(danmaku: IDanmakus, danmaList: List<Danma>) {
+        log("Parse danma begin...")
+        val start = System.currentTimeMillis()
+
+        val singleDanmaList = ArrayList<SingleDanma>(danmaku.size())
+        val sepSize = SEP.length
+        var p: String
+        var currentOffset: Int
+        var nextIndex: Int
+        var singleDanma: SingleDanma
+        var index: Int
+        var text: String
+        for (danma in danmaList) {
+            p = danma.p()
+            currentOffset = 0
+            nextIndex = p.indexOf(SEP, currentOffset, true)
+            if (nextIndex == -1) continue
+
+            singleDanma = SingleDanma(danma.m())
+
+            index = 0
+            do {
+                text = p.substring(currentOffset, nextIndex)
+                when(index++) {
+                    0 -> singleDanma.time = text.toFloatOrNull() ?: 0f
+                    1 -> singleDanma.type = text.toIntOrNull() ?: 1
+                    2 -> singleDanma.textColor = text.toIntOrNull() ?: 0
+                }
+                currentOffset = nextIndex + sepSize
+                nextIndex = p.indexOf(SEP, currentOffset, true)
+            } while (nextIndex != -1)
+            singleDanmaList.add(singleDanma)
+        }
+        log("Parse danma map: time=${System.currentTimeMillis() - start}")
+
+        var item: BaseDanmaku
+        var color: Int
+        singleDanmaList.forEachIndexed { i, danma ->
+            item = mContext.mDanmakuFactory.createDanmaku(danma.type, mContext) ?: return@forEachIndexed
+            item.time = (danma.time * 1000).toLong()
+            item.textSize = danma.textSize * (mDispDensity - 0.6f)
+            color = -0x1000000 or danma.textColor
+            item.textColor = color
+            item.textShadowColor = if (color <= Color.BLACK) Color.WHITE else Color.BLACK
+            item.index = i
+            parseDanmaText(item, danma.m)
+            if (item.duration != null) {
+                item.timer = timer
+                item.flags = mContext.mGlobalFlagValues
+                danmaku.addItem(item)
+            }
+        }
+
+        log("Parse danma finish: time=${System.currentTimeMillis() - start}")
     }
 
     private fun parseDanmaText(item: BaseDanmaku, m: String) {

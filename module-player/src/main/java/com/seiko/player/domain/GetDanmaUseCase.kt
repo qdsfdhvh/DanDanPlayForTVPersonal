@@ -32,6 +32,8 @@ class GetDanmaUseCase : KoinComponent {
 
         Timber.d("episodeId = $episodeId")
 
+        var start = System.currentTimeMillis()
+
         var bean: DanmaDownloadBean? = null
         try {
             bean = danmaRepository.getDanmaDownloadBean(episodeId)
@@ -40,11 +42,11 @@ class GetDanmaUseCase : KoinComponent {
         }
 
         if (bean != null) {
-            Timber.d("从数据库获得弹幕数据。")
+            Timber.d("danma from db, 耗时：${System.currentTimeMillis() - start}")
             return Result.Success(bean)
         }
 
-        val start = System.currentTimeMillis()
+        start = System.currentTimeMillis()
         try {
 //            val requestBody = "".toRequestBody("application/octet-stream".toMediaType())
             bean = api.downloadDanma(episodeId)
@@ -54,7 +56,7 @@ class GetDanmaUseCase : KoinComponent {
                 episodeId = episodeId,
                 danma = bean
             ))
-            Timber.d("耗时：${System.currentTimeMillis() - start}")
+            Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
         } catch (e: Exception) {
             return Result.Error(e)
         }
