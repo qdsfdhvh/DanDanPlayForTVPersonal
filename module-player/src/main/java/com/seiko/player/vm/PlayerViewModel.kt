@@ -58,7 +58,10 @@ class PlayerViewModel(
         }
         when(val result = getSubtitle.invoke(param)) {
             is Result.Success -> {
-                _subtitlePath.value = result.data
+                val subtitles = result.data
+                if (subtitles.isNotEmpty()) {
+                    _subtitlePath.value = subtitles[0]
+                }
             }
             is Result.Error -> {
                 Timber.e(result.exception)

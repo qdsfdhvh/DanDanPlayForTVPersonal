@@ -3,7 +3,7 @@ package com.seiko.player.domain
 import com.seiko.common.data.Result
 import com.seiko.common.service.AppTvService
 import com.seiko.player.data.api.DanDanCommentApiService
-import com.seiko.player.data.db.model.Danma
+import com.seiko.player.data.db.model.Danmaku
 import com.seiko.player.data.comments.DanmaRepository
 import com.seiko.player.data.model.DanmaDownloadBean
 import com.seiko.player.data.model.PlayParam
@@ -19,15 +19,15 @@ class GetDanmaUseCase : KoinComponent {
     suspend operator fun invoke(param: PlayParam): Result<DanmaDownloadBean> {
         // 目前hash为空，不处理
         if (param.hash.isEmpty()) {
-            return Result.Error(RuntimeException("${param.videoUri} -> Null Hash"))
+            return Result.Error(Exception("${param.videoUri} -> Null Hash"))
         }
 
         val service = AppTvService.get()
-            ?: return Result.Error(RuntimeException("${param.videoUri} -> Not found AppTvService"))
+            ?: return Result.Error(Exception("${param.videoUri} -> Not found AppTvService"))
 
         val episodeId = service.findEpisodeId(param.hash)
         if (episodeId == -1) {
-            return Result.Error(RuntimeException("${param.videoUri} -> Not found episodeId"))
+            return Result.Error(Exception("${param.videoUri} -> Not found episodeId"))
         }
 
         Timber.d("episodeId = $episodeId")
@@ -48,7 +48,7 @@ class GetDanmaUseCase : KoinComponent {
         try {
 //            val requestBody = "".toRequestBody("application/octet-stream".toMediaType())
             bean = api.downloadDanma(episodeId)
-            danmaRepository.saveDanmaDownloadBean(Danma(
+            danmaRepository.saveDanmaDownloadBean(Danmaku(
                 videoPath = param.videoUri.toString(),
                 hash = param.hash,
                 episodeId = episodeId,

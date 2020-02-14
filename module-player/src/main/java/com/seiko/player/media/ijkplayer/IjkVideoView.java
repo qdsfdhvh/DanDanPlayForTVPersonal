@@ -30,20 +30,21 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
+
+import com.seiko.player.media.ijkplayer.render.IRenderView;
+import com.seiko.player.media.ijkplayer.render.SurfaceRenderView;
+import com.seiko.player.media.ijkplayer.render.TextureRenderView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import timber.log.Timber;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
@@ -145,9 +146,6 @@ public class IjkVideoView extends FrameLayout {
 
     private void initVideoView(Context context) {
         mAppContext = context.getApplicationContext();
-
-        initBackground();
-
         mVideoWidth = 0;
         mVideoHeight = 0;
         // REMOVED: getHolder().addCallback(mSHCallback);
@@ -446,14 +444,7 @@ public class IjkVideoView extends FrameLayout {
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
             mCurrentBufferPercentage = 0;
-            String scheme = mUri.getScheme();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mIsUsingMediaDataSource &&
-                    (TextUtils.isEmpty(scheme) || "file".equalsIgnoreCase(scheme))) {
-                IMediaDataSource dataSource = new FileMediaDataSource(new File(mUri.toString()));
-                mMediaPlayer.setDataSource(dataSource);
-            } else {
-                mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders);
-            }
+            mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders);
             bindSurfaceHolder(mMediaPlayer, mSurfaceHolder);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setScreenOnWhilePlaying(true);
@@ -1010,15 +1001,6 @@ public class IjkVideoView extends FrameLayout {
         return 0;
     }
 
-    // REMOVED: getAudioSessionId();
-    // REMOVED: onAttachedToWindow();
-    // REMOVED: onDetachedFromWindow();
-    // REMOVED: onLayout();
-    // REMOVED: draw();
-    // REMOVED: measureAndLayoutSubtitleWidget();
-    // REMOVED: setSubtitleWidget();
-    // REMOVED: getSubtitleLooper();
-
     //-------------------------
     // Extend: Aspect Ratio
     //-------------------------
@@ -1060,62 +1042,6 @@ public class IjkVideoView extends FrameLayout {
         } else {
             setRender(RENDER_TEXTURE_VIEW);
         }
-    }
-
-    //-------------------------
-    // Extend: Background
-    //-------------------------
-
-    private boolean mEnableBackgroundPlay = false;
-
-    /**
-     * 初始化后台服务
-     */
-    private void initBackground() {
-//        // 是否是能后台播放
-////        mEnableBackgroundPlay = mSettings.getEnableBackgroundPlay();
-////        if (mEnableBackgroundPlay) {
-////            MediaPlayerService.intentToStart(getContext());
-////            mMediaPlayer = MediaPlayerService.getMediaPlayer();
-////            if (mHudViewHolder != null)
-////                mHudViewHolder.setMediaPlayer(mMediaPlayer);
-////        }
-    }
-
-    public boolean isBackgroundPlayEnabled() {
-        return mEnableBackgroundPlay;
-    }
-
-//    public void enterBackground() {
-////        MediaPlayerService.setMediaPlayer(mMediaPlayer);
-//    }
-//
-//    public void stopBackgroundPlay() {
-////        MediaPlayerService.setMediaPlayer(null);
-//    }
-
-//    private String buildTimeMilli(long duration) {
-//        long total_seconds = duration / 1000;
-//        long hours = total_seconds / 3600;
-//        long minutes = (total_seconds % 3600) / 60;
-//        long seconds = total_seconds % 60;
-//        if (duration <= 0) {
-//            return "--:--";
-//        }
-//        if (hours >= 100) {
-//            return String.format(Locale.US, "%d:%02d:%02d", hours, minutes, seconds);
-//        } else if (hours > 0) {
-//            return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
-//        } else {
-//            return String.format(Locale.US, "%02d:%02d", minutes, seconds);
-//        }
-//    }
-
-    //MediaDataSource
-    private boolean mIsUsingMediaDataSource = false;
-
-    public void setIsUsingMediaDataSource(boolean mIsUsingMediaDataSource) {
-        this.mIsUsingMediaDataSource = mIsUsingMediaDataSource;
     }
 
     /**

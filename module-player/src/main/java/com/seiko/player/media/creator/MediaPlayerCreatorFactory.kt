@@ -7,11 +7,7 @@ interface MediaPlayerCreatorFactory {
 
     fun getCreator(@Type type: Int): MediaPlayerCreator
 
-    @IntDef(
-        Type.IJK_ANDROID_PLAYER,
-        Type.IJK_PLAYER,
-        Type.EXO_PLAYER
-    )
+    @IntDef(Type.IJK_ANDROID_PLAYER, Type.IJK_PLAYER, Type.EXO_PLAYER)
     @Retention(AnnotationRetention.SOURCE)
     annotation class Type {
         companion object {

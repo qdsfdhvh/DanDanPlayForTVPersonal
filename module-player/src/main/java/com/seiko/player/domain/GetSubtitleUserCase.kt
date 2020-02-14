@@ -12,7 +12,7 @@ import java.util.*
 
 class GetSubtitleUserCase : KoinComponent {
 
-    suspend operator fun invoke(param: PlayParam): Result<String> {
+    suspend operator fun invoke(param: PlayParam): Result<List<String>> {
         return withContext(Dispatchers.IO) {
             val uri = param.videoUri
             val videoPath = if ("file".equals(uri.scheme, ignoreCase = true)) {
@@ -20,12 +20,9 @@ class GetSubtitleUserCase : KoinComponent {
             } else {
                 uri.toString()
             }
-            val subtitles = getLocalSubtitlePath(videoPath)
+            val subtitles = getLocalSubtitlePath(videoPath) ?: emptyList()
             Timber.d(subtitles.toString())
-            if (subtitles.isNullOrEmpty()) {
-                return@withContext Result.Error(RuntimeException("Not Found support subtitle with: $videoPath"))
-            }
-            return@withContext Result.Success(subtitles[0])
+            return@withContext Result.Success(subtitles)
         }
     }
 
@@ -48,7 +45,7 @@ private fun getLocalSubtitlePath(filePath: String?): List<String>? {
     //  无后缀名称
     val videoName = FileUtil.getFileNotExt(file.absolutePath)
 
-    return file.parentFile.listFiles().filter {
+    return file.parentFile?.listFiles()?.filter {
         val path = it.absolutePath
         var bool = path.startsWith(videoName)
 
@@ -59,5 +56,5 @@ private fun getLocalSubtitlePath(filePath: String?): List<String>? {
             }
         }
         bool
-    }.map { it.absolutePath }
+    }?.map { it.absolutePath }
 }

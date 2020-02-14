@@ -1,3 +1,4 @@
+include ':libs:tool-danma'
 include ':app',
         ':module-tv',
         ':module-torrent',
@@ -5,9 +6,10 @@ include ':app',
         ':common',
 
         ':libs:thunder',
-        ':libs:tool_torrent',
-        ':libs:file_picker',
+        ':libs:tool-torrent',
+        ':libs:file-picker',
 //        ':libs:exoplayer_ffmpeg',
 
         ':plugin'
 rootProject.name='DanDanPlayForTV'
+include ':libs:tool-subtitle'

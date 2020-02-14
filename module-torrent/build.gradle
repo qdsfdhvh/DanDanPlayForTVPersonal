@@ -22,8 +22,8 @@ this.beforeEvaluate {
 
 dependencies {
     implementation project(':common')
-    implementation project(':libs:file_picker')
-    implementation project(':libs:tool_torrent')
+    implementation project(':libs:file-picker')
+    implementation project(':libs:tool-torrent')
 
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler

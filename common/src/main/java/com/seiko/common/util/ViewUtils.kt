@@ -41,3 +41,9 @@ fun getPercentHeightSize(value: Int): Int {
         res / designHeight + 1
     }
 }
+
+fun getRealTextSizeScale(scale: Float): Float {
+    val screenHeight = AutoSizeConfig.getInstance().screenHeight
+    val designHeight = AutoSizeConfig.getInstance().designHeightInDp
+    return  designHeight * scale / screenHeight
+}

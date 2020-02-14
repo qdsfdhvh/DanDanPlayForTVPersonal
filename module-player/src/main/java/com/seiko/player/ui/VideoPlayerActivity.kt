@@ -16,6 +16,8 @@ import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
+import com.seiko.danma.IDanmakuEngine
+import com.seiko.danma.SimpleDrawHandlerCallback
 import com.seiko.player.R
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.model.PlayerOption
@@ -24,14 +26,12 @@ import com.seiko.player.databinding.PlayerControlBottomBinding
 import com.seiko.player.delegate.VideoTouchDelegate
 import com.seiko.player.media.ijkplayer.MediaPlayerParams
 import com.seiko.player.media.creator.MediaPlayerCreatorFactory
-import com.seiko.player.media.danmaku.DanmakuContextCreator
-import com.seiko.player.media.danmaku.JsonDanmakuParser
-import com.seiko.player.media.subtitle.ISubtitleEngine
-import com.seiko.player.media.subtitle.model.Subtitle
 import com.seiko.player.ui.adapter.OptionsAdapter
 import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.vm.PlayerViewModel
+import com.seiko.subtitle.ISubtitleEngine
+import com.seiko.subtitle.model.Subtitle
 import kotlinx.coroutines.launch
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.danmaku.model.BaseDanmaku
@@ -95,15 +95,13 @@ class VideoPlayerActivity: FragmentActivity()
 
     private val viewModel: PlayerViewModel by viewModel()
     private val mediaPlayerFactory: MediaPlayerCreatorFactory by inject()
-    private val danmakuContextCreator: DanmakuContextCreator by inject()
+    private val danmakuEngine: IDanmakuEngine by inject()
     private val subtitleEngine: ISubtitleEngine by inject()
 
     private lateinit var binding: PlayerActivityVideoBinding
     private lateinit var bindingControlBottom: PlayerControlBottomBinding
-    private lateinit var danmakuContext: DanmakuContext
 
     private val handler by lazyAndroid { VideoPlayerHandler(this) }
-//    private val keyDownDelegate by lazyAndroid { VideoKeyDownDelegate(viewModel, handler) }
     private val touchDelegate by lazyAndroid { VideoTouchDelegate(handler) }
 
     private val optionsAdapter by lazyAndroid { OptionsAdapter(this) }
@@ -133,6 +131,7 @@ class VideoPlayerActivity: FragmentActivity()
             if (binding.playerViewController.playerTipLayout.visibility == View.VISIBLE) {
                 binding.playerViewController.playerTipLayout.visibility = View.GONE
             }
+
             // 重置参数
             if (mTargetPosition != INVALID_VALUE) {
                 mTargetPosition = INVALID_VALUE
@@ -144,7 +143,7 @@ class VideoPlayerActivity: FragmentActivity()
                 // 视频
                 binding.playerVideoViewIjk.seekTo(position)
                 // 弹幕
-                binding.playerDanmakuView.seekTo(position)
+                danmakuEngine.seekTo(position)
             }
         }
     }
@@ -207,7 +206,7 @@ class VideoPlayerActivity: FragmentActivity()
     override fun onStop() {
         super.onStop()
         binding.playerVideoViewIjk.stopPlayback()
-        binding.playerDanmakuView.release()
+        danmakuEngine.release()
         subtitleEngine.release()
     }
 
@@ -244,6 +243,8 @@ class VideoPlayerActivity: FragmentActivity()
                     Timber.d("MEDIA_INFO_BUFFERING_START")
                 }
                 MediaPlayerParams.STATE_PLAYING -> {
+                    // 绑定播放器到弹幕引擎
+                    danmakuEngine.bindToMediaPlayer(mp, binding.playerDanmakuView)
                     // 绑定播放器到字幕引擎
                     subtitleEngine.bindToMediaPlayer(mp)
                     // 开始更新进度
@@ -272,29 +273,18 @@ class VideoPlayerActivity: FragmentActivity()
             return@setOnErrorListener false
         }
         // 弹幕
-        danmakuContext = danmakuContextCreator.create()
-        binding.playerDanmakuView.setCallback(object : DrawHandler.Callback {
-            override fun updateTimer(timer: DanmakuTimer?) {
-
-            }
-
-            override fun drawingFinished() {
-
-            }
-
-            override fun danmakuShown(danmaku: BaseDanmaku?) {
-
-            }
-
+        danmakuEngine.setCallback(object : SimpleDrawHandlerCallback() {
             override fun prepared() {
+                Timber.d("danma Prepared")
                 lifecycleScope.launch {
-                    binding.playerDanmakuView.start(binding.playerVideoViewIjk.currentPosition)
+                    danmakuEngine.seekTo(binding.playerVideoViewIjk.currentPosition)
                 }
             }
         })
         // 字幕
         subtitleEngine.setOnSubtitleListener(object : ISubtitleEngine.OnSubtitleListener {
             override fun onSubtitlePrepared() {
+                Timber.d("subtitle Prepared")
                 subtitleEngine.start()
             }
 
@@ -318,10 +308,7 @@ class VideoPlayerActivity: FragmentActivity()
                     bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_pause_player)
                 }
                 // 弹幕
-                val danmakuView = binding.playerDanmakuView
-                if (danmakuView.isPrepared && danmakuView.isPaused) {
-                    danmakuView.resume()
-                }
+                danmakuEngine.start()
                 // 字幕
                 subtitleEngine.start()
                 // 屏幕常亮
@@ -333,28 +320,23 @@ class VideoPlayerActivity: FragmentActivity()
                     bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_play_player)
                 }
                 // 弹幕
-                val danmakuView = binding.playerDanmakuView
-                if (danmakuView.isPrepared && !danmakuView.isPaused) {
-                    danmakuView.pause()
-                }
+                danmakuEngine.stop()
                 // 字幕
                 subtitleEngine.stop()
                 // 取消屏幕常亮
                 binding.root.keepScreenOn = false
             }
         }
+
         viewModel.danma.observe(this::getLifecycle) { danma ->
-            val parser = JsonDanmakuParser(danma)
-            binding.playerDanmakuView.prepare(parser, danmakuContext)
-            binding.playerDanmakuView.enableDanmakuDrawingCache(true)
-//            binding.playerDanmakuView.showFPS(true)
+            danmakuEngine.setDanmaList(danma.comments)
         }
         viewModel.showDanma.observe(this::getLifecycle) { isShowDanma ->
             if (isShowDanma) {
-                binding.playerDanmakuView.show()
+                danmakuEngine.show()
                 bindingControlBottom.playerBtnOverlayDanma.isSelected = true
             } else {
-                binding.playerDanmakuView.hide()
+                danmakuEngine.hide()
                 bindingControlBottom.playerBtnOverlayDanma.isSelected = false
             }
         }

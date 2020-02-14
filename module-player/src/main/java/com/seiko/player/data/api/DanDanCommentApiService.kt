@@ -1,7 +1,6 @@
 package com.seiko.player.data.api
 
 import com.seiko.player.data.model.DanmaDownloadBean
-import okhttp3.RequestBody
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path

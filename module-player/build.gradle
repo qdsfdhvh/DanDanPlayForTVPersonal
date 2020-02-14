@@ -42,14 +42,12 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-okhttp:2.11.1'
 //    implementation project(':libs:exoplayer_ffmpeg') // only armv7a
     // IjkPlayer
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
+    implementation dependence.libIjkplayer
+    implementation dependence.libIjkplayer_armv7a
+    implementation dependence.libIjkplayer_x86
+    implementation dependence.libIjkplayer_x86_64
     // 弹幕
-    implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
-    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
-    implementation 'com.github.ctiao:ndkbitmap-x86:0.9.21'
-    // 编码检测
-    implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
+    implementation project(':libs:tool-danma')
+    // 字幕
+    implementation project(':libs:tool-subtitle')
 }
