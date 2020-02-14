@@ -73,14 +73,14 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
     private fun updateUI(data: ResultData<List<ResMagnetItemEntity>>) {
         when(data) {
             is ResultData.Loading -> {
-                setLoadFragment(true)
+//                setLoadFragment(true)
             }
             is ResultData.Error -> {
-                setLoadFragment(false)
+//                setLoadFragment(false)
                 toast(data.exception.toString())
             }
             is ResultData.Success -> {
-                setLoadFragment(false)
+//                setLoadFragment(false)
                 updateResults(data.data)
             }
         }
