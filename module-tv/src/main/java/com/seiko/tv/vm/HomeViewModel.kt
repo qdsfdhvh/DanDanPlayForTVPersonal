@@ -7,6 +7,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.common.data.Result
+import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
@@ -40,7 +41,7 @@ class HomeViewModel(
     }
 
     /**
-     * 我的收藏
+     * 我的收藏（动态）
      */
     val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -48,11 +49,11 @@ class HomeViewModel(
         }
 
     /**
-     * 我的历史
+     * 我的历史（动态），前20条
      */
     val historyBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            emitSource(getBangumiHistoryList.invoke())
+            emitSource(getBangumiHistoryList.invoke(10))
         }
 
     /**

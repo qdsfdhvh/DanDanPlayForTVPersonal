@@ -1,22 +1,23 @@
 package com.seiko.tv.ui.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
 import androidx.leanback.app.FixDetailsSupportFragment
 import androidx.leanback.widget.*
+import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.palette.graphics.Palette
+import com.seiko.common.util.makeSceneTransitionAnimation
 import com.seiko.tv.R
-import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
+import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.EpisodesListRow
+import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.*
 import com.seiko.tv.vm.BangumiDetailViewModel
-import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -43,7 +44,6 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     private lateinit var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter
 
     private var mDetailsOverviewPrevState = -1
-    private var searchKeyWord = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,62 +70,58 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         mPresenterSelector = ClassPresenterSelector()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this
-        adapter = mAdapter
+        createDetailsOverviewRowPresenter()
+
         prepareEntranceTransition()
+
+        adapter = mAdapter
     }
 
     /**
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.bangumiDetailsAndPalette.observe(this::getLifecycle, this::updateDetails)
+        viewModel.bangumiDetailsBean.observe(this::getLifecycle, this::updateDetails)
         viewModel.animeId.value = args.animeId
     }
 
     /**
      * 更新动漫详情
      */
-    private fun updateDetails(pair: Pair<BangumiDetailsEntity, Palette?>?) {
-        if (pair == null) return
-        val details = pair.first
-        val palette = pair.second
-        setupDetailsOverviewRowPresenter(palette)
-        setupDetailsOverviewRow(details)
-        setupEpisodesRows(details.episodes)
-        setupRelatedsRows(details.relateds.map { it.toHomeImageBean() })
-        setupSimilarsRows(details.similars.map { it.toHomeImageBean() })
-        prepareEntranceTransition()
-        searchKeyWord = details.searchKeyword
+    private fun updateDetails(details: BangumiDetailBean) {
+        createDetailsOverviewRow(details)
+        createEpisodesRows(details.episodes)
+        createRelatedsRows(details.relateds)
+        createSimilarsRows(details.similars)
         startEntranceTransition()
     }
 
     /**
      * 添加简介布局选择器
      */
-    private fun setupDetailsOverviewRowPresenter(palette: Palette?) {
-        val logoPresenter = CustomDetailsOverviewLogoPresenter()
-        val descriptionPresenter = CustomDetailsDescriptionPresenter()
+    private fun createDetailsOverviewRowPresenter() {
+        val logoPresenter = FrescoDetailsOverviewLogoPresenter()
+        val descriptionPresenter = DetailsDescriptionPresenter()
         mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
         mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
         mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
-        val swatch = palette?.darkMutedSwatch
-        if (swatch != null) {
-            descriptionPresenter.setColor(swatch.titleTextColor, swatch.bodyTextColor)
-            mDescriptionRowPresenter.backgroundColor = swatch.rgb
-            val hsv = FloatArray(3)
-            val color = swatch.rgb
-            Color.colorToHSV(color, hsv)
-            hsv[2] *= 0.8f
-            mDescriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
-//            mAdapter!!.notifyItemRangeChanged(0, 1)
-        }
         mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
+
+        mDescriptionRowPresenter.isParticipatingEntranceTransition = false
+        prepareEntranceTransition()
     }
 
     /**
      * 添加简介布局数据
      */
-    private fun setupDetailsOverviewRow(details: BangumiDetailsEntity) {
+    private fun createDetailsOverviewRow(details: BangumiDetailBean) {
+        if (details.overviewRowBackgroundColor != 0) {
+            mDescriptionRowPresenter.backgroundColor = details.overviewRowBackgroundColor
+        }
+        if (details.actionBackgroundColor != 0) {
+            mDescriptionRowPresenter.actionsBackgroundColor = details.actionBackgroundColor
+        }
+
         val detailsOverviewRow = DetailsOverviewRow(details)
         detailsOverviewRow.setImageBitmap(requireActivity(), null)
         detailsOverviewRow.isImageScaleUpAllowed = true
@@ -150,7 +146,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     /**
      * 添加 分集
      */
-    private fun setupEpisodesRows(episodes: List<BangumiEpisodeEntity>) {
+    private fun createEpisodesRows(episodes: List<BangumiEpisodeEntity>) {
         if (episodes.isNotEmpty()) {
             val presenterSelector = BangumiPresenterSelector()
             val episodesAdapter = ArrayObjectAdapter(presenterSelector)
@@ -164,7 +160,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     /**
      * 添加 其他系列
      */
-    private fun setupRelatedsRows(relateds: List<HomeImageBean>) {
+    private fun createRelatedsRows(relateds: List<HomeImageBean>) {
         if (relateds.isNotEmpty()) {
             val presenterSelector = BangumiPresenterSelector()
             val relatedAdapter = ArrayObjectAdapter(presenterSelector)
@@ -178,7 +174,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     /**
      * 添加 相似作品
      */
-    private fun setupSimilarsRows(similars: List<HomeImageBean>) {
+    private fun createSimilarsRows(similars: List<HomeImageBean>) {
         if (similars.isNotEmpty()) {
             val presenterSelector = BangumiPresenterSelector()
             val relatedAdapter = ArrayObjectAdapter(presenterSelector)
@@ -219,19 +215,21 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is BangumiEpisodeEntity -> {
-                val keyword = viewModel.getSearchKey(searchKeyWord, item)
+                val keyword = viewModel.getSearchKey(item)
 
                 val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
                 action.animeId = args.animeId
                 action.episodeId = item.episodeId
+
                 findNavController().navigate(action)
             }
             is HomeImageBean -> {
-                findNavController().navigate(
-                    BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(
-                        item.animeId
-                    )
-                )
+                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
+
+                val cardView = holder.view as MainAreaCardView
+                val options = makeSceneTransitionAnimation(requireActivity(), Pair(cardView.getImageView(), getString(R.string.transition_image)))
+                val extras = ActivityNavigatorExtras(options)
+                findNavController().navigate(action, extras)
             }
         }
     }

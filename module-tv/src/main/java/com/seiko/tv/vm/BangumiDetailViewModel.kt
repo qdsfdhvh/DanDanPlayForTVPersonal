@@ -1,14 +1,17 @@
 package com.seiko.tv.vm
 
+import android.graphics.Color
 import androidx.lifecycle.*
 import androidx.palette.graphics.Palette
 import com.seiko.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.common.data.Result
+import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
 import com.seiko.tv.domain.bangumi.SaveBangumiHistoryUseCase
+import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
 
@@ -31,9 +34,11 @@ class BangumiDetailViewModel(
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             when(val result = getBangumiDetails.invoke(animeId)) {
                 is Result.Success -> {
-                    emit(result.data)
+                    val details = result.data
+                    emit(details)
                     // 保留到浏览历史
-                    saveBangumiHistory.invoke(result.data)
+                    saveBangumiHistory.invoke(details)
+                    searchKeyWord = details.searchKeyword
                 }
                 is Result.Error -> Timber.w(result.exception)
             }
@@ -43,17 +48,59 @@ class BangumiDetailViewModel(
     /**
      * 番剧信息 与 logo色调解析数据
      */
-    val bangumiDetailsAndPalette: LiveData<Pair<BangumiDetailsEntity, Palette?>> = bangumiDetails.switchMap { details ->
+    val bangumiDetailsBean: LiveData<BangumiDetailBean> = bangumiDetails.switchMap { details ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             val palette = getImageUrlPalette.invoke(details.imageUrl)
-            emit(details to palette)
+
+            val titleColor: Int
+            val bodyColor: Int
+            val actionBackgroundColor: Int
+            val overviewRowBackgroundColor: Int
+            val swatch = palette?.darkMutedSwatch
+            if (swatch != null) {
+                val hsv = FloatArray(3)
+                val color = swatch.rgb
+                Color.colorToHSV(color, hsv)
+                hsv[2] *= 0.8f
+
+                titleColor = swatch.titleTextColor
+                bodyColor = swatch.bodyTextColor
+                overviewRowBackgroundColor = color
+                actionBackgroundColor = Color.HSVToColor(hsv)
+            } else {
+                titleColor = 0
+                bodyColor = 0
+                overviewRowBackgroundColor = 0
+                actionBackgroundColor = 0
+            }
+
+            emit(BangumiDetailBean(
+                animeTitle = details.animeTitle,
+                imageUrl = details.imageUrl,
+                tags = details.tags.joinToString { it.tagName },
+                description = details.summary,
+                rating = details.rating,
+                isFavorited = details.isFavorited,
+
+                titleColor = titleColor,
+                bodyColor = bodyColor,
+                overviewRowBackgroundColor = overviewRowBackgroundColor,
+                actionBackgroundColor = actionBackgroundColor,
+
+                episodes = details.episodes,
+                relateds = details.relateds.map { it.toHomeImageBean() },
+                similars = details.similars.map { it.toHomeImageBean() }
+            ))
+
         }
     }
+
+    private var searchKeyWord = ""
 
     /**
      * 从标题(第一话 XXXXXX)中提取关键字
      */
-    fun getSearchKey(searchKeyWord: String, item: BangumiEpisodeEntity): String {
+    fun getSearchKey(item: BangumiEpisodeEntity): String {
         val infoArray = item.episodeTitle.split("\\s".toRegex())
         var episode = if (infoArray.isEmpty()) item.episodeTitle else infoArray[0]
         if (episode.startsWith("第") && episode.endsWith("话")) {

@@ -9,17 +9,10 @@ import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.seiko.common.ui.dialog.setLoadFragment
-import com.seiko.tv.ui.presenter.SearchBangumiPresenter
-import com.seiko.tv.ui.presenter.SearchMagnetPresenter
-import com.seiko.tv.data.model.AnimeRow
-import com.seiko.tv.ui.card.SearchMagnetCardView
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
-import com.seiko.common.data.ResultData
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
-import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector

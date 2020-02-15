@@ -5,38 +5,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="imageCardViewInfoAreaStyle">@style/DanDanTvTheme.CardViewTitleStyle</item>
-        <item name="imageCardViewTitleStyle">@style/DanDanTvTheme.CardViewInfoStyle</item>
-        <item name="imageCardViewStyle">@style/DanDanTvTheme.CardView</item>
-
+        
 <!--        <item name="android:windowNoTitle">true</item>-->
 <!--        <item name="android:windowActionBar">false</item>-->
         <item name="android:windowFullscreen">true</item>
 <!--        <item name="android:windowContentOverlay">@null</item>-->
-    </style>
-
-    <style name="DanDanTvTheme.CardViewTitleStyle" parent="Widget.Leanback.ImageCardView.TitleStyle">
-        <item name="android:scrollHorizontally">true</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">marquee</item>
-    </style>
-
-    <style name="DanDanTvTheme.CardViewInfoStyle" parent="Widget.Leanback.ImageCardView.InfoAreaStyle">
-        <item name="android:background">@color/tv_card_content_dark</item>
-    </style>
-
-    <style name="DanDanTvTheme.CardView" parent="Widget.Leanback.ImageCardViewStyle">
-        <item name="cardType">infoUnderWithExtra</item>
-        <item name="infoVisibility">always</item>
-    </style>
-
-    <style name="DanDanTvTheme.DialogFragmentStyle" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="DanDanTvTextStyle">

@@ -30,6 +30,10 @@
             android:id="@+id/action_homeFragment_to_bangumiHistoryFragment"
             app:destination="@id/bangumiHistoryFragment"
             app:popUpTo="@id/homeFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_bangumiAreaFragmentV2"
+            app:destination="@id/bangumiAreaFragmentV2"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <!--播放表-->
     <fragment
@@ -102,5 +106,14 @@
             android:name="episodeId"
             app:argType="integer"
             android:defaultValue="-1"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bangumiAreaFragmentV2"
+        android:name="com.seiko.tv.ui.fragment.BangumiAreaFragmentV2"
+        android:label="BangumiAreaFragmentV2" >
+        <action
+            android:id="@+id/action_bangumiAreaFragmentV2_to_bangumiDetailsFragment"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@id/bangumiAreaFragmentV2" />
     </fragment>
 </navigation>

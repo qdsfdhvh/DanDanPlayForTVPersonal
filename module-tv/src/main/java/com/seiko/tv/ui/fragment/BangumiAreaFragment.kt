@@ -49,7 +49,7 @@ class BangumiAreaFragment : Fragment(),
         private const val ARGS_BANGUMI_SELECTED_POSITION = "ARGS_BANGUMI_SELECTED_POSITION"
     }
 
-    private val viewModel by inject<BangumiAreaViewModel>()
+    private val viewModel: BangumiAreaViewModel by inject()
 
     private lateinit var binding: FragmentAreaBinding
 

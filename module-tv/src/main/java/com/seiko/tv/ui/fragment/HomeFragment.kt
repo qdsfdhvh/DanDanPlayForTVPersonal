@@ -30,6 +30,7 @@ class HomeFragment : FixBrowseSupportFragment()
         private const val ROW_AREA = 0
         private const val ROW_FAVORITE = 1
         private const val ROW_SETTING = 2
+        private const val ROW_HISTORY = 3
 
         private const val ID_AREA = 0
         private const val ID_FAVOURITE = 1
@@ -91,6 +92,8 @@ class HomeFragment : FixBrowseSupportFragment()
         createListRow(ROW_AREA, getString(R.string.title_area))
         // 我的收藏
         createListRow(ROW_FAVORITE, getString(R.string.title_favorite))
+        // 浏览历史
+        createListRow(ROW_HISTORY, getString(R.string.title_history))
         // 工具中心
         createListRow(ROW_SETTING, getString(R.string.title_setting))
         // 绑定Adapter
@@ -114,8 +117,11 @@ class HomeFragment : FixBrowseSupportFragment()
         viewModel.todayBangumiList.observe(this::getLifecycle) { bangumiList ->
             arrayAdapters.get(ROW_AREA)?.setItems(bangumiList, HomeImageBeanDiffCallback())
         }
-        viewModel.favoriteBangumiList.observe(this::getLifecycle) { favorites ->
-            arrayAdapters.get(ROW_FAVORITE)?.setItems(favorites, HomeImageBeanDiffCallback())
+        viewModel.favoriteBangumiList.observe(this::getLifecycle) { favoriteList ->
+            arrayAdapters.get(ROW_FAVORITE)?.setItems(favoriteList, HomeImageBeanDiffCallback())
+        }
+        viewModel.historyBangumiList.observe(this::getLifecycle) { historyList ->
+            arrayAdapters.get(ROW_HISTORY)?.setItems(historyList, HomeImageBeanDiffCallback())
         }
         // 加载个人数据
         arrayAdapters.get(ROW_SETTING)?.setItems(leftItems, null)
@@ -150,8 +156,11 @@ class HomeFragment : FixBrowseSupportFragment()
             is HomeSettingBean -> {
                 when(item.id) {
                     ID_AREA -> {
+//                        findNavController().navigate(
+//                            HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
+//                        )
                         findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
+                            HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragmentV2()
                         )
                     }
                     ID_TIME -> {

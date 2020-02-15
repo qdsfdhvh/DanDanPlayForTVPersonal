@@ -9,4 +9,4 @@
     android:adjustViewBounds="true"
     android:elevation="@dimen/lb_details_overview_z"
     app:placeholderImageScaleType="centerCrop"
-    tools:viewBindingIgnore="true" />
+    android:transitionName="@string/transition_image" />

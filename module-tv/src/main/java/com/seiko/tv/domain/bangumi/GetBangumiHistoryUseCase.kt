@@ -13,12 +13,12 @@ class GetBangumiHistoryUseCase : KoinComponent {
 
     private val historyRepo: BangumiHistoryRepository by inject()
 
-    fun invoke(): LiveData<PagedList<HomeImageBean>> {
+    fun invoke(count: Int): LiveData<PagedList<HomeImageBean>> {
         val config = PagedList.Config.Builder()
             .setPageSize(8)
             .setEnablePlaceholders(false)
             .build()
-        return historyRepo.getBangumiDetailsList()
+        return historyRepo.getBangumiDetailsList(count)
             .map { it.toHomeImageBean() }
             .toLiveData(config)
     }

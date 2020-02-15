@@ -2,34 +2,44 @@ package com.seiko.tv.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.seiko.tv.R
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.data.model.api.BangumiSeason
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
-import com.seiko.tv.vm.BangumiHistoryViewModel
-import com.seiko.tv.vm.HomeViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import com.seiko.tv.vm.BangumiAreaPageViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class BangumiHistoryFragment : VerticalGridSupportFragment()
+class BangumiAreaPageFragment : GridFragment()
     , OnItemViewClickedListener {
 
     companion object {
         private const val COLUMNS = 7
+        private const val ARGS_SEASON = "ARGS_SEASON"
+
+        fun newInstance(season: BangumiSeason): BangumiAreaPageFragment {
+            val bundle = Bundle()
+            bundle.putParcelable(ARGS_SEASON, season)
+            val fragment = BangumiAreaPageFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
-    private val viewModel: BangumiHistoryViewModel by viewModel()
+    private val season by lazyAndroid { arguments!!.getParcelable<BangumiSeason>(ARGS_SEASON)!! }
+
+    private val viewModel: BangumiAreaPageViewModel by viewModel()
 
     private lateinit var arrayAdapter: ArrayObjectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        setupRowAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,10 +48,6 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     }
 
     private fun setupUI() {
-        title = getString(R.string.bangumi_area)
-    }
-
-    private fun setupRowAdapter() {
         val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM)
         verticalGridPresenter.numberOfColumns = COLUMNS
         onItemViewClickedListener = this
@@ -50,14 +56,13 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
         val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = ArrayObjectAdapter(presenterSelector)
         adapter = arrayAdapter
-        prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
-        viewModel.historyBangumiList.observe(this::getLifecycle) { bangumiList ->
+        viewModel.bangumiList.observe(this::getLifecycle) { bangumiList ->
             arrayAdapter.setItems(bangumiList, HomeImageBeanDiffCallback())
-            startEntranceTransition()
         }
+        viewModel.season.value = season
     }
 
     override fun onItemClicked(
@@ -69,13 +74,11 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 findNavController().navigate(
-                    BangumiHistoryFragmentDirections.actionBangumiHistoryFragmentToBangumiDetailsFragment(
+                    BangumiAreaFragmentV2Directions.actionBangumiAreaFragmentV2ToBangumiDetailsFragment(
                         item.animeId
                     )
                 )
             }
         }
     }
-
-
 }

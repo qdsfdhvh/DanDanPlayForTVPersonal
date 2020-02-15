@@ -18,6 +18,8 @@ class MainAreaCardView(context: Context) : AbsCardView<HomeImageBean>(context) {
         binding = ItemMainAreaBinding.inflate(inflater, parent, true)
     }
 
+    fun getImageView() = binding.img
+
     override fun bind(item: HomeImageBean) {
         binding.img.loadImage(item.imageUrl)
         binding.title.text = item.animeTitle

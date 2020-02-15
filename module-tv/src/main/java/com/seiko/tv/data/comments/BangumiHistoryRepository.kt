@@ -11,10 +11,20 @@ internal class BangumiHistoryRepository(database: AppDatabase) {
     private val bangumiHistoryDao = database.bangumiHistoryDao()
 
     /**
-     * 获得本地动漫前200条浏览历史
+     * 获得本地动漫前x条浏览历史，按浏览时间排序
+     * PS：插入新数据时，会动态变化
+     * @param count 前多少条
      */
-    fun getBangumiDetailsList(): DataSource.Factory<Int, BangumiHistoryEntity> {
-        return bangumiHistoryDao.all(200)
+    fun getBangumiDetailsList(count: Int): DataSource.Factory<Int, BangumiHistoryEntity> {
+        return bangumiHistoryDao.all(count)
+    }
+
+    /**
+     * 获得本地动漫前x条浏览历史，按浏览时间排序
+     * @param count 前多少条
+     */
+    fun getBangumiDetailsListFixed(count: Int): List<BangumiHistoryEntity> {
+        return bangumiHistoryDao.allFixed(count)
     }
 
     suspend fun saveBangumiDetails(details: BangumiDetailsEntity): Result<Boolean> {
