@@ -8,6 +8,7 @@ internal val viewModelModule = module {
     viewModel { BangumiAreaViewModel(get(), get()) }
     viewModel { BangumiAreaPageViewModel(get()) }
     viewModel { BangumiDetailViewModel(get(), get(), get(), get()) }
+    viewModel { BangumiFavoriteViewModel(get()) }
     viewModel { BangumiHistoryViewModel(get()) }
     viewModel { HomeViewModel(get(), get(), get()) }
     viewModel { SearchBangumiViewModel(get(), get(), get()) }

@@ -12,13 +12,13 @@ class GetBangumiFavoriteUseCase : KoinComponent {
 
     private val detailsRepo: BangumiDetailsRepository by inject()
 
-    operator fun invoke(): LiveData<PagedList<HomeImageBean>> {
+    operator fun invoke(count: Int): LiveData<PagedList<HomeImageBean>> {
         val config = PagedList.Config.Builder()
             .setPageSize(8)
 //            .setInitialLoadSizeHint(10)
             .setEnablePlaceholders(false)
             .build()
-        return detailsRepo.getBangumiDetailsList()
+        return detailsRepo.getBangumiDetailsList(count)
             .map { it.toHomeImageBean() }
             .toLiveData(config)
     }

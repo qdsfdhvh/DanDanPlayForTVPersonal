@@ -49,9 +49,8 @@ class HomeFragment : FixBrowseSupportFragment()
     private val leftItems by lazyAndroid {
         listOf(
             HomeSettingBean(ID_AREA, getString(R.string.bangumi_area), R.drawable.ic_bangumi_area),
-//            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
             HomeSettingBean(ID_TIME, getString(R.string.bangumi_time), R.drawable.ic_bangumi_time),
-//            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
+            HomeSettingBean(ID_FAVOURITE, getString(R.string.bangumi_favorite), R.drawable.ic_bangumi_favourite),
             HomeSettingBean(ID_HISTORY, getString(R.string.bangumi_history), R.drawable.ic_bangumi_history),
             HomeSettingBean(ID_DOWNLOAD, getString(R.string.bangumi_download), R.drawable.ic_bangumi_download),
             HomeSettingBean(ID_SETTING, getString(R.string.bangumi_setting), R.drawable.ic_bangumi_setting)
@@ -87,15 +86,15 @@ class HomeFragment : FixBrowseSupportFragment()
      */
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        arrayAdapters = SparseArray(3)
+        arrayAdapters = SparseArray(4)
+        // 工具中心
+        createListRow(ROW_SETTING, getString(R.string.title_setting))
         // 今日更新
         createListRow(ROW_AREA, getString(R.string.title_area))
         // 我的收藏
         createListRow(ROW_FAVORITE, getString(R.string.title_favorite))
         // 浏览历史
         createListRow(ROW_HISTORY, getString(R.string.title_history))
-        // 工具中心
-        createListRow(ROW_SETTING, getString(R.string.title_setting))
         // 绑定Adapter
         adapter = rowsAdapter
         onItemViewClickedListener = this
@@ -161,6 +160,11 @@ class HomeFragment : FixBrowseSupportFragment()
 //                        )
                         findNavController().navigate(
                             HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragmentV2()
+                        )
+                    }
+                    ID_FAVOURITE -> {
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionHomeFragmentToBangumiFavoriteFragment()
                         )
                     }
                     ID_TIME -> {

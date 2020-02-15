@@ -220,7 +220,6 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
                 val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
                 action.animeId = args.animeId
                 action.episodeId = item.episodeId
-
                 findNavController().navigate(action)
             }
             is HomeImageBean -> {

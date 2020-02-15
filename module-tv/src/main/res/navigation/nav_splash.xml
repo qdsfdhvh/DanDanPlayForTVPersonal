@@ -22,10 +22,10 @@
             android:id="@+id/action_homeFragment_to_bangumiTimeLineFragment"
             app:destination="@id/bangumiTimeLineFragment"
             app:popUpTo="@id/homeFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_bangumiAreaFragment"
-            app:destination="@id/bangumiAreaFragment"
-            app:popUpTo="@id/homeFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_homeFragment_to_bangumiAreaFragment"-->
+<!--            app:destination="@id/bangumiAreaFragment"-->
+<!--            app:popUpTo="@id/homeFragment" />-->
         <action
             android:id="@+id/action_homeFragment_to_bangumiHistoryFragment"
             app:destination="@id/bangumiHistoryFragment"
@@ -33,6 +33,10 @@
         <action
             android:id="@+id/action_homeFragment_to_bangumiAreaFragmentV2"
             app:destination="@id/bangumiAreaFragmentV2"
+            app:popUpTo="@id/homeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bangumiFavoriteFragment"
+            app:destination="@id/bangumiFavoriteFragment"
             app:popUpTo="@id/homeFragment" />
     </fragment>
     <!--播放表-->
@@ -46,15 +50,15 @@
             app:popUpTo="@+id/bangumiTimeLineFragment" />
     </fragment>
     <!--番剧-->
-    <fragment
-        android:id="@+id/bangumiAreaFragment"
-        android:name="com.seiko.tv.ui.fragment.BangumiAreaFragment"
-        tools:layout="BangumiAreaFragment">
-        <action
-            android:id="@+id/action_bangumiAreaFragment_to_bangumiDetailsFragment"
-            app:destination="@id/bangumiDetailsFragment"
-            app:popUpTo="@+id/bangumiAreaFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/bangumiAreaFragment"-->
+<!--        android:name="com.seiko.tv.ui.fragment.BangumiAreaFragment"-->
+<!--        tools:layout="BangumiAreaFragment">-->
+<!--        <action-->
+<!--            android:id="@+id/action_bangumiAreaFragment_to_bangumiDetailsFragment"-->
+<!--            app:destination="@id/bangumiDetailsFragment"-->
+<!--            app:popUpTo="@+id/bangumiAreaFragment" />-->
+<!--    </fragment>-->
     <!--番剧详情-->
     <fragment
         android:id="@+id/bangumiDetailsFragment"
@@ -115,5 +119,14 @@
             android:id="@+id/action_bangumiAreaFragmentV2_to_bangumiDetailsFragment"
             app:destination="@id/bangumiDetailsFragment"
             app:popUpTo="@id/bangumiAreaFragmentV2" />
+    </fragment>
+    <fragment
+        android:id="@+id/bangumiFavoriteFragment"
+        android:name="com.seiko.tv.ui.fragment.BangumiFavoriteFragment"
+        android:label="BangumiFavoriteFragment" >
+        <action
+            android:id="@+id/action_bangumiFavoriteFragment_to_bangumiDetailsFragment"
+            app:destination="@id/bangumiDetailsFragment"
+            app:popUpTo="@id/bangumiFavoriteFragment" />
     </fragment>
 </navigation>

@@ -39,10 +39,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
-
-        private val PERMISSIONS_AUDIO = arrayOf(
-            Manifest.permission.RECORD_AUDIO
-        )
     }
 
     private val args by navArgs<SearchMagnetFragmentArgs>()
@@ -175,7 +171,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
                     if (success) {
                         val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
                         if (hash != null) {
-                            Timber.d("添加种子完成：$hash")
                             viewModel.saveMagnetInfoUseCase(hash, args.animeId, args.episodeId)
                         }
                     }

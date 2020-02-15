@@ -57,7 +57,9 @@ class SearchMagnetViewModel(
      * 保存种子信息，尝试关联动漫与集数
      */
     fun saveMagnetInfoUseCase(hash: String, animeId: Long, episodeId: Int) = viewModelScope.launch {
+        Timber.d("添加种子完成...")
         val item = currentMagnetItem ?: return@launch
         saveMagnetInfo.invoke(item, hash, animeId, episodeId)
+        Timber.d("添加种子完成：hash=$hash, animeId=$animeId, episodeId=$episodeId")
     }
 }

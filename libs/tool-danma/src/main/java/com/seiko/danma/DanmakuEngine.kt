@@ -70,6 +70,7 @@ class DanmakuEngine(
     }
 
     override fun release() {
+        danmaParser = null
         mediaPlayer = null
         danmaView?.release()
         danmaView = null

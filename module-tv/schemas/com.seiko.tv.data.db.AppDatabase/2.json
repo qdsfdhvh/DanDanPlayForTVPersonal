@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "c6564e52b1cd293a5d30452b78030cf4",
+    "identityHash": "e691363e4f5b39bcb10ec1b38f0f7bbe",
     "entities": [
       {
         "tableName": "BangumiDetails",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`animeId` INTEGER NOT NULL, `animeTitle` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `type` TEXT NOT NULL, `typeDescription` TEXT NOT NULL, `summary` TEXT NOT NULL, `bangumiUrl` TEXT NOT NULL, `isOnAir` INTEGER NOT NULL, `airDay` INTEGER NOT NULL, `searchKeyword` TEXT NOT NULL, `isRestricted` INTEGER NOT NULL, `rating` REAL NOT NULL, `addedDate` INTEGER NOT NULL, PRIMARY KEY(`animeId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`animeId` INTEGER NOT NULL, `animeTitle` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `type` TEXT NOT NULL, `typeDescription` TEXT NOT NULL, `summary` TEXT NOT NULL, `bangumiUrl` TEXT NOT NULL, `isOnAir` INTEGER NOT NULL, `airDay` INTEGER NOT NULL, `searchKeyword` TEXT NOT NULL, `isRestricted` INTEGER NOT NULL, `rating` REAL NOT NULL, `addedDate` INTEGER NOT NULL, `updateDate` INTEGER NOT NULL, `createDate` INTEGER NOT NULL, PRIMARY KEY(`animeId`))",
         "fields": [
           {
             "fieldPath": "animeId",
@@ -83,6 +83,18 @@
           {
             "fieldPath": "addedDate",
             "columnName": "addedDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updateDate",
+            "columnName": "updateDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "createDate",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -538,7 +550,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c6564e52b1cd293a5d30452b78030cf4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e691363e4f5b39bcb10ec1b38f0f7bbe')"
     ]
   }
 }

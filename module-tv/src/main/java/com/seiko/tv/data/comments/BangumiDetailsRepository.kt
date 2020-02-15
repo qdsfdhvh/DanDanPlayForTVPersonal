@@ -39,8 +39,21 @@ internal class BangumiDetailsRepository(
     /**
      * 获得本地收藏的全部动漫
      */
-    fun getBangumiDetailsList(): DataSource.Factory<Int, BangumiDetailsEntity> {
-        return bangumiDetailsDao.all()
+    fun getBangumiDetailsList(count: Int): DataSource.Factory<Int, BangumiDetailsEntity> {
+        return bangumiDetailsDao.all(count)
+    }
+
+    fun getBangumiDetailsListFixed(): List<BangumiDetailsEntity> {
+        return bangumiDetailsDao.allFixed()
+    }
+
+    /**
+     * 尝试更新收藏的动漫的浏览时间
+     */
+    suspend fun updateBangumiDetailsUpdateDate(animeId: Long) {
+        if (isFavorited(animeId)) {
+            bangumiDetailsDao.update(animeId, System.currentTimeMillis())
+        }
     }
 
     /**

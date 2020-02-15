@@ -11,4 +11,10 @@ object RoomMigration {
         }
     }
 
+    val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE BangumiDetails ADD COLUMN `updateDate` INTEGER DEFAULT 0 NOT NULL")
+            database.execSQL("ALTER TABLE BangumiDetails ADD COLUMN `createDate` INTEGER DEFAULT 0 NOT NULL")
+        }
+    }
 }

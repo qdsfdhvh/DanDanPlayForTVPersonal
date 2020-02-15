@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
 
     // WorkManger
-    implementation "androidx.work:work-runtime-ktx:2.3.0"
+    implementation "androidx.work:work-runtime-ktx:2.3.1"
 
     // @see https://stackoverflow.com/questions/58630667/rejecting-re-init-on-previously-failed-class-in-okhttp
     implementation 'org.conscrypt:conscrypt-android:2.2.1'

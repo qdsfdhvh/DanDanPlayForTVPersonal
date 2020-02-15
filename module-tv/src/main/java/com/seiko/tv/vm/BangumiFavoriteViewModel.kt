@@ -6,20 +6,21 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.domain.bangumi.GetBangumiFavoriteFixedUseCase
+import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
-import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import kotlinx.coroutines.Dispatchers
 
-class BangumiHistoryViewModel(
-    private val getBangumiHistoryList: GetBangumiHistoryFixedUseCase
+class BangumiFavoriteViewModel(
+    private val getBangumiHistoryList: GetBangumiFavoriteFixedUseCase
 ) : ViewModel() {
 
     /**
      * 我的历史，前20条
      */
-    val historyBangumiList: LiveData<List<HomeImageBean>> =
+    val favoriteBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(getBangumiHistoryList.invoke(MAX_BANGUMI_HISTORY_SIZE))
+            emit(getBangumiHistoryList.invoke())
         }
 }

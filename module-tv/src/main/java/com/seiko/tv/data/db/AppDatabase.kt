@@ -16,7 +16,7 @@ import com.seiko.tv.util.constants.DB_NAME_DEFAULT
     BangumiHistoryEntity::class,
     ResMagnetItemEntity::class,
     EpisodeTorrentEntity::class
-], version = 2)
+], version = 3)
 
 abstract class AppDatabase : RoomDatabase() {
 
@@ -24,7 +24,8 @@ abstract class AppDatabase : RoomDatabase() {
         fun create(context: Context, dbName: String): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, dbName)
                 .addMigrations(
-                    RoomMigration.MIGRATION_1_2
+                    RoomMigration.MIGRATION_1_2,
+                    RoomMigration.MIGRATION_2_3
                 )
                 .build()
         }

@@ -195,11 +195,11 @@ class BangumiAreaFragment : Fragment(),
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(item) {
             is BangumiIntroEntity -> {
-                findNavController().navigate(
-                    BangumiAreaFragmentDirections.actionBangumiAreaFragmentToBangumiDetailsFragment(
-                        item.animeId
-                    )
-                )
+//                findNavController().navigate(
+//                    BangumiAreaFragmentDirections.actionBangumiAreaFragmentToBangumiDetailsFragment(
+//                        item.animeId
+//                    )
+//                )
             }
         }
     }

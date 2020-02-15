@@ -59,7 +59,9 @@ data class BangumiDetailsEntity(
     var isRestricted: Boolean = false,
     var rating: Float = 0f,
 
-    var addedDate: Long = 0
+    var addedDate: Long = 0,
+    var updateDate: Long = 0,
+    var createDate: Long = 0
 ) {
 
     @Ignore

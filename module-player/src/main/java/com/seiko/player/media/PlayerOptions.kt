@@ -17,7 +17,7 @@ object PlayerOptions {
             //合并重复弹幕
             isDuplicateMergingEnabled = true
             //弹幕滚动速度
-            setScrollSpeedFactor(1.2f)
+            setScrollSpeedFactor(1.4f)
             //弹幕文字大小
             setScaleTextSize(getRealTextSizeScale(3f))
 //        //弹幕文字透明度

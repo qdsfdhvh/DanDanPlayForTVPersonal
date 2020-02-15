@@ -30,3 +30,8 @@ private val SEP = File.separator
 val DEFAULT_DOWNLOAD_PATH = "${Environment.getExternalStorageDirectory().absolutePath}${SEP}DanDanPlay$SEP"
 // 缓存路径
 val DEFAULT_CACHE_FOLDER_PATH = "$DEFAULT_DOWNLOAD_PATH.cache$SEP"
+
+/**
+ * 本地历史上限
+ */
+internal val MAX_BANGUMI_HISTORY_SIZE = 200

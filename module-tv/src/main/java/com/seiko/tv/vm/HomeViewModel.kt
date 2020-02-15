@@ -45,7 +45,7 @@ class HomeViewModel(
      */
     val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            emitSource(getFavoriteBangumiList.invoke())
+            emitSource(getFavoriteBangumiList.invoke(10))
         }
 
     /**

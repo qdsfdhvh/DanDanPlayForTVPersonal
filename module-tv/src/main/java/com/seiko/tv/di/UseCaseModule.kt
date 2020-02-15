@@ -10,6 +10,7 @@ val useCaseModule = module {
 
     single { GetBangumiAirDayBeansUseCase() }
     single { GetBangumiDetailsUseCase() }
+    single { GetBangumiFavoriteFixedUseCase() }
     single { GetBangumiFavoriteUseCase() }
     single { GetBangumiHistoryFixedUseCase() }
     single { GetBangumiHistoryUseCase() }

@@ -1,5 +1,6 @@
 package com.seiko.tv.ui.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -31,7 +32,8 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     private fun setupUI() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = false
-        title = getString(R.string.title_area)
+        title = getString(R.string.bangumi_area)
+        brandColor = Color.parseColor("#424242")
         mainFragmentRegistry.registerFragment(SeasonPageRow::class.java, PageRowFragmentFactory())
     }
 
