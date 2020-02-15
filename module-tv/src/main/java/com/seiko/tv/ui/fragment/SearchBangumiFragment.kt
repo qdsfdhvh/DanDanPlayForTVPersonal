@@ -22,6 +22,8 @@ import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
+import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchBangumiFragment : SearchSupportFragment(),
@@ -29,16 +31,25 @@ class SearchBangumiFragment : SearchSupportFragment(),
     SpeechRecognitionCallback,
     OnItemViewClickedListener {
 
+    companion object {
+        private const val ROW_BANGUMI = 100
+        private const val ROW_MAGNET = 200
+
+        private const val REQUEST_SPEECH = 2222
+        private const val REQUEST_TORRENT = 2223
+    }
+
     private val viewModel by viewModel<SearchBangumiViewModel>()
 
-    private var rowsAdapter: ArrayObjectAdapter? = null // ArrayObjectAdapter(ListRowPresenter())
-
-    private lateinit var adapterRows: SparseArray<AnimeRow<*>>
+    private lateinit var rowsAdapter: ArrayObjectAdapter
+    private lateinit var arrayAdapters: SparseArray<ArrayObjectAdapter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
         setupRows()
+        // 测试
+        setSearchQuery("紫罗兰", true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,65 +64,33 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     private fun setupRows() {
-        if (rowsAdapter != null) return
+        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        arrayAdapters = SparseArray(2)
+        createListRow(ROW_BANGUMI, "相关作品")
+        createListRow(ROW_MAGNET, "磁力链接")
 
-        adapterRows = SparseArray(2)
-        adapterRows.put(ROW_BANGUMI, AnimeRow<SearchAnimeDetails>(ROW_BANGUMI)
-            .setDiffCallback(SearchAnimeDetailsDiffCallback())
-            .setAdapter(SearchBangumiPresenter())
-            .setTitle("相关作品"))
-        adapterRows.put(ROW_MAGNET, AnimeRow<SearchMagnetCardView>(ROW_MAGNET)
-            .setAdapter(SearchMagnetPresenter())
-            .setTitle("磁力链接"))
+    }
 
-        // 生成界面的Adapter
-        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        for (i in 0 until adapterRows.size()) {
-            val row = adapterRows.valueAt(i)
-            val headerItem = HeaderItem(row.getId(), row.getTitle())
-            val listRow = ListRow(headerItem, row.getAdapter())
-            rowsAdapter.add(listRow)
-        }
-        this.rowsAdapter = rowsAdapter
+    private fun createListRow(id: Int, title: String) {
+        val presenterSelector = BangumiPresenterSelector()
+        val headerItem = HeaderItem(id.toLong(), title)
+        val objectAdapter = ArrayObjectAdapter(presenterSelector)
+        val listRow = ListRow(headerItem, objectAdapter)
+        rowsAdapter.add(listRow)
+        arrayAdapters.put(id, objectAdapter)
     }
 
     private fun bindViewModel() {
-        viewModel.mainState.observe(this::getLifecycle, this::updateUI)
         viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
         viewModel.magnetList.observe(this::getLifecycle, this::updateMagnetList)
-
-        if (viewModel.mainState.value == null) {
-//            if (!checkPermissions(PERMISSIONS_AUDIO)) {
-//                requestPermissions(PERMISSIONS_AUDIO, REQUEST_ID_AUDIO)
-//            }
-
-            // 测试
-            setSearchQuery("紫罗兰永恒花园", false)
-            search("紫罗兰永恒花园")
-        }
-    }
-
-    private fun updateUI(data: ResultData<Boolean>) {
-        when(data) {
-            is ResultData.Loading -> {
-//                setLoadFragment(true)
-            }
-            is ResultData.Error -> {
-//                setLoadFragment(false)
-                toast(data.exception.toString())
-            }
-            is ResultData.Success -> {
-//                setLoadFragment(false)
-            }
-        }
     }
 
     private fun updateBangumiList(results: List<SearchAnimeDetails>) {
-        adapterRows[ROW_BANGUMI]?.setList(results)
+        arrayAdapters[ROW_BANGUMI]?.setItems(results, SearchAnimeDetailsDiffCallback())
     }
 
     private fun updateMagnetList(results: List<ResMagnetItemEntity>) {
-        adapterRows[ROW_MAGNET]?.setList(results)
+        arrayAdapters[ROW_MAGNET]?.setItems(results, ResMagnetItemDiffCallback())
     }
 
     override fun recognizeSpeech() {
@@ -127,30 +106,12 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     override fun onQueryTextChange(newQuery: String): Boolean {
-//        search(newQuery.trim())
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        search(query.trim())
+        viewModel.keyword.value = query.trim()
         return true
-    }
-
-    private fun search(query: String) {
-        if (viewModel.equalQuery(query)) {
-            return
-        }
-
-        if (query.length < 2) {
-            clearSearchResults()
-            return
-        }
-
-        viewModel.getBangumiListAndMagnetList(query)
-    }
-
-    private fun clearSearchResults() {
-//        rowsAdapter.clear()
     }
 
     /**
@@ -186,24 +147,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     /**
-     * 权限请求回调
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        when(requestCode) {
-//            REQUEST_ID_AUDIO -> {
-//                if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-//                    ToastUtils.showShort("没有语音权限。")
-//                }
-//            }
-//        }
-    }
-
-    /**
      * Activity退栈回调
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -229,20 +172,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    companion object {
-        private const val ROW_BANGUMI = 100
-        private const val ROW_MAGNET = 200
-
-//        private const val REQUEST_ID_AUDIO = 1122
-
-        private const val REQUEST_SPEECH = 2222
-        private const val REQUEST_TORRENT = 2223
-
-//        private val PERMISSIONS_AUDIO = arrayOf(
-//            Manifest.permission.RECORD_AUDIO
-//        )
     }
 
 }

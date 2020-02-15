@@ -12,5 +12,5 @@ internal val dbModule = module {
 }
 
 private fun createAppDatabase(context: Context): AppDatabase {
-    return Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME_DEFAULT).build()
+    return AppDatabase.create(context, DB_NAME_DEFAULT)
 }

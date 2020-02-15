@@ -18,31 +18,35 @@ object Navigator {
      * 跳转到DanDan数据展示页面
      */
     fun navToPlayTV(activity: Activity) {
-//        Timber.d("Navigator - navToPlayTV")
-        ARouter.getInstance().build(Routes.DanDanPlay.PATH_TV).navigation(activity)
+        ARouter.getInstance()
+            .build(Routes.DanDanPlay.PATH_TV)
+            .navigation(activity.baseContext)
     }
 
     /**
      * 跳转种子页面
      */
     fun navToTorrent(activity: Activity, callback: NavigationCallback? = null) {
-        Timber.d("Navigator - navToTorrent")
-        ARouter.getInstance().build(Routes.Torrent.PATH).navigation(activity, callback)
+        ARouter.getInstance()
+            .build(Routes.Torrent.PATH)
+            .navigation(activity.baseContext, callback)
     }
 
     /**
      * 跳转种子信息页面
      */
     fun navToAddTorrent(activity: Activity, uri: Uri) {
-        Timber.d("Navigator - navToAddTorrent")
         val postcard = ARouter.getInstance().build(Routes.Torrent.PATH_ADD)
-        LogisticsCenter.completion(postcard)
 
-        val intent = Intent(activity, postcard.destination)
+        try {
+            LogisticsCenter.completion(postcard)
+        } catch (e: NoRouteFoundException) {
+            return
+        }
+
+        val intent = Intent(activity.baseContext, postcard.destination)
         intent.data = uri
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
-
         activity.startActivity(intent)
     }
 
@@ -52,15 +56,17 @@ object Navigator {
      */
     fun navToAddTorrent(fragment: Fragment, uri: Uri, requestCode: Int) {
         val postcard = ARouter.getInstance().build(Routes.Torrent.PATH_ADD)
-        LogisticsCenter.completion(postcard)
 
-        val intent = Intent(fragment.requireContext(), postcard.destination)
+        try {
+            LogisticsCenter.completion(postcard)
+        } catch (e: NoRouteFoundException) {
+            return
+        }
+
+        val intent = Intent(fragment.requireActivity().baseContext, postcard.destination)
         intent.data = uri
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(postcard.extras)
-
         fragment.startActivityForResult(intent, requestCode)
-        Timber.d("navToAddTorrent")
     }
 
     /**

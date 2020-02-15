@@ -9,7 +9,7 @@ import com.seiko.tv.data.api.model.BangumiDetailsResponse
 import com.seiko.tv.data.api.model.BangumiListResponse
 import com.seiko.tv.data.api.model.BangumiSeasonListResponse
 
-internal class BangumiRepository(
+internal class DanDanApiRepository(
     private val api: DanDanApiService
 )  {
 

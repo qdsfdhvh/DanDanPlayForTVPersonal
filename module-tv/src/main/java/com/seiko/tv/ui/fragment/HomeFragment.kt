@@ -13,24 +13,37 @@ import androidx.navigation.fragment.findNavController
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.common.ui.dialog.DialogSelectFragment
-import com.seiko.tv.ui.presenter.MainAreaPresenter
-import com.seiko.tv.ui.presenter.MainSettingPresenter
-import com.seiko.tv.data.model.AnimeRow
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.toast.toast
+import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : FixBrowseSupportFragment()
     , OnItemViewClickedListener
     , View.OnClickListener {
 
+    companion object {
+        private const val ROW_AREA = 0
+        private const val ROW_FAVORITE = 1
+        private const val ROW_SETTING = 2
+
+        private const val ID_AREA = 0
+        private const val ID_FAVOURITE = 1
+        private const val ID_TIME = 2
+        private const val ID_INDEX = 3
+        private const val ID_SETTING = 4
+        private const val ID_DOWNLOAD = 5
+        private const val ID_HISTORY = 6
+    }
+
     private val viewModel by viewModel<HomeViewModel>()
 
-    private var adapterRows: SparseArray<AnimeRow<*>>? = null
+    private lateinit var rowsAdapter: ArrayObjectAdapter
+    private lateinit var arrayAdapters: SparseArray<ArrayObjectAdapter>
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -38,6 +51,7 @@ class HomeFragment : FixBrowseSupportFragment()
 //            MyBean(ID_FAVOURITE, "追 番", R.drawable.ic_bangumi_favourite),
             HomeSettingBean(ID_TIME, getString(R.string.bangumi_time), R.drawable.ic_bangumi_time),
 //            MyBean(ID_INDEX, "索引", R.drawable.ic_bangumi_index)
+            HomeSettingBean(ID_HISTORY, getString(R.string.bangumi_history), R.drawable.ic_bangumi_history),
             HomeSettingBean(ID_DOWNLOAD, getString(R.string.bangumi_download), R.drawable.ic_bangumi_download),
             HomeSettingBean(ID_SETTING, getString(R.string.bangumi_setting), R.drawable.ic_bangumi_setting)
         )
@@ -48,11 +62,6 @@ class HomeFragment : FixBrowseSupportFragment()
         setupUI()
         setupRows()
         bindViewModel()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        adapterRows = null
     }
 
     /**
@@ -76,33 +85,26 @@ class HomeFragment : FixBrowseSupportFragment()
      * 生成Rows
      */
     private fun setupRows() {
-//        if (adapter != null) return
-        // 生成数据的Adapter
-        adapterRows = SparseArray(3)
-        adapterRows!!.put(ROW_AREA, AnimeRow<HomeImageBean>(ROW_AREA)
-            .setDiffCallback(HomeImageBeanDiffCallback())
-            .setAdapter(MainAreaPresenter())
-            .setTitle(getString(R.string.title_area)))
-        adapterRows!!.put(ROW_FAVORITE, AnimeRow<HomeImageBean>(ROW_FAVORITE)
-            .setDiffCallback(HomeImageBeanDiffCallback())
-            .setAdapter(MainAreaPresenter())
-            .setTitle(getString(R.string.title_favorite)))
-        adapterRows!!.put(ROW_SETTING, AnimeRow<HomeSettingBean>(ROW_SETTING)
-                .setAdapter(MainSettingPresenter())
-                .setTitle(getString(R.string.title_setting)))
-
-        // 生成界面的Adapter
-        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        for (i in 0 until adapterRows!!.size()) {
-            val row = adapterRows!!.valueAt(i)
-            val headerItem = HeaderItem(row.getId(), row.getTitle())
-            val listRow = ListRow(headerItem, row.getAdapter())
-            rowsAdapter.add(listRow)
-        }
-
+        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        arrayAdapters = SparseArray(3)
+        // 今日更新
+        createListRow(ROW_AREA, getString(R.string.title_area))
+        // 我的收藏
+        createListRow(ROW_FAVORITE, getString(R.string.title_favorite))
+        // 工具中心
+        createListRow(ROW_SETTING, getString(R.string.title_setting))
         // 绑定Adapter
         adapter = rowsAdapter
         onItemViewClickedListener = this
+    }
+
+    private fun createListRow(id: Int, title: String) {
+        val presenterSelector = BangumiPresenterSelector()
+        val headerItem = HeaderItem(id.toLong(), title)
+        val objectAdapter = ArrayObjectAdapter(presenterSelector)
+        val listRow = ListRow(headerItem, objectAdapter)
+        rowsAdapter.add(listRow)
+        arrayAdapters.put(id, objectAdapter)
     }
 
     /**
@@ -110,13 +112,13 @@ class HomeFragment : FixBrowseSupportFragment()
      */
     private fun bindViewModel() {
         viewModel.todayBangumiList.observe(this::getLifecycle) { bangumiList ->
-            adapterRows?.get(ROW_AREA)?.setList(bangumiList)
+            arrayAdapters.get(ROW_AREA)?.setItems(bangumiList, HomeImageBeanDiffCallback())
         }
         viewModel.favoriteBangumiList.observe(this::getLifecycle) { favorites ->
-            adapterRows?.get(ROW_FAVORITE)?.setList(favorites)
+            arrayAdapters.get(ROW_FAVORITE)?.setItems(favorites, HomeImageBeanDiffCallback())
         }
         // 加载个人数据
-        adapterRows?.get(ROW_SETTING)?.setList(leftItems)
+        arrayAdapters.get(ROW_SETTING)?.setItems(leftItems, null)
     }
 
     /**
@@ -157,6 +159,11 @@ class HomeFragment : FixBrowseSupportFragment()
                             HomeFragmentDirections.actionHomeFragmentToBangumiTimeLineFragment()
                         )
                     }
+                    ID_HISTORY -> {
+                        findNavController().navigate(
+                            HomeFragmentDirections.actionHomeFragmentToBangumiHistoryFragment()
+                        )
+                    }
                     ID_DOWNLOAD -> {
                         Navigator.navToTorrent(requireActivity())
                     }
@@ -183,18 +190,5 @@ class HomeFragment : FixBrowseSupportFragment()
                 .build()
                 .show(childFragmentManager)
         }
-    }
-
-    companion object {
-        private const val ROW_AREA = 0
-        private const val ROW_FAVORITE = 1
-        private const val ROW_SETTING = 2
-
-        private const val ID_AREA = 0
-        private const val ID_FAVOURITE = 1
-        private const val ID_TIME = 2
-        private const val ID_INDEX = 3
-        private const val ID_SETTING = 4
-        private const val ID_DOWNLOAD = 5
     }
 }

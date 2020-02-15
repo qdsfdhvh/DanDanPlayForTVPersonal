@@ -1,21 +1,14 @@
-package com.seiko.tv.domain
+package com.seiko.tv.domain.bangumi
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import androidx.paging.*
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.common.data.Result
 import com.seiko.tv.data.comments.BangumiDetailsRepository
-import com.seiko.tv.data.comments.BangumiRepository
-import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.util.toHomeImageBean
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class GetFavoriteBangumiListUseCase : KoinComponent {
+class GetBangumiFavoriteUseCase : KoinComponent {
 
     private val detailsRepo: BangumiDetailsRepository by inject()
 

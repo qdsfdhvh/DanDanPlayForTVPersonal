@@ -6,10 +6,10 @@ import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.seiko.tv.ui.presenter.MainAreaPresenter
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
@@ -45,27 +45,12 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
 //        viewModel.getBangumiList(false)
     }
 
-//    private fun updateUI(data: ResultData<List<AirDayBangumiBean>>) {
-//        when (data.responseType) {
-//            Status.LOADING -> {
-//                setLoadFragment(true)
-//            }
-//            Status.ERROR -> {
-//                setLoadFragment(false)
-//                toast(data.error.toString())
-//            }
-//            Status.SUCCESSFUL -> {
-//                setLoadFragment(false)
-//                updateAirDayBangumiList(data.data ?: return)
-//            }
-//        }
-//    }
-
     private fun updateAirDayBangumiList(list: List<AirDayBangumiBean>) {
         var areaAdapter: ArrayObjectAdapter
         var headerItem: HeaderItem
         val rows = list.map { airDay ->
-            areaAdapter = ArrayObjectAdapter(MainAreaPresenter())
+            val presenterSelector = BangumiPresenterSelector()
+            areaAdapter = ArrayObjectAdapter(presenterSelector)
             headerItem = HeaderItem(airDay.id.toLong(), getWeekName(airDay.id))
             areaAdapter.addAll(0, airDay.bangumiList)
             ListRow(headerItem, areaAdapter)

@@ -27,6 +27,7 @@ import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.BangumiIntroEntity
+import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -175,7 +176,7 @@ class BangumiAreaFragment : Fragment(),
     /**
      * 加载动漫合集
      */
-    private fun updateBangumiList(data: ResultData<List<BangumiIntroEntity>>) {
+    private fun updateBangumiList(data: ResultData<List<HomeImageBean>>) {
         when(data) {
             is ResultData.Loading -> {
                 binding.progress.visibility = View.VISIBLE

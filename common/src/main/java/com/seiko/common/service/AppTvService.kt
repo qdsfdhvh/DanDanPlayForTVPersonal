@@ -1,6 +1,5 @@
 package com.seiko.common.service
 
-import android.content.Context
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.router.Routes

@@ -6,11 +6,11 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.navArgs
-import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.tv.ui.presenter.SearchMagnetPresenter
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.data.ResultData
@@ -19,36 +19,49 @@ import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
+import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScope(),
+class SearchMagnetFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
     SpeechRecognitionCallback,
     OnItemViewClickedListener {
+
+    companion object {
+        private const val ROW_MAGNET = 200
+
+        private const val REQUEST_ID_AUDIO = 1122
+
+        private const val REQUEST_SPEECH = 2222
+        private const val REQUEST_TORRENT = 2223
+
+        private val PERMISSIONS_AUDIO = arrayOf(
+            Manifest.permission.RECORD_AUDIO
+        )
+    }
 
     private val args by navArgs<SearchMagnetFragmentArgs>()
 
     private val viewModel by viewModel<SearchMagnetViewModel>()
 
-    private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+    private lateinit var rowsAdapter: ArrayObjectAdapter
+    private lateinit var arrayAdapters: SparseArray<ArrayObjectAdapter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
+        setupRows()
+        setSearchQuery(args.keyword, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-    }
-
-    override fun onDestroy() {
-        cancel()
-        super.onDestroy()
     }
 
     private fun setupUI() {
@@ -57,44 +70,30 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
         setSpeechRecognitionCallback(this)
     }
 
+    private fun setupRows() {
+        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        arrayAdapters = SparseArray(1)
+        createListRow(ROW_MAGNET, "磁力链接")
+    }
+
+    private fun createListRow(id: Int, title: String) {
+        val presenterSelector = BangumiPresenterSelector()
+        val headerItem = HeaderItem(id.toLong(), title)
+        val objectAdapter = ArrayObjectAdapter(presenterSelector)
+        val listRow = ListRow(headerItem, objectAdapter)
+        rowsAdapter.add(listRow)
+        arrayAdapters.put(id, objectAdapter)
+    }
+
     private fun loadData() {
-        viewModel.mainState.observe(this::getLifecycle, this::updateUI)
-        if (viewModel.mainState.value == null) {
-            if (!checkPermissions(PERMISSIONS_AUDIO)) {
-                requestPermissions(PERMISSIONS_AUDIO, REQUEST_ID_AUDIO)
-            }
-            setSearchQuery(args.keyword, false)
-        }
+        viewModel.magnetList.observe(this::getLifecycle, this::updateResults)
     }
 
     /**
      * 加载磁力搜索结果
      */
-    private fun updateUI(data: ResultData<List<ResMagnetItemEntity>>) {
-        when(data) {
-            is ResultData.Loading -> {
-//                setLoadFragment(true)
-            }
-            is ResultData.Error -> {
-//                setLoadFragment(false)
-                toast(data.exception.toString())
-            }
-            is ResultData.Success -> {
-//                setLoadFragment(false)
-                updateResults(data.data)
-            }
-        }
-    }
-
     private fun updateResults(magnets: List<ResMagnetItemEntity>) {
-        val magnetAdapter = ArrayObjectAdapter(SearchMagnetPresenter())
-        magnetAdapter.addAll(0, magnets)
-        val headerItem = HeaderItem("搜索结果")
-        if (rowsAdapter.size() > 0) {
-            rowsAdapter.replace(0, ListRow(headerItem, magnetAdapter))
-        } else {
-            rowsAdapter.add(ListRow(headerItem, magnetAdapter))
-        }
+        arrayAdapters[ROW_MAGNET].setItems(magnets, ResMagnetItemDiffCallback())
     }
 
     override fun recognizeSpeech() {
@@ -110,39 +109,22 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
     }
 
     override fun onQueryTextChange(newQuery: String): Boolean {
-        search(newQuery.trim())
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        search(query.trim())
+        viewModel.keyword.value = query.trim()
         return true
-    }
-
-    private fun search(query: String) {
-        if (viewModel.equalQuery(query)) {
-            return
-        }
-
-        if (query.length < 2) {
-            clearSearchResults()
-            return
-        }
-
-        viewModel.getMagnetListWithSearch(query)
-    }
-
-    private fun clearSearchResults() {
-        rowsAdapter.clear()
     }
 
     /**
      * 点击：磁力
      */
-    override fun onItemClicked(holder: Presenter.ViewHolder,
-                               item: Any?,
-                               rowHolder: RowPresenter.ViewHolder?,
-                               row: Row?
+    override fun onItemClicked(
+        holder: Presenter.ViewHolder,
+        item: Any?,
+        rowHolder: RowPresenter.ViewHolder?,
+        row: Row?
     ) {
         when(item) {
             is ResMagnetItemEntity -> {
@@ -202,15 +184,4 @@ class SearchMagnetFragment : SearchSupportFragment(), CoroutineScope by MainScop
         }
     }
 
-    companion object {
-        private const val REQUEST_ID_AUDIO = 1122
-
-        private const val REQUEST_SPEECH = 2222
-        private const val REQUEST_TORRENT = 2223
-
-        private val PERMISSIONS_AUDIO = arrayOf(
-            Manifest.permission.RECORD_AUDIO
-        )
-
-    }
 }

@@ -1,12 +1,8 @@
 package com.seiko.tv.vm
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.seiko.tv.domain.SaveMagnetInfoUseCase
-import com.seiko.common.data.ResultLiveData
 import com.seiko.common.data.ResultData
 import com.seiko.tv.domain.search.SearchBangumiListUseCase
 import com.seiko.tv.domain.search.SearchMagnetListUseCase
@@ -17,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SearchBangumiViewModel(
     private val searchBangumiList: SearchBangumiListUseCase,
@@ -24,59 +21,38 @@ class SearchBangumiViewModel(
     private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : ViewModel() {
 
-    private val _mainState = ResultLiveData<Boolean>()
-    val mainState: LiveData<ResultData<Boolean>> = _mainState
+    /**
+     * 搜索关键字
+     */
+    val keyword = MutableLiveData<String>()
+    private val changeKeyword = keyword.distinctUntilChanged()
 
-    private val _bangumiList = MutableLiveData<List<SearchAnimeDetails>>()
-    val bangumiList: LiveData<List<SearchAnimeDetails>> = _bangumiList
+    /**
+     * 动漫结果
+     */
+    val bangumiList: LiveData<List<SearchAnimeDetails>> = changeKeyword.switchMap { keyword ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = searchBangumiList.invoke(keyword, "")) {
+                is Result.Error -> Timber.e(result.exception)
+                is Result.Success ->  emit(result.data)
+            }
+        }
+    }
 
-    private val _magnetList = MutableLiveData<List<ResMagnetItemEntity>>()
-    val magnetList: LiveData<List<ResMagnetItemEntity>> = _magnetList
-
-    // 上一次搜搜的关键字
-    private var query = ""
+    /**
+     * 磁力结果
+     */
+    val magnetList: LiveData<List<ResMagnetItemEntity>> = changeKeyword.switchMap { keyword ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = searchMagnetList.invoke(keyword, -1, -1)) {
+                is Result.Error -> Timber.e(result.exception)
+                is Result.Success ->  emit(result.data)
+            }
+        }
+    }
 
     // 当前点击的Magnet信息
     private var currentMagnetItem: ResMagnetItemEntity? = null
-
-    /**
-     * 搜索番剧和磁力链接
-     * @param keyword 关键字
-     */
-    fun getBangumiListAndMagnetList(keyword: String) = viewModelScope.launch {
-        query = keyword
-        _mainState.showLoading()
-
-        val defer1 = async(Dispatchers.IO) { searchBangumiList.invoke(keyword, "") }
-        val defer2 = async(Dispatchers.IO) { searchMagnetList.invoke(keyword, -1, -1) }
-        val result1 = defer1.await()
-        val result2 = defer2.await()
-
-        delay(200)
-
-        var error: Exception? = null
-        when(result1) {
-            is Result.Error -> error = result1.exception
-            is Result.Success -> _bangumiList.value = result1.data
-        }
-        when(result2) {
-            is Result.Error -> error = result2.exception
-            is Result.Success -> _magnetList.value = result2.data
-        }
-
-        if (error != null) {
-            _mainState.failed(error)
-        } else {
-            _mainState.success(true)
-        }
-    }
-
-    /**
-     * 关键字是否有变化
-     */
-    fun equalQuery(query: String): Boolean  {
-        return this.query == query
-    }
 
     /**
      * 选择当前的Magnet信息
@@ -100,4 +76,5 @@ class SearchBangumiViewModel(
         val item = currentMagnetItem ?: return@launch
         saveMagnetInfo.invoke(item, hash, animeId, episodeId)
     }
+
 }

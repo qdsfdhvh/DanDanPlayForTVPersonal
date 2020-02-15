@@ -1,11 +1,8 @@
 package com.seiko.tv.vm
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.seiko.tv.domain.SaveMagnetInfoUseCase
-import com.seiko.common.data.ResultLiveData
 import com.seiko.common.data.ResultData
 import com.seiko.tv.domain.search.SearchMagnetListUseCase
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
@@ -13,44 +10,33 @@ import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class SearchMagnetViewModel(
     private val searchMagnetList: SearchMagnetListUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : ViewModel() {
 
-    private val _mainState =
-        ResultLiveData<List<ResMagnetItemEntity>>()
-    val mainState: LiveData<ResultData<List<ResMagnetItemEntity>>> = _mainState
+    /**
+     * 搜索关键字
+     */
+    val keyword = MutableLiveData<String>()
+    private val changeKeyword = keyword.distinctUntilChanged()
 
-    // 上一次搜索的关键字
-    private var query = ""
+    /**
+     * 磁力结果
+     */
+    val magnetList: LiveData<List<ResMagnetItemEntity>> = changeKeyword.switchMap { keyword ->
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = searchMagnetList.invoke(keyword, -1, -1)) {
+                is Result.Error -> Timber.e(result.exception)
+                is Result.Success ->  emit(result.data)
+            }
+        }
+    }
 
     // 当前点击的Magnet信息
     private var currentMagnetItem: ResMagnetItemEntity? = null
-
-    /**
-     * 搜索磁力链接
-     * @param keyword 关键字
-     */
-    fun getMagnetListWithSearch(keyword: String) = viewModelScope.launch {
-        query = keyword
-        _mainState.showLoading()
-        val result = withContext(Dispatchers.IO) {
-            searchMagnetList.invoke(keyword, -1, -1)
-        }
-        when(result) {
-            is Result.Error -> _mainState.failed(result.exception)
-            is Result.Success -> _mainState.success(result.data)
-        }
-    }
-
-    /**
-     * 关键字是否有变化
-     */
-    fun equalQuery(query: String): Boolean  {
-        return this.query == query
-    }
 
     /**
      * 选择当前的Magnet信息

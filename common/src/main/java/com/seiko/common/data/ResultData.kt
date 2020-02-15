@@ -1,7 +1,5 @@
 package com.seiko.common.data
 
-import androidx.lifecycle.MutableLiveData
-
 /**
  * A generic wrapper class around data request
  */
@@ -17,20 +15,4 @@ sealed class ResultData<out T : Any> {
             is Error -> "Error[exception=$exception]"
         }
     }
-}
-
-class ResultLiveData< T: Any> : MutableLiveData<ResultData<T>>() {
-
-    fun showLoading() {
-        value = ResultData.Loading()
-    }
-
-    fun success(data: T) {
-        value = ResultData.Success(data)
-    }
-
-    fun failed(error: Exception?) {
-        value = ResultData.Error(error)
-    }
-
 }

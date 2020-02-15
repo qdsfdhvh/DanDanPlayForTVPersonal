@@ -12,13 +12,11 @@ import androidx.palette.graphics.Palette
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
-import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.ui.presenter.*
 import com.seiko.tv.vm.BangumiDetailViewModel
-import com.seiko.common.data.ResultData
-import com.seiko.common.ui.dialog.setLoadFragment
-import com.seiko.common.util.toast.toast
+import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -39,10 +37,10 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     private val args by navArgs<BangumiDetailsFragmentArgs>()
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
-    private var mPresenterSelector: ClassPresenterSelector? = null
-    private var mAdapter: ArrayObjectAdapter? = null
-    private var mActionAdapter: ArrayObjectAdapter? = null
-    private var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter? = null
+    private lateinit var mPresenterSelector: ClassPresenterSelector
+    private lateinit var mAdapter: ArrayObjectAdapter
+    private lateinit var mActionAdapter: ArrayObjectAdapter
+    private lateinit var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter
 
     private var mDetailsOverviewPrevState = -1
     private var searchKeyWord = ""
@@ -61,11 +59,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     override fun onDestroyView() {
         super.onDestroyView()
         onItemViewClickedListener = null
-        mPresenterSelector = null
-        mAdapter = null
-        mActionAdapter = null
-        mDetailsOverviewPrevState = mDescriptionRowPresenter?.mPreviousState ?: -1
-        mDescriptionRowPresenter = null
+        mDetailsOverviewPrevState = mDescriptionRowPresenter.mPreviousState
         cancel()
     }
 
@@ -77,6 +71,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this
         adapter = mAdapter
+        prepareEntranceTransition()
     }
 
     /**
@@ -86,25 +81,6 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         viewModel.bangumiDetailsAndPalette.observe(this::getLifecycle, this::updateDetails)
         viewModel.animeId.value = args.animeId
     }
-
-//    /**
-//     * 加载'动漫详情'数据
-//     */
-//    private fun updateUI(data: ResultData<Pair<BangumiDetailsEntity, Palette?>>) {
-//        when(data) {
-//            is ResultData.Loading -> {
-//                setLoadFragment(true)
-//            }
-//            is ResultData.Error -> {
-//                setLoadFragment(false)
-//                toast(data.exception.toString())
-//            }
-//            is ResultData.Success -> {
-//                setLoadFragment(false)
-//                updateDetails(data.data)
-//            }
-//        }
-//    }
 
     /**
      * 更新动漫详情
@@ -116,10 +92,11 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         setupDetailsOverviewRowPresenter(palette)
         setupDetailsOverviewRow(details)
         setupEpisodesRows(details.episodes)
-        setupRelatedsRows(details.relateds)
-        setupSimilarsRows(details.similars)
+        setupRelatedsRows(details.relateds.map { it.toHomeImageBean() })
+        setupSimilarsRows(details.similars.map { it.toHomeImageBean() })
         prepareEntranceTransition()
         searchKeyWord = details.searchKeyword
+        startEntranceTransition()
     }
 
     /**
@@ -129,20 +106,20 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         val logoPresenter = CustomDetailsOverviewLogoPresenter()
         val descriptionPresenter = CustomDetailsDescriptionPresenter()
         mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
-        mDescriptionRowPresenter!!.setViewHolderState(mDetailsOverviewPrevState)
-        mDescriptionRowPresenter!!.onActionClickedListener = this@BangumiDetailsFragment
+        mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
+        mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
         val swatch = palette?.darkMutedSwatch
         if (swatch != null) {
             descriptionPresenter.setColor(swatch.titleTextColor, swatch.bodyTextColor)
-            mDescriptionRowPresenter!!.backgroundColor = swatch.rgb
+            mDescriptionRowPresenter.backgroundColor = swatch.rgb
             val hsv = FloatArray(3)
             val color = swatch.rgb
             Color.colorToHSV(color, hsv)
             hsv[2] *= 0.8f
-            mDescriptionRowPresenter!!.actionsBackgroundColor = Color.HSVToColor(hsv)
-            mAdapter!!.notifyItemRangeChanged(0, 1)
+            mDescriptionRowPresenter.actionsBackgroundColor = Color.HSVToColor(hsv)
+//            mAdapter!!.notifyItemRangeChanged(0, 1)
         }
-        mPresenterSelector!!.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
+        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
     }
 
     /**
@@ -153,11 +130,11 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         detailsOverviewRow.setImageBitmap(requireActivity(), null)
         detailsOverviewRow.isImageScaleUpAllowed = true
         mActionAdapter = ArrayObjectAdapter()
-        mActionAdapter!!.add(
+        mActionAdapter.add(
             Action(ID_RATING, "评分:${details.rating}", null,
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_rating))
         )
-        mActionAdapter!!.add(
+        mActionAdapter.add(
             if (details.isFavorited) {
                 Action(ID_FAVOURITE, "已收藏", null,
                     ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full))
@@ -167,7 +144,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
             }
         )
         detailsOverviewRow.actionsAdapter = mActionAdapter
-        mAdapter!!.add(detailsOverviewRow)
+        mAdapter.add(detailsOverviewRow)
     }
 
     /**
@@ -175,37 +152,40 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
      */
     private fun setupEpisodesRows(episodes: List<BangumiEpisodeEntity>) {
         if (episodes.isNotEmpty()) {
-            val episodesAdapter = ArrayObjectAdapter(BangumiEpisodePresenter())
+            val presenterSelector = BangumiPresenterSelector()
+            val episodesAdapter = ArrayObjectAdapter(presenterSelector)
             episodesAdapter.addAll(0, episodes)
             val header = HeaderItem(0, "分集")
-            mAdapter!!.add(EpisodesListRow(header, episodesAdapter))
-            mPresenterSelector!!.addClassPresenter(EpisodesListRow::class.java, EpisodesListRowPresenter(0))
+            mAdapter.add(EpisodesListRow(header, episodesAdapter))
+            mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
         }
     }
 
     /**
      * 添加 其他系列
      */
-    private fun setupRelatedsRows(relateds: List<BangumiIntroEntity>) {
+    private fun setupRelatedsRows(relateds: List<HomeImageBean>) {
         if (relateds.isNotEmpty()) {
-            val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
+            val presenterSelector = BangumiPresenterSelector()
+            val relatedAdapter = ArrayObjectAdapter(presenterSelector)
             relatedAdapter.addAll(0, relateds)
             val header = HeaderItem(0, "其他系列")
-            mAdapter!!.add(ListRow(header, relatedAdapter))
-            mPresenterSelector!!.addClassPresenter(ListRow::class.java, ListRowPresenter())
+            mAdapter.add(ListRow(header, relatedAdapter))
+            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
     }
 
     /**
      * 添加 相似作品
      */
-    private fun setupSimilarsRows(similars: List<BangumiIntroEntity>) {
+    private fun setupSimilarsRows(similars: List<HomeImageBean>) {
         if (similars.isNotEmpty()) {
-            val relatedAdapter = ArrayObjectAdapter(BangumiRelatedPresenter())
+            val presenterSelector = BangumiPresenterSelector()
+            val relatedAdapter = ArrayObjectAdapter(presenterSelector)
             relatedAdapter.addAll(0, similars)
             val header = HeaderItem(0, "相似作品")
-            mAdapter!!.add(ListRow(header, relatedAdapter))
-            mPresenterSelector!!.addClassPresenter(ListRow::class.java, ListRowPresenter())
+            mAdapter.add(ListRow(header, relatedAdapter))
+            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
     }
 
@@ -225,8 +205,8 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
                         action.label1 = "未收藏"
                         action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty)
                     }
-                    val index = mActionAdapter!!.indexOf(action)
-                    mActionAdapter!!.notifyItemRangeChanged(index, 1)
+                    val index = mActionAdapter.indexOf(action)
+                    mActionAdapter.notifyItemRangeChanged(index, 1)
                 }
             }
         }
@@ -240,12 +220,13 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         when(item) {
             is BangumiEpisodeEntity -> {
                 val keyword = viewModel.getSearchKey(searchKeyWord, item)
+
                 val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
                 action.animeId = args.animeId
                 action.episodeId = item.episodeId
                 findNavController().navigate(action)
             }
-            is BangumiIntroEntity -> {
+            is HomeImageBean -> {
                 findNavController().navigate(
                     BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(
                         item.animeId

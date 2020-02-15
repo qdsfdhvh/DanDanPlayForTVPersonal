@@ -3,30 +3,31 @@ package com.seiko.tv.vm
 import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.seiko.tv.domain.bangumi.GetBangumiAirDayBeansUseCase
-import com.seiko.tv.domain.GetFavoriteBangumiListUseCase
+import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.common.data.Result
-import com.seiko.tv.data.db.model.BangumiDetailsEntity
+import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(
     private val getWeekBangumiList: GetBangumiAirDayBeansUseCase,
-    private val getFavoriteBangumiList: GetFavoriteBangumiListUseCase
+    private val getFavoriteBangumiList: GetBangumiFavoriteUseCase,
+    private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ): ViewModel() {
 
     /**
      * 每周更新
      */
-    val weekBangumiList: LiveData<List<AirDayBangumiBean>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-        when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
-            is Result.Success -> emit(result.data)
-            is Result.Error -> Timber.w(result.exception)
+    val weekBangumiList: LiveData<List<AirDayBangumiBean>> =
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
+                is Result.Success -> emit(result.data)
+                is Result.Error -> Timber.w(result.exception)
+            }
         }
-    }
 
     /**
      * 今日更新
@@ -41,9 +42,18 @@ class HomeViewModel(
     /**
      * 我的收藏
      */
-    val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-        emitSource(getFavoriteBangumiList.invoke())
-    }
+    val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            emitSource(getFavoriteBangumiList.invoke())
+        }
+
+    /**
+     * 我的历史
+     */
+    val historyBangumiList: LiveData<PagedList<HomeImageBean>> =
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            emitSource(getBangumiHistoryList.invoke())
+        }
 
     /**
      * 今天周几

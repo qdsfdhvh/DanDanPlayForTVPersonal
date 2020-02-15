@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 
-class MainAreaPresenter : BasePresenter() {
+class HomeImageBeanPresenter : BasePresenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = MainAreaCardView(parent.context)

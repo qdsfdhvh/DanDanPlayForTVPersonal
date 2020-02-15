@@ -28,6 +28,7 @@
         <!--主界面-->
         <activity android:name=".SplashActivity"
             android:theme="@style/SplashTheme"
+            android:exported="true"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

@@ -5,7 +5,7 @@ import androidx.leanback.widget.Presenter
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.tv.ui.card.MainMyCardView
 
-class MainSettingPresenter : Presenter() {
+class HomeSettingBeanPresenter : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = MainMyCardView(parent.context)

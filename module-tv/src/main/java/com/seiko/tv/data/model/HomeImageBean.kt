@@ -5,4 +5,13 @@ data class HomeImageBean(
     val animeTitle: String,
     val imageUrl: String,
     val status: String
-)
+) {
+    override fun toString(): String {
+        return "HomeImageBean{" +
+                "animeId='" + animeId + "'" +
+                ",animeTitle='" + animeTitle + "'" +
+                ",imageUrl='" + imageUrl + "'" +
+                ",status='" + status + "'" +
+                "}"
+    }
+}

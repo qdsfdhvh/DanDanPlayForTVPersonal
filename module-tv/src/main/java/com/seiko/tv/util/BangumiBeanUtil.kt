@@ -2,6 +2,7 @@ package com.seiko.tv.util
 
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
+import com.seiko.tv.data.db.model.BangumiHistoryEntity
 import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 
@@ -10,23 +11,8 @@ fun BangumiDetailsEntity.toHomeImageBean(): HomeImageBean {
         animeId = animeId,
         animeTitle = animeTitle,
         imageUrl = imageUrl,
-        status = getBangumiStatus()
+        status = getBangumiStatus(isOnAir, episodes.size, airDay)
     )
-}
-
-fun BangumiDetailsEntity.getBangumiStatus(): String {
-    if (!isOnAir) return "已完结 · ${episodes.size}话全"
-    val onAirDay = when(airDay) {
-        0 -> "每周日更新"
-        1 -> "每周一更新"
-        2 -> "每周二更新"
-        3 -> "每周三更新"
-        4 -> "每周四更新"
-        5 -> "每周五更新"
-        6 -> "每周六更新"
-        else -> "更新时间未知"
-    }
-    return "连载中 · $onAirDay"
 }
 
 fun BangumiIntroEntity.toHomeImageBean(): HomeImageBean {
@@ -34,12 +20,24 @@ fun BangumiIntroEntity.toHomeImageBean(): HomeImageBean {
         animeId = animeId,
         animeTitle = animeTitle,
         imageUrl = imageUrl,
-        status = getBangumiStatus()
+        status = getBangumiStatus(isOnAir, 0, airDay)
     )
 }
 
-fun BangumiIntroEntity.getBangumiStatus(): String {
-    if (!isOnAir) return "已完结"
+fun BangumiHistoryEntity.toHomeImageBean(): HomeImageBean {
+    return HomeImageBean(
+        animeId = animeId,
+        animeTitle = animeTitle,
+        imageUrl = imageUrl,
+        status = getBangumiStatus(isOnAir, 0, airDay)
+    )
+}
+
+private fun getBangumiStatus(isOnAir: Boolean, episodesList: Int, airDay: Int): String {
+    if (!isOnAir) {
+        return if (episodesList > 0) "已完结 · ${episodesList}话全" else "已完结"
+    }
+
     val onAirDay = when(airDay) {
         0 -> "每周日更新"
         1 -> "每周一更新"
