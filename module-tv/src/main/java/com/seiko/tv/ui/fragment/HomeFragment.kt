@@ -2,12 +2,11 @@ package com.seiko.tv.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.View
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.leanback.app.FixBrowseSupportFragment
+import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.seiko.tv.R
@@ -18,11 +17,14 @@ import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
+import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import org.koin.android.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
-class HomeFragment : FixBrowseSupportFragment()
+class HomeFragment : BrowseSupportFragment()
     , OnItemViewClickedListener
     , View.OnClickListener {
 
@@ -35,7 +37,7 @@ class HomeFragment : FixBrowseSupportFragment()
         private const val ID_AREA = 0
         private const val ID_FAVOURITE = 1
         private const val ID_TIME = 2
-        private const val ID_INDEX = 3
+//        private const val ID_INDEX = 3
         private const val ID_SETTING = 4
         private const val ID_DOWNLOAD = 5
         private const val ID_HISTORY = 6
@@ -44,7 +46,7 @@ class HomeFragment : FixBrowseSupportFragment()
     private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    private lateinit var arrayAdapters: SparseArray<ArrayObjectAdapter>
+
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -57,10 +59,14 @@ class HomeFragment : FixBrowseSupportFragment()
         )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setupUI()
         setupRows()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         bindViewModel()
     }
 
@@ -81,49 +87,50 @@ class HomeFragment : FixBrowseSupportFragment()
         requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
     }
 
+    private lateinit var settingAdapter: ArrayObjectAdapter
+    private lateinit var areaAdapter: AsyncObjectAdapter<HomeImageBean>
+    private lateinit var favoriteAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+    private lateinit var historyAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+
     /**
      * 生成Rows
      */
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        arrayAdapters = SparseArray(4)
+
+        val presenterSelector = BangumiPresenterSelector()
+        val homeImageBeanDiffCallback = HomeImageBeanDiffCallback()
         // 工具中心
-        createListRow(ROW_SETTING, getString(R.string.title_setting))
+        settingAdapter = ArrayObjectAdapter(presenterSelector)
+        settingAdapter.setItems(leftItems, null)
+        createListRow(ROW_SETTING, getString(R.string.title_setting), settingAdapter)
         // 今日更新
-        createListRow(ROW_AREA, getString(R.string.title_area))
+        areaAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        createListRow(ROW_AREA, getString(R.string.title_area), areaAdapter)
         // 我的收藏
-        createListRow(ROW_FAVORITE, getString(R.string.title_favorite))
+        favoriteAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        createListRow(ROW_FAVORITE, getString(R.string.title_favorite), favoriteAdapter)
         // 浏览历史
-        createListRow(ROW_HISTORY, getString(R.string.title_history))
+        historyAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        createListRow(ROW_HISTORY, getString(R.string.title_history), historyAdapter)
         // 绑定Adapter
         adapter = rowsAdapter
         onItemViewClickedListener = this
     }
 
-    private fun createListRow(id: Int, title: String) {
-        val presenterSelector = BangumiPresenterSelector()
+    private fun  createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
         val headerItem = HeaderItem(id.toLong(), title)
-        val objectAdapter = ArrayObjectAdapter(presenterSelector)
         val listRow = ListRow(headerItem, objectAdapter)
         rowsAdapter.add(listRow)
-        arrayAdapters.put(id, objectAdapter)
     }
 
     /**
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.todayBangumiList.observe(this::getLifecycle) { bangumiList ->
-            arrayAdapters.get(ROW_AREA)?.setItems(bangumiList, HomeImageBeanDiffCallback())
-        }
-        viewModel.favoriteBangumiList.observe(this::getLifecycle) { favoriteList ->
-            arrayAdapters.get(ROW_FAVORITE)?.setItems(favoriteList, HomeImageBeanDiffCallback())
-        }
-        viewModel.historyBangumiList.observe(this::getLifecycle) { historyList ->
-            arrayAdapters.get(ROW_HISTORY)?.setItems(historyList, HomeImageBeanDiffCallback())
-        }
-        // 加载个人数据
-        arrayAdapters.get(ROW_SETTING)?.setItems(leftItems, null)
+        viewModel.todayBangumiList.observe(this::getLifecycle, areaAdapter::submitList)
+        viewModel.favoriteBangumiList.observe(this::getLifecycle, favoriteAdapter::submitList)
+        viewModel.historyBangumiList.observe(this::getLifecycle, historyAdapter::submitList)
     }
 
     /**
@@ -178,6 +185,7 @@ class HomeFragment : FixBrowseSupportFragment()
                         )
                     }
                     ID_DOWNLOAD -> {
+                        Timber.tag("Navigator").d("home click")
                         Navigator.navToTorrent(requireActivity())
                     }
                     ID_SETTING -> {

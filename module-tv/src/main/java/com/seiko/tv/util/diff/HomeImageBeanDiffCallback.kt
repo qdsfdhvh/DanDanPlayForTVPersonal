@@ -13,11 +13,13 @@ class HomeImageBeanDiffCallback : DiffCallback<HomeImageBean>() {
     }
 
     override fun areItemsTheSame(oldItem: HomeImageBean, newItem: HomeImageBean): Boolean {
-        return oldItem.animeId.compareTo(newItem.animeId) == 0
+        return oldItem.animeId == newItem.animeId
     }
 
     override fun areContentsTheSame(oldItem: HomeImageBean, newItem: HomeImageBean): Boolean {
-        return oldItem == newItem
+        return oldItem.animeTitle == newItem.animeTitle
+                && oldItem.imageUrl == newItem.imageUrl
+                && oldItem.status == newItem.status
     }
 
     override fun getChangePayload(oldItem: HomeImageBean, newItem: HomeImageBean): Any? {

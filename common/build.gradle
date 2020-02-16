@@ -17,6 +17,8 @@ dependencies {
     api dependence.libFragmentKtx
     api dependence.libLivedata
     api dependence.libLivedataKtx
+    api dependence.libPaging
+    api dependence.libPagingKtx
 
     // Log
     api 'com.jakewharton.timber:timber:4.7.1'

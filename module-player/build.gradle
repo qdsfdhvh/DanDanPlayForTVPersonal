@@ -34,7 +34,6 @@ dependencies {
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
     // AppCompat
-    implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha04"
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.11.1'

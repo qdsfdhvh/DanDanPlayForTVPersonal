@@ -34,17 +34,20 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
 
     private val adapter by lazyAndroid { TorrentDetailFilesAdapter() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.tag("Navigator").d("TorrentDetailFilesFragment - onStart")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Timber.tag("Navigator").d("TorrentDetailFilesFragment - onCreateView")
         binding = TorrentFragmentDetailFileBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.tag("Navigator").d("TorrentDetailFilesFragment - onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
     }

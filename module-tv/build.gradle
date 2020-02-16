@@ -32,9 +32,6 @@ dependencies {
     implementation dependence.libNavigationFragmentKtx
     implementation dependence.libNavigationUiKtx
 
-    implementation dependence.libPaging
-    implementation dependence.libPagingKtx
-
     // Image
     // 2.0.0 CloseableReference: Finalized without closing
     // @see https://github.com/facebook/fresco/issues/2445

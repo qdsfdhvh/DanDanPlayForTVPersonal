@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
-import androidx.leanback.app.FixDetailsSupportFragment
+import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,15 +19,11 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.*
 import com.seiko.tv.vm.BangumiDetailViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class BangumiDetailsFragment : FixDetailsSupportFragment()
-    , CoroutineScope by MainScope()
+class BangumiDetailsFragment : DetailsSupportFragment()
     , OnItemViewClickedListener
     , OnActionClickedListener {
 
@@ -51,16 +48,10 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
         bindViewModel()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Timber.d("onSaveInstanceState")
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         onItemViewClickedListener = null
         mDetailsOverviewPrevState = mDescriptionRowPresenter.mPreviousState
-        cancel()
     }
 
     /**
@@ -191,7 +182,7 @@ class BangumiDetailsFragment : FixDetailsSupportFragment()
     override fun onActionClicked(action: Action?) {
         when(action?.id) {
             ID_FAVOURITE -> {
-                launch {
+                lifecycleScope.launch {
                     if (viewModel.setFavourite()) {
                         Timber.d("已收藏")
                         action.label1 = "已收藏"

@@ -6,6 +6,7 @@ import android.content.Intent
 import com.seiko.common.eventbus.EventBusScope
 import com.seiko.common.util.toast.toast
 import com.seiko.common.data.Result
+import com.seiko.common.service.BaseIntentService
 import com.seiko.torrent.data.model.AddTorrentParams
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.data.model.toTask
@@ -13,8 +14,9 @@ import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
-class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope by MainScope() {
+class TorrentTaskService : BaseIntentService("TorrentTaskService") {
 
     companion object {
         private const val ACTION_ADD_TORRENT = "ACTION_ADD_TORRENT"
@@ -58,7 +60,6 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
             context.startService(intent)
         }
     }
-
 
     override fun onHandleIntent(intent: Intent?) {
         if (intent == null) return
@@ -114,4 +115,5 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope b
     private fun shutDown() {
         downloader.release()
     }
+
 }

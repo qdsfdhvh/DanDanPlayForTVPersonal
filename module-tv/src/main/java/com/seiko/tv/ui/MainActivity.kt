@@ -1,7 +1,6 @@
 package com.seiko.tv.ui
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.DispatchKeyEventDispatcher
 import androidx.activity.DispatchKeyEventDispatcherOwner
@@ -12,7 +11,6 @@ import com.seiko.common.service.TorrentService
 import com.seiko.tv.R
 import com.seiko.tv.util.extensions.hideSoftInput
 import com.seiko.tv.util.extensions.isSoftInputMethodShowing
-import timber.log.Timber
 
 @Route(path = Routes.DanDanPlay.PATH_TV)
 class MainActivity : FragmentActivity(R.layout.activity_main), DispatchKeyEventDispatcherOwner {
@@ -31,20 +29,9 @@ class MainActivity : FragmentActivity(R.layout.activity_main), DispatchKeyEventD
         return@DispatchKeyEventDispatcher super@MainActivity.dispatchKeyEvent(event)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.d("onCreate")
-    }
-
-    /**
-     * PS: Navigation在返回时，Fragment的View会重新绘制。
-     */
-
     override fun onDestroy() {
         super.onDestroy()
-        // 关闭Torrent下载
         TorrentService.get()?.shutDown(this)
-        Timber.d("onCreate")
     }
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {

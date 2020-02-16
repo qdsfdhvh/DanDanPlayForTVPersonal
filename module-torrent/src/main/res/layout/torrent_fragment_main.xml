@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.main.TorrentMainFragment">
 
     <View
         android:id="@id/torrent_container_btn"
@@ -38,8 +39,9 @@
         app:layout_constraintBottom_toBottomOf="@id/torrent_btn_add"
         app:layout_constraintStart_toEndOf="@id/torrent_btn_add"/>
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@id/torrent_container_list"
+        android:name="com.seiko.torrent.ui.main.TorrentListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout="@layout/torrent_fragment_list"
@@ -48,8 +50,9 @@
         app:layout_constraintStart_toStartOf="@id/torrent_container_btn"
         app:layout_constraintEnd_toEndOf="@id/torrent_container_btn"/>
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@id/torrent_container_detail"
+        android:name="com.seiko.torrent.ui.detail.TorrentDetailFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout="@layout/torrent_fragment_detail"

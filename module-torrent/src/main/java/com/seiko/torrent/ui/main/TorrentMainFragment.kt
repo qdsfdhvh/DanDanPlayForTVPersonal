@@ -25,26 +25,23 @@ import timber.log.Timber
 class TorrentMainFragment : Fragment(), View.OnClickListener {
 
     companion object {
-        const val TAG = "TorrentMainFragment"
         private const val FilePickerRequestCode = 6906
-
-        fun newInstance(): TorrentMainFragment {
-            return TorrentMainFragment()
-        }
     }
 
     private lateinit var binding: TorrentFragmentMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("Navigator - onCreate")
+        Timber.tag("Navigator").d("TorrentMainFragment - onCreate")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Timber.tag("Navigator").d("TorrentMainFragment - onActivityCreated")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Timber.tag("Navigator").d("TorrentMainFragment - onCreateView")
         binding = TorrentFragmentMainBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
@@ -52,7 +49,7 @@ class TorrentMainFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("Navigator - onViewCreated")
+        Timber.tag("Navigator").d("TorrentMainFragment - onViewCreated")
         bindViewModel()
     }
 
@@ -60,28 +57,6 @@ class TorrentMainFragment : Fragment(), View.OnClickListener {
         binding.torrentBtnAdd.setOnClickListener(this)
         binding.torrentBtnOpenFile.setOnClickListener(this)
         binding.torrentBtnAdd.requestFocus()
-        openTorrentListFragment()
-        openTorrentDetailFragment()
-    }
-
-    private fun openTorrentListFragment() {
-        if (childFragmentManager.findFragmentByTag(TorrentListFragment.TAG) == null) {
-            childFragmentManager.commit {
-                add(R.id.torrent_container_list,
-                    TorrentListFragment.newInstance(),
-                    TorrentListFragment.TAG)
-            }
-        }
-    }
-
-    private fun openTorrentDetailFragment() {
-        if (childFragmentManager.findFragmentByTag(TorrentDetailFragment.TAG) == null) {
-            childFragmentManager.commit {
-                add(R.id.torrent_container_detail,
-                    TorrentDetailFragment.newInstance(),
-                    TorrentDetailFragment.TAG)
-            }
-        }
     }
 
     private fun bindViewModel() {

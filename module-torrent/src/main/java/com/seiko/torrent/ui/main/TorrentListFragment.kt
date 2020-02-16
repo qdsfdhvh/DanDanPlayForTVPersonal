@@ -6,22 +6,15 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
-import com.seiko.common.eventbus.registerEventBus
-import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentListBinding
-import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.vm.MainViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -29,12 +22,7 @@ class TorrentListFragment : Fragment()
     , OnItemClickListener {
 
     companion object {
-        const val TAG = "TorrentListFragment"
         private const val TAG_TORRENTS_LIST_STATE = "torrents_list_state"
-
-        fun newInstance(): TorrentListFragment {
-            return TorrentListFragment()
-        }
     }
 
     /* Save state scrolling */
@@ -47,24 +35,25 @@ class TorrentListFragment : Fragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("Navigator - onCreate")
+        Timber.tag("Navigator").d("TorrentListFragment - onActivityCreated")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Timber.tag("Navigator").d("TorrentListFragment - onCreateView")
         binding = TorrentFragmentListBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.tag("Navigator").d("TorrentListFragment - onViewCreated")
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("Navigator - onViewCreated")
         bindViewModel()
     }
 
     override fun onStart() {
         super.onStart()
-        Timber.d("Navigator - onStart")
+        Timber.tag("Navigator").d("TorrentListFragment - onStart")
         viewModel.loadData(false)
     }
 
@@ -136,8 +125,8 @@ class TorrentListFragment : Fragment()
                 position: Int,
                 subposition: Int
             ) {
-                when(parent) {
-                    binding.torrentList -> {
+                when(parent?.id) {
+                    R.id.torrent_list -> {
                         val item = adapter.get(position) ?: return
                         if (adapter.isSelectHash(item.hash)) {
                             viewModel.setTorrentHash(null)

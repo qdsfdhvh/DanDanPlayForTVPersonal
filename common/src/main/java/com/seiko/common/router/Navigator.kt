@@ -27,6 +27,7 @@ object Navigator {
      * 跳转种子页面
      */
     fun navToTorrent(activity: Activity, callback: NavigationCallback? = null) {
+        Timber.tag("Navigator").d("navToTorrent")
         ARouter.getInstance()
             .build(Routes.Torrent.PATH)
             .navigation(activity.baseContext, callback)

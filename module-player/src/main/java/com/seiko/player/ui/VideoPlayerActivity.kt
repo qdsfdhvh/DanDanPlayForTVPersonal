@@ -33,10 +33,6 @@ import com.seiko.player.vm.PlayerViewModel
 import com.seiko.subtitle.ISubtitleEngine
 import com.seiko.subtitle.model.Subtitle
 import kotlinx.coroutines.launch
-import master.flame.danmaku.controller.DrawHandler
-import master.flame.danmaku.danmaku.model.BaseDanmaku
-import master.flame.danmaku.danmaku.model.DanmakuTimer
-import master.flame.danmaku.danmaku.model.android.DanmakuContext
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
