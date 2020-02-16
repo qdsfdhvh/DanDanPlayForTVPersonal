@@ -1,7 +1,5 @@
 package com.seiko.subtitle
 
-import android.os.Handler
-import android.os.HandlerThread
 import com.seiko.subtitle.format.*
 import com.seiko.subtitle.model.TimedTextObject
 import com.seiko.subtitle.util.FileUtil
@@ -13,31 +11,9 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-typealias OnParsedListener = (Result<TimedTextObject>) -> Unit
-
-private const val TAG = "SubtitleParser"
-
-class SubtitleParser(
-    private val subtitlePath: String,
-    private val listener: OnParsedListener
-) : Runnable {
-
-    fun parse() {
-        val handlerThread = HandlerThread("SubtitleParser")
-        handlerThread.start()
-        val handler = Handler(handlerThread.looper)
-        handler.post(this)
-    }
-
-    override fun run() {
-        parseSubTitle(File(subtitlePath)).let(listener)
-    }
-}
-
-@Throws(FileNotFoundException::class)
-private fun parseSubTitle(file: File): Result<TimedTextObject> {
+internal fun parseSubTitle(file: File): Result<TimedTextObject> {
     if (!file.exists()) {
-        throw FileNotFoundException("SubTitle not found: " + file.absolutePath)
+        return Result.failure(FileNotFoundException("SubTitle not found: " + file.absolutePath))
     }
 
     val ext = FileUtil.getFileExt(file.absolutePath).toLowerCase(Locale.US)
@@ -65,7 +41,7 @@ private fun parseSubTitle(file: File): Result<TimedTextObject> {
         }
         detector.dataEnd()
         val charsetName = detector.detectedCharset ?: "UTF-8"
-        log(TAG, "Parse SubTitle Charset：$charsetName")
+        log("Parse SubTitle Charset：$charsetName")
 
         // 解析字幕
         val tto = format.parseFile(file.absolutePath, FileInputStream(file), charsetName)

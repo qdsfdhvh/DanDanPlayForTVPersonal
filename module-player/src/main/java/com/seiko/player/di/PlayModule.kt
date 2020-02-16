@@ -19,7 +19,7 @@ val playModule = module {
     single { createExoMediaPlayerCreator(androidContext(), get()) }
     single { createMediaPlayerFactory() }
     single { createDanmakuEngine() }
-    single { createSubtitleEngine() }
+    factory { createSubtitleEngine() }
 }
 
 private fun createIjkMediaPlayerCreator(prefs: PrefDataSource): IjkMediaPlayerCreator {

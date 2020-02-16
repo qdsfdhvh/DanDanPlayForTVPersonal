@@ -12,7 +12,7 @@ interface DanmakuDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(bean: Danmaku): Long
 
-    @Query("SELECT * FROM Danma_table WHERE episodeId=:episodeId LIMIT 0, 1")
-    suspend fun getEpisodeId(episodeId: Int): Danmaku?
+    @Query("SELECT * FROM Danma_table WHERE videoMd5=:videoMd5")
+    suspend fun getDanma(videoMd5: String): Danmaku?
 
 }

@@ -10,16 +10,11 @@ import timber.log.Timber
 import java.io.File
 import java.util.*
 
-class GetSubtitleUserCase : KoinComponent {
+class GetSubtitleUseCase : KoinComponent {
 
     suspend operator fun invoke(param: PlayParam): Result<List<String>> {
         return withContext(Dispatchers.IO) {
-            val uri = param.videoUri
-            val videoPath = if ("file".equals(uri.scheme, ignoreCase = true)) {
-                uri.path
-            } else {
-                uri.toString()
-            }
+            val videoPath = param.videoPath
             val subtitles = getLocalSubtitlePath(videoPath) ?: emptyList()
             Timber.d(subtitles.toString())
             return@withContext Result.Success(subtitles)
@@ -42,7 +37,7 @@ private fun getLocalSubtitlePath(filePath: String?): List<String>? {
     val file = File(filePath)
     if (!file.exists()) return null
 
-    //  无后缀名称
+    // 去除后缀
     val videoName = FileUtil.getFileNotExt(file.absolutePath)
 
     return file.parentFile?.listFiles()?.filter {

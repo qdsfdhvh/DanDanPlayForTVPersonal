@@ -7,10 +7,12 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import com.seiko.common.util.getMD5
 import timber.log.Timber
 import java.io.File
 
 object FileUtil {
+
     private const val EXTERNAL_STORAGE = "com.android.externalstorage.documents"
     private const val DOWNLOAD_DOCUMENT = "com.android.providers.downloads.documents"
     private const val MEDIA_DOCUMENT = "com.android.providers.media.documents"

@@ -97,7 +97,6 @@ class HomeFragment : BrowseSupportFragment()
      */
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-
         val presenterSelector = BangumiPresenterSelector()
         val homeImageBeanDiffCallback = HomeImageBeanDiffCallback()
         // 工具中心

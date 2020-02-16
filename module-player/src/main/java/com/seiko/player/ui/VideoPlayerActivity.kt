@@ -32,6 +32,7 @@ import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.vm.PlayerViewModel
 import com.seiko.subtitle.ISubtitleEngine
 import com.seiko.subtitle.model.Subtitle
+import com.seiko.subtitle.widget.setSubtitle
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -333,10 +334,6 @@ class VideoPlayerActivity: FragmentActivity()
                 binding.root.keepScreenOn = false
             }
         }
-
-        viewModel.danma.observe(this::getLifecycle) { danma ->
-            danmakuEngine.setDanmaList(danma.comments)
-        }
         viewModel.showDanma.observe(this::getLifecycle) { isShowDanma ->
             if (isShowDanma) {
                 danmakuEngine.show()
@@ -346,6 +343,7 @@ class VideoPlayerActivity: FragmentActivity()
                 bindingControlBottom.playerBtnOverlayDanma.isSelected = false
             }
         }
+        viewModel.danma.observe(this::getLifecycle, danmakuEngine::setDanmaList)
         viewModel.subtitlePath.observe(this::getLifecycle, subtitleEngine::setSubtitlePath)
         viewModel.loadData()
     }
@@ -360,7 +358,7 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom.playerOverlayTitle.text = param.videoTitle
         videoView.setVideoURI(param.videoUri)
         // 尝试下载弹幕字幕
-        viewModel.downloadTracker(param)
+        viewModel.videoParam.value = param
     }
 
     /**

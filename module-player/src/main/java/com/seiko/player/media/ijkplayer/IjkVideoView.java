@@ -416,8 +416,8 @@ public class IjkVideoView extends FrameLayout {
             mCurrentState = MediaPlayerParams.STATE_IDLE;
             mTargetState = MediaPlayerParams.STATE_IDLE;
             _notifyMediaStatus();
-            AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
-            am.abandonAudioFocus(null);
+//            AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+//            am.abandonAudioFocus(null);
         }
     }
 
@@ -431,8 +431,8 @@ public class IjkVideoView extends FrameLayout {
         // called start() previously
         release(false);
         // 声音控制
-        AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
-        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//        AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+//        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         try {
             mMediaPlayer = mediaPlayerCreator.createPlayer();
@@ -846,21 +846,21 @@ public class IjkVideoView extends FrameLayout {
         release(true);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-//        if (isInPlaybackState() && mMediaController != null) {
-//            toggleMediaControlsVisibility();
-//        }
-        return false;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+////        if (isInPlaybackState() && mMediaController != null) {
+////            toggleMediaControlsVisibility();
+////        }
+//        return false;
+//    }
 
-    @Override
-    public boolean onTrackballEvent(MotionEvent ev) {
-//        if (isInPlaybackState() && mMediaController != null) {
-//            toggleMediaControlsVisibility();
-//        }
-        return false;
-    }
+//    @Override
+//    public boolean onTrackballEvent(MotionEvent ev) {
+////        if (isInPlaybackState() && mMediaController != null) {
+////            toggleMediaControlsVisibility();
+////        }
+//        return false;
+//    }
 
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {

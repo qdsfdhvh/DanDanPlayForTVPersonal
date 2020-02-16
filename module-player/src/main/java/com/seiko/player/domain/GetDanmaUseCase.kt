@@ -1,66 +1,57 @@
 package com.seiko.player.domain
 
 import com.seiko.common.data.Result
-import com.seiko.common.service.AppTvService
-import com.seiko.player.data.api.DanDanCommentApiService
 import com.seiko.player.data.db.model.Danmaku
-import com.seiko.player.data.comments.DanmaRepository
-import com.seiko.player.data.model.DanmaDownloadBean
+import com.seiko.player.data.comments.DanmaDbRepository
+import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.PlayParam
+import com.seiko.player.util.getVideoMd5
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
+import java.io.File
+import java.io.FileNotFoundException
 
 class GetDanmaUseCase : KoinComponent {
 
-    private val api: DanDanCommentApiService by inject()
-    private val danmaRepository: DanmaRepository by inject()
+    private val danmaDbRepo: DanmaDbRepository by inject()
+    private val downloadDanma: DownloadDanmaUseCase by inject()
 
-    suspend operator fun invoke(param: PlayParam): Result<DanmaDownloadBean> {
-        // 目前hash为空，不处理
-        if (param.hash.isEmpty()) {
-            return Result.Error(Exception("${param.videoUri} -> Null Hash"))
+    suspend operator fun invoke(param: PlayParam): Result<List<DanmaCommentBean>> {
+        // 判断视频是否存在
+        val videoFile = File(param.videoPath)
+        if (!videoFile.exists()) {
+            return Result.Error(FileNotFoundException("Not found file: ${param.videoPath}"))
         }
 
-        val service = AppTvService.get()
-            ?: return Result.Error(Exception("${param.videoUri} -> Not found AppTvService"))
+        // 获得视频md5
+        val videoMD5 = File(param.videoPath).getVideoMd5()
 
-        val episodeId = service.findEpisodeId(param.hash)
-        if (episodeId == -1) {
-            return Result.Error(Exception("${param.videoUri} -> Not found episodeId"))
-        }
-
-        Timber.d("episodeId = $episodeId")
-
+        // 尝试从本地数据库获取弹幕
         var start = System.currentTimeMillis()
-
-        var bean: DanmaDownloadBean? = null
-        try {
-            bean = danmaRepository.getDanmaDownloadBean(episodeId)
-        } catch (e: Exception) {
-            Timber.e(e)
+        when(val result = danmaDbRepo.getDanmaDownloadBean(videoMD5)) {
+            is Result.Success -> {
+                Timber.d("danma from db, 耗时：${System.currentTimeMillis() - start}")
+                return Result.Success(result.data)
+            }
         }
 
-        if (bean != null) {
-            Timber.d("danma from db, 耗时：${System.currentTimeMillis() - start}")
-            return Result.Success(bean)
-        }
-
+        // 下载弹幕
         start = System.currentTimeMillis()
-        try {
-//            val requestBody = "".toRequestBody("application/octet-stream".toMediaType())
-            bean = api.downloadDanma(episodeId)
-            danmaRepository.saveDanmaDownloadBean(Danmaku(
-                videoPath = param.videoUri.toString(),
-                hash = param.hash,
-                episodeId = episodeId,
-                danma = bean
-            ))
-            Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
-        } catch (e: Exception) {
-            return Result.Error(e)
+        return when(val result = downloadDanma.invoke(param)) {
+            is Result.Success -> {
+                Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
+                // 保存到数据库
+                danmaDbRepo.saveDanmaDownloadBean(Danmaku(
+                    videoMd5 = videoMD5,
+                    danma = result.data
+                ))
+                result
+            }
+            is Result.Error -> {
+                result
+            }
         }
-        return Result.Success(bean)
     }
 
 }

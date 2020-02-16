@@ -30,5 +30,7 @@ dependencies {
     implementation dependence.libIjkplayer
     // 编码检测
     implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
+
+    implementation dependence.libCoroutinesCore
 }
 

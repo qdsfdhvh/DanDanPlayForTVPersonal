@@ -15,16 +15,12 @@
         android:id="@id/player_danmaku_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.seiko.subtitle.widget.SubtitleTextView
+    <com.seiko.subtitle.widget.SubtitleView
         android:id="@id/player_subtitle_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="30dp"
-        android:textSize="32sp"
-        android:textColor="@color/white"
-        android:lines="1"
-        tools:text="字幕在这里"/>
+        tools:visibility="invisible"/>
     <!--控制-->
     <include
         layout="@layout/player_controller"

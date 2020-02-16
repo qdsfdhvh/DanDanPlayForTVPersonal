@@ -6,15 +6,25 @@ import android.os.Message
 import com.seiko.subtitle.cache.SubtitleCache
 import com.seiko.subtitle.model.Subtitle
 import com.seiko.subtitle.util.log
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import tv.danmaku.ijk.media.player.IMediaPlayer
+import java.io.File
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.CoroutineContext
 
-class SubtitleEngine : ISubtitleEngine {
+class SubtitleEngine : ISubtitleEngine, CoroutineScope {
 
     companion object {
         private const val TAG = "SubtitleEngine"
-        private const val MSG_REFRESH = 888
         private const val REFRESH_INTERVAL = 200L
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = SupervisorJob() + Dispatchers.IO
 
     private val subtitleCache = SubtitleCache()
     private var subtitlePath: String? = null
@@ -23,8 +33,7 @@ class SubtitleEngine : ISubtitleEngine {
 
     private var mediaPlayer: IMediaPlayer? = null
 
-    private var handlerThread: HandlerThread? = null
-    private var workHandler: Handler? = null
+    private var isWorking = AtomicBoolean(false)
 
     override fun bindToMediaPlayer(mediaPlayer: IMediaPlayer?) {
         this.mediaPlayer = mediaPlayer
@@ -32,88 +41,83 @@ class SubtitleEngine : ISubtitleEngine {
 
     override fun setSubtitlePath(path: String) {
         if (subtitlePath == path) return
-
         stop()
-        createWorkThread()
+
+        log("Parse subtitle begin...")
+        val start = System.currentTimeMillis()
 
         subtitles = subtitleCache.get(path)
         if (!subtitles.isNullOrEmpty()) {
-            log(TAG, "load subtitle from cache")
+            log(TAG, "Parse subtitle from cache，time=${System.currentTimeMillis() - start}")
             notifyPrepared()
             return
         }
 
-        SubtitleParser(path) { result ->
+        launch {
+            val result = parseSubTitle(File(path))
             if (result.isSuccess) {
-                val tto = result.getOrNull() ?: return@SubtitleParser
+                val tto = result.getOrNull() ?: return@launch
                 val captions = tto.captions
                 if (captions == null) {
-                    log(TAG, "onSuccess: captions is null.")
-                    return@SubtitleParser
+                    log(TAG, "Parse subtitle failed: captions is null.")
+                    return@launch
                 }
                 subtitlePath = path
                 subtitles = ArrayList(captions.values)
+
+                log(TAG, "Parse subtitle finish，time=${System.currentTimeMillis() - start}")
                 notifyPrepared()
+
                 subtitleCache.put(path, ArrayList(captions.values))
             } else {
                 log(TAG, result.exceptionOrNull())
             }
-        }.parse()
+        }
     }
 
     override fun start() {
-//        if (mediaPlayer == null) return
-        if (workHandler != null) {
-            workHandler!!.removeMessages(MSG_REFRESH)
-            workHandler!!.sendEmptyMessageDelayed(MSG_REFRESH, REFRESH_INTERVAL)
+        if (isWorking.compareAndSet(false, true)) {
+            launch {
+                workFlow().collect { notifyRefreshUI(it) }
+            }
         }
     }
 
     override fun stop() {
-        workHandler?.removeMessages(MSG_REFRESH)
+         if (isWorking.compareAndSet(true, false)) {
+
+         }
     }
 
     override fun release() {
-        stopWorkThread()
         subtitlePath = null
         subtitles = null
+        cancel()
     }
 
     override fun setOnSubtitleListener(listener: ISubtitleEngine.OnSubtitleListener?) {
         this.listener = listener
     }
 
-    private fun createWorkThread() {
-        handlerThread = HandlerThread("SubtitleFindThread")
-        handlerThread!!.start()
-        workHandler = object : Handler(handlerThread!!.looper) {
-            override fun handleMessage(msg: Message?) {
-                if (msg == null || msg.what != MSG_REFRESH) return
-                try {
-                    var delay = REFRESH_INTERVAL
-                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
-                        val position = mediaPlayer!!.currentPosition
-                        val subtitle = SubtitleFinder.find(position, subtitles)
-                        notifyRefreshUI(subtitle)
-                        if (subtitle != null) {
-                            delay = subtitle.end.mseconds - position
-                        }
-                    }
-                    workHandler?.sendEmptyMessageDelayed(MSG_REFRESH, delay)
-                } catch (ignored: Exception) {
+    private fun workFlow(): Flow<Subtitle?> = flow {
+        var delay: Long
+        while (isWorking.get()) {
+            delay = REFRESH_INTERVAL
+
+            val position = withContext(Dispatchers.Main) {
+                if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                    mediaPlayer!!.currentPosition
+                } else -1
+            }
+
+            if (position > 0) {
+                val subtitle = SubtitleFinder.find(position, subtitles)
+                emit(subtitle)
+                if (subtitle != null) {
+                    delay = subtitle.end.mseconds - position
                 }
             }
-        }
-    }
-
-    private fun stopWorkThread() {
-        if (handlerThread != null) {
-            handlerThread!!.quit()
-            handlerThread = null
-        }
-        if (workHandler != null) {
-            workHandler!!.removeCallbacksAndMessages(null)
-            workHandler = null
+            delay(delay)
         }
     }
 

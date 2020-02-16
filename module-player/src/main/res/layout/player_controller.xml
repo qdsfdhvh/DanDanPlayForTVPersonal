@@ -23,9 +23,7 @@
             android:id="@id/player_tip_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:nextFocusUp="@id/ab_repeat_add_marker"
-            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+            android:textColor="@color/white"
             android:textSize="16sp"
             tools:text="12:30/25:00" />
         <SeekBar
