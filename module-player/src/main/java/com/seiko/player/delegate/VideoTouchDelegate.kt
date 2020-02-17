@@ -2,7 +2,7 @@ package com.seiko.player.delegate
 
 import android.view.MotionEvent
 import androidx.leanback.widget.BaseGridView
-import com.seiko.player.ui.VideoPlayerHandler
+import com.seiko.player.ui.video.VideoPlayerHandler
 
 /**
  * 触控操作

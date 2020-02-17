@@ -41,12 +41,16 @@ class HomeFragment : BrowseSupportFragment()
         private const val ID_SETTING = 4
         private const val ID_DOWNLOAD = 5
         private const val ID_HISTORY = 6
+        private const val ID_MEDIA = 7
     }
 
     private val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
-
+    private lateinit var settingAdapter: ArrayObjectAdapter
+    private lateinit var areaAdapter: AsyncObjectAdapter<HomeImageBean>
+    private lateinit var favoriteAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+    private lateinit var historyAdapter: AsyncPagedObjectAdapter<HomeImageBean>
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -54,6 +58,7 @@ class HomeFragment : BrowseSupportFragment()
             HomeSettingBean(ID_TIME, getString(R.string.bangumi_time), R.drawable.ic_bangumi_time),
             HomeSettingBean(ID_FAVOURITE, getString(R.string.bangumi_favorite), R.drawable.ic_bangumi_favourite),
             HomeSettingBean(ID_HISTORY, getString(R.string.bangumi_history), R.drawable.ic_bangumi_history),
+            HomeSettingBean(ID_MEDIA, getString(R.string.bangumi_media), R.drawable.ic_bangumi_media),
             HomeSettingBean(ID_DOWNLOAD, getString(R.string.bangumi_download), R.drawable.ic_bangumi_download),
             HomeSettingBean(ID_SETTING, getString(R.string.bangumi_setting), R.drawable.ic_bangumi_setting)
         )
@@ -86,11 +91,6 @@ class HomeFragment : BrowseSupportFragment()
         // 监听返回键
         requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
     }
-
-    private lateinit var settingAdapter: ArrayObjectAdapter
-    private lateinit var areaAdapter: AsyncObjectAdapter<HomeImageBean>
-    private lateinit var favoriteAdapter: AsyncPagedObjectAdapter<HomeImageBean>
-    private lateinit var historyAdapter: AsyncPagedObjectAdapter<HomeImageBean>
 
     /**
      * 生成Rows
@@ -183,8 +183,12 @@ class HomeFragment : BrowseSupportFragment()
                             HomeFragmentDirections.actionHomeFragmentToBangumiHistoryFragment()
                         )
                     }
+                    ID_MEDIA -> {
+                        Timber.tag("Navigator").d("click media")
+                        Navigator.navToPlayerMedia(requireActivity())
+                    }
                     ID_DOWNLOAD -> {
-                        Timber.tag("Navigator").d("home click")
+                        Timber.tag("Navigator").d("click download")
                         Navigator.navToTorrent(requireActivity())
                     }
                     ID_SETTING -> {

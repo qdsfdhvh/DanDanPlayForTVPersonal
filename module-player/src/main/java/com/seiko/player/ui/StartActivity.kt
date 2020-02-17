@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
+import com.seiko.player.ui.video.VideoPlayerActivity
 import com.seiko.player.util.FileUtils
 import com.seiko.player.util.extensions.getRealPath
 import timber.log.Timber

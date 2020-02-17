@@ -2,7 +2,7 @@ package com.seiko.tv.ui.presenter
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.leanback.widget.Presenter
+import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.tv.ui.card.SearchMagnetCardView
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 

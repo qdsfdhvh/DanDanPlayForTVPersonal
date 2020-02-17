@@ -1,4 +1,4 @@
-package com.seiko.player.ui
+package com.seiko.player.ui.video
 
 import android.os.Handler
 import android.os.Looper

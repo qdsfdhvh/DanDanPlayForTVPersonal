@@ -33,6 +33,10 @@
     <item name="player_option_title" type="id"/>
     <item name="player_option_icon" type="id"/>
 
+    <item name="player_title" type="id"/>
+    <item name="player_thumbnail" type="id"/>
+    <item name="player_size" type="id"/>
+
     <item name="player_tip_layout" type="id"/>
     <item name="player_tip_time" type="id"/>
     <item name="player_tip_progress" type="id"/>

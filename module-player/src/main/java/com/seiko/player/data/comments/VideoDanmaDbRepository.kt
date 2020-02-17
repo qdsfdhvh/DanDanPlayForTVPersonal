@@ -1,13 +1,13 @@
 package com.seiko.player.data.comments
 
 import com.seiko.common.data.Result
-import com.seiko.player.data.db.dao.DanmakuDao
-import com.seiko.player.data.db.model.Danmaku
+import com.seiko.player.data.db.dao.VideoDanmakuDao
+import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.model.DanmaCommentBean
 
-class DanmaDbRepository(private val danmaDao: DanmakuDao) {
+class VideoDanmaDbRepository(private val danmaDao: VideoDanmakuDao) {
 
-    suspend fun saveDanmaDownloadBean(bean: Danmaku): Boolean {
+    suspend fun saveDanmaDownloadBean(bean: VideoDanmaku): Boolean {
         bean.downloadDate = System.currentTimeMillis()
         return danmaDao.insert(bean) > 0
     }

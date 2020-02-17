@@ -1,4 +1,4 @@
-package com.seiko.tv.util
+package com.seiko.common.util
 
 import android.app.Application
 import android.graphics.Bitmap
@@ -14,28 +14,27 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import java.io.File
 
 private val MAX_HEAP_SIZE = Runtime.getRuntime().maxMemory().toInt()
 private val MAX_MEMORY_CACHE_SIZE = MAX_HEAP_SIZE / 4
 private const val MAX_DISK_CACHE_SIZE = 40L * ByteConstants.MB
 
 fun Application.initFresco() {
-
-    val diskCacheConfig = DiskCacheConfig.newBuilder(this)
+    val diskCacheConfig = DiskCacheConfig.newBuilder(this@initFresco)
         .setBaseDirectoryPath(cacheDir)
         .setBaseDirectoryName(packageName)
         .setMaxCacheSize(MAX_DISK_CACHE_SIZE) // max cache size
         .build()
 
-    val config = ImagePipelineConfig.newBuilder(this)
+    val config = ImagePipelineConfig.newBuilder(this@initFresco)
         .setBitmapMemoryCacheParamsSupplier {
             MemoryCacheParams(
                 MAX_MEMORY_CACHE_SIZE,
                 Int.MAX_VALUE,
                 MAX_MEMORY_CACHE_SIZE,
                 Int.MAX_VALUE,
-                Int.MAX_VALUE
-            )
+                Int.MAX_VALUE)
         }
         .setDownsampleEnabled(true)
         .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
@@ -44,7 +43,7 @@ fun Application.initFresco() {
         .setMainDiskCacheConfig(diskCacheConfig)
         .build()
 
-    Fresco.initialize(this, config)
+    Fresco.initialize(this@initFresco, config)
 }
 
 fun getImagePipeline(): ImagePipeline {
@@ -62,6 +61,17 @@ fun GenericDraweeView.loadImage(url: String?) {
         .setProgressiveRenderingEnabled(false)
         .build()
 
+    controller = Fresco.newDraweeControllerBuilder()
+        .setImageRequest(request)
+        .setOldController(controller)
+        .setAutoPlayAnimations(true)
+        .build()
+}
+
+fun GenericDraweeView.loadFileImage(path: String) {
+    val uri = Uri.fromFile(File(path))
+    val request =ImageRequestBuilder.newBuilderWithSource(uri)
+        .build()
     controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
         .setOldController(controller)

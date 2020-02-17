@@ -17,6 +17,7 @@ import com.seiko.common.data.ResultData
 import com.seiko.common.util.extensions.checkPermissions
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
@@ -46,7 +47,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
     private val viewModel by viewModel<SearchMagnetViewModel>()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    private lateinit var arrayAdapters: SparseArray<ArrayObjectAdapter>
+    private lateinit var magnetAdapter: AsyncObjectAdapter<ResMagnetItemEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,28 +69,27 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        arrayAdapters = SparseArray(1)
-        createListRow(ROW_MAGNET, "磁力链接")
+        val presenterSelector = BangumiPresenterSelector()
+
+        magnetAdapter = AsyncObjectAdapter(presenterSelector, ResMagnetItemDiffCallback())
+        createListRow(ROW_MAGNET, "磁力链接", magnetAdapter)
     }
 
-    private fun createListRow(id: Int, title: String) {
-        val presenterSelector = BangumiPresenterSelector()
+    private fun createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
         val headerItem = HeaderItem(id.toLong(), title)
-        val objectAdapter = ArrayObjectAdapter(presenterSelector)
         val listRow = ListRow(headerItem, objectAdapter)
         rowsAdapter.add(listRow)
-        arrayAdapters.put(id, objectAdapter)
     }
 
     private fun loadData() {
-        viewModel.magnetList.observe(this::getLifecycle, this::updateResults)
-    }
-
-    /**
-     * 加载磁力搜索结果
-     */
-    private fun updateResults(magnets: List<ResMagnetItemEntity>) {
-        arrayAdapters[ROW_MAGNET].setItems(magnets, ResMagnetItemDiffCallback())
+        viewModel.magnetList.observe(this::getLifecycle) { magnets ->
+            magnetAdapter.submitList(magnets) {
+                if (magnets.isNotEmpty()) {
+                    Timber.d("重置焦点")
+                    rowsSupportFragment.setSelectedPosition(0, false)
+                }
+            }
+        }
     }
 
     override fun recognizeSpeech() {

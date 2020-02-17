@@ -1,4 +1,4 @@
-package com.seiko.player.ui
+package com.seiko.player.ui.widget
 
 //import android.net.Uri
 //import android.os.Bundle

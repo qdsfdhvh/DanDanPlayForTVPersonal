@@ -25,3 +25,9 @@ internal const val MAX_VIDEO_SEEK = 1000
  * 计算视频最大多少字节的MD5
  */
 internal const val MAX_VIDEO_MD5_SIZE_DEFAULT = 16L * 1024 * 1024
+
+/**
+ * Player目录
+ */
+internal const val PLAYER_DATA_DIR = "PLAYER_DATA_DIR"
+internal const val PLAYER_THUMBNAIL_DIR = "PLAYER_THUMBNAIL_DIR"

@@ -5,18 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.seiko.player.data.db.dao.DanmakuDao
-import com.seiko.player.data.db.dao.SlaveDao
+import com.seiko.player.data.db.dao.VideoDanmakuDao
 import com.seiko.player.data.db.dao.VideoMatchDao
-import com.seiko.player.data.db.model.Danmaku
-import com.seiko.player.data.db.model.Slave
+import com.seiko.player.data.db.dao.VideoMediaDao
+import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.db.model.VideoMatch
+import com.seiko.player.data.db.model.VideoMedia
 
 @Database(entities = [
-    Slave::class,
-    Danmaku::class,
-    VideoMatch::class
-], version = 2)
+    VideoDanmaku::class,
+    VideoMatch::class,
+    VideoMedia::class
+], version = 3)
 @TypeConverters(DanmaDownloadBeanConverter::class)
 abstract class PlayerDatabase : RoomDatabase() {
 
@@ -28,10 +28,9 @@ abstract class PlayerDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun slaveDao(): SlaveDao
-
-    abstract fun danmaDao(): DanmakuDao
+    abstract fun danmaDao(): VideoDanmakuDao
 
     abstract fun videoMatchDao(): VideoMatchDao
 
+    abstract fun videoMediaDao(): VideoMediaDao
 }

@@ -49,8 +49,8 @@ class AsyncPagedObjectAdapter<T : Any>: ObjectAdapter {
         differ.submitList(list)
     }
 
-    fun submitList(list: PagedList<T>, commitCallback: Runnable?) {
-        differ.submitList(list, commitCallback)
+    fun submitList(list: PagedList<T>, commitCallback: () -> Unit?) {
+        differ.submitList(list) { commitCallback.invoke() }
     }
 
     override fun size(): Int {

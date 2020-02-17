@@ -13,7 +13,7 @@ import com.seiko.player.data.model.DanmaCommentBean
         Index(value = ["videoMd5"], unique = true)
     ]
 )
-data class Danmaku(
+data class VideoDanmaku(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,
 

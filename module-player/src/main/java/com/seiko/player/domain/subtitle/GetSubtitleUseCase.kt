@@ -1,4 +1,4 @@
-package com.seiko.player.domain
+package com.seiko.player.domain.subtitle
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.model.PlayParam
@@ -15,7 +15,9 @@ class GetSubtitleUseCase : KoinComponent {
     suspend operator fun invoke(param: PlayParam): Result<List<String>> {
         return withContext(Dispatchers.IO) {
             val videoPath = param.videoPath
-            val subtitles = getLocalSubtitlePath(videoPath) ?: emptyList()
+            val subtitles = getLocalSubtitlePath(
+                videoPath
+            ) ?: emptyList()
             Timber.d(subtitles.toString())
             return@withContext Result.Success(subtitles)
         }

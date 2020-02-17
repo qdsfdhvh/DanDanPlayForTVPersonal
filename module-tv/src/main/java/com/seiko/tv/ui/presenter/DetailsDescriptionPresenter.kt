@@ -17,7 +17,7 @@ package com.seiko.tv.ui.presenter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
-import androidx.leanback.widget.DetailsOverviewRow
+import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.databinding.DetailViewContentBinding
 

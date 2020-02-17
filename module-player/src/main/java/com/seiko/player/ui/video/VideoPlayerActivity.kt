@@ -1,4 +1,4 @@
-package com.seiko.player.ui
+package com.seiko.player.ui.video
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -98,7 +98,11 @@ class VideoPlayerActivity: FragmentActivity()
     private lateinit var binding: PlayerActivityVideoBinding
     private lateinit var bindingControlBottom: PlayerControlBottomBinding
 
-    private val handler by lazyAndroid { VideoPlayerHandler(this) }
+    private val handler by lazyAndroid {
+        VideoPlayerHandler(
+            this
+        )
+    }
     private val touchDelegate by lazyAndroid { VideoTouchDelegate(handler) }
 
     private val optionsAdapter by lazyAndroid { OptionsAdapter(this) }
@@ -116,7 +120,8 @@ class VideoPlayerActivity: FragmentActivity()
     /**
      * 目标进度
      */
-    private var mTargetPosition = INVALID_VALUE
+    private var mTargetPosition =
+        INVALID_VALUE
 
     /**
      * 跳转任务
@@ -131,7 +136,8 @@ class VideoPlayerActivity: FragmentActivity()
 
             // 重置参数
             if (mTargetPosition != INVALID_VALUE) {
-                mTargetPosition = INVALID_VALUE
+                mTargetPosition =
+                    INVALID_VALUE
             }
 
             val videoView = binding.playerVideoViewIjk
@@ -541,7 +547,9 @@ class VideoPlayerActivity: FragmentActivity()
 
         // 切换成了显示状态，5秒后关闭
         if (isOverlayShow) {
-            handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+            handler.overlayShow(false,
+                DELAY_HIDE_CONTROL_TIME
+            )
         }
     }
 
@@ -603,7 +611,9 @@ class VideoPlayerActivity: FragmentActivity()
                 KeyEvent.KEYCODE_DPAD_LEFT,
                 KeyEvent.KEYCODE_DPAD_RIGHT -> {
                     if (KeyEvent.ACTION_DOWN == event.action) {
-                        handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+                        handler.overlayShow(false,
+                            DELAY_HIDE_CONTROL_TIME
+                        )
 //                        return true
                     }
                 }
@@ -613,7 +623,9 @@ class VideoPlayerActivity: FragmentActivity()
                         if (bindingControlBottom.playerBtnOverlayPlay.isFocused) {
                             handler.overlayShow(false)
                         } else {
-                            handler.overlayShow(false, DELAY_HIDE_CONTROL_TIME)
+                            handler.overlayShow(false,
+                                DELAY_HIDE_CONTROL_TIME
+                            )
                         }
 //                        return true
                     }

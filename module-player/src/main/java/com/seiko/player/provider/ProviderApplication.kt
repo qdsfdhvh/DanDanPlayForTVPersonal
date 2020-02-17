@@ -16,12 +16,12 @@ class ProviderApplication : IProviderApplication {
         loadKoinModules(listOf(
             // 本地配置、数据库、网络请求
             prefModule, dbModule, networkModule,
-            // 实例
-            useCaseModule,
-            // ...
-            repositoryModule,
             // 播放器
             playModule,
+            // ...
+            repositoryModule,
+            // 实例
+            useCaseModule,
             // viewModel
             viewModelModule
         ))

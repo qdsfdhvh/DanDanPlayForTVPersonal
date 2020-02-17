@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.common.ui.presenter
 
 import android.os.Bundle
 import androidx.leanback.widget.Presenter

@@ -8,7 +8,7 @@ import com.seiko.tv.databinding.ItemBangumiRelatedBinding
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.common.ui.card.AbsCardView
 import com.seiko.tv.data.model.api.SearchAnimeDetails
-import com.seiko.tv.util.loadImage
+import com.seiko.common.util.loadImage
 
 class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(context) {
 

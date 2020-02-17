@@ -2,6 +2,7 @@ package com.dandanplay.tv
 
 import android.app.Application
 import android.content.Context
+import android.os.StrictMode
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.util.timber.NanoDebugTree
@@ -34,6 +35,26 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
         }
+
+        strictMode()
+    }
+
+    /**
+     * 严格模式
+     */
+    private fun strictMode() {
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+            .detectDiskReads()
+            .detectDiskWrites()
+            .detectNetwork()
+            .penaltyLog()
+            .build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+            .detectLeakedSqlLiteObjects()
+//            .detectLeakedClosableObjects()
+            .penaltyLog()
+            .penaltyDeath()
+            .build())
     }
 
 }

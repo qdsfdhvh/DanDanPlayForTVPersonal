@@ -1,8 +1,8 @@
-package com.seiko.player.domain
+package com.seiko.player.domain.danma
 
 import com.seiko.common.data.Result
-import com.seiko.player.data.db.model.Danmaku
-import com.seiko.player.data.comments.DanmaDbRepository
+import com.seiko.player.data.db.model.VideoDanmaku
+import com.seiko.player.data.comments.VideoDanmaDbRepository
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.util.getVideoMd5
@@ -14,7 +14,7 @@ import java.io.FileNotFoundException
 
 class GetDanmaUseCase : KoinComponent {
 
-    private val danmaDbRepo: DanmaDbRepository by inject()
+    private val danmaDbRepo: VideoDanmaDbRepository by inject()
     private val downloadDanma: DownloadDanmaUseCase by inject()
 
     suspend operator fun invoke(param: PlayParam): Result<List<DanmaCommentBean>> {
@@ -42,7 +42,7 @@ class GetDanmaUseCase : KoinComponent {
             is Result.Success -> {
                 Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
                 // 保存到数据库
-                danmaDbRepo.saveDanmaDownloadBean(Danmaku(
+                danmaDbRepo.saveDanmaDownloadBean(VideoDanmaku(
                     videoMd5 = videoMD5,
                     danma = result.data
                 ))

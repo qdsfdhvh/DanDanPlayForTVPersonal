@@ -2,7 +2,7 @@ package com.seiko.player.delegate
 
 import android.view.KeyEvent
 import androidx.leanback.widget.BaseGridView
-import com.seiko.player.ui.VideoPlayerHandler
+import com.seiko.player.ui.video.VideoPlayerHandler
 import com.seiko.player.vm.PlayerViewModel
 import timber.log.Timber
 

@@ -10,9 +10,13 @@
             android:theme="@style/Theme.VLC.Transparent.NoUI">
         </activity>
 
+        <!--媒体库-->
+        <activity android:name=".ui.media.MediaActivity"
+            android:theme="@style/Theme.VLC.Transparent"/>
+
         <!--播放器-->
         <activity
-            android:name=".ui.VideoPlayerActivity"
+            android:name=".ui.video.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
             android:exported="true"
             android:finishOnTaskLaunch="true"

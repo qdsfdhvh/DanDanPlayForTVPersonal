@@ -1,4 +1,4 @@
-package com.seiko.player.domain
+package com.seiko.player.domain.danma
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.api.model.MatchRequest

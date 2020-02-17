@@ -476,10 +476,7 @@ class TorrentEngine(private val options: TorrentEngineOptions) {
             val data = Vectors.byte_vector2bytes(bytes)
             // 保存种子恢复文件
             val file = getResumeFile(hash)
-            if (file != null) {
-                log("$hash 保存恢复文件：${file.absolutePath}")
-                file.writeBytes(data)
-            }
+            file?.writeBytes(data)
         } catch (e: Exception) {
             log("$hash Error saving resume data of:", e)
         }

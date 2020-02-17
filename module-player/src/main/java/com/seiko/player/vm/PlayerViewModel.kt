@@ -2,14 +2,12 @@ package com.seiko.player.vm
 
 import androidx.lifecycle.*
 import com.seiko.common.data.Result
-import com.seiko.player.data.api.model.DanmaDownloadResponse
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.domain.GetDanmaUseCase
-import com.seiko.player.domain.GetSubtitleUseCase
+import com.seiko.player.domain.danma.GetDanmaUseCase
+import com.seiko.player.domain.subtitle.GetSubtitleUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class PlayerViewModel(

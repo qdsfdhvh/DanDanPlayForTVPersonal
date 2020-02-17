@@ -33,10 +33,6 @@ dependencies {
     implementation dependence.libNavigationFragmentKtx
     implementation dependence.libNavigationUiKtx
 
-    // Image
-    // 2.0.0 CloseableReference: Finalized without closing
-    // @see https://github.com/facebook/fresco/issues/2445
-    implementation 'com.facebook.fresco:fresco:2.1.0'
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
 

@@ -3,13 +3,12 @@ package com.seiko.common.util.prefs
 
 import android.app.Application
 import android.os.Parcelable
-import androidx.preference.PreferenceDataStore
 import com.tencent.mmkv.MMKV
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 internal fun Application.initMMKV() {
-    MMKV.initialize(this)
+    MMKV.initialize(this@initMMKV)
 }
 
 fun createMMKVPreferenceDataStore(name: String): MmkvPreferenceDataStore {
