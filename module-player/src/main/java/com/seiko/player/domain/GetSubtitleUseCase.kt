@@ -2,7 +2,7 @@ package com.seiko.player.domain
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.util.FileUtil
+import com.seiko.player.util.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -38,14 +38,14 @@ private fun getLocalSubtitlePath(filePath: String?): List<String>? {
     if (!file.exists()) return null
 
     // 去除后缀
-    val videoName = FileUtil.getFileNotExt(file.absolutePath)
+    val videoName = FileUtils.getFileNotExt(file.absolutePath)
 
     return file.parentFile?.listFiles()?.filter {
         val path = it.absolutePath
         var bool = path.startsWith(videoName)
 
         if (bool) {
-            val ext = FileUtil.getFileExt(path)
+            val ext = FileUtils.getFileExt(path)
             if (ext.isNotEmpty()) {
                 bool = bool && SUPPORT_EXT_ARRAY.contains(ext.toLowerCase(Locale.US))
             }

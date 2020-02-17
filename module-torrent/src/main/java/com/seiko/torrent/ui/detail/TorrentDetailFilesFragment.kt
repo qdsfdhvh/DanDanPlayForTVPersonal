@@ -84,7 +84,7 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
             toast("非视频文件：${filePath}")
             return
         }
-        Navigator.navToPlayer(this, Uri.fromFile(file), node.name, item.hash)
+        Navigator.navToPlayer(this, Uri.fromFile(file), node.name)
     }
 
 }

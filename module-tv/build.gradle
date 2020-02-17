@@ -3,6 +3,7 @@ apply plugin: 'com.gfd.comswitch'
 apply plugin: 'androidx.navigation.safeargs'
 
 apply from: rootProject.file('libbase.gradle')
+apply from: rootProject.file('libclean.gradle')
 
 kapt {
     arguments {

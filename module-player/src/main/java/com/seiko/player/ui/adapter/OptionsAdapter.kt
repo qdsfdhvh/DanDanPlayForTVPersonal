@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.BaseListAdapter
-import com.seiko.player.data.model.PlayerOption
+import com.seiko.player.data.model.PlayOption
 import com.seiko.player.databinding.PlayerItemOptionBinding
-import com.seiko.player.util.diff.PlayerOptionDiffCallback
+import com.seiko.player.util.diff.PlayOptionDiffCallback
 
-class OptionsAdapter(context: Context) : BaseListAdapter<PlayerOption, OptionsAdapter.OptionsViewHolder>(PlayerOptionDiffCallback()) {
+class OptionsAdapter(context: Context) : BaseListAdapter<PlayOption, OptionsAdapter.OptionsViewHolder>(PlayOptionDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -49,11 +49,11 @@ class OptionsAdapter(context: Context) : BaseListAdapter<PlayerOption, OptionsAd
         }
 
         fun payload(bundle: Bundle) {
-            if (bundle.containsKey(PlayerOptionDiffCallback.ARGS_OPTION_TITLE)) {
-                binding.playerOptionTitle.text = bundle.getString(PlayerOptionDiffCallback.ARGS_OPTION_TITLE)
+            if (bundle.containsKey(PlayOptionDiffCallback.ARGS_OPTION_TITLE)) {
+                binding.playerOptionTitle.text = bundle.getString(PlayOptionDiffCallback.ARGS_OPTION_TITLE)
             }
-            if (bundle.containsKey(PlayerOptionDiffCallback.ARGS_OPTION_ICON)) {
-                binding.playerOptionIcon.setImageResource(bundle.getInt(PlayerOptionDiffCallback.ARGS_OPTION_ICON))
+            if (bundle.containsKey(PlayOptionDiffCallback.ARGS_OPTION_ICON)) {
+                binding.playerOptionIcon.setImageResource(bundle.getInt(PlayOptionDiffCallback.ARGS_OPTION_ICON))
             }
         }
     }

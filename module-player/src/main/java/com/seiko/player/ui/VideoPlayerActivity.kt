@@ -20,7 +20,7 @@ import com.seiko.danma.IDanmakuEngine
 import com.seiko.danma.SimpleDrawHandlerCallback
 import com.seiko.player.R
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.data.model.PlayerOption
+import com.seiko.player.data.model.PlayOption
 import com.seiko.player.databinding.PlayerActivityVideoBinding
 import com.seiko.player.databinding.PlayerControlBottomBinding
 import com.seiko.player.delegate.VideoTouchDelegate
@@ -81,12 +81,12 @@ class VideoPlayerActivity: FragmentActivity()
     /**
      * 右侧配置界面数据
      */
-    private val optionList: List<PlayerOption> by lazyAndroid {
+    private val optionList: List<PlayOption> by lazyAndroid {
         listOf(
-            PlayerOption(ID_AUDIO_TRACK, R.drawable.ic_audiotrack_w, getString(R.string.ctx_player_audio_track)),
-            PlayerOption(ID_AUDIO_DELAY, R.drawable.ic_audiodelay_w, getString(R.string.audio_delay)),
-            PlayerOption(ID_PLAYBACK_SPEED, R.drawable.ic_speed, getString(R.string.playback_speed)),
-            PlayerOption(ID_AB_REPEAT, R.drawable.ic_ab_repeat, getString(R.string.ab_repeat))
+            PlayOption(ID_AUDIO_TRACK, R.drawable.ic_audiotrack_w, getString(R.string.ctx_player_audio_track)),
+            PlayOption(ID_AUDIO_DELAY, R.drawable.ic_audiodelay_w, getString(R.string.audio_delay)),
+            PlayOption(ID_PLAYBACK_SPEED, R.drawable.ic_speed, getString(R.string.playback_speed)),
+            PlayOption(ID_AB_REPEAT, R.drawable.ic_ab_repeat, getString(R.string.ab_repeat))
         )
     }
 
@@ -387,7 +387,7 @@ class VideoPlayerActivity: FragmentActivity()
      */
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(item) {
-            is PlayerOption -> {
+            is PlayOption -> {
                 when(item.id) {
                     // 点击 回放速度
                     ID_PLAYBACK_SPEED -> {

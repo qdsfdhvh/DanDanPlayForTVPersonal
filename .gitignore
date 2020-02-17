@@ -7,13 +7,12 @@ build/
 .DS_Store
 .externalNativeBuild
 .cxx
+gradlew*
 
 /repo
 
-key.properties
 
-
-app-bl
 componentrelease
-
-gradlew*
+app-bl
+schemas
+key.properties

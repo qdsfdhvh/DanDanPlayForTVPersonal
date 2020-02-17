@@ -8,12 +8,16 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.util.FileUtil
-import com.seiko.player.util.constants.INTENT_TYPE_VIDEO
+import com.seiko.player.util.FileUtils
+import com.seiko.player.util.extensions.getRealPath
 import timber.log.Timber
 
 @Route(path = Routes.Player.PATH)
 class StartActivity : FragmentActivity() {
+
+    companion object {
+        private const val INTENT_TYPE_VIDEO = "video"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,43 +37,48 @@ class StartActivity : FragmentActivity() {
             return
         }
 
-        var videoUri: Uri? = null
-        var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
-        val hash: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_HASH)
-
         //外部打开
-        if (Intent.ACTION_VIEW == openIntent.action) {
+        var videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
             if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
                 toast("Bad Intent：$openIntent")
                 finish()
                 return
             }
-
-            // 获取真实地址
-            val data = intent.data
-            if (data != null) {
-                val videoPath = FileUtil.getRealFilePath(this, data)
-                videoUri = Uri.parse(videoPath)
-                videoTitle = videoTitle ?: FileUtil.getFileName(videoPath)
-            }
+            intent.data
         } else {
-            videoUri = openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
+            openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
         }
 
-//        Timber.d(videoUri.toString())
-//        Timber.d(videoTitle)
-
+        // 没有uri
         if (videoUri == null) {
-            finish()
+            openMediaActivity()
             return
+        }
+
+        // 获取真实地址
+        val videoPath = videoUri.getRealPath(this)
+        if (videoPath == null) {
+            openMediaActivity()
+            return
+        }
+        // 转成普通的uri
+        videoUri = Uri.parse(videoPath)
+
+        // 获取视频标题
+        var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
+        if (videoTitle.isNullOrEmpty()) {
+            videoTitle = FileUtils.getFileName(videoPath)
         }
 
         VideoPlayerActivity.launch(this, PlayParam(
             videoUri = videoUri,
-            videoTitle = videoTitle ?:  "",
-            hash = hash ?: ""
+            videoPath = videoPath,
+            videoTitle = videoTitle
         ))
         finish()
     }
 
+    private fun openMediaActivity() {
+        finish()
+    }
 }

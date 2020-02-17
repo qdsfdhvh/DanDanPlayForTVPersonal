@@ -1,24 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply from: rootProject.file('libbase.gradle')
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
-    defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     kotlinOptions {
         freeCompilerArgs = ["-Xallow-result-return-type"]
     }
@@ -30,7 +13,7 @@ dependencies {
     implementation dependence.libIjkplayer
     // 编码检测
     implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
-
+    // 协程
     implementation dependence.libCoroutinesCore
 }
 

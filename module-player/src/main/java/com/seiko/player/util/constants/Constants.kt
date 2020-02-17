@@ -21,5 +21,7 @@ internal const val PREFS_NAME_DEFAULT = "Seiko_Player_Prefs"
  */
 internal const val MAX_VIDEO_SEEK = 1000
 
-
-const val INTENT_TYPE_VIDEO = "video"
+/**
+ * 计算视频最大多少字节的MD5
+ */
+internal const val MAX_VIDEO_MD5_SIZE_DEFAULT = 16L * 1024 * 1024

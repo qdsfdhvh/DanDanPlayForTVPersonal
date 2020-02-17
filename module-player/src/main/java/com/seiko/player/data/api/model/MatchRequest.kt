@@ -9,7 +9,7 @@ import java.io.File
 //videoDuration (integer): [可选]32位整数的视频时长，单位为秒。默认为0。 ,
 //matchMode (string): [可选]匹配模式。 = ['hashAndFileName', 'fileNameOnly', 'hashOnly']
 //}
-data class MatchRequest(
+class MatchRequest private constructor(
     var fileName: String = "",
     var fileHash: String = "",
     var fieSize: Long = 0,
@@ -17,7 +17,6 @@ data class MatchRequest(
     var matchModel: String = ""
 ) {
     companion object {
-
         private const val MATCH_MODE_DETAIL = "hashAndFileName"
         private const val MATCH_MODE_FILE_NAME_ONLY = "fileNameOnly"
         private const val MATCH_MODE_HASH_ONLY = "hashOnly"

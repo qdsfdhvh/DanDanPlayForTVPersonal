@@ -2,6 +2,7 @@ apply plugin: 'com.gfd.comswitch'
 //apply plugin: 'com.android.library'
 
 apply from: rootProject.file('libbase.gradle')
+apply from: rootProject.file('libclean.gradle')
 
 kapt {
     arguments {

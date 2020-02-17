@@ -5,11 +5,11 @@ import okio.sink
 import okio.source
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
-import java.util.*
 
 
-//@Throws(IOException::class)
+@Throws(IOException::class)
 fun File.writeByteArray(bytes: ByteArray) {
     val sink = this.sink().buffer()
     val source = ByteArrayInputStream(bytes).source().buffer()
@@ -19,7 +19,7 @@ fun File.writeByteArray(bytes: ByteArray) {
     source.close()
 }
 
-//@Throws(IOException::class)
+@Throws(IOException::class)
 fun File.writeInputStream(inputStream: InputStream?) {
     if (inputStream == null) return
 

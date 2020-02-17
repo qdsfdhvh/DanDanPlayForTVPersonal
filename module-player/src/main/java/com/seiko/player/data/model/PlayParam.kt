@@ -7,19 +7,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class PlayParam(
+    val videoPath: String,
     val videoUri: Uri,
-    var videoTitle: String = "",
-    var hash: String = ""
+    val videoTitle: String
 ) : Parcelable {
-
-    @IgnoredOnParcel
-    val videoPath: String by lazy {
-        if ("file".equals(videoUri.scheme, ignoreCase = true)) {
-            videoUri.path!!
-        } else {
-            videoUri.toString()
-        }
-    }
 
     override fun hashCode(): Int {
         return videoUri.hashCode()
