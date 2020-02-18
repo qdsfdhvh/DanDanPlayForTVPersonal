@@ -31,4 +31,6 @@
 
     <dimen name="player_control_bottom_width">600dp</dimen>
 
+    <dimen name="tv_grid_card_thumb_width">192dp</dimen>
+    <dimen name="tv_grid_card_thumb_height">120dp</dimen>
 </resources>

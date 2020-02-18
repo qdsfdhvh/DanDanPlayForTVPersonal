@@ -31,6 +31,25 @@
         <item name="advanced_options_style">@style/Theme.MaterialComponents.Dialog</item>
     </style>
 
+    <style name="Theme.VLC.TV" parent="Theme.Leanback">
+        <item name="colorPrimary">@color/orange800</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/orange600</item>
+        <item name="android:windowFullscreen">true</item>
+<!--        <item name="imageCardViewInfoAreaStyle">@style/VLCardViewInfoStyle</item>-->
+<!--        <item name="imageCardViewTitleStyle">@style/VLCardViewTitleStyle</item>-->
+<!--        <item name="imageCardViewStyle">@style/VLCardView</item>-->
+<!--        <item name="audio_player_background_tint">@color/grey900transparent</item>-->
+<!--        <item name="background_default_gradient">@drawable/gradient_background_tv</item>-->
+<!--        <item name="audio_browser_separator">@color/orange500</item>-->
+<!--        <item name="player_icon_color">@color/white</item>-->
+<!--        <item name="ariane_text_color">@color/simple_list_title</item>-->
+<!--        <item name="list_title">@color/grey50</item>-->
+<!--        <item name="ariane_text_size">18sp</item>-->
+<!--        <item name="font_light">@color/grey50transparent_ea</item>-->
+<!--        <item name="empty_button">@style/Widget.Leanback.DetailsActionButtonStyle</item>-->
+    </style>
+
     <style name="VLC.TextView" parent="android:Widget.TextView">
         <item name="android:textDirection">locale</item>
     </style>

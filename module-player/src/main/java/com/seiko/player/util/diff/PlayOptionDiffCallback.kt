@@ -1,10 +1,10 @@
 package com.seiko.player.util.diff
 
 import android.os.Bundle
-import androidx.leanback.widget.DiffCallback
+import androidx.recyclerview.widget.DiffUtil
 import com.seiko.player.data.model.PlayOption
 
-class PlayOptionDiffCallback : DiffCallback<PlayOption>() {
+class PlayOptionDiffCallback : DiffUtil.ItemCallback<PlayOption>() {
 
     companion object {
         const val ARGS_OPTION_ICON = "ARGS_OPTION_ICON"

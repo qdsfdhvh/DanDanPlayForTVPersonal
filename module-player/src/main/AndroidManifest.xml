@@ -12,7 +12,7 @@
 
         <!--媒体库-->
         <activity android:name=".ui.media.MediaActivity"
-            android:theme="@style/Theme.VLC.Transparent"/>
+            android:theme="@style/Theme.VLC.TV"/>
 
         <!--播放器-->
         <activity

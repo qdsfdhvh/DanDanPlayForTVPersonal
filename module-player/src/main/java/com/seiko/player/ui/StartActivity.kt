@@ -39,7 +39,7 @@ class StartActivity : FragmentActivity() {
         }
 
         //外部打开
-        var videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
+        val videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
             if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
                 toast("Bad Intent：$openIntent")
                 finish()
@@ -62,8 +62,8 @@ class StartActivity : FragmentActivity() {
             openMediaActivity()
             return
         }
-        // 转成普通的uri
-        videoUri = Uri.parse(videoPath)
+//        // 转成普通的uri
+//        videoUri = Uri.parse(videoPath)
 
         // 获取视频标题
         var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
@@ -72,7 +72,7 @@ class StartActivity : FragmentActivity() {
         }
 
         VideoPlayerActivity.launch(this, PlayParam(
-            videoUri = videoUri,
+//            videoUri = videoUri,
             videoPath = videoPath,
             videoTitle = videoTitle
         ))

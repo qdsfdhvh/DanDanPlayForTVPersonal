@@ -3,6 +3,7 @@ package com.seiko.player.ui.video
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -362,7 +363,7 @@ class VideoPlayerActivity: FragmentActivity()
         val param: PlayParam = intent.getParcelableExtra(ARGS_VIDEO_PARAMS) ?: return
         val videoView = binding.playerVideoViewIjk
         bindingControlBottom.playerOverlayTitle.text = param.videoTitle
-        videoView.setVideoURI(param.videoUri)
+        videoView.setVideoURI(Uri.parse(param.videoPath))
         // 尝试下载弹幕字幕
         viewModel.videoParam.value = param
     }

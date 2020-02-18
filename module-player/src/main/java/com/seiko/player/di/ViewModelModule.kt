@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 internal val viewModelModule = module {
     viewModel { PlayerViewModel(get(), get(), get()) }
-    viewModel { MediaViewModel(get()) }
+    viewModel { MediaViewModel(get(), get()) }
 }

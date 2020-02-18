@@ -18,7 +18,10 @@ data class VideoMedia(
     var videoMd5: String = "",
 
     var videoPath: String = "",
+    var videoTitle: String = "",
     var videoThumbnail: String = "",
+
+    var videoSize: Long = 0,
     var videoDuration: Long = 0,
-    var videoSize: Long = 0
+    var videoCurrentPosition: Long = 0
 )

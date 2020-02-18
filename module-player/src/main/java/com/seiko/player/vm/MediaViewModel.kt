@@ -1,28 +1,51 @@
 package com.seiko.player.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.seiko.common.data.Result
-import com.seiko.player.data.db.model.VideoMedia
+import androidx.lifecycle.*
+import androidx.paging.PagedList
+import com.seiko.player.data.model.FolderVideoBean
+import com.seiko.player.data.model.VideoBean
 import com.seiko.player.domain.media.GetVideoMediaListUseCase
+import com.seiko.player.domain.media.QueryVideoMediaUseCase
 import kotlinx.coroutines.Dispatchers
-import timber.log.Timber
+import java.io.File
+import java.util.ArrayList
 
 class MediaViewModel(
-    private val getVideoMediaList: GetVideoMediaListUseCase
+    private val getVideoMediaList: GetVideoMediaListUseCase,
+    private val queryVideoMedia: QueryVideoMediaUseCase
 ) : ViewModel() {
 
-    val mediaList: LiveData<List<VideoMedia>> =
+    val videoList: LiveData<PagedList<VideoBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            when(val result = getVideoMediaList.invoke(false)) {
-                is Result.Error -> Timber.w(result.exception)
-                is Result.Success -> {
-                    Timber.d(result.data.toString())
-                    emit(result.data)
-                }
-            }
+            emitSource(getVideoMediaList.invoke())
+
+            // 检查一次本地视频
+            queryVideoMedia.invoke()
         }
 
+//    val folderVideoList: LiveData<List<FolderVideoBean>> = videoList.switchMap { videoList ->
+//        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+//            val map = HashMap<String, List<VideoBean>>()
+//
+//            var list: ArrayList<VideoBean>?
+//            var parentPath: String
+//            for (media in videoList) {
+//                parentPath = getParentPath(media.videoPath) ?: continue
+//                list = map[parentPath] as? ArrayList<VideoBean>
+//                if (list == null) {
+//                    list = ArrayList()
+//                    map[parentPath] = list
+//                }
+//                list.add(media)
+//            }
+//            emit( map.map { FolderVideoBean(it.key, it.value) })
+//        }
+//    }
+
+}
+
+private fun getParentPath(path: String): String? {
+    val file = File(path)
+    if (!file.exists()) return null
+    return file.parent
 }

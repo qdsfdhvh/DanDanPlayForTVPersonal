@@ -16,7 +16,7 @@ import com.seiko.player.data.db.model.VideoMedia
     VideoDanmaku::class,
     VideoMatch::class,
     VideoMedia::class
-], version = 3)
+], version = 4)
 @TypeConverters(DanmaDownloadBeanConverter::class)
 abstract class PlayerDatabase : RoomDatabase() {
 

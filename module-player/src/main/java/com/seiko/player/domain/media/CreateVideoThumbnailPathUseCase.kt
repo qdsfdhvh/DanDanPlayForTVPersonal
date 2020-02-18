@@ -35,7 +35,7 @@ class CreateVideoThumbnailPathUseCase : KoinComponent{
         // 生成视频md5
         val videoMd5 = videoFile.getVideoMd5()
 
-        // 创建缩略图路径
+        // 创建缩略图路径，如果存在此文件则删除
         val videoThumbnailFile = File(videoThumbnailDir, "$videoMd5.jpg")
         if (videoThumbnailFile.exists() && !videoThumbnailFile.delete()) {
             return  ""
@@ -57,7 +57,7 @@ class CreateVideoThumbnailPathUseCase : KoinComponent{
 }
 
 @Throws(IOException::class)
-fun File.writeBitmap(bitmap: Bitmap?) {
+private fun File.writeBitmap(bitmap: Bitmap?) {
     if (bitmap == null) return
     val stream = FileOutputStream(this)
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)

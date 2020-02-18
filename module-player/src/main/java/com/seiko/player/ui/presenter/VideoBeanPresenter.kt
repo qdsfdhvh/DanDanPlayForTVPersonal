@@ -3,10 +3,10 @@ package com.seiko.player.ui.presenter
 import android.os.Bundle
 import android.view.ViewGroup
 import com.seiko.common.ui.presenter.BasePresenter
-import com.seiko.player.data.db.model.VideoMedia
+import com.seiko.player.data.model.VideoBean
 import com.seiko.player.ui.card.VideoMediaCardView
 
-class VideoMediaPresenter : BasePresenter() {
+class VideoBeanPresenter : BasePresenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = VideoMediaCardView(parent.context)
@@ -15,7 +15,7 @@ class VideoMediaPresenter : BasePresenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) {
         val cardView = holder.view as VideoMediaCardView
-        val intro = item as VideoMedia
+        val intro = item as VideoBean
         cardView.bind(intro)
     }
 

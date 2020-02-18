@@ -23,8 +23,9 @@ object Navigator {
     }
 
     private fun navigation(postcard: Postcard,
-                          doOnNotRoute: () -> Unit = {},
-                          doOnSuccess: (Postcard) -> Unit = {}) {
+                           doOnNotRoute: () -> Unit = {},
+                           doOnSuccess: (Postcard) -> Unit = {},
+                           doOnInterrupt: (Throwable?) -> Unit = {}) {
         try {
             LogisticsCenter.completion(postcard)
         } catch (e: NoRouteFoundException) {
@@ -39,7 +40,7 @@ object Navigator {
             }
 
             override fun onInterrupt(exception: Throwable?) {
-
+                doOnInterrupt.invoke(exception)
             }
         })
     }
