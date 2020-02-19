@@ -76,4 +76,8 @@
     <style name="TipsFontStyle.Small" parent="TipsFontStyle">
         <item name="android:textSize">10sp</item>
     </style>
+
+    <style name="VLCImageCardViewContentStyleTextAppearance" parent="TextAppearance.Leanback.ImageCardView.Content">
+        <item name="android:gravity">center_horizontal</item>
+    </style>
 </resources>

@@ -51,6 +51,11 @@ class TorrentListFragment : Fragment()
         bindViewModel()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        binding.torrentList.adapter = adapter
+    }
+
     override fun onStart() {
         super.onStart()
         Timber.tag("Navigator").d("TorrentListFragment - onStart")
@@ -71,7 +76,6 @@ class TorrentListFragment : Fragment()
     private fun setupUI() {
         adapter = TorrentListAdapter()
         adapter.setOnItemClickListener(this)
-        binding.torrentList.adapter = adapter
         binding.torrentList.setItemSpacing(25)
         binding.torrentList.setPadding(12, 25, 12, 25)
         binding.torrentList.setOnChildViewHolderSelectedListener(mItemSelectedListener)

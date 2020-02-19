@@ -6,6 +6,7 @@ import com.seiko.common.util.getMD5
 import com.seiko.player.data.comments.VideoMediaRepository
 import com.seiko.player.data.db.model.VideoMedia
 import com.seiko.player.util.FileUtils
+import com.seiko.player.util.getFileNameFromPath
 import com.seiko.player.util.getVideoMd5
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -50,7 +51,7 @@ class QueryVideoMediaUseCase : KoinComponent {
                                 id = id,
                                 videoMd5 = videoMd5,
                                 videoPath = videoPath,
-                                videoTitle = FileUtils.getFileName(videoPath),
+                                videoTitle = videoPath.getFileNameFromPath(),
                                 videoSize = videoSize,
                                 videoDuration = videoDuration
                             )

@@ -3,6 +3,7 @@ package com.seiko.player.provider
 import android.app.Application
 import com.seiko.common.provider.IProviderApplication
 import com.seiko.player.di.*
+import com.seiko.player.service.MediaParsingService
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -25,6 +26,8 @@ class ProviderApplication : IProviderApplication {
             // viewModel
             viewModelModule
         ))
+
+        MediaParsingService.startMediaLibrary(application)
     }
 
     override fun onTerminate() {

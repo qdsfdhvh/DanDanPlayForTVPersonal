@@ -15,11 +15,13 @@
     <color name="orange500focus">#86ff8800</color>
     <color name="orange200transparent">#64ffca7d</color>
 
-<!--    <color name="grey50transparent">#b9fafafa</color>-->
-<!--    <color name="grey50transparent_ea">#eafafafa</color>-->
-<!--    <color name="grey400transparent">#80bdbdbd</color>-->
-<!--    <color name="grey600transparent">#80757575</color>-->
-<!--    <color name="grey850transparent">#bb323232</color>-->
-<!--    <color name="grey850transparent_dd">#dd323232</color>-->
+    <color name="grey50transparent">#b9fafafa</color>
+    <color name="grey50transparent_ea">#eafafafa</color>
+    <color name="grey400transparent">#80bdbdbd</color>
+    <color name="grey600transparent">#80757575</color>
+    <color name="grey850transparent">#bb323232</color>
+    <color name="grey850transparent_dd">#dd323232</color>
     <color name="grey900transparent">#80212121</color>
+
+    <color name="playerbackground">#c0141414</color>
 </resources>

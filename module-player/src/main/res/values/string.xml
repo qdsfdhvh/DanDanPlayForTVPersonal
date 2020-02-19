@@ -43,4 +43,10 @@
     <string name="ctx_player_audio_track">音频轨</string>
     <string name="ctx_player_subs_track">字幕轨</string>
     <string name="video_remote_enable">切换到远程控制模式</string>
+
+    <string name="time_category_new">新媒体</string>
+    <string name="time_category_current_month">本月</string>
+    <string name="time_category_current_year">今年</string>
+    <string name="time_category_last_year">去年</string>
+    <string name="time_category_older">较旧媒体</string>
 </resources>

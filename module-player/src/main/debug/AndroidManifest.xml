@@ -444,5 +444,6 @@
 
         <service android:name=".service.PlaybackService"/>
 
+        <service android:name=".service.MediaParsingService"/>
     </application>
 </manifest>

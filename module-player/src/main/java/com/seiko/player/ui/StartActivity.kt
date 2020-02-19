@@ -11,6 +11,7 @@ import com.seiko.player.data.model.PlayParam
 import com.seiko.player.ui.video.VideoPlayerActivity
 import com.seiko.player.util.FileUtils
 import com.seiko.player.util.extensions.getRealPath
+import com.seiko.player.util.getFileNameFromPath
 import timber.log.Timber
 
 @Route(path = Routes.Player.PATH)
@@ -68,7 +69,7 @@ class StartActivity : FragmentActivity() {
         // 获取视频标题
         var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
         if (videoTitle.isNullOrEmpty()) {
-            videoTitle = FileUtils.getFileName(videoPath)
+            videoTitle = videoPath.getFileNameFromPath()
         }
 
         VideoPlayerActivity.launch(this, PlayParam(

@@ -62,6 +62,11 @@ class TorrentDetailFragment : Fragment()
         bindViewModel()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        binding.torrentTab.adapter = tabAdapter
+    }
+
     override fun onDestroyView() {
         binding.torrentTab.removeOnChildViewHolderSelectedListener(mItemSelectedListener)
         super.onDestroyView()
@@ -102,7 +107,6 @@ class TorrentDetailFragment : Fragment()
         binding.torrentTab.setPadding(25, 0, 25, 0)
         binding.torrentTab.setItemSpacing(25)
         binding.torrentTab.addOnChildViewHolderSelectedListener(mItemSelectedListener)
-        binding.torrentTab.adapter = tabAdapter
 
         // ViewPager2
         binding.torrentViewPager.adapter = DetailPagerAdapter(this)

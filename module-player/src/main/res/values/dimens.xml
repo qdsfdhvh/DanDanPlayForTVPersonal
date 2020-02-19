@@ -31,6 +31,16 @@
 
     <dimen name="player_control_bottom_width">600dp</dimen>
 
-    <dimen name="tv_grid_card_thumb_width">192dp</dimen>
-    <dimen name="tv_grid_card_thumb_height">120dp</dimen>
+    <dimen name="tv_grid_card_thumb_width">320dp</dimen>
+    <dimen name="tv_grid_card_thumb_height">200dp</dimen>
+
+    <dimen name="tv_overscan_vertical">27dp</dimen>
+    <dimen name="tv_overscan_horizontal">48dp</dimen>
+
+    <!--Keylines-->
+    <dimen name="kl_half">4dp</dimen>
+    <dimen name="kl_small">8dp</dimen>
+    <dimen name="kl_normal">16dp</dimen>
+
+    <dimen name="audio_browser_item_size">48dp</dimen>
 </resources>

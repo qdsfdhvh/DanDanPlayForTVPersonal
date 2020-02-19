@@ -29,11 +29,11 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the name of file
      */
-    fun getFileName(filePath: String?): String {
-        if (isSpace(filePath)) return ""
-        val lastSep = filePath!!.lastIndexOf(File.separator)
-        return if (lastSep == -1) filePath else filePath.substring(lastSep + 1)
-    }
+//    fun getFileName(filePath: String?): String {
+//        if (isSpace(filePath)) return ""
+//        val lastSep = filePath!!.lastIndexOf(File.separator)
+//        return if (lastSep == -1) filePath else filePath.substring(lastSep + 1)
+//    }
 
     fun getFileExt(filePath: String?): String {
         if (isSpace(filePath)) return ""
@@ -47,3 +47,7 @@ object FileUtils {
         return filePath.substring(0, end)
     }
 }
+
+
+
+fun String.getFileNameFromPath() = substringAfterLast(File.separator)

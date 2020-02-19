@@ -36,6 +36,7 @@ dependencies {
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
     // AppCompat
+    implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha04"
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
@@ -51,4 +52,7 @@ dependencies {
     implementation project(':libs:tool-danma')
     // 字幕
     implementation project(':libs:tool-subtitle')
+    // VLC
+    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
+    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"
 }

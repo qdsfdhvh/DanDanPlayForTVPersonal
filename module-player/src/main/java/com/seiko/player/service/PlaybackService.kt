@@ -3,12 +3,13 @@ package com.seiko.player.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
+import com.seiko.common.service.BaseIntentService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 
-class PlaybackService : IntentService("PlaybackService"), CoroutineScope by MainScope() {
+class PlaybackService : BaseIntentService("PlaybackService") {
 
     companion object {
 
