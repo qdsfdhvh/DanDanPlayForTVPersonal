@@ -1,30 +1,35 @@
 package com.seiko.player.service
 
+import android.annotation.TargetApi
+import android.app.IntentService
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.PowerManager
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.seiko.common.service.BaseIntentService
+import com.seiko.player.R
 import com.seiko.player.util.constants.safeOffer
+import com.seiko.player.util.helper.NotificationHelper
 import com.seiko.player.vlc.util.AndroidDevices
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import kotlinx.coroutines.withContext
+import org.videolan.medialibrary.interfaces.DevicesDiscoveryCb
 import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
 //@ObsoleteCoroutinesApi
 //@ExperimentalCoroutinesApi
-class MediaParsingService : BaseIntentService("MediaParsingService") {
+class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscoveryCb {
 
     companion object {
         const val ACTION_INIT = "medialibrary_init"
@@ -50,6 +55,7 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
             intent.putExtra(EXTRA_FIRST_RUN, firstRun)
             intent.putExtra(EXTRA_UPGRADE, upgrade)
             intent.putExtra(EXTRA_PARSE, parse)
+            context.startService(intent)
             ContextCompat.startForegroundService(context, intent)
             Timber.d("startMediaLibrary finish")
         }
@@ -65,9 +71,14 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
 
 //    private lateinit var actions : SendChannel<Action>
 
+    override val coroutineContext: CoroutineContext
+        get() = SupervisorJob() + Dispatchers.IO
+
     override fun onCreate() {
         super.onCreate()
+        Timber.d("onCreate")
         mediaLibrary = Medialibrary.getInstance()
+        mediaLibrary.addDeviceDiscoveryCb(this)
 //        val pm = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
 //        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Player:MediaParsingService")
 
@@ -79,40 +90,55 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
 //        setupScope()
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-        when(intent?.action) {
-            ACTION_INIT -> {
-                Timber.d("onStartCommand ACTION_INIT")
-                val upgrade = intent.getBooleanExtra(EXTRA_UPGRADE, false)
-                val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
-                setupMediaLibrary(upgrade, parse)
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaLibrary.removeDeviceDiscoveryCb(this)
+        Timber.d("onDestroy")
+        cancel()
     }
 
-    //    private fun setupMedialibrary(upgrade: Boolean, parse: Boolean) {
-    //        if (medialibrary.isInitiated) {
-    //            medialibrary.resumeBackgroundOperations()
-    //            if (parse && !scanActivated) actions.safeOffer(StartScan(upgrade))
-    //        } else actions.safeOffer(Init(upgrade, parse))
-    //    }
-    private fun setupMediaLibrary(upgrade: Boolean, parse: Boolean) {
-        Timber.d("setupMediaLibrary")
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun forceForeground() {
+        val notification = NotificationHelper.createScanNotification(applicationContext, getString(R.string.loading_medialibrary), scanPaused)
+        startForeground(43, notification)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            forceForeground()
+        }
+        super.onStartCommand(intent, flags, startId)
+        if (intent == null) {
+            exitCommand()
+            return START_NOT_STICKY
+        }
+        when(intent.action) {
+            ACTION_INIT -> {
+                Timber.d("onStartCommand ACTION_INIT")
+                val firstRun = intent.getBooleanExtra(EXTRA_FIRST_RUN, false)
+                val upgrade = intent.getBooleanExtra(EXTRA_UPGRADE, false)
+                val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
+                setupMediaLibrary(firstRun, upgrade, parse)
+            }
+        }
+        return START_NOT_STICKY
+    }
+
+    private fun setupMediaLibrary(firstRun: Boolean, upgrade: Boolean, parse: Boolean) = launch {
+        Timber.d("setupMediaLibrary firstRun=$firstRun, upgrade=$upgrade, parse=$parse")
         if (mediaLibrary.isInitiated) {
             mediaLibrary.resumeBackgroundOperations()
             if (parse && !scanActivated) {
                 Timber.d("setupMediaLibrary StartScan")
-//                actions.safeOffer(Action.StartScan(upgrade))
                 actionStartScan(upgrade)
             }
         } else {
             Timber.d("setupMediaLibrary Init")
-            actionInit(upgrade, parse)
-//            actions.safeOffer(Action.Init(upgrade, parse))
+            actionInit(firstRun, upgrade, parse)
         }
     }
 
-    private fun actionInit(upgrade: Boolean, parse: Boolean) {
+    private fun actionInit(firstRun: Boolean, upgrade: Boolean, parse: Boolean) {
         Timber.d("actions Init")
         if (mediaLibrary.isInitiated) {
             exitCommand()
@@ -120,7 +146,7 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
         }
 
         val context = this@MediaParsingService
-        var shouldInit = !dbExists()
+        var shouldInit = firstRun || !dbExists()
         val initCode = mediaLibrary.init(context)
         if (initCode != Medialibrary.ML_INIT_ALREADY_INITIALIZED) {
             shouldInit = shouldInit or
@@ -136,29 +162,10 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
     }
 
     private fun actionStartScan(upgrade: Boolean) {
+        Timber.d("actionStartScan")
         addDevices(true)
         startScan(false, upgrade)
     }
-
-//    private fun setupScope() {
-//        actions = lifecycleScope.actor(context = Dispatchers.IO, capacity = Channel.UNLIMITED) {
-//            for (action in channel) when (action) {
-//                is Action.Init -> {
-//
-//                }
-//                is Action.StartScan -> {
-//                    addDevices(true)
-//                    startScan(false, action.upgrade)
-//                }
-//                is Action.UpdateStorageList -> {
-//                    updateStorageList()
-//                }
-//                is Action.Reload -> {
-////                    reload(action.path)
-//                }
-//            }
-//        }
-//    }
 
     private fun initMediaLib(parse: Boolean, shouldInit: Boolean, upgrade: Boolean) {
         addDevices(parse)
@@ -174,12 +181,14 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
     }
 
     private fun startScan(shouldInit: Boolean, upgrade: Boolean) {
+        Timber.d("startScan shouldInit=$shouldInit")
         scanActivated = true
         when {
             shouldInit -> {
                 for (folder in Medialibrary.getBlackList()) {
                     mediaLibrary.banFolder(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY + folder)
                 }
+                Timber.d("discover ${AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY}")
                 mediaLibrary.discover(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY)
             }
             upgrade -> {
@@ -194,6 +203,7 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
 
     private fun addDevices(addExternal: Boolean) {
         val mainStorage = AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY
+        Timber.d("addDevice : $mainStorage")
         mediaLibrary.addDevice("main-storage", mainStorage, true)
 
         val devices = AndroidDevices.externalStorageDirectories
@@ -202,6 +212,7 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
             Timber.d(uuid)
             if (device.isEmpty() || !device.scanAllowed()) continue
 
+            Timber.d("addDevice : $uuid")
             mediaLibrary.addDevice(uuid, device, false)
         }
     }
@@ -265,13 +276,37 @@ class MediaParsingService : BaseIntentService("MediaParsingService") {
      * 退出命令
      */
     private fun exitCommand() {
-//        if (!mediaLibrary.isWorking && !serviceLock && !discoverTriggered) {
+        if (!mediaLibrary.isWorking && !serviceLock && !discoverTriggered) {
 //            if (wakeLock.isHeld) {
 //                wakeLock.release()
 //            }
-//            stopForeground(true)
-//            stopService(Intent(applicationContext, MediaParsingService::class.java))
-//        }
+            stopForeground(true)
+            stopService(Intent(applicationContext, MediaParsingService::class.java))
+        }
+    }
+
+    override fun onReloadStarted(entryPoint: String?) {
+        Timber.d(entryPoint)
+    }
+
+    override fun onReloadCompleted(entryPoint: String?) {
+        Timber.d(entryPoint)
+    }
+
+    override fun onDiscoveryStarted(entryPoint: String?) {
+        Timber.d(entryPoint)
+    }
+
+    override fun onParsingStatsUpdated(percent: Int) {
+        Timber.d(percent.toString())
+    }
+
+    override fun onDiscoveryCompleted(entryPoint: String?) {
+        Timber.d(entryPoint)
+    }
+
+    override fun onDiscoveryProgress(entryPoint: String?) {
+        Timber.d(entryPoint)
     }
 
 //    private sealed class Action {

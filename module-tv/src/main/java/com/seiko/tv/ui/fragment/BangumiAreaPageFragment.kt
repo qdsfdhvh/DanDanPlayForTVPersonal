@@ -48,7 +48,7 @@ class BangumiAreaPageFragment : GridFragment()
     }
 
     private fun setupUI() {
-        val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM)
+        val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter

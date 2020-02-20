@@ -21,11 +21,15 @@
     <string name="playback_multiple_errors">Multiple media cannot be played</string>
     <string name="widget_default_text" translatable="false">VLC mini player</string>
 
+    <string name="ml_scanning">正在扫描媒体文件</string>
+    <string name="resume">继续</string>
+    <string name="pause">暂停</string>
     <string name="play">播放</string>
     <string name="player_info">信息</string>
     <string name="volume">音量</string>
     <string name="brightness">亮度</string>
     <string name="playback_speed">回放速度</string>
+    <string name="loading_medialibrary">正在加载媒体库…</string>
 <!--    <string name="error_not_compatible">抱歉，该版本的 VLC for Android™ 尚不支持您的设备。</string>-->
 <!--    <string name="error_problem">抱歉，VLC for Android 加载时出现问题，需要关闭。</string>-->
 <!--    <string name="error_message_is">错误消息为 (请在汇报问题时附上此内容):\n</string>-->

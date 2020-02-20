@@ -96,7 +96,7 @@ class ImageLoader(
 
     fun clearBackground(bm: BackgroundManager?) {
         if (bm === null) return
-        bm.color = ContextCompat.getColor(activity, R.color.tv_bg)
+//        bm.color = ContextCompat.getColor(activity, R.color.tv_bg)
         bm.drawable = null
     }
 }

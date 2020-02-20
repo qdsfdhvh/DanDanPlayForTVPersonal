@@ -1,6 +1,5 @@
-apply plugin: 'com.gfd.comswitch'
 //apply plugin: 'com.android.library'
-apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'com.gfd.comswitch'
 
 apply from: rootProject.file('libbase.gradle')
 apply from: rootProject.file('libclean.gradle')

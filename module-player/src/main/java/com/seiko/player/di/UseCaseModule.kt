@@ -15,6 +15,7 @@ internal val useCaseModule = module {
     single { GetDanmaUseCase() }
     single { GetVideoEpisodeIdUseCase() }
 
+    //Deprecated
     single { CompletionVideoMediaUseCase() }
     single { CreateVideoThumbnailPathUseCase() }
     single { GetVideoMediaListUseCase() }

@@ -1,24 +1,6 @@
 package com.seiko.common.util
 
-import android.app.Activity
-import android.content.Context
-import android.util.DisplayMetrics
-import android.view.View
-import android.view.animation.AccelerateInterpolator
 import me.jessyan.autosize.AutoSizeConfig
-import timber.log.Timber
-
-/**
- * 动画 放大/缩放
- */
-fun View.scaleAnimator(hasFocus: Boolean, focusScale: Float, duration: Long) {
-    val scale = if (hasFocus) focusScale else 1.0f
-    animate().scaleX(scale)
-        .scaleY(scale)
-        .setInterpolator(AccelerateInterpolator())
-        .setDuration(duration)
-}
-
 
 fun getPercentWidthSize(value: Int): Int {
     val screenWidth = AutoSizeConfig.getInstance().screenWidth

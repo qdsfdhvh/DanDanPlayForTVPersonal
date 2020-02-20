@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
@@ -35,7 +36,7 @@ class StartActivity : FragmentActivity() {
     private fun checkIntent() {
         val openIntent = intent
         if (openIntent == null) {
-            finish()
+            openMediaActivity()
             return
         }
 
@@ -43,7 +44,7 @@ class StartActivity : FragmentActivity() {
         val videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
             if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
                 toast("Bad Intent：$openIntent")
-                finish()
+                openMediaActivity()
                 return
             }
             intent.data
@@ -63,8 +64,6 @@ class StartActivity : FragmentActivity() {
             openMediaActivity()
             return
         }
-//        // 转成普通的uri
-//        videoUri = Uri.parse(videoPath)
 
         // 获取视频标题
         var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
@@ -73,7 +72,6 @@ class StartActivity : FragmentActivity() {
         }
 
         VideoPlayerActivity.launch(this, PlayParam(
-//            videoUri = videoUri,
             videoPath = videoPath,
             videoTitle = videoTitle
         ))
@@ -81,6 +79,7 @@ class StartActivity : FragmentActivity() {
     }
 
     private fun openMediaActivity() {
+        Navigator.navToPlayerMedia(this)
         finish()
     }
 }

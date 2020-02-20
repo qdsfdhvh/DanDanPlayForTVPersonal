@@ -4,18 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.BasePagedListAdapter
-import com.seiko.common.util.scaleAnimator
-import com.seiko.player.R
+import com.seiko.common.ui.adapter.FocusAnimator
 import com.seiko.player.databinding.MediaBrowserTvItemBinding
-import com.seiko.player.ui.widget.FocusListener
-import com.seiko.player.ui.widget.TvFocusableAdapter
 import com.seiko.player.util.diff.MediaLibraryItemDiffCallback
 import com.seiko.player.vlc.util.ImageLoader
-import com.seiko.player.vlc.util.TvAdapterUtils
 import org.videolan.medialibrary.Tools
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
@@ -26,6 +21,7 @@ class MediaTvListAdapter(
 ) : BasePagedListAdapter<MediaLibraryItem, MediaTvListAdapter.ViewHolder>(MediaLibraryItemDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
+    var selectPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = MediaBrowserTvItemBinding.inflate(inflater, parent, false)
@@ -35,6 +31,18 @@ class MediaTvListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
     }
+
+    override fun submitList(pagedList: PagedList<MediaLibraryItem>?) {
+        selectPosition = if (pagedList.isNullOrEmpty()) -1 else 0
+        super.submitList(pagedList)
+    }
+
+    override fun submitList(pagedList: PagedList<MediaLibraryItem>?, commitCallback: Runnable?) {
+        selectPosition = if (pagedList.isNullOrEmpty()) -1 else 0
+        super.submitList(pagedList, commitCallback)
+    }
+
+    fun getSelectItem() = if (selectPosition == -1) null else getItem(selectPosition)
 
     private var focusListener: OnItemFocusListener? = null
 
@@ -46,16 +54,23 @@ class MediaTvListAdapter(
         fun onItemFocused(view: View, item: MediaLibraryItem)
     }
 
-    inner class ViewHolder(private val binding: MediaBrowserTvItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(
+        private val binding: MediaBrowserTvItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val animator = FocusAnimator(binding.root, 1.2f,  false, 150)
 
         init {
             binding.root.isFocusable = true
             binding.root.isFocusableInTouchMode = true
-            binding.root.setOnFocusChangeListener { v, hasFocus ->
-                if (v == null) return@setOnFocusChangeListener
-                v.scaleAnimator(hasFocus, 1.2f, 150)
+            binding.root.setOnFocusChangeListener { _, hasFocus ->
+                animator.animateFocus(hasFocus, false)
                 if (hasFocus) {
-                    focusListener?.onItemFocused(v, getItem(layoutPosition)!!)
+                    val position = adapterPosition
+                    if (position >= 0) {
+                        selectPosition = position
+                        focusListener?.onItemFocused(binding.root, getItem(position)!!)
+                    }
                 }
             }
             binding.root.setOnClickListener {

@@ -42,7 +42,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     private fun setupRowAdapter() {
-        val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM)
+        val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
@@ -70,7 +70,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 findNavController().navigate(
-                    BangumiHistoryFragmentDirections.actionBangumiHistoryFragmentToBangumiDetailsFragment(
+                    BangumiFavoriteFragmentDirections.actionBangumiFavoriteFragmentToBangumiDetailsFragment(
                         item.animeId
                     )
                 )

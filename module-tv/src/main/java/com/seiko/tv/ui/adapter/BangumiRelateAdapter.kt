@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.seiko.common.util.scaleAnimator
 import com.seiko.common.ui.adapter.BaseListAdapter
+import com.seiko.common.ui.adapter.FocusAnimator
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 
-class BangumiRelateAdapter : BaseListAdapter<HomeImageBean, BangumiRelateAdapter.BangumiRelateViewHolder>(HomeImageBeanDiffCallback()),
-    View.OnFocusChangeListener {
+class BangumiRelateAdapter : BaseListAdapter<HomeImageBean, BangumiRelateAdapter.BangumiRelateViewHolder>(HomeImageBeanDiffCallback()) {
 
     fun get(position: Int): HomeImageBean? {
         if (position < 0 || position >= itemCount) return null
@@ -21,7 +20,6 @@ class BangumiRelateAdapter : BaseListAdapter<HomeImageBean, BangumiRelateAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BangumiRelateViewHolder {
         val cardView = MainAreaCardView(parent.context)
-        cardView.onFocusChangeListener = this
         return BangumiRelateViewHolder(cardView)
     }
 
@@ -33,17 +31,17 @@ class BangumiRelateAdapter : BaseListAdapter<HomeImageBean, BangumiRelateAdapter
         holder.payload(bundle)
     }
 
-    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-        if (v == null) return
-        v.scaleAnimator(hasFocus, 1.2f, 150)
-    }
-
     inner class BangumiRelateViewHolder(
         private val cardView: MainAreaCardView
     ) : RecyclerView.ViewHolder(cardView)
         , View.OnClickListener {
 
+        private val animator = FocusAnimator(cardView, 1.2f,  false, 150)
+
         init {
+            cardView.setOnFocusChangeListener { _, hasFocus ->
+                animator.animateFocus(hasFocus, false)
+            }
             cardView.setOnClickListener(this)
         }
 

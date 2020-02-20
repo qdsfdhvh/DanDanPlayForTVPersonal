@@ -36,6 +36,7 @@
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/orange600</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/tv_bg</item>
 <!--        <item name="imageCardViewInfoAreaStyle">@style/VLCardViewInfoStyle</item>-->
 <!--        <item name="imageCardViewTitleStyle">@style/VLCardViewTitleStyle</item>-->
 <!--        <item name="imageCardViewStyle">@style/VLCardView</item>-->
