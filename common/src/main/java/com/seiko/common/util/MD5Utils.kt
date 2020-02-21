@@ -6,11 +6,6 @@ import java.nio.channels.FileChannel
 import java.security.MessageDigest
 import kotlin.Exception
 
-/**
- * 获取字符串MD5
- *
- * @return 加密后md5
- */
 fun String.getMD5(): String {
     try {
         val md = MessageDigest.getInstance("MD5")

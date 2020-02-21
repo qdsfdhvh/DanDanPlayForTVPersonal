@@ -4,27 +4,29 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.BasePagedListAdapter
 import com.seiko.common.ui.adapter.FocusAnimator
-import com.seiko.player.databinding.MediaBrowserTvItemBinding
-import com.seiko.player.util.diff.MediaLibraryItemDiffCallback
-import com.seiko.player.vlc.util.ImageLoader
+import com.seiko.player.databinding.PlayerItemMediaBinding
+import com.seiko.player.util.diff.MediaWrapperDiffCallback
+import com.seiko.player.util.bitmap.ImageLoader
 import org.videolan.medialibrary.Tools
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 
 class MediaTvListAdapter(
     context: Context,
-    private val imageLoader: ImageLoader
-) : BasePagedListAdapter<MediaLibraryItem, MediaTvListAdapter.ViewHolder>(MediaLibraryItemDiffCallback()) {
+    private val imageLoader: ImageLoader,
+    private val lifecycleScope: LifecycleCoroutineScope
+) : BasePagedListAdapter<MediaWrapper, MediaTvListAdapter.ViewHolder>(MediaWrapperDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
     var selectPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = MediaBrowserTvItemBinding.inflate(inflater, parent, false)
+        val binding = PlayerItemMediaBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
@@ -32,12 +34,12 @@ class MediaTvListAdapter(
         holder.bind(position)
     }
 
-    override fun submitList(pagedList: PagedList<MediaLibraryItem>?) {
+    override fun submitList(pagedList: PagedList<MediaWrapper>?) {
         selectPosition = if (pagedList.isNullOrEmpty()) -1 else 0
         super.submitList(pagedList)
     }
 
-    override fun submitList(pagedList: PagedList<MediaLibraryItem>?, commitCallback: Runnable?) {
+    override fun submitList(pagedList: PagedList<MediaWrapper>?, commitCallback: Runnable?) {
         selectPosition = if (pagedList.isNullOrEmpty()) -1 else 0
         super.submitList(pagedList, commitCallback)
     }
@@ -55,7 +57,7 @@ class MediaTvListAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: MediaBrowserTvItemBinding
+        private val binding: PlayerItemMediaBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val animator = FocusAnimator(binding.root, 1.2f,  false, 150)
@@ -86,27 +88,27 @@ class MediaTvListAdapter(
             val item = getItem(position)!!
             var progress = 0
             var resolution = ""
-            var description = item.description
+            var description = ""
             var max = 0
-            if (item is MediaWrapper) {
-                if (item.type == MediaWrapper.TYPE_VIDEO) {
-                    resolution = generateResolutionClass(item.width, item.height) ?: ""
-                    description = if (item.time == 0L) Tools.millisToString(item.length) else Tools.getProgressText(item)
-                    if (item.length > 0) {
-                        val lastTime = item.displayTime
-                        if (lastTime > 0) {
-                            max = (item.length / 1000).toInt()
-                            progress = (lastTime / 1000).toInt()
-                        }
+            if (item.type == MediaWrapper.TYPE_VIDEO) {
+                resolution = generateResolutionClass(item.width, item.height) ?: ""
+                description = if (item.time == 0L) Tools.millisToString(item.length) else Tools.getProgressText(item)
+                if (item.length > 0) {
+                    val lastTime = item.displayTime
+                    if (lastTime > 0) {
+                        max = (item.length / 1000).toInt()
+                        progress = (lastTime / 1000).toInt()
                     }
                 }
             }
             binding.title.text = item.title
-            binding.subtitle.text = description
+            binding.time.text = description
             binding.badgeTV.text = resolution
             binding.progressBar.max = max
             binding.progressBar.progress = progress
-            imageLoader.loadImage(binding.mediaCover, item)
+            lifecycleScope.launchWhenStarted {
+                imageLoader.loadImage(binding.mediaCover, item)
+            }
         }
     }
 }

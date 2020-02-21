@@ -3,7 +3,10 @@ package com.seiko.tv.provider
 import android.app.Application
 import com.seiko.tv.di.*
 import com.seiko.common.provider.IProviderApplication
-import com.seiko.common.util.initFresco
+import com.seiko.tv.util.initFresco
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -25,6 +28,11 @@ class ProviderApplication : IProviderApplication {
             // viewModel
             viewModelModule
         ))
+
+        GlobalScope.launch(Dispatchers.IO) {
+            // 初始化Fresco
+            application.initFresco()
+        }
     }
 
     override fun onTerminate() {

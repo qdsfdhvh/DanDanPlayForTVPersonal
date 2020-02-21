@@ -1,26 +1,17 @@
 package com.seiko.player.service
 
 import android.annotation.TargetApi
-import android.app.IntentService
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.PowerManager
-import android.text.TextUtils
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.lifecycleScope
-import com.seiko.common.service.BaseIntentService
 import com.seiko.player.R
-import com.seiko.player.util.constants.safeOffer
 import com.seiko.player.util.helper.NotificationHelper
 import com.seiko.player.vlc.util.AndroidDevices
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.actor
 import org.videolan.medialibrary.interfaces.DevicesDiscoveryCb
 import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
@@ -45,19 +36,16 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
 
         @JvmStatic
         fun startMediaLibrary(context: Context,
-                              firstRun: Boolean = false,
                               upgrade: Boolean = false,
                               parse: Boolean = true) {
-            Timber.d("startMediaLibrary...")
             if (Medialibrary.getInstance().isStarted) return
             val intent = Intent(context, MediaParsingService::class.java)
             intent.action = ACTION_INIT
-            intent.putExtra(EXTRA_FIRST_RUN, firstRun)
+//            intent.putExtra(EXTRA_FIRST_RUN, firstRun)
             intent.putExtra(EXTRA_UPGRADE, upgrade)
             intent.putExtra(EXTRA_PARSE, parse)
             context.startService(intent)
             ContextCompat.startForegroundService(context, intent)
-            Timber.d("startMediaLibrary finish")
         }
     }
 
@@ -115,17 +103,16 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         when(intent.action) {
             ACTION_INIT -> {
                 Timber.d("onStartCommand ACTION_INIT")
-                val firstRun = intent.getBooleanExtra(EXTRA_FIRST_RUN, false)
                 val upgrade = intent.getBooleanExtra(EXTRA_UPGRADE, false)
                 val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
-                setupMediaLibrary(firstRun, upgrade, parse)
+                setupMediaLibrary(upgrade, parse)
             }
         }
         return START_NOT_STICKY
     }
 
-    private fun setupMediaLibrary(firstRun: Boolean, upgrade: Boolean, parse: Boolean) = launch {
-        Timber.d("setupMediaLibrary firstRun=$firstRun, upgrade=$upgrade, parse=$parse")
+    private fun setupMediaLibrary(upgrade: Boolean, parse: Boolean) = launch {
+        Timber.d("setupMediaLibrary upgrade=$upgrade, parse=$parse")
         if (mediaLibrary.isInitiated) {
             mediaLibrary.resumeBackgroundOperations()
             if (parse && !scanActivated) {
@@ -134,11 +121,11 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
             }
         } else {
             Timber.d("setupMediaLibrary Init")
-            actionInit(firstRun, upgrade, parse)
+            actionInit(upgrade, parse)
         }
     }
 
-    private fun actionInit(firstRun: Boolean, upgrade: Boolean, parse: Boolean) {
+    private fun actionInit(upgrade: Boolean, parse: Boolean) {
         Timber.d("actions Init")
         if (mediaLibrary.isInitiated) {
             exitCommand()
@@ -146,7 +133,8 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         }
 
         val context = this@MediaParsingService
-        var shouldInit = firstRun || !dbExists()
+        var shouldInit = !dbExists()
+        Timber.d("actionInit shouldInit=$shouldInit")
         val initCode = mediaLibrary.init(context)
         if (initCode != Medialibrary.ML_INIT_ALREADY_INITIALIZED) {
             shouldInit = shouldInit or
@@ -168,6 +156,7 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
     }
 
     private fun initMediaLib(parse: Boolean, shouldInit: Boolean, upgrade: Boolean) {
+        Timber.d("initMedialib parse=$parse, shouldInit=$shouldInit, upgrade=$upgrade")
         addDevices(parse)
         if (upgrade) {
             mediaLibrary.forceParserRetry()

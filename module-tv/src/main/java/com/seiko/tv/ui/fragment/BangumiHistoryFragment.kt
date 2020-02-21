@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiHistoryViewModel
@@ -20,7 +21,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     , OnItemViewClickedListener {
 
     companion object {
-        private const val COLUMNS = 7
+        private const val COLUMNS = 6
     }
 
     private val viewModel: BangumiHistoryViewModel by viewModel()
@@ -38,8 +39,10 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     }
 
     private fun setupRowAdapter() {
-        val verticalGridPresenter = VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
+        val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
+        verticalGridPresenter.setItemSpacing(25)
+
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
 

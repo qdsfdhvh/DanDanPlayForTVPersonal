@@ -27,7 +27,7 @@ class ProviderApplication : IProviderApplication {
             viewModelModule
         ))
 
-        MediaParsingService.startMediaLibrary(application, firstRun = true)
+        MediaParsingService.startMediaLibrary(application, upgrade = true)
     }
 
     override fun onTerminate() {

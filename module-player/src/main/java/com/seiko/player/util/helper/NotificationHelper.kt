@@ -10,7 +10,7 @@ import com.seiko.player.ui.StartActivity
 
 object NotificationHelper {
 
-    private const val MEDIALIBRRARY_CHANNEL_ID = "vlc_medialibrary"
+    private const val MEDIA_LIBRARY_CHANNEL_ID = "player_media_library"
     private const val ACTION_RESUME_SCAN = "action_resume_scan"
     private const val ACTION_PAUSE_SCAN = "action_pause_scan"
 
@@ -19,7 +19,7 @@ object NotificationHelper {
     fun createScanNotification(ctx: Context, progressText: String, paused: Boolean): Notification {
         val intent = Intent(ctx, StartActivity::class.java)
         intent.action = Intent.ACTION_VIEW
-        val scanCompatBuilder = NotificationCompat.Builder(ctx, MEDIALIBRRARY_CHANNEL_ID)
+        val scanCompatBuilder = NotificationCompat.Builder(ctx, MEDIA_LIBRARY_CHANNEL_ID)
             .setContentIntent(PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentTitle(ctx.getString(R.string.ml_scanning))
@@ -30,11 +30,11 @@ object NotificationHelper {
 
         notificationIntent.action = if (paused) ACTION_RESUME_SCAN else ACTION_PAUSE_SCAN
         val pi = PendingIntent.getBroadcast(ctx, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val playpause = if (paused)
+        val action = if (paused)
             NotificationCompat.Action(R.drawable.ic_play, ctx.getString(R.string.resume), pi)
         else
             NotificationCompat.Action(R.drawable.ic_pause, ctx.getString(R.string.pause), pi)
-        scanCompatBuilder.addAction(playpause)
+        scanCompatBuilder.addAction(action)
         return scanCompatBuilder.build()
     }
 

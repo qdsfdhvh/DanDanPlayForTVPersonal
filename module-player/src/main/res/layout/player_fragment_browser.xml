@@ -32,5 +32,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/media_browser_tv_item"/>
+        tools:listitem="@layout/player_item_media"/>
 </com.seiko.player.ui.widget.FocusableConstraintLayout>

@@ -8,14 +8,12 @@ import androidx.lifecycle.Observer
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
-private const val TAG = "VLC/LiveEvent"
-
 class LiveEvent<T> : MutableLiveData<T>() {
     private val pending = AtomicBoolean(false)
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         if (hasActiveObservers()) {
-            Timber.tag(TAG).w("Multiple observers registered but only one will be notified of changes.")
+            Timber.w("Multiple observers registered but only one will be notified of changes.")
         }
         // Observe the internal MutableLiveData
         super.observe(owner, Observer<T> { t ->

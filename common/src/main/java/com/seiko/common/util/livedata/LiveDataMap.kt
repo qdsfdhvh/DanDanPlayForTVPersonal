@@ -38,14 +38,13 @@ class LiveDataMap<K, V> : MutableLiveData<MutableMap<K, V>>() {
     }
 
     @MainThread
-    suspend fun clear() {
+    fun clear() {
         value = value.apply { clear() }
     }
 
     @MainThread
     fun add(key: K, item: V) {
         value = value.apply {
-//                remove(key)
             put(key, item)
         }
     }

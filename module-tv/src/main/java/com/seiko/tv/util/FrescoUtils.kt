@@ -1,4 +1,4 @@
-package com.seiko.common.util
+package com.seiko.tv.util
 
 import android.app.Application
 import android.graphics.Bitmap

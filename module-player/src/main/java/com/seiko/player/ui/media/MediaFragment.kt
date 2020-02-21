@@ -1,23 +1,12 @@
 package com.seiko.player.ui.media
 
-import android.graphics.ImageDecoder
-import android.graphics.Rect
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BackgroundManager
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.FocusHighlightHelper
-import androidx.leanback.widget.ItemBridgeAdapter
-import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagedList
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.util.extensions.getScreenWidth
@@ -28,14 +17,13 @@ import com.seiko.player.databinding.PlayerFragmentBrowserBinding
 import com.seiko.player.ui.adapter.MediaTvListAdapter
 import com.seiko.player.ui.video.VideoPlayerActivity
 import com.seiko.player.util.RecyclerViewUtils
-import com.seiko.player.vlc.util.ImageLoader
+import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.vm.VideosViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.yield
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
-import timber.log.Timber
 
 class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItemClickListener {
 
@@ -44,8 +32,8 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
     private lateinit var binding: PlayerFragmentBrowserBinding
     private lateinit var backgroundManager: BackgroundManager
 
-    private val imageLoader by lazyAndroid { ImageLoader(requireActivity()) }
-    private val adapter by lazyAndroid { MediaTvListAdapter(requireActivity(), imageLoader) }
+    private val imageLoader: ImageLoader by inject()
+    private val adapter by lazyAndroid { MediaTvListAdapter(requireActivity(), imageLoader, lifecycleScope) }
 
     private var setFocus = true
 
@@ -80,7 +68,10 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
         if (item == null) {
             imageLoader.clearBackground(backgroundManager)
         } else {
-            imageLoader.updateBackground(backgroundManager, item)
+            lifecycleScope.launchWhenStarted {
+                yield()
+                imageLoader.updateBackground(requireActivity(), backgroundManager, item)
+            }
         }
         super.onStart()
         if (setFocus) {
@@ -114,8 +105,7 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
 
     private fun bindViewModel() {
         viewModel.provider.pagedList.observe(this::getLifecycle) { list ->
-            Timber.d("media list size = ${list.size}")
-            adapter.submitList(list as PagedList<MediaLibraryItem>)
+            adapter.submitList(list)
         }
     }
 
@@ -131,7 +121,9 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
     }
 
     override fun onItemFocused(view: View, item: MediaLibraryItem) {
-        imageLoader.updateBackground(backgroundManager, item)
+        lifecycleScope.launchWhenStarted {
+            imageLoader.updateBackground(requireActivity(), backgroundManager, item)
+        }
     }
 
 }

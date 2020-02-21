@@ -1,7 +1,6 @@
 package com.seiko.player.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -10,7 +9,6 @@ import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.ui.video.VideoPlayerActivity
-import com.seiko.player.util.FileUtils
 import com.seiko.player.util.extensions.getRealPath
 import com.seiko.player.util.getFileNameFromPath
 import timber.log.Timber
