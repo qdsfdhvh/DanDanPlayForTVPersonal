@@ -8,19 +8,36 @@
 
     <application>
         <!--主界面-->
-        <activity android:name=".ui.MainActivity"
-            android:theme="@style/DanDanTvTheme"
+        <activity android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask"
             android:exported="true"
+            android:theme="@style/DanDanTvTheme.Browse"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>
 
-        <activity android:name=".ui.home.HomeActivity"
+        <activity android:name=".ui.search.SearchActivity"
             android:exported="true"
-            android:theme="@style/Theme.Leanback.Browse"/>
+            android:theme="@style/DanDanTvTheme.Search"/>
+
+        <activity android:name=".ui.area.BangumiAreaActivity"
+            android:exported="true"
+            android:theme="@style/DanDanTvTheme.Browse"/>
+
+        <activity android:name=".ui.bangumi.BangumiFavoriteActivity"
+            android:exported="true"
+            android:theme="@style/DanDanTvTheme.VerticalGrid"/>
+
+        <activity android:name=".ui.bangumi.BangumiHistoryActivity"
+            android:exported="true"
+            android:theme="@style/DanDanTvTheme.VerticalGrid"/>
+
+        <activity android:name=".ui.bangumi.BangumiTimeLineActivity"
+            android:exported="true"
+            android:theme="@style/DanDanTvTheme.Browse"/>
 
         <activity android:name=".ui.bangumi.BangumiDetailsActivity"
             android:exported="true"
-            android:theme="@style/Theme.Leanback.Details"/>
+            android:theme="@style/DanDanTvTheme.Details"/>
     </application>
 
 </manifest>

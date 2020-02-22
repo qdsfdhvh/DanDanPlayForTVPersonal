@@ -18,6 +18,8 @@ class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(
         binding = ItemBangumiRelatedBinding.inflate(inflater, parent, true)
     }
 
+    fun getImageView() = binding.img
+
     override fun bind(item: SearchAnimeDetails) {
         binding.img.loadImage(item.imageUrl)
         binding.title.text = item.animeTitle

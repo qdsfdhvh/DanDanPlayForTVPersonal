@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
 import com.seiko.common.router.Navigator
@@ -15,6 +14,8 @@ import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
+import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
+import com.seiko.tv.ui.card.SearchBangumiCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -30,6 +31,10 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
+
+        fun newInstance(): SearchBangumiFragment {
+            return SearchBangumiFragment()
+        }
     }
 
     private val viewModel by viewModel<SearchBangumiViewModel>()
@@ -113,11 +118,13 @@ class SearchBangumiFragment : SearchSupportFragment(),
     ) {
         when(item) {
             is SearchAnimeDetails -> {
-                findNavController().navigate(
-                    SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(
-                        item.animeId
-                    )
-                )
+                val cardView = holder.view as SearchBangumiCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
+//                findNavController().navigate(
+//                    SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(
+//                        item.animeId
+//                    )
+//                )
             }
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)

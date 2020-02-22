@@ -8,11 +8,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.navArgs
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
@@ -25,15 +25,27 @@ class SearchMagnetFragment : SearchSupportFragment(),
     OnItemViewClickedListener {
 
     companion object {
+        const val ARGS_KEYWORD = "ARGS_KEYWORD"
+        const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
+        const val ARGS_EPISODE_ID = "ARGS_EPISODE_ID"
         private const val ROW_MAGNET = 200
 
         private const val REQUEST_ID_AUDIO = 1122
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
+
+        fun newInstance(bundle: Bundle): SearchMagnetFragment {
+            val fragment = SearchMagnetFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
-    private val args by navArgs<SearchMagnetFragmentArgs>()
+//    private val args by navArgs<SearchMagnetFragmentArgs>()
+    private val keyword by lazyAndroid { arguments!!.getString(ARGS_KEYWORD)!! }
+    private val animeId by lazyAndroid { arguments!!.getLong(ARGS_ANIME_ID) }
+    private val episodeId by lazyAndroid { arguments!!.getInt(ARGS_EPISODE_ID) }
 
     private val viewModel by viewModel<SearchMagnetViewModel>()
 
@@ -44,7 +56,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
         super.onCreate(savedInstanceState)
         setupUI()
         setupRows()
-        setSearchQuery(args.keyword, true)
+        setSearchQuery(keyword, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,7 +173,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
                     if (success) {
                         val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
                         if (hash != null) {
-                            viewModel.saveMagnetInfoUseCase(hash, args.animeId, args.episodeId)
+                            viewModel.saveMagnetInfoUseCase(hash, animeId, episodeId)
                         }
                     }
                 }

@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
@@ -18,6 +17,7 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
 import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
 import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
+import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.vm.BangumiDetailViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -227,23 +227,17 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         when(item) {
             is BangumiEpisodeEntity -> {
                 val keyword = viewModel.getSearchKey(item)
+                SearchActivity.launchMagnet(requireActivity(), keyword, animeId, item.episodeId)
 
-                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
-                action.animeId = animeId
-                action.episodeId = item.episodeId
-                findNavController().navigate(action)
+//                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
+//                action.animeId = animeId
+//                action.episodeId = item.episodeId
+//                findNavController().navigate(action)
             }
             is HomeImageBean -> {
                 val card = holder.view
                 card as MainAreaCardView
                 BangumiDetailsActivity.launch(requireActivity(), item.animeId, card.getImageView())
-
-//                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
-//
-//                val cardView = holder.view as MainAreaCardView
-//                val options = makeSceneTransitionAnimation(requireActivity(), Pair(cardView.getImageView(), getString(R.string.transition_image)))
-//                val extras = ActivityNavigatorExtras(options)
-//                findNavController().navigate(action, extras)
             }
         }
     }

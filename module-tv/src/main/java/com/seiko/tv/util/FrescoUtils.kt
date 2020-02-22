@@ -1,11 +1,15 @@
 package com.seiko.tv.util
 
+import android.app.Activity
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import com.facebook.cache.disk.DiskCacheConfig
 import com.facebook.common.util.ByteConstants
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.view.DraweeTransition
 import com.facebook.drawee.view.GenericDraweeView
 import com.facebook.imagepipeline.cache.MemoryCacheParams
 import com.facebook.imagepipeline.common.ResizeOptions
@@ -52,6 +56,13 @@ fun getImagePipeline(): ImagePipeline {
 
 fun clearFrescoMemory() {
     ImagePipelineFactory.getInstance().imagePipeline.clearMemoryCaches()
+}
+
+fun Activity.setupSharedElementTransition() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        window.sharedElementEnterTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 进入
+        window.sharedElementReturnTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 返回
+    }
 }
 
 fun GenericDraweeView.loadImage(url: String?) {

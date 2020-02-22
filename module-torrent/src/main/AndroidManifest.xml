@@ -7,14 +7,14 @@
 
     <application>
         <activity
-            android:name=".ui.TorrentMainActivity"
+            android:name=".ui.main.TorrentMainActivity"
             android:theme="@style/Theme.Torrent.Transparent"
             android:exported="true"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>
 
         <activity
-            android:name=".ui.TorrentAddActivity"
+            android:name=".ui.add.TorrentAddActivity"
             android:theme="@style/Theme.Torrent.Transparent"
             android:launchMode="singleTask"
             android:exported="true"

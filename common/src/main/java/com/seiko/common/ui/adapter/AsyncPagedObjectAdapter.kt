@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ListUpdateCallback
 class AsyncPagedObjectAdapter<T : Any>: ObjectAdapter {
 
     private val updateCallback = object : ListUpdateCallback {
-
         override fun onInserted(position: Int, count: Int) {
             notifyItemRangeInserted(position, count)
         }

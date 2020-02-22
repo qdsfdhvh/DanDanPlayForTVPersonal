@@ -13,6 +13,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
 import com.seiko.tv.domain.bangumi.SaveBangumiHistoryUseCase
 import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
 class BangumiDetailViewModel(
@@ -36,6 +37,8 @@ class BangumiDetailViewModel(
                 is Result.Success -> {
                     val details = result.data
                     emit(details)
+
+                    delay(500)
                     // 保留到浏览历史
                     saveBangumiHistory.invoke(details)
                     searchKeyWord = details.searchKeyword

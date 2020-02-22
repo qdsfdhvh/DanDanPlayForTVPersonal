@@ -1,4 +1,4 @@
-package com.seiko.torrent.ui
+package com.seiko.torrent.ui.main
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity

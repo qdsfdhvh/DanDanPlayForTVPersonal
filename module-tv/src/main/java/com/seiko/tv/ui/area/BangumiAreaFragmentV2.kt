@@ -15,6 +15,12 @@ import org.koin.android.ext.android.inject
 
 class BangumiAreaFragmentV2 : BrowseSupportFragment() {
 
+    companion object {
+        fun newInstance(): BangumiAreaFragmentV2 {
+            return BangumiAreaFragmentV2()
+        }
+    }
+
     private val viewModel: BangumiAreaViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {

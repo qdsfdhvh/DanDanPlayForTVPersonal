@@ -5,14 +5,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
+
+    companion object {
+        fun newInstance(): BangumiTimeLineFragment {
+            return BangumiTimeLineFragment()
+        }
+    }
 
     private val viewModel by viewModel<HomeViewModel>()
 
@@ -59,29 +65,24 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         rowsAdapter.addAll(0, rows)
     }
 
-    override fun onItemClicked(holder: Presenter.ViewHolder?, item: Any?,
+    override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is HomeImageBean -> {
-                findNavController().navigate(
-                    BangumiTimeLineFragmentDirections
-                        .actionBangumiTimeLineFragmentToBangumiDetailsFragment(item.animeId)
-                )
+                val cardView = holder.view as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
             }
-        }
-    }
-
-    companion object {
-        private fun getWeekName(id: Int) = when(id) {
-            0 -> "周日"
-            1 -> "周一"
-            2 -> "周二"
-            3 -> "周三"
-            4 -> "周四"
-            5 -> "周五"
-            6 -> "周六"
-            else -> ""
         }
     }
 }
 
+private fun getWeekName(id: Int) = when(id) {
+    0 -> "周日"
+    1 -> "周一"
+    2 -> "周二"
+    3 -> "周三"
+    4 -> "周四"
+    5 -> "周五"
+    6 -> "周六"
+    else -> ""
+}

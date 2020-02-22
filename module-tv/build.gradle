@@ -1,6 +1,5 @@
 //apply plugin: 'com.android.library'
 apply plugin: 'com.gfd.comswitch'
-apply plugin: 'androidx.navigation.safeargs'
 
 apply from: rootProject.file('libbase.gradle')
 apply from: rootProject.file('libclean.gradle')
@@ -28,10 +27,6 @@ dependencies {
     implementation project(':libs:thunder')
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
-
-    // navigation
-    implementation dependence.libNavigationFragmentKtx
-    implementation dependence.libNavigationUiKtx
 
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'

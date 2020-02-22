@@ -12,15 +12,13 @@ import androidx.fragment.app.commit
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.seiko.tv.R
+import com.seiko.tv.util.setupSharedElementTransition
 
-class BangumiDetailsActivity : FragmentActivity(R.layout.activity_bangumi_detials) {
+class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.sharedElementEnterTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 进入
-            window.sharedElementReturnTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 返回
-        }
+        setupSharedElementTransition()
         if (supportFragmentManager.findFragmentByTag(BangumiDetailsFragment.TAG) == null) {
             val fragment = BangumiDetailsFragment.newInstance(intent.extras!!)
             supportFragmentManager.commit {

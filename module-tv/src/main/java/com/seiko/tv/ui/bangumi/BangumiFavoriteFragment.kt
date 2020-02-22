@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
@@ -18,6 +18,10 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     companion object {
         private const val COLUMNS = 6
+
+        fun newInstance(): BangumiFavoriteFragment {
+            return BangumiFavoriteFragment()
+        }
     }
 
     private val viewModel: BangumiFavoriteViewModel by viewModel()
@@ -35,6 +39,11 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         bindViewModel()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        adapter = arrayAdapter
+    }
+
     private fun setupUI() {
     }
 
@@ -48,7 +57,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
         val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = ArrayObjectAdapter(presenterSelector)
-        adapter = arrayAdapter
+
         prepareEntranceTransition()
     }
 
@@ -61,18 +70,15 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     override fun onItemClicked(
-        itemViewHolder: Presenter.ViewHolder?,
+        itemViewHolder: Presenter.ViewHolder,
         item: Any?,
         rowViewHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
         when(item) {
             is HomeImageBean -> {
-                findNavController().navigate(
-                    BangumiFavoriteFragmentDirections.actionBangumiFavoriteFragmentToBangumiDetailsFragment(
-                        item.animeId
-                    )
-                )
+                val cardView = itemViewHolder.view as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
             }
         }
     }

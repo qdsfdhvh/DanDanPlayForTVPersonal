@@ -37,12 +37,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.TorrentMainActivity"
+        <activity android:name=".ui.main.TorrentMainActivity"
             android:theme="@style/Theme.Torrent.Transparent"/>
 
         <activity
             android:label="@string/torrent_app_name"
-            android:name=".ui.TorrentAddActivity"
+            android:name=".ui.add.TorrentAddActivity"
             android:theme="@style/Theme.Torrent.Transparent"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>

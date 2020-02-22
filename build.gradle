@@ -9,7 +9,6 @@ buildscript {
     dependencies {
         classpath dependence.libGradlePlugin
         classpath dependence.libKotlinGradlePlugin
-        classpath dependence.libNavigationGradlePlugin
         classpath 'com.gfd.plugin:plugin:1.0.0'
     }
 }

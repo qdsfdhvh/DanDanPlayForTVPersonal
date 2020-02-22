@@ -1,15 +1,13 @@
-package com.seiko.tv.ui.home
+package com.seiko.tv.ui.main
 
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
@@ -19,15 +17,17 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.HomeSettingBean
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
+import com.seiko.tv.ui.area.BangumiAreaActivity
+import com.seiko.tv.ui.bangumi.*
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class HomeFragment : BrowseSupportFragment()
+class MainFragment : BrowseSupportFragment()
     , OnItemViewClickedListener
     , View.OnClickListener {
 
@@ -40,11 +40,14 @@ class HomeFragment : BrowseSupportFragment()
         private const val ID_AREA = 0
         private const val ID_FAVOURITE = 1
         private const val ID_TIME = 2
-//        private const val ID_INDEX = 3
-        private const val ID_SETTING = 4
-        private const val ID_DOWNLOAD = 5
-        private const val ID_HISTORY = 6
-        private const val ID_MEDIA = 7
+        private const val ID_SETTING = 3
+        private const val ID_DOWNLOAD = 4
+        private const val ID_HISTORY = 5
+        private const val ID_MEDIA = 6
+
+        fun newInstance(): MainFragment {
+            return MainFragment()
+        }
     }
 
     private val viewModel by viewModel<HomeViewModel>()
@@ -78,6 +81,11 @@ class HomeFragment : BrowseSupportFragment()
         bindViewModel()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        adapter = rowsAdapter
+    }
+
     /**
      * 生成相关UI
      */
@@ -90,6 +98,9 @@ class HomeFragment : BrowseSupportFragment()
         // 设置搜索键
         searchAffordanceColor = ContextCompat.getColor(requireActivity(), R.color.colorAccent)
         setOnSearchClickedListener(this)
+
+        // Item点击
+        onItemViewClickedListener = this
 
         // 监听返回键
         requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
@@ -115,9 +126,6 @@ class HomeFragment : BrowseSupportFragment()
         // 浏览历史
         historyAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_HISTORY, getString(R.string.title_history), historyAdapter)
-        // 绑定Adapter
-        adapter = rowsAdapter
-        onItemViewClickedListener = this
     }
 
     private fun  createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
@@ -141,9 +149,7 @@ class HomeFragment : BrowseSupportFragment()
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.title_orb -> {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToSearchBangumiFragment()
-                )
+                SearchActivity.launchBangumi(requireActivity())
             }
         }
     }
@@ -155,39 +161,22 @@ class HomeFragment : BrowseSupportFragment()
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is HomeImageBean -> {
-                val card = holder.view
-                card as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, card.getImageView())
-//                findNavController().navigate(
-//                    HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
-//                        item.animeId
-//                    )
-//                )
+                val cardView = holder.view as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
             }
             is HomeSettingBean -> {
                 when(item.id) {
                     ID_AREA -> {
-//                        findNavController().navigate(
-//                            HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragment()
-//                        )
-                        findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToBangumiAreaFragmentV2()
-                        )
+                        BangumiAreaActivity.launch(requireActivity())
                     }
                     ID_FAVOURITE -> {
-                        findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToBangumiFavoriteFragment()
-                        )
+                        BangumiFavoriteActivity.launch(requireActivity())
                     }
                     ID_TIME -> {
-                        findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToBangumiTimeLineFragment()
-                        )
+                        BangumiTimeLineActivity.launch(requireActivity())
                     }
                     ID_HISTORY -> {
-                        findNavController().navigate(
-                            HomeFragmentDirections.actionHomeFragmentToBangumiHistoryFragment()
-                        )
+                        BangumiHistoryActivity.launch(requireActivity())
                     }
                     ID_MEDIA -> {
                         Timber.tag("Navigator").d("click media")

@@ -3,10 +3,11 @@ package com.seiko.tv.ui.area
 import android.os.Bundle
 import android.view.View
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
+import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
+import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
@@ -47,8 +48,7 @@ class BangumiAreaPageFragment : GridFragment()
 
     private fun setupUI() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
-        verticalGridPresenter.numberOfColumns =
-            COLUMNS
+        verticalGridPresenter.numberOfColumns = COLUMNS
         verticalGridPresenter.setItemSpacing(25)
 
         onItemViewClickedListener = this
@@ -67,18 +67,15 @@ class BangumiAreaPageFragment : GridFragment()
     }
 
     override fun onItemClicked(
-        itemViewHolder: Presenter.ViewHolder?,
+        itemViewHolder: Presenter.ViewHolder,
         item: Any?,
         rowViewHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
         when(item) {
             is HomeImageBean -> {
-                findNavController().navigate(
-                    BangumiAreaFragmentV2Directions.actionBangumiAreaFragmentV2ToBangumiDetailsFragment(
-                        item.animeId
-                    )
-                )
+                val cardView = itemViewHolder.view as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
             }
         }
     }

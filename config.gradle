@@ -5,7 +5,6 @@ versions.kotlin_coroutines = "1.3.3"
 versions.support = "1.1.0"
 versions.constraintlayout = "1.1.3"
 versions.leanback = "1.1.0-alpha03"
-versions.navigation = "2.1.0"
 versions.fragment = "1.2.0"
 versions.livedata = "2.2.0"
 versions.koin = "2.0.1"
@@ -48,10 +47,6 @@ ext {
             'libKotlinJdk7'        : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
             'libCoroutinesCore'    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlin_coroutines}",
             'libCoroutinesAndroid' : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlin_coroutines}",
-
-            'libNavigationGradlePlugin': "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}",
-            'libNavigationFragmentKtx' : "androidx.navigation:navigation-fragment-ktx:${versions.navigation}",
-            'libNavigationUiKtx'       : "androidx.navigation:navigation-ui-ktx:${versions.navigation}",
 
             'libKoinViewModel' : "org.koin:koin-android-viewmodel:${versions.koin}",
 

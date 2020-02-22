@@ -1,4 +1,4 @@
-package com.seiko.torrent.ui
+package com.seiko.torrent.ui.add
 
 import android.annotation.SuppressLint
 import android.content.Intent
