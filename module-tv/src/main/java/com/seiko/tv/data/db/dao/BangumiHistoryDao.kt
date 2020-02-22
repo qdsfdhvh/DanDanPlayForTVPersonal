@@ -16,7 +16,7 @@ interface BangumiHistoryDao {
     fun all(count: Int): DataSource.Factory<Int, BangumiHistoryEntity>
 
     @Query("SELECT * FROM BangumiHistory ORDER BY updateDate DESC LIMIT :count")
-    fun allFixed(count: Int): List<BangumiHistoryEntity>
+    suspend fun allFixed(count: Int): List<BangumiHistoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun put(entity: BangumiHistoryEntity): Long

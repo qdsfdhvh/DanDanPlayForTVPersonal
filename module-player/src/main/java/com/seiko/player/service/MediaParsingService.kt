@@ -30,7 +30,6 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         const val ACTION_DISCOVER_DEVICE = "medialibrary_discover_device"
         const val ACTION_CHECK_STORAGES = "medialibrary_check_storages"
 
-        private const val EXTRA_FIRST_RUN = "extra_first_run"
         private const val EXTRA_UPGRADE = "extra_upgrade"
         private const val EXTRA_PARSE = "extra_parse"
 
@@ -41,23 +40,18 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
             if (Medialibrary.getInstance().isStarted) return
             val intent = Intent(context, MediaParsingService::class.java)
             intent.action = ACTION_INIT
-//            intent.putExtra(EXTRA_FIRST_RUN, firstRun)
             intent.putExtra(EXTRA_UPGRADE, upgrade)
             intent.putExtra(EXTRA_PARSE, parse)
-            context.startService(intent)
             ContextCompat.startForegroundService(context, intent)
         }
     }
 
     private lateinit var mediaLibrary: Medialibrary
-//    private lateinit var wakeLock: PowerManager.WakeLock
 
     private var scanPaused = false
     @Volatile private var scanActivated = false
     @Volatile private var serviceLock = false
     @Volatile private var discoverTriggered = false
-
-//    private lateinit var actions : SendChannel<Action>
 
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
@@ -67,15 +61,6 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         Timber.d("onCreate")
         mediaLibrary = Medialibrary.getInstance()
         mediaLibrary.addDeviceDiscoveryCb(this)
-//        val pm = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
-//        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Player:MediaParsingService")
-
-//        Medialibrary.getState().observe(this::getLifecycle) { running ->
-//            if (!running && !scanPaused) {
-//                exitCommand()
-//            }
-//        }
-//        setupScope()
     }
 
     override fun onDestroy() {

@@ -23,7 +23,7 @@ internal class BangumiHistoryRepository(database: AppDatabase) {
      * 获得本地动漫前x条浏览历史，按浏览时间排序
      * @param count 前多少条
      */
-    fun getBangumiDetailsListFixed(count: Int): List<BangumiHistoryEntity> {
+    suspend fun getBangumiDetailsListFixed(count: Int): List<BangumiHistoryEntity> {
         return bangumiHistoryDao.allFixed(count)
     }
 

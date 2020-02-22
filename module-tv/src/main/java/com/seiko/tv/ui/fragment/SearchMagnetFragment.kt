@@ -83,12 +83,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     private fun loadData() {
         viewModel.magnetList.observe(this::getLifecycle) { magnets ->
-            magnetAdapter.submitList(magnets) {
-                if (magnets.isNotEmpty()) {
-                    Timber.d("重置焦点")
-                    rowsSupportFragment.setSelectedPosition(0, false)
-                }
-            }
+            magnetAdapter.submitList(magnets)
         }
     }
 

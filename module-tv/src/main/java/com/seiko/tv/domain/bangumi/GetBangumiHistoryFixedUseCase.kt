@@ -11,7 +11,7 @@ class GetBangumiHistoryFixedUseCase : KoinComponent {
 
     private val historyRepo: BangumiHistoryRepository by inject()
 
-    fun invoke(count: Int): List<HomeImageBean> {
+    suspend fun invoke(count: Int): List<HomeImageBean> {
         return historyRepo.getBangumiDetailsListFixed(count)
             .map { it.toHomeImageBean() }
     }
