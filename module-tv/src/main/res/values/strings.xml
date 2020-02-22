@@ -34,5 +34,5 @@
     <string name="txt_play">播放</string>
     <string name="txt_cancel">取消</string>
 
-    <string name="transition_image" translatable="false">transition_image</string>
+<!--    <string name="transition_image" translatable="false">transition_image</string>-->
 </resources>

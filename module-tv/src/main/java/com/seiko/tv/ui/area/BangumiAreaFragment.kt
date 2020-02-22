@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.area
 
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.*
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.tv.R
 import com.seiko.tv.databinding.FragmentAreaBinding
@@ -23,7 +22,6 @@ import androidx.activity.requireDispatchKeyEventDispatcher
 import com.seiko.tv.ui.widget.SpaceItemDecoration
 import com.seiko.common.util.getPercentHeightSize
 import com.seiko.common.util.getPercentWidthSize
-import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.BangumiIntroEntity
@@ -146,7 +144,10 @@ class BangumiAreaFragment : Fragment(),
             // 算出并排数、左右间距
             val count = width / (itemWidth + ITEM_RIGHT_PADDING_PX)
             val padding = (width % (itemWidth + ITEM_RIGHT_PADDING_PX)) / 2
-            binding.gridBangumi.setPadding(padding, GRID_VIEW_TOP_PX, padding, GRID_VIEW_BOTTOM_PX)
+            binding.gridBangumi.setPadding(padding,
+                GRID_VIEW_TOP_PX, padding,
+                GRID_VIEW_BOTTOM_PX
+            )
 
             binding.gridBangumi.setNumColumns(count)
             binding.gridBangumi.setOnChildViewHolderSelectedListener(mItemSelectedListener)
@@ -279,7 +280,9 @@ private class AreaHandler(fragment: BangumiAreaFragment) : Handler() {
         removeMessages(HANDLER_WHAT_SEASON)
         val msg = obtainMessage(HANDLER_WHAT_SEASON)
         msg.obj = item
-        sendMessageDelayed(msg, POST_DELAY_TIME)
+        sendMessageDelayed(msg,
+            POST_DELAY_TIME
+        )
     }
 
     override fun handleMessage(msg: Message) {

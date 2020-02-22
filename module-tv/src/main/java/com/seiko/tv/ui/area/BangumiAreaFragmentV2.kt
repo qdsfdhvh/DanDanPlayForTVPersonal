@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.area
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,12 +8,10 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRowPresenter
-import androidx.leanback.widget.PageRow
 import com.seiko.tv.R
 import com.seiko.tv.data.model.SeasonPageRow
 import com.seiko.tv.vm.BangumiAreaViewModel
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class BangumiAreaFragmentV2 : BrowseSupportFragment() {
 
@@ -34,7 +32,9 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
         isHeadersTransitionOnBackEnabled = false
         title = getString(R.string.bangumi_area)
         brandColor = Color.parseColor("#424242")
-        mainFragmentRegistry.registerFragment(SeasonPageRow::class.java, PageRowFragmentFactory())
+        mainFragmentRegistry.registerFragment(SeasonPageRow::class.java,
+            PageRowFragmentFactory()
+        )
     }
 
     private fun bindViewModel() {
@@ -54,7 +54,9 @@ private class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fra
 
     override fun createFragment(row: Any?): Fragment {
         return when(row) {
-            is SeasonPageRow -> BangumiAreaPageFragment.newInstance(row.season)
+            is SeasonPageRow -> BangumiAreaPageFragment.newInstance(
+                row.season
+            )
             else -> throw IllegalArgumentException(String.format("Invalid row %s", row))
         }
     }

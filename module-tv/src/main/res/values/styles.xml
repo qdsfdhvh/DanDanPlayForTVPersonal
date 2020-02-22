@@ -5,11 +5,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
-        
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="android:windowActionBar">false</item>-->
+
         <item name="android:windowFullscreen">true</item>
-<!--        <item name="android:windowContentOverlay">@null</item>-->
+    </style>
+
+    <style name="DanDanTvTheme.Browse" parent="Theme.Leanback.Browse">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="DanDanTvTheme.Details" parent="Theme.Leanback.Details">
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="DanDanTvTextStyle">
@@ -27,7 +32,7 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
     <style name="DanDanTvTextStyle.Chapter" parent="DanDanTvTextStyle.Min">
-        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:padding">4dp</item>
     </style>
 

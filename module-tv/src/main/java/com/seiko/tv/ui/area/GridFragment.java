@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.seiko.tv.ui.fragment;
+package com.seiko.tv.ui.area;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.leanback.app.BrowseFragment;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.transition.TransitionHelper;
 import androidx.leanback.widget.ObjectAdapter;

@@ -1,20 +1,15 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.search
 
-import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.navArgs
-import com.seiko.tv.ui.presenter.SearchMagnetPresenter
 import com.seiko.tv.vm.SearchMagnetViewModel
-import com.seiko.common.data.ResultData
-import com.seiko.common.util.extensions.checkPermissions
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
@@ -22,11 +17,7 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class SearchMagnetFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
@@ -89,7 +80,9 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     override fun recognizeSpeech() {
         try {
-            startActivityForResult(recognizerIntent, REQUEST_SPEECH)
+            startActivityForResult(recognizerIntent,
+                REQUEST_SPEECH
+            )
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
         }
@@ -130,7 +123,9 @@ class SearchMagnetFragment : SearchSupportFragment(),
      */
     private fun downloadMagnet() {
         val uri = viewModel.getCurrentMagnetUri() ?: return
-        Navigator.navToAddTorrent(this, uri, REQUEST_TORRENT)
+        Navigator.navToAddTorrent(this, uri,
+            REQUEST_TORRENT
+        )
     }
 
     /**

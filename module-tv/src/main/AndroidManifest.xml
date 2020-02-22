@@ -13,6 +13,14 @@
             android:exported="true"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>
+
+        <activity android:name=".ui.home.HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Leanback.Browse"/>
+
+        <activity android:name=".ui.bangumi.BangumiDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Leanback.Details"/>
     </application>
 
 </manifest>

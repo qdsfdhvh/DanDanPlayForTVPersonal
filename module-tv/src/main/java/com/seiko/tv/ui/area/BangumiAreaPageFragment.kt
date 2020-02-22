@@ -1,9 +1,7 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.area
 
 import android.os.Bundle
 import android.view.View
-import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
 import com.seiko.common.util.extensions.lazyAndroid
@@ -14,7 +12,6 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiAreaPageViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class BangumiAreaPageFragment : GridFragment()
     , OnItemViewClickedListener {
@@ -50,7 +47,8 @@ class BangumiAreaPageFragment : GridFragment()
 
     private fun setupUI() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
-        verticalGridPresenter.numberOfColumns = COLUMNS
+        verticalGridPresenter.numberOfColumns =
+            COLUMNS
         verticalGridPresenter.setItemSpacing(25)
 
         onItemViewClickedListener = this

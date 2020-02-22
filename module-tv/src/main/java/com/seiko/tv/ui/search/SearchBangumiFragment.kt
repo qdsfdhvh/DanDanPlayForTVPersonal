@@ -1,10 +1,9 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.search
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
@@ -15,7 +14,6 @@ import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
-import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
@@ -83,7 +81,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     override fun recognizeSpeech() {
         try {
-            startActivityForResult(recognizerIntent, REQUEST_SPEECH)
+            startActivityForResult(recognizerIntent,
+                REQUEST_SPEECH
+            )
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
         }
@@ -131,7 +131,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
      */
     private fun downloadMagnet() {
         val uri = viewModel.getCurrentMagnetUri() ?: return
-        Navigator.navToAddTorrent(this, uri, REQUEST_TORRENT)
+        Navigator.navToAddTorrent(this, uri,
+            REQUEST_TORRENT
+        )
     }
 
     /**

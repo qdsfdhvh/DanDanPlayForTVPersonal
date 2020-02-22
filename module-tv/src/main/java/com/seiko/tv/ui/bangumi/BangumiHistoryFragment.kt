@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
@@ -9,37 +9,30 @@ import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
+import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
-import com.seiko.tv.vm.BangumiFavoriteViewModel
 import com.seiko.tv.vm.BangumiHistoryViewModel
-import com.seiko.tv.vm.HomeViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
-class BangumiFavoriteFragment : VerticalGridSupportFragment()
+class BangumiHistoryFragment : VerticalGridSupportFragment()
     , OnItemViewClickedListener {
 
     companion object {
         private const val COLUMNS = 6
     }
 
-    private val viewModel: BangumiFavoriteViewModel by viewModel()
+    private val viewModel: BangumiHistoryViewModel by viewModel()
 
     private lateinit var arrayAdapter: ArrayObjectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupUI()
         setupRowAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
-    }
-
-    private fun setupUI() {
     }
 
     private fun setupRowAdapter() {
@@ -57,9 +50,10 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     private fun bindViewModel() {
-        viewModel.favoriteBangumiList.observe(this::getLifecycle) { bangumiList ->
+        viewModel.historyBangumiList.observe(this::getLifecycle) { bangumiList ->
             arrayAdapter.setItems(bangumiList, HomeImageBeanDiffCallback())
-            title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
+            title = "%s (%s/%s)".format(getString(R.string.bangumi_history),
+                bangumiList.size, MAX_BANGUMI_HISTORY_SIZE)
             startEntranceTransition()
         }
     }
@@ -73,7 +67,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 findNavController().navigate(
-                    BangumiFavoriteFragmentDirections.actionBangumiFavoriteFragmentToBangumiDetailsFragment(
+                    BangumiHistoryFragmentDirections.actionBangumiHistoryFragmentToBangumiDetailsFragment(
                         item.animeId
                     )
                 )

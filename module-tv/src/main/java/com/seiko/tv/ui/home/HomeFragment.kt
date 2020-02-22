@@ -1,26 +1,29 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.navigation.fragment.findNavController
-import com.seiko.tv.R
-import com.seiko.tv.data.model.HomeSettingBean
-import com.seiko.common.ui.dialog.DialogSelectFragment
-import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
-import com.seiko.tv.vm.HomeViewModel
-import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
+import com.seiko.common.ui.dialog.DialogSelectFragment
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
+import com.seiko.tv.R
+import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.data.model.HomeSettingBean
+import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
+import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
+import com.seiko.tv.vm.HomeViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -152,11 +155,14 @@ class HomeFragment : BrowseSupportFragment()
                                rowHolder: RowPresenter.ViewHolder?, row: Row?) {
         when(item) {
             is HomeImageBean -> {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
-                        item.animeId
-                    )
-                )
+                val card = holder.view
+                card as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, card.getImageView())
+//                findNavController().navigate(
+//                    HomeFragmentDirections.actionHomeFragmentToBangumiDetailsFragment(
+//                        item.animeId
+//                    )
+//                )
             }
             is HomeSettingBean -> {
                 when(item.id) {

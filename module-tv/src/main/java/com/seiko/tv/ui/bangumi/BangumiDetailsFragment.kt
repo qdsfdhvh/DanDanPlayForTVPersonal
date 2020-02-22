@@ -1,23 +1,23 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.util.Pair
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.seiko.common.util.makeSceneTransitionAnimation
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.presenter.*
+import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
+import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
+import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
 import com.seiko.tv.vm.BangumiDetailViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -28,11 +28,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     , OnActionClickedListener {
 
     companion object {
+        const val TAG = "BangumiDetailsFragment"
+        const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
+        const val TRANSITION_NAME = "t_for_transition";
         private const val ID_RATING = 1L
         private const val ID_FAVOURITE = 2L
+
+        fun newInstance(bundle: Bundle): BangumiDetailsFragment {
+            val fragment = BangumiDetailsFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
-    private val args by navArgs<BangumiDetailsFragmentArgs>()
+//    private val args by navArgs<BangumiDetailsFragmentArgs>()
+    private val animeId by lazyAndroid { arguments!!.getLong(ARGS_ANIME_ID) }
     private val viewModel by viewModel<BangumiDetailViewModel>()
 
     private lateinit var mPresenterSelector: ClassPresenterSelector
@@ -62,24 +72,30 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         onItemViewClickedListener = this
         createDetailsOverviewRowPresenter()
-
+//        setupEmptyAdapter()
         prepareEntranceTransition()
-
         adapter = mAdapter
     }
+
+//    private fun setupEmptyAdapter() {
+//        val emptyAdapter = ArrayObjectAdapter(mPresenterSelector)
+//        emptyAdapter.add(DetailsOverviewRow(BangumiDetailBean.empty()))
+//        adapter = emptyAdapter
+//    }
 
     /**
      * 开始加载数据
      */
     private fun bindViewModel() {
         viewModel.bangumiDetailsBean.observe(this::getLifecycle, this::updateDetails)
-        viewModel.animeId.value = args.animeId
+        viewModel.animeId.value = animeId
     }
 
     /**
      * 更新动漫详情
      */
     private fun updateDetails(details: BangumiDetailBean) {
+//        adapter = mAdapter
         createDetailsOverviewRow(details)
         createEpisodesRows(details.episodes)
         createRelatedsRows(details.relateds)
@@ -96,10 +112,14 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
         mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
         mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
-
         mDescriptionRowPresenter.isParticipatingEntranceTransition = false
-        prepareEntranceTransition()
+
+        val mHelper = FullWidthDetailsOverviewSharedElementHelper()
+        mHelper.setSharedElementEnterTransition(requireActivity(), TRANSITION_NAME)
+        mDescriptionRowPresenter.setListener(mHelper)
+        mDescriptionRowPresenter.isParticipatingEntranceTransition = false
+
+        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
     }
 
     /**
@@ -209,17 +229,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
                 val keyword = viewModel.getSearchKey(item)
 
                 val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
-                action.animeId = args.animeId
+                action.animeId = animeId
                 action.episodeId = item.episodeId
                 findNavController().navigate(action)
             }
             is HomeImageBean -> {
-                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
+                val card = holder.view
+                card as MainAreaCardView
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, card.getImageView())
 
-                val cardView = holder.view as MainAreaCardView
-                val options = makeSceneTransitionAnimation(requireActivity(), Pair(cardView.getImageView(), getString(R.string.transition_image)))
-                val extras = ActivityNavigatorExtras(options)
-                findNavController().navigate(action, extras)
+//                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentRelatedVideos(item.animeId)
+//
+//                val cardView = holder.view as MainAreaCardView
+//                val options = makeSceneTransitionAnimation(requireActivity(), Pair(cardView.getImageView(), getString(R.string.transition_image)))
+//                val extras = ActivityNavigatorExtras(options)
+//                findNavController().navigate(action, extras)
             }
         }
     }

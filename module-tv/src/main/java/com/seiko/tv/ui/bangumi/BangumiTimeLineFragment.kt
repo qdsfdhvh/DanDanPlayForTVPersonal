@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.fragment
+package com.seiko.tv.ui.bangumi
 
 import android.graphics.Color
 import android.os.Bundle

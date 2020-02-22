@@ -7,7 +7,7 @@
     <!--主界面-->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.seiko.tv.ui.fragment.HomeFragment"
+        android:name="com.seiko.tv.ui.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/lb_browse_fragment">
         <action
@@ -42,7 +42,7 @@
     <!--播放表-->
     <fragment
         android:id="@+id/bangumiTimeLineFragment"
-        android:name="com.seiko.tv.ui.fragment.BangumiTimeLineFragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiTimeLineFragment"
         android:label="BangumiTimeLineFragment">
         <action
             android:id="@+id/action_bangumiTimeLineFragment_to_bangumiDetailsFragment"
@@ -52,7 +52,7 @@
     <!--番剧-->
 <!--    <fragment-->
 <!--        android:id="@+id/bangumiAreaFragment"-->
-<!--        android:name="com.seiko.tv.ui.fragment.BangumiAreaFragment"-->
+<!--        android:name="com.seiko.tv.ui.area.BangumiAreaFragment"-->
 <!--        tools:layout="BangumiAreaFragment">-->
 <!--        <action-->
 <!--            android:id="@+id/action_bangumiAreaFragment_to_bangumiDetailsFragment"-->
@@ -62,7 +62,7 @@
     <!--番剧详情-->
     <fragment
         android:id="@+id/bangumiDetailsFragment"
-        android:name="com.seiko.tv.ui.fragment.BangumiDetailsFragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiDetailsFragment"
         android:label="BangumiDetailsFragment">
         <argument
             android:name="animeId"
@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/bangumiHistoryFragment"
-        android:name="com.seiko.tv.ui.fragment.BangumiHistoryFragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiHistoryFragment"
         android:label="BangumiHistoryFragment" >
         <action
             android:id="@+id/action_bangumiHistoryFragment_to_bangumiDetailsFragment"
@@ -87,7 +87,7 @@
     <!--番剧搜索-->
     <fragment
         android:id="@+id/searchBangumiFragment"
-        android:name="com.seiko.tv.ui.fragment.SearchBangumiFragment"
+        android:name="com.seiko.tv.ui.search.SearchBangumiFragment"
         android:label="SearchBangumiFragment">
         <action
             android:id="@+id/action_searchBangumiFragment_to_bangumiDetailsFragment"
@@ -97,7 +97,7 @@
     <!--磁力搜索-->
     <fragment
         android:id="@+id/searchMagnetFragment"
-        android:name="com.seiko.tv.ui.fragment.SearchMagnetFragment"
+        android:name="com.seiko.tv.ui.search.SearchMagnetFragment"
         android:label="SearchMagnetFragment">
         <argument
             android:name="keyword"
@@ -113,7 +113,7 @@
     </fragment>
     <fragment
         android:id="@+id/bangumiAreaFragmentV2"
-        android:name="com.seiko.tv.ui.fragment.BangumiAreaFragmentV2"
+        android:name="com.seiko.tv.ui.area.BangumiAreaFragmentV2"
         android:label="BangumiAreaFragmentV2" >
         <action
             android:id="@+id/action_bangumiAreaFragmentV2_to_bangumiDetailsFragment"
@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/bangumiFavoriteFragment"
-        android:name="com.seiko.tv.ui.fragment.BangumiFavoriteFragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiFavoriteFragment"
         android:label="BangumiFavoriteFragment" >
         <action
             android:id="@+id/action_bangumiFavoriteFragment_to_bangumiDetailsFragment"
