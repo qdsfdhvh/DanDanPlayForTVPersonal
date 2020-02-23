@@ -32,6 +32,7 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
 
         private const val EXTRA_UPGRADE = "extra_upgrade"
         private const val EXTRA_PARSE = "extra_parse"
+        private const val EXTRA_PATH = "extra_path"
 
         @JvmStatic
         fun startMediaLibrary(context: Context,
@@ -42,6 +43,16 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
             intent.action = ACTION_INIT
             intent.putExtra(EXTRA_UPGRADE, upgrade)
             intent.putExtra(EXTRA_PARSE, parse)
+            ContextCompat.startForegroundService(context, intent)
+        }
+
+        @JvmStatic
+        fun reloadMediaLibrary(context: Context, path: String? = null) {
+            val intent = Intent(context, MediaParsingService::class.java)
+            intent.action = ACTION_RELOAD
+            if (!path.isNullOrEmpty()) {
+                intent.putExtra(EXTRA_PATH, path)
+            }
             ContextCompat.startForegroundService(context, intent)
         }
     }
@@ -92,6 +103,10 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
                 val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
                 setupMediaLibrary(upgrade, parse)
             }
+            ACTION_RELOAD -> {
+                val path = intent.getStringExtra(EXTRA_PATH)
+                reload(path)
+            }
         }
         return START_NOT_STICKY
     }
@@ -107,6 +122,14 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         } else {
             Timber.d("setupMediaLibrary Init")
             actionInit(upgrade, parse)
+        }
+    }
+
+    private fun reload(path: String?) = launch {
+        if (path.isNullOrEmpty()) {
+            mediaLibrary.reload()
+        } else {
+            mediaLibrary.reload(path)
         }
     }
 
@@ -191,12 +214,6 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         }
     }
 
-//    private fun reload(path: String?) {
-//        if (reload > 0) return
-//        if (TextUtils.isEmpty(path)) medialibrary.reload()
-//        else medialibrary.reload(path)
-//    }
-
     private fun String.scanAllowed(): Boolean {
         val file = File(Uri.parse(this@scanAllowed).path ?: return false)
         if (!file.exists() || !file.canRead()) return false
@@ -240,13 +257,6 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
     }
 
     /**
-     * VLC Media 数据库是否存在
-     */
-    private fun Context.dbExists(): Boolean {
-        return File(getDir("db", Context.MODE_PRIVATE).toString() + Medialibrary.VLC_MEDIA_DB_NAME).exists()
-    }
-
-    /**
      * 退出命令
      */
     private fun exitCommand() {
@@ -260,36 +270,35 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
     }
 
     override fun onReloadStarted(entryPoint: String?) {
-        Timber.d(entryPoint)
+        Timber.d("onReloadStarted: %s", entryPoint)
     }
 
     override fun onReloadCompleted(entryPoint: String?) {
-        Timber.d(entryPoint)
+        Timber.d("onReloadCompleted: %s", entryPoint)
     }
 
     override fun onDiscoveryStarted(entryPoint: String?) {
-        Timber.d(entryPoint)
+        Timber.d("onDiscoveryStarted: %s", entryPoint)
     }
 
     override fun onParsingStatsUpdated(percent: Int) {
-        Timber.d(percent.toString())
+        Timber.d("onParsingStatsUpdated: %s", percent.toString())
     }
 
     override fun onDiscoveryCompleted(entryPoint: String?) {
-        Timber.d(entryPoint)
+        Timber.d("onDiscoveryCompleted: %s", entryPoint)
     }
 
     override fun onDiscoveryProgress(entryPoint: String?) {
-        Timber.d(entryPoint)
+        Timber.d("onDiscoveryProgress: %s", entryPoint)
     }
 
-//    private sealed class Action {
-//        class Init(val upgrade: Boolean, val parse: Boolean) : Action()
-//        class StartScan(val upgrade: Boolean) : Action()
-//        object UpdateStorageList : Action()
-//        class DiscoverStorage(val path: String) : Action()
-//        class DiscoverFolder(val path: String) : Action()
-//        class Reload(val path: String?) : Action()
-//        object ForceReload : Action()
-//    }
+}
+
+
+/**
+ * VLC Media 数据库是否存在
+ */
+private fun Context.dbExists(): Boolean {
+    return File(getDir("db", Context.MODE_PRIVATE).toString() + Medialibrary.VLC_MEDIA_DB_NAME).exists()
 }

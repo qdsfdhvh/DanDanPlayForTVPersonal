@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingLeft="@dimen/tv_overscan_horizontal"
-        android:paddingTop="62dp"
+        android:paddingTop="96dp"
         android:paddingRight="@dimen/tv_overscan_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
