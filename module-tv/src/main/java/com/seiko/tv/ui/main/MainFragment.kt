@@ -25,7 +25,6 @@ import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class MainFragment : BrowseSupportFragment()
     , OnItemViewClickedListener
@@ -50,7 +49,7 @@ class MainFragment : BrowseSupportFragment()
         }
     }
 
-    private val viewModel by viewModel<HomeViewModel>()
+    private val viewModel: HomeViewModel by viewModel()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var settingAdapter: ArrayObjectAdapter
@@ -81,17 +80,12 @@ class MainFragment : BrowseSupportFragment()
         bindViewModel()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        adapter = rowsAdapter
-    }
-
     /**
      * 生成相关UI
      */
     private fun setupUI() {
         headersState = HEADERS_ENABLED
-        isHeadersTransitionOnBackEnabled = true
+//        isHeadersTransitionOnBackEnabled = true
         title = getString(R.string.app_name)
         brandColor = Color.parseColor("#424242")
 
@@ -126,11 +120,16 @@ class MainFragment : BrowseSupportFragment()
         // 浏览历史
         historyAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_HISTORY, getString(R.string.title_history), historyAdapter)
+
+        adapter = rowsAdapter
+
+        prepareEntranceTransition()
     }
 
     private fun  createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
         val headerItem = HeaderItem(id.toLong(), title)
         val listRow = ListRow(headerItem, objectAdapter)
+        R.layout.lb_rows_fragment
         rowsAdapter.add(listRow)
     }
 
@@ -138,7 +137,10 @@ class MainFragment : BrowseSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.todayBangumiList.observe(this::getLifecycle, areaAdapter::submitList)
+        viewModel.todayBangumiList.observe(this::getLifecycle) { list ->
+            startEntranceTransition()
+            areaAdapter.submitList(list)
+        }
         viewModel.favoriteBangumiList.observe(this::getLifecycle, favoriteAdapter::submitList)
         viewModel.historyBangumiList.observe(this::getLifecycle, historyAdapter::submitList)
     }
@@ -179,11 +181,9 @@ class MainFragment : BrowseSupportFragment()
                         BangumiHistoryActivity.launch(requireActivity())
                     }
                     ID_MEDIA -> {
-                        Timber.tag("Navigator").d("click media")
                         Navigator.navToPlayerMedia(requireActivity())
                     }
                     ID_DOWNLOAD -> {
-                        Timber.tag("Navigator").d("click download")
                         Navigator.navToTorrent(requireActivity())
                     }
                     ID_SETTING -> {

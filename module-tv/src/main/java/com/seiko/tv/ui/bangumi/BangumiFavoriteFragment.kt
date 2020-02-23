@@ -30,21 +30,12 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupUI()
         setupRowAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        adapter = arrayAdapter
-    }
-
-    private fun setupUI() {
     }
 
     private fun setupRowAdapter() {
@@ -57,6 +48,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
         val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = ArrayObjectAdapter(presenterSelector)
+        adapter = arrayAdapter
 
         prepareEntranceTransition()
     }

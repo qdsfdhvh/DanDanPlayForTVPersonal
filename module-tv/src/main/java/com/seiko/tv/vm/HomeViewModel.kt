@@ -10,6 +10,7 @@ import com.seiko.common.data.Result
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.util.*
 
@@ -25,7 +26,9 @@ class HomeViewModel(
     val weekBangumiList: LiveData<List<AirDayBangumiBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
-                is Result.Success -> emit(result.data)
+                is Result.Success -> {
+                    emit(result.data)
+                }
                 is Result.Error -> Timber.w(result.exception)
             }
         }
@@ -36,6 +39,7 @@ class HomeViewModel(
     val todayBangumiList: LiveData<List<HomeImageBean>> = weekBangumiList.switchMap { data ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             val bangumiList = if (data.isNotEmpty()) data[0].bangumiList else emptyList()
+//            delay(250)
             emit(bangumiList)
         }
     }
@@ -45,6 +49,7 @@ class HomeViewModel(
      */
     val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+//            delay(250)
             emitSource(getFavoriteBangumiList.invoke(10))
         }
 
@@ -53,6 +58,7 @@ class HomeViewModel(
      */
     val historyBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            delay(250)
             emitSource(getBangumiHistoryList.invoke(10))
         }
 

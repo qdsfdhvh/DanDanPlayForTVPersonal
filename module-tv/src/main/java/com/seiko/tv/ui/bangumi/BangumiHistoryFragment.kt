@@ -39,11 +39,6 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
         bindViewModel()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        adapter = arrayAdapter
-    }
-
     private fun setupRowAdapter() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
@@ -54,6 +49,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
 
         val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = ArrayObjectAdapter(presenterSelector)
+        adapter = arrayAdapter
 
         prepareEntranceTransition()
     }
@@ -61,8 +57,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     private fun bindViewModel() {
         viewModel.historyBangumiList.observe(this::getLifecycle) { bangumiList ->
             arrayAdapter.setItems(bangumiList, HomeImageBeanDiffCallback())
-            title = "%s (%s/%s)".format(getString(R.string.bangumi_history),
-                bangumiList.size, MAX_BANGUMI_HISTORY_SIZE)
+            title = "%s (%s/%s)".format(getString(R.string.bangumi_history), bangumiList.size, MAX_BANGUMI_HISTORY_SIZE)
             startEntranceTransition()
         }
     }

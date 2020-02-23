@@ -48,9 +48,9 @@ class AsyncObjectAdapter<T : Any>: ObjectAdapter {
         differ.submitList(list)
     }
 
-    fun submitList(list: List<T>, commitCallback: () -> Unit?) {
-        differ.submitList(list) { commitCallback.invoke() }
-    }
+//    fun submitList(list: List<T>, commitCallback: () -> Unit?) {
+//        differ.submitList(list) { commitCallback.invoke() }
+//    }
 
     override fun size(): Int {
         return differ.currentList.size

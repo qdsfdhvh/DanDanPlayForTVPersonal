@@ -10,6 +10,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 class BangumiHistoryViewModel(
     private val getBangumiHistoryList: GetBangumiHistoryFixedUseCase
@@ -20,6 +21,7 @@ class BangumiHistoryViewModel(
      */
     val historyBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            delay(250)
             emit(getBangumiHistoryList.invoke(MAX_BANGUMI_HISTORY_SIZE))
         }
 }

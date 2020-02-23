@@ -11,6 +11,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 class BangumiFavoriteViewModel(
     private val getBangumiHistoryList: GetBangumiFavoriteFixedUseCase
@@ -21,6 +22,7 @@ class BangumiFavoriteViewModel(
      */
     val favoriteBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            delay(250)
             emit(getBangumiHistoryList.invoke())
         }
 }
