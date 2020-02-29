@@ -16,6 +16,7 @@ import com.seiko.player.data.model.PlayParam
 import com.seiko.player.databinding.PlayerFragmentBrowserBinding
 import com.seiko.player.ui.adapter.MediaTvListAdapter
 import com.seiko.player.ui.video.VideoPlayerActivity
+import com.seiko.player.ui.video.VlcVideoPlayerActivity
 import com.seiko.player.util.RecyclerViewUtils
 import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.vm.VideosViewModel
@@ -112,7 +113,11 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(item) {
             is MediaWrapper  -> {
-                VideoPlayerActivity.launch(requireActivity(), PlayParam(
+//                VideoPlayerActivity.launch(requireActivity(), PlayParam(
+//                    item.uri.path!!,
+//                    item.title
+//                ))
+                VlcVideoPlayerActivity.launch(requireActivity(), PlayParam(
                     item.uri.path!!,
                     item.title
                 ))

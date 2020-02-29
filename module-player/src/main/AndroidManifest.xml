@@ -28,6 +28,18 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
 
+        <!--播放器VLC-->
+        <activity
+            android:name=".ui.video.VlcVideoPlayerActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
+            android:exported="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.VLC.Player"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
+        </activity>
+
         <service android:name=".service.PlaybackService"/>
 
         <service android:name=".service.MediaParsingService"/>

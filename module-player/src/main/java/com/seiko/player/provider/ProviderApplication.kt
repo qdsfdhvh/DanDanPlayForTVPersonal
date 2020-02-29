@@ -8,6 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.core.context.loadKoinModules
+import org.videolan.libvlc.FactoryManager
+import org.videolan.libvlc.LibVLCFactory
+import org.videolan.libvlc.MediaFactory
+import org.videolan.libvlc.interfaces.ILibVLCFactory
+import org.videolan.libvlc.interfaces.IMediaFactory
 import timber.log.Timber
 
 /**
@@ -29,6 +34,10 @@ class ProviderApplication : IProviderApplication {
             // viewModel
             viewModelModule
         ))
+
+        // VLC Service Loaders
+        FactoryManager.registerFactory(IMediaFactory.factoryId, MediaFactory())
+        FactoryManager.registerFactory(ILibVLCFactory.factoryId, LibVLCFactory())
 
         GlobalScope.launch(Dispatchers.IO) {
             MediaParsingService.startMediaLibrary(application, upgrade = true)

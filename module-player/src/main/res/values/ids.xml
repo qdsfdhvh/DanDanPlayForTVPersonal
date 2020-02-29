@@ -26,6 +26,7 @@
     <item name="player_overlay_time" type="id"/>
 
     <item name="player_video_view_ijk" type="id"/>
+    <item name="player_video_view_vlc" type="id"/>
     <item name="player_danmaku_view" type="id"/>
     <item name="player_subtitle_view" type="id"/>
 

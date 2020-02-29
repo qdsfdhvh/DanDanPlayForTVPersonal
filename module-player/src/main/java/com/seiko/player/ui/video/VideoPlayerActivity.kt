@@ -96,8 +96,9 @@ class VideoPlayerActivity: FragmentActivity()
     private val danmakuEngine: IDanmakuEngine by inject()
     private val subtitleEngine: ISubtitleEngine by inject()
 
-    private lateinit var binding: PlayerActivityVideoBinding
-    private lateinit var bindingControlBottom: PlayerControlBottomBinding
+    private var _binding: PlayerActivityVideoBinding? = null
+    private val binding get() = _binding!!
+    private val bindingControlBottom get() = binding.playerViewController.playerLayoutControlBottom
 
     private val handler by lazyAndroid {
         VideoPlayerHandler(
@@ -183,8 +184,7 @@ class VideoPlayerActivity: FragmentActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = PlayerActivityVideoBinding.inflate(layoutInflater)
-        bindingControlBottom = binding.playerViewController.playerLayoutControlBottom
+        _binding = PlayerActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupUI()
         bindViewModel()
@@ -216,6 +216,7 @@ class VideoPlayerActivity: FragmentActivity()
 
     override fun onDestroy() {
         super.onDestroy()
+        _binding = null
         handler.removeCallbacksAndMessages(null)
     }
 

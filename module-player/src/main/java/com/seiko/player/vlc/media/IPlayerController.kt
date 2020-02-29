@@ -1,0 +1,60 @@
+package com.seiko.player.vlc.media
+
+import androidx.lifecycle.LiveData
+import com.seiko.player.data.model.Progress
+import org.videolan.libvlc.MediaPlayer
+import org.videolan.libvlc.interfaces.IMedia
+
+interface IPlayerController {
+
+    /**
+     * 获取进度LiveData
+     */
+    fun getProgressLiveData(): LiveData<Progress>
+
+    /**
+     * 是否正在播放
+     */
+    fun isPlaying(): Boolean
+
+    /**
+     * 播放
+     */
+    fun play()
+
+    /**
+     * 暂停
+     */
+    fun pause(): Boolean
+
+    /**
+     * 停止
+     */
+    fun stop()
+
+    /**
+     * 跳转到
+     */
+    fun seekTo(position: Long)
+
+    /**
+     * 设置播放速度
+     */
+    fun setRate(rate: Float)
+
+    /**
+     * 设置播放源
+     */
+    suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long)
+
+    /**
+     * 重启播放器
+     */
+    suspend fun restart()
+
+    /**
+     * 注销播放器
+     */
+    suspend fun release()
+
+}

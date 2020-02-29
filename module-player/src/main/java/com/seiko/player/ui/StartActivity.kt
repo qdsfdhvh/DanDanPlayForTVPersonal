@@ -9,6 +9,7 @@ import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.ui.video.VideoPlayerActivity
+import com.seiko.player.ui.video.VlcVideoPlayerActivity
 import com.seiko.player.util.extensions.getRealPath
 import com.seiko.player.util.getFileNameFromPath
 import timber.log.Timber
@@ -69,7 +70,11 @@ class StartActivity : FragmentActivity() {
             videoTitle = videoPath.getFileNameFromPath()
         }
 
-        VideoPlayerActivity.launch(this, PlayParam(
+//        VideoPlayerActivity.launch(this, PlayParam(
+//            videoPath = videoPath,
+//            videoTitle = videoTitle
+//        ))
+        VlcVideoPlayerActivity.launch(this, PlayParam(
             videoPath = videoPath,
             videoTitle = videoTitle
         ))

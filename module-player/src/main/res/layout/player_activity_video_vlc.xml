@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/player_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--画面-->
+    <org.videolan.libvlc.util.VLCVideoLayout
+        android:id="@id/player_video_view_vlc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false" />
+    <!--弹幕-->
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@id/player_danmaku_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.seiko.subtitle.widget.SubtitleView
+        android:id="@id/player_subtitle_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center_horizontal"
+        tools:visibility="invisible"/>
+    <!--控制-->
+    <include
+        layout="@layout/player_controller"
+        android:id="@id/player_view_controller"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>
