@@ -3,7 +3,6 @@ package com.seiko.player.vlc.media
 import android.content.Context
 import android.net.Uri
 import org.videolan.libvlc.FactoryManager
-import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.ILibVLC
 import org.videolan.libvlc.interfaces.ILibVLCFactory
@@ -29,7 +28,7 @@ class VlcInstance(
     }
 
     @Synchronized
-    fun restart() {
+    fun clear() {
         if (libVlc != null) {
             libVlc!!.release()
             libVlc = null

@@ -24,16 +24,14 @@ class DanDanApiGenerator(
                 })
             }
         }
-        .build()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(DANDAN_API_BASE_URL)
-        .client(newOkHttpClient)
+        .callFactory(newOkHttpClient.build())
         .addConverterFactory(converterFactory)
-        .build()
 
     fun create(): DanDanApiService {
-        return retrofit.create(DanDanApiService::class.java)
+        return retrofit.build().create(DanDanApiService::class.java)
     }
 
 }

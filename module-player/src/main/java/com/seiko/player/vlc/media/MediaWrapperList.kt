@@ -77,10 +77,13 @@ class MediaWrapperList {
      */
     @Synchronized
     fun clear() {
-        // Signal to observers of media being deleted.
-        for (i in internalList.indices)
-            signalEventListeners(EVENT_REMOVED, i, -1, internalList[i].location)
-        internalList.clear()
+        if (internalList.isNullOrEmpty()) {
+            // Signal to observers of media being deleted.
+            internalList.forEachIndexed { i, media ->
+                signalEventListeners(EVENT_REMOVED, i, -1, media.location)
+            }
+            internalList.clear()
+        }
         videoCount = 0
     }
 
@@ -146,10 +149,7 @@ class MediaWrapperList {
         }
     }
 
-    @Synchronized
-    fun size(): Int {
-        return internalList.size
-    }
+    val size @Synchronized get() = internalList.size
 
     @Synchronized
     fun getMedia(position: Int): MediaWrapper? {
@@ -179,7 +179,7 @@ class MediaWrapperList {
     override fun toString(): String {
         val sb = StringBuilder()
         sb.append("LibVLC Media List: {")
-        for (i in 0 until size()) {
+        for (i in 0 until size) {
             sb.append(i.toString())
             sb.append(": ")
             sb.append(getMRL(i))

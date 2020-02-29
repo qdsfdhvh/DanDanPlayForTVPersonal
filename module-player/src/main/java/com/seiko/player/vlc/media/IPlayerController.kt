@@ -47,10 +47,10 @@ interface IPlayerController {
      */
     suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long)
 
-    /**
-     * 重启播放器
-     */
-    suspend fun restart()
+//    /**
+//     * 重启播放器
+//     */
+//    suspend fun restart()
 
     /**
      * 注销播放器

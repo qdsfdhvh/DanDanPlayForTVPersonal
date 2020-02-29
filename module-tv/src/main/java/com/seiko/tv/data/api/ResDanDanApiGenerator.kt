@@ -11,11 +11,10 @@ internal class ResDanDanApiGenerator(
 ) {
     private val retrofit = Retrofit.Builder()
         .baseUrl(DANDAN_RES_BASE_URL)
-        .client(okHttpClient)
+        .callFactory(okHttpClient)
         .addConverterFactory(converterFactory)
-        .build()
 
     fun create(): ResDanDanApiService {
-        return retrofit.create(ResDanDanApiService::class.java)
+        return retrofit.build().create(ResDanDanApiService::class.java)
     }
 }

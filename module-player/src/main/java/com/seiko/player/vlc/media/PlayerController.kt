@@ -1,6 +1,7 @@
 package com.seiko.player.vlc.media
 
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.seiko.common.util.extensions.lazyAndroid
@@ -10,6 +11,7 @@ import kotlinx.coroutines.withContext
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IVLCVout
+import timber.log.Timber
 import kotlin.math.abs
 
 class PlayerController(
@@ -21,8 +23,14 @@ class PlayerController(
     /**
      * 播放器
      */
-    var mediaPlayer = newMediaPlayer()
-        private set
+    private var _mediaPlayer: MediaPlayer? = null
+    val mediaPlayer: MediaPlayer
+        get() {
+            if (_mediaPlayer == null) {
+                _mediaPlayer = newMediaPlayer()
+            }
+            return _mediaPlayer!!
+        }
 
     /**
      * 外部MediaListener
@@ -121,40 +129,41 @@ class PlayerController(
      */
     override suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long) {
         this.listener = listener
-
         setPlaybackStarted(time, media.duration)
+
         mediaPlayer.setEventListener(null)
         withContext(Dispatchers.IO) {
             if (!mediaPlayer.isReleased) {
+                val oldMedia = mediaPlayer.media
+                if (oldMedia != null && !oldMedia.isReleased) {
+                    oldMedia.release()
+                }
                 mediaPlayer.media = media
             }
         }
         mediaPlayer.setEventListener(this)
+
         if (!mediaPlayer.isReleased) {
             mediaPlayer.setVideoTitleDisplay(MediaPlayer.Position.Disable, 0)
+            mediaPlayer.play()
         }
-    }
-
-    /**
-     * 重启播放器
-     */
-    override suspend fun restart() {
-        val oldMediaPlayer = mediaPlayer
-        mediaPlayer = newMediaPlayer()
-        releasePlayer(oldMediaPlayer)
     }
 
     /**
      * 注销播放器
      */
     override suspend fun release() {
-        releasePlayer(mediaPlayer)
-        setPlaybackStopped()
+        releasePlayer(_mediaPlayer)
+        _mediaPlayer = null
+        withContext(Dispatchers.Main) {
+            setPlaybackStopped()
+        }
     }
 
     /**
      * 更新进度
      */
+    @MainThread
     private fun updateProgress(
         position: Long = progress.value?.position ?: 0,
         duration: Long = progress.value?.duration ?: 0
@@ -168,6 +177,7 @@ class PlayerController(
     /**
      * 开始播放
      */
+    @MainThread
     private fun setPlaybackStarted(position: Long, duration: Long) {
         seekable = true
         pausable = true
@@ -178,6 +188,7 @@ class PlayerController(
     /**
      * 停止播放，状态重置
      */
+    @MainThread
     private fun setPlaybackStopped() {
         playbackState = PlaybackStateCompat.STATE_STOPPED
         updateProgress(0, 0)
@@ -205,7 +216,9 @@ class PlayerController(
             MediaPlayer.Event.EncounteredError -> setPlaybackStopped()
             MediaPlayer.Event.PausableChanged -> pausable = event.pausable
             MediaPlayer.Event.SeekableChanged -> seekable = event.seekable
-            MediaPlayer.Event.LengthChanged -> updateProgress(duration = event.lengthChanged)
+            MediaPlayer.Event.LengthChanged -> {
+                updateProgress(duration = event.lengthChanged)
+            }
             MediaPlayer.Event.TimeChanged -> {
                 val time = event.timeChanged
                 if (abs(time - lastTime) > 950L) {
@@ -220,20 +233,23 @@ class PlayerController(
     fun isVideoPlaying(): Boolean {
         return !mediaPlayer.isReleased && mediaPlayer.vlcVout.areViewsAttached()
     }
+
 }
 
-private suspend fun releasePlayer(player: MediaPlayer) {
-    if (player.isReleased) return
+private suspend fun releasePlayer(player: MediaPlayer?) {
+    if (player == null || player.isReleased) return
 
     player.setEventListener(null)
     if (player.vlcVout.areViewsAttached()) {
         player.vlcVout.detachViews()
     }
 
+    // TODO ERROR: VLCObject (org.videolan.libvlc.Media) finalized but not natively released
     val media = player.media
     if (media != null) {
         media.setEventListener(null)
         media.release()
+        Timber.d("media is release=${media.isReleased}")
     }
 
     withContext(Dispatchers.IO) {

@@ -1,8 +1,6 @@
 package com.seiko.player.vlc.media
 
 import android.net.Uri
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
@@ -20,11 +18,11 @@ class PlayerListManager(
     private var currentIndex = -1
 
     private fun hasMedia(): Boolean {
-        return mediaList.size() != 0
+        return mediaList.size != 0
     }
 
     private fun isValidPosition(position: Int): Boolean {
-        return position in 0 until mediaList.size()
+        return position in 0 until mediaList.size
     }
 
     suspend fun load(list: List<MediaWrapper>, position: Int) {
@@ -46,7 +44,11 @@ class PlayerListManager(
             0
         }
 
-        val mw = mediaList.getMedia(position) ?: return
+        val mw = mediaList.getMedia(position)
+        if (mw == null) {
+            Timber.w("Warning: index $position media is null")
+            return
+        }
 
         val isVideoPlaying = mw.type == MediaWrapper.TYPE_VIDEO && player.isVideoPlaying()
         if (isVideoPlaying) {
@@ -61,6 +63,7 @@ class PlayerListManager(
         val start = 0L
         val media = instance.getFromUri(uri)
         media.addOption(":start-time=${start/1000L}")
+
         player.startPlayback(media, this, start)
     }
 
@@ -68,6 +71,16 @@ class PlayerListManager(
         if (hasMedia()) {
             player.play()
         }
+    }
+
+    override fun stop() {
+        mediaList.clear()
+    }
+
+    override suspend fun release() {
+        mediaList.clear()
+        instance.clear()
+        player.release()
     }
 
     override fun onEvent(event: MediaPlayer.Event?) {

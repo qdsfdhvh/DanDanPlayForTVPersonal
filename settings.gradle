@@ -8,7 +8,7 @@ include ':app',
         ':libs:file-picker',
         ':libs:tool-danma',
         ':libs:tool-subtitle',
-        ':libs:tool-torrent'
+        ':libs:tool-torrent',
 //        ':libs:exoplayer_ffmpeg',
 
         ':plugin'

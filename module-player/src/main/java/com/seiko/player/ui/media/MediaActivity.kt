@@ -11,10 +11,16 @@ import kotlinx.coroutines.launch
 
 @Route(path = Routes.Player.PATH_MEDIA)
 class MediaActivity : FragmentActivity(R.layout.player_activity_media) {
+
+    private var isFirst = true
+
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launch(Dispatchers.IO) {
-            MediaParsingService.reloadMediaLibrary(this@MediaActivity)
+        if (isFirst) {
+            isFirst = false
+            lifecycleScope.launch(Dispatchers.IO) {
+                MediaParsingService.reloadMediaLibrary(this@MediaActivity)
+            }
         }
     }
 }

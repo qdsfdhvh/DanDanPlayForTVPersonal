@@ -40,7 +40,7 @@ dependencies {
     // NetWork
     api 'com.squareup.retrofit2:retrofit:2.7.1'
     api 'com.squareup.retrofit2:converter-moshi:2.7.1'
-    api 'com.squareup.okhttp3:logging-interceptor:4.3.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.4.0'
 
     // Database
     api dependence.libRoomRuntime

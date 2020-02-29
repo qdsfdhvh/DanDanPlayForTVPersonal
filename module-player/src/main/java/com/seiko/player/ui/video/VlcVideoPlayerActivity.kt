@@ -2,17 +2,22 @@ package com.seiko.player.ui.video
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.databinding.PlayerActivityVideoVlcBinding
 import com.seiko.player.vlc.media.PlayerListManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
+import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.Medialibrary
+import timber.log.Timber
 
 class VlcVideoPlayerActivity : FragmentActivity() {
 
@@ -64,9 +69,11 @@ class VlcVideoPlayerActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        displayManager.release()
-        mediaPlayer.detachViews()
         _binding = null
+        displayManager.release()
+        GlobalScope.launch {
+            playerListManager.release()
+        }
     }
 
     private fun setupUI() {
@@ -81,7 +88,12 @@ class VlcVideoPlayerActivity : FragmentActivity() {
     private fun setVideoUri() {
         val intent = intent ?: return
         val param: PlayParam = intent.getParcelableExtra(ARGS_VIDEO_PARAMS) ?: return
-        val media = Medialibrary.getInstance().getMedia(param.videoPath)
+        Timber.d(param.videoPath)
+        var media = Medialibrary.getInstance().getMedia(param.videoPath)
+        if (media == null) {
+            media = MLServiceLocator.getAbstractMediaWrapper(Uri.parse(param.videoPath))
+        }
+        Timber.d(media.toString())
         lifecycleScope.launch {
             playerListManager.load(listOf(media), 0)
         }

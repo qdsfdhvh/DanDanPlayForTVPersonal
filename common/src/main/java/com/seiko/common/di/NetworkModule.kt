@@ -11,7 +11,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-
 internal val networkModule = module {
     single { createCache(androidContext()) }
     single { createSingleHttpClient(get()) }
