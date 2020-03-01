@@ -53,14 +53,10 @@ class PlayerViewModel(
      * 播放状态
      */
     private val _isPlaying = MutableLiveData<Boolean>()
-    val isPlaying: LiveData<Boolean> = _isPlaying
+    val isPlaying: LiveData<Boolean> get() = _isPlaying
 
-    private val _showDanma = MutableLiveData<Boolean>()
-    val showDanma: LiveData<Boolean> = _showDanma
-
-    fun loadData() {
-        _showDanma.value = prefDataSource.showDanma
-    }
+    private val _showDanma = MutableLiveData<Boolean>().apply { value = prefDataSource.showDanma }
+    val showDanma: LiveData<Boolean> get() = _showDanma
 
     /**
      * 播放

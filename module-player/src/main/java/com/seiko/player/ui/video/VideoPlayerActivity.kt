@@ -23,8 +23,6 @@ import com.seiko.player.R
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.model.PlayOption
 import com.seiko.player.databinding.PlayerActivityVideoBinding
-import com.seiko.player.databinding.PlayerControlBottomBinding
-import com.seiko.player.delegate.VideoTouchDelegate
 import com.seiko.player.media.ijkplayer.MediaPlayerParams
 import com.seiko.player.media.creator.MediaPlayerCreatorFactory
 import com.seiko.player.ui.adapter.OptionsAdapter
@@ -99,13 +97,9 @@ class VideoPlayerActivity: FragmentActivity()
     private var _binding: PlayerActivityVideoBinding? = null
     private val binding get() = _binding!!
     private val bindingControlBottom get() = binding.playerViewController.playerLayoutControlBottom
+    private val bindingTipLayout get() = binding.playerViewController.playerTipLayout
 
-    private val handler by lazyAndroid {
-        VideoPlayerHandler(
-            this
-        )
-    }
-    private val touchDelegate by lazyAndroid { VideoTouchDelegate(handler) }
+    private val handler by lazyAndroid { VideoPlayerHandler(this) }
 
     private val optionsAdapter by lazyAndroid { OptionsAdapter(this) }
 
@@ -132,8 +126,8 @@ class VideoPlayerActivity: FragmentActivity()
         var position = 0L
         override fun run() {
             // 隐藏左上角进度条
-            if (binding.playerViewController.playerTipLayout.visibility == View.VISIBLE) {
-                binding.playerViewController.playerTipLayout.visibility = View.GONE
+            if (bindingTipLayout.root.visibility == View.VISIBLE) {
+                bindingTipLayout.root.visibility = View.GONE
             }
 
             // 重置参数
@@ -228,7 +222,7 @@ class VideoPlayerActivity: FragmentActivity()
         bindingControlBottom.playerOverlaySeekbar.setOnSeekBarChangeListener(this)
         bindingControlBottom.playerOverlaySeekbar.max = MAX_VIDEO_SEEK
         // 左上角进度
-        binding.playerViewController.playerTipProgress.max = MAX_VIDEO_SEEK
+        bindingTipLayout.playerTipProgress.max = MAX_VIDEO_SEEK
         // 右侧配置
         binding.playerViewController.playerOptionsList.layoutManager = LinearLayoutManager(this)
         binding.playerViewController.playerOptionsList.adapter = optionsAdapter
@@ -252,7 +246,7 @@ class VideoPlayerActivity: FragmentActivity()
                 MediaPlayerParams.STATE_PREPARED -> {
                     Timber.d("STATE_PREPARED")
                     // 绑定播放器到弹幕引擎
-                    danmakuEngine.bindToMediaPlayer(mp, binding.playerDanmakuView)
+                    danmakuEngine.bindDanmakuView(binding.playerDanmakuView)
                     // 绑定播放器到字幕引擎
                     subtitleEngine.bindToMediaPlayer(mp)
                 }
@@ -323,7 +317,7 @@ class VideoPlayerActivity: FragmentActivity()
                     bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_pause_player)
                 }
                 // 弹幕
-                danmakuEngine.start()
+                danmakuEngine.play()
                 // 字幕
                 subtitleEngine.start()
                 // 屏幕常亮
@@ -335,7 +329,7 @@ class VideoPlayerActivity: FragmentActivity()
                     bindingControlBottom.playerBtnOverlayPlay.setImageResource(R.drawable.ic_play_player)
                 }
                 // 弹幕
-                danmakuEngine.stop()
+                danmakuEngine.pause()
                 // 字幕
                 subtitleEngine.stop()
                 // 取消屏幕常亮
@@ -353,7 +347,6 @@ class VideoPlayerActivity: FragmentActivity()
         }
         viewModel.danma.observe(this::getLifecycle, danmakuEngine::setDanmaList)
         viewModel.subtitlePath.observe(this::getLifecycle, subtitleEngine::setSubtitlePath)
-        viewModel.loadData()
     }
 
     /**
@@ -489,8 +482,8 @@ class VideoPlayerActivity: FragmentActivity()
      */
     internal fun updateProgress(): Long {
         // 隐藏左上角进度条
-        if (binding.playerViewController.playerTipLayout.visibility == View.VISIBLE) {
-            binding.playerViewController.playerTipLayout.visibility = View.GONE
+        if (bindingTipLayout.root.visibility == View.VISIBLE) {
+            bindingTipLayout.root.visibility = View.GONE
         }
 
         val videoView = binding.playerVideoViewIjk
@@ -519,8 +512,8 @@ class VideoPlayerActivity: FragmentActivity()
      */
     private fun updateTipProgress(position: Long) {
         // 显示左上角进度条
-        if (binding.playerViewController.playerTipLayout.visibility == View.GONE) {
-            binding.playerViewController.playerTipLayout.visibility = View.VISIBLE
+        if (bindingTipLayout.root.visibility == View.GONE) {
+            bindingTipLayout.root.visibility = View.VISIBLE
         }
 
         val videoView = binding.playerVideoViewIjk
@@ -530,11 +523,11 @@ class VideoPlayerActivity: FragmentActivity()
 
         // 转换为 Seek 显示的进度值
         val pos = MAX_VIDEO_SEEK * position / duration
-        binding.playerViewController.playerTipProgress.progress = pos.toInt()
+        bindingTipLayout.playerTipProgress.progress = pos.toInt()
         // 左上角进度
         val timeFormat = Tools.millisToString(position)
         val lengthFormat = Tools.millisToString(duration)
-        binding.playerViewController.playerTipTime.text = "%s/%s".format(timeFormat, lengthFormat)
+        bindingTipLayout.playerTipTime.text = "%s/%s".format(timeFormat, lengthFormat)
     }
 
     /**
@@ -592,7 +585,13 @@ class VideoPlayerActivity: FragmentActivity()
      */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) return false
-        return touchDelegate.onInterceptTouchEvent(event) || super.onTouchEvent(event)
+        when(event.action) {
+            MotionEvent.ACTION_UP -> {
+                handler.controlShow()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
     }
 
     /**

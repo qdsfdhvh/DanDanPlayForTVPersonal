@@ -5,7 +5,7 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
 
-class PlayerListManager(
+class PlayerManager(
     private val instance: VlcInstance,
     private val player: PlayerController
 ) : IPlayerController by player
@@ -14,8 +14,20 @@ class PlayerListManager(
 
     val mediaPlayer get() = player.mediaPlayer
 
+    val seekable get() = player.seekable
+
+    val pausable get() = player.pausable
+
+    /**
+     * 播放列表
+     */
     private val mediaList = MediaWrapperList()
     private var currentIndex = -1
+
+    /**
+     * 外部MediaListener
+     */
+    private var listener: MediaPlayer.EventListener? = null
 
     private fun hasMedia(): Boolean {
         return mediaList.size != 0
@@ -25,7 +37,16 @@ class PlayerListManager(
         return position in 0 until mediaList.size
     }
 
-    suspend fun load(list: List<MediaWrapper>, position: Int) {
+    suspend fun load(media: MediaWrapper,  listener: MediaPlayer.EventListener? = null) {
+        load(listOf(media), 0, listener)
+    }
+
+    suspend fun load(
+        list: List<MediaWrapper>,
+        position: Int,
+        listener: MediaPlayer.EventListener? = null
+    ) {
+        this.listener = listener
         mediaList.removeEventListener(this)
         mediaList.replaceWith(list)
         mediaList.addEventListener(this)
@@ -78,13 +99,14 @@ class PlayerListManager(
     }
 
     override suspend fun release() {
+        listener = null
         mediaList.clear()
         instance.clear()
         player.release()
     }
 
     override fun onEvent(event: MediaPlayer.Event?) {
-
+        listener?.onEvent(event)
     }
 
     override fun onItemAdded(index: Int, mrl: String) {

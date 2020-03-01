@@ -10,10 +10,9 @@ interface IDanmakuEngine {
 
     /**
      * 绑定播放器
-     * @param mediaPlayer 播放器
      * @param danmaView 弹幕视图
      */
-    fun bindToMediaPlayer(mediaPlayer: IMediaPlayer?, danmaView: IDanmakuView)
+    fun bindDanmakuView(danmaView: IDanmakuView)
 
     /**
      * 弹幕集合
@@ -23,12 +22,12 @@ interface IDanmakuEngine {
     /**
      * 开始
      */
-    fun start()
+    fun play()
 
     /**
      * 停止
      */
-    fun stop()
+    fun pause()
 
     /**
      * 注销

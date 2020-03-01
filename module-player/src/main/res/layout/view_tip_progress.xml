@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/player_rounded_corners"
+    android:visibility="gone"
+    tools:layout_width="200dp"
+    tools:visibility="visible"
+    android:padding="6dp">
+    <TextView
+        android:id="@id/player_tip_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="12:30/25:00" />
+    <SeekBar
+        android:id="@id/player_tip_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layoutDirection="ltr"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:progressDrawable="@drawable/po_seekbar_video_tip"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_thumb_null"
+        tools:progress="50"
+        tools:max="100"/>
+</LinearLayout>

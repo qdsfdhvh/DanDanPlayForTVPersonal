@@ -13,7 +13,7 @@ import com.seiko.player.util.constants.PLAYER_THUMBNAIL_DIR
 import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.util.bitmap.ThumbnailsProvider
 import com.seiko.player.vlc.media.PlayerController
-import com.seiko.player.vlc.media.PlayerListManager
+import com.seiko.player.vlc.media.PlayerManager
 import com.seiko.player.vlc.media.VlcInstance
 import com.seiko.player.vlc.media.VlcOptions
 import com.seiko.subtitle.ISubtitleEngine
@@ -24,7 +24,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.videolan.medialibrary.interfaces.Medialibrary
 import java.io.File
-import kotlin.math.sin
 
 val playModule = module {
     single(named(PLAYER_DATA_DIR)) { createPlayerDataDir(androidContext()) }
@@ -100,6 +99,6 @@ private fun createPlayerController(instance: VlcInstance): PlayerController {
     return PlayerController(instance)
 }
 
-private fun createPlayerListManager(instance: VlcInstance, player: PlayerController): PlayerListManager {
-    return PlayerListManager(instance, player)
+private fun createPlayerListManager(instance: VlcInstance, player: PlayerController): PlayerManager {
+    return PlayerManager(instance, player)
 }

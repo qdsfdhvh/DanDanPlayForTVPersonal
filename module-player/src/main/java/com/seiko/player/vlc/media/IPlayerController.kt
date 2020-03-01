@@ -13,6 +13,16 @@ interface IPlayerController {
     fun getProgressLiveData(): LiveData<Progress>
 
     /**
+     * 获取当前视频进度
+     */
+    fun getCurrentPosition(): Long
+
+    /**
+     * 获取当前视频长度
+     */
+    fun getCurrentDuration(): Long
+
+    /**
      * 是否正在播放
      */
     fun isPlaying(): Boolean

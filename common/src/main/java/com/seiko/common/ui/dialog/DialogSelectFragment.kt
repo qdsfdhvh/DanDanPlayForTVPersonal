@@ -10,6 +10,7 @@ import com.seiko.common.databinding.DialogSelectFragmentBinding
 class DialogSelectFragment : BaseDialogFragment() {
 
     private var onConfirm: (() -> Unit)? = null
+    private var onDismiss: (() -> Unit)? = null
 
     private lateinit var binding: DialogSelectFragmentBinding
 
@@ -43,12 +44,15 @@ class DialogSelectFragment : BaseDialogFragment() {
             dismiss()
             onConfirm?.invoke()
         }
-        binding.btnCancel.setOnClickListener { dismiss() }
-    }
+        binding.btnCancel.setOnClickListener {
+            dismiss()
+            onDismiss?.invoke()
+        }
 
-
-    private fun setConfirmClickListener(listener: (() -> Unit)?) {
-        onConfirm = listener
+        dialog?.let {
+            it.setCancelable(false)
+            it.setCanceledOnTouchOutside(false)
+        }
     }
 
     fun show(manager: FragmentManager) {
@@ -58,6 +62,7 @@ class DialogSelectFragment : BaseDialogFragment() {
     class Builder {
         private val bundle = Bundle()
         private var confirmClickListener: (() -> Unit)? = null
+        private var dismissClickListener: (() -> Unit)? = null
 
         fun setTitle(title: String): Builder {
             bundle.putString(ARGS_TITLE, title)
@@ -74,6 +79,11 @@ class DialogSelectFragment : BaseDialogFragment() {
             return this
         }
 
+        fun setDismissClickListener(listener: () -> Unit): Builder {
+            dismissClickListener = listener
+            return this
+        }
+
         fun setCancelText(text: String): Builder {
             bundle.putString(ARGS_CANCEL_TEXT, text)
             return this
@@ -87,7 +97,8 @@ class DialogSelectFragment : BaseDialogFragment() {
         fun build(): DialogSelectFragment {
             val fragment = DialogSelectFragment()
             fragment.arguments = bundle
-            fragment.setConfirmClickListener(confirmClickListener)
+            fragment.onConfirm = confirmClickListener
+            fragment.onDismiss = dismissClickListener
             return fragment
         }
     }

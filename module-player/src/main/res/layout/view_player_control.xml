@@ -36,26 +36,40 @@
         tools:text="[梦蓝字幕组]Crayonshinchan 蜡笔小新[1020][2020.01.11][三角关系棒 变成蜻蜓的野原广志 内裤物语][720P][AVC][GB_JP][MP4].mp4"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintTop_toTopOf="parent"
-        vlc:layout_constraintEnd_toStartOf="@id/player_overlay_length_container"/>
+        vlc:layout_constraintEnd_toStartOf="@id/player_overlay_length"/>
 
-    <FrameLayout
-        android:id="@id/player_overlay_length_container"
+    <TextView
+        android:id="@id/player_overlay_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:nextFocusUp="@id/ab_repeat_add_marker"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:textSize="16sp"
+        tools:text="00:32/56:37"
         vlc:layout_constraintEnd_toEndOf="parent"
         vlc:layout_constraintBottom_toBottomOf="@id/player_overlay_title">
-        <TextView
-            android:id="@id/player_overlay_length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:nextFocusUp="@id/ab_repeat_add_marker"
-            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
-            android:textSize="16sp"
-            tools:text="00:32/56:37" />
-    </FrameLayout>
+    </TextView>
+<!--    <FrameLayout-->
+<!--        android:id="@id/player_overlay_length_container"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        vlc:layout_constraintEnd_toEndOf="parent"-->
+<!--        vlc:layout_constraintBottom_toBottomOf="@id/player_overlay_title">-->
+<!--        <TextView-->
+<!--            android:id="@id/player_overlay_length"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--            android:nextFocusUp="@id/ab_repeat_add_marker"-->
+<!--            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"-->
+<!--            android:textSize="16sp"-->
+<!--            tools:text="00:32/56:37" />-->
+<!--    </FrameLayout>-->
 
     <SeekBar
         android:id="@id/player_overlay_seekbar"

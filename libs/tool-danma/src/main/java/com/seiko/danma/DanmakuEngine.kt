@@ -13,7 +13,6 @@ class DanmakuEngine(
     private val config: DanmakuEngineOptions
 ) : IDanmakuEngine, DrawHandler.Callback {
 
-    private var mediaPlayer: IMediaPlayer? = null
     private var danmaView: IDanmakuView? = null
     private var danmaCallback: DrawHandler.Callback? = null
 
@@ -37,9 +36,8 @@ class DanmakuEngine(
         }
     }
 
-    override fun bindToMediaPlayer(mediaPlayer: IMediaPlayer?, danmaView: IDanmakuView) {
+    override fun bindDanmakuView(danmaView: IDanmakuView) {
         log("bindToMediaPlayer")
-        this.mediaPlayer = mediaPlayer
         this.danmaView = danmaView
         danmaView.setDrawingThreadType(config.drawType)
         danmaView.showFPS(config.showFps)
@@ -54,24 +52,22 @@ class DanmakuEngine(
         prepareDanma()
     }
 
-    override fun start() {
-        if (mediaPlayer == null) return
+    override fun play() {
         val danmaView = danmaView ?: return
         if (danmaView.isPrepared && danmaView.isPaused) {
             danmaView.resume()
         }
     }
 
-    override fun stop() {
+    override fun pause() {
         val danmaView = danmaView ?: return
-        if (danmaView.isPrepared && !danmaView.isPrepared) {
+        if (danmaView.isPrepared && !danmaView.isPaused) {
             danmaView.pause()
         }
     }
 
     override fun release() {
         danmaParser = null
-        mediaPlayer = null
         danmaView?.release()
         danmaView = null
         danmaCallback = null

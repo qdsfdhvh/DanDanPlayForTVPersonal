@@ -6,43 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--左上角进度条-->
-    <LinearLayout
+    <include
         android:id="@id/player_tip_layout"
+        layout="@layout/view_tip_progress"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/player_rounded_corners"
-        vlc:layout_constraintTop_toTopOf="parent"
-        vlc:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:padding="6dp">
-        <TextView
-            android:id="@id/player_tip_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            tools:text="12:30/25:00" />
-        <SeekBar
-            android:id="@id/player_tip_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layoutDirection="ltr"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:progressDrawable="@drawable/po_seekbar_video_tip"
-            android:splitTrack="false"
-            android:thumb="@drawable/seekbar_thumb_null"
-            tools:progress="50"
-            tools:max="100"/>
-    </LinearLayout>
+        vlc:layout_constraintTop_toTopOf="parent"
+        vlc:layout_constraintStart_toStartOf="parent"/>
     <!-- A-B 循环 -->
 <!--    <include-->
-<!--        layout="@layout/player_control_ab_repeat"-->
+<!--        layout="@layout/view_ab_repeat"-->
 <!--        android:id="@id/player_layout_control_ab_repeat"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
@@ -54,7 +29,7 @@
     
     <!-- 底部控制 -->
     <include
-        layout="@layout/player_control_bottom"
+        layout="@layout/view_player_control"
         android:id="@id/player_layout_control_bottom"
         android:layout_width="@dimen/player_control_bottom_width"
         android:layout_height="wrap_content"

@@ -50,23 +50,39 @@ class PlayerController(
     /**
      * 是否可拖动
      */
-    private var seekable = false
+    var seekable = false
+        private set
 
     /**
      * 是否可暂停
      */
-    private var pausable = false
+    var pausable = false
+        private set
 
     /**
      * 进度LiveData
      */
-    private val progress by lazyAndroid { MutableLiveData<Progress>() }
+    private val progress by lazyAndroid { MutableLiveData<Progress>().apply { value = Progress() } }
 
     /**
      * 获取进度LiveData
      */
     override fun getProgressLiveData(): LiveData<Progress> {
         return progress
+    }
+
+    /**
+     * 获取当前视频进度
+     */
+    override fun getCurrentPosition(): Long {
+        return progress.value?.position ?: 0
+    }
+
+    /**
+     * 获取当前视频长度
+     */
+    override fun getCurrentDuration(): Long {
+        return progress.value?.duration ?: 0
     }
 
     /**
