@@ -11,6 +11,9 @@
     <!-- Declare permissions used by our app -->
     <uses-permission android:name="${applicationId}.MEDIA" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!-- USe foreground services -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> <!-- normal -->
+
     <uses-feature
         android:name="android.software.leanback"
         android:required="false"/>
@@ -432,17 +435,6 @@
             android:theme="@style/Theme.VLC.TV"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>
-
-        <!--播放器-->
-        <activity
-            android:name=".ui.video.VideoPlayerActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
-            android:exported="true"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.VLC.Player">
-        </activity>
 
         <!--播放器VLC-->
         <activity

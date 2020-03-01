@@ -8,5 +8,5 @@ import org.koin.dsl.module
 
 internal val viewModelModule = module {
     viewModel { PlayerViewModel(get(), get(), get()) }
-    viewModel { VideosViewModel(androidApplication()) }
+    viewModel { VideosViewModel(androidApplication(), get()) }
 }

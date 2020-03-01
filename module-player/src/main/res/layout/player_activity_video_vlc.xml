@@ -15,12 +15,6 @@
         android:id="@id/player_danmaku_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.seiko.subtitle.widget.SubtitleView
-        android:id="@id/player_subtitle_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom|center_horizontal"
-        tools:visibility="invisible"/>
     <!--控制-->
     <include
         layout="@layout/player_controller"

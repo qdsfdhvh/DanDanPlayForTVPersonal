@@ -7,7 +7,6 @@ import master.flame.danmaku.controller.IDanmakuView
 import master.flame.danmaku.danmaku.model.BaseDanmaku
 import master.flame.danmaku.danmaku.model.DanmakuTimer
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
-import tv.danmaku.ijk.media.player.IMediaPlayer
 
 class DanmakuEngine(
     private val config: DanmakuEngineOptions

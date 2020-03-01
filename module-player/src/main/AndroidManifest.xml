@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.player">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!-- USe foreground services -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> <!-- normal -->
+
     <application>
 
         <!--中转-->
@@ -15,18 +19,6 @@
             android:theme="@style/Theme.VLC.TV"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>
-
-        <!--播放器-->
-        <activity
-            android:name=".ui.video.VideoPlayerActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
-            android:exported="true"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.VLC.Player"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
 
         <!--播放器VLC-->
         <activity

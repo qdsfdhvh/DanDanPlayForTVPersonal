@@ -34,4 +34,9 @@ interface PrefDataSource {
      */
     var showDanma: Boolean
 
+    /**
+     * 是否已经创建vlc媒体库
+     */
+    var isInitVlcMedia: Boolean
+
 }

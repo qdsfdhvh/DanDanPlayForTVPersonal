@@ -69,7 +69,9 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
 
     override fun onCreate() {
         super.onCreate()
-        Timber.d("onCreate")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationHelper.createNotificationChannels(this)
+        }
         mediaLibrary = Medialibrary.getInstance()
         mediaLibrary.addDeviceDiscoveryCb(this)
     }
@@ -77,13 +79,13 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
     override fun onDestroy() {
         super.onDestroy()
         mediaLibrary.removeDeviceDiscoveryCb(this)
-        Timber.d("onDestroy")
         cancel()
     }
 
     @TargetApi(Build.VERSION_CODES.O)
     private fun forceForeground() {
-        val notification = NotificationHelper.createScanNotification(applicationContext, getString(R.string.loading_medialibrary), scanPaused)
+        val notification = NotificationHelper.createScanNotification(
+            applicationContext, getString(R.string.loading_medialibrary), scanPaused)
         startForeground(43, notification)
     }
 

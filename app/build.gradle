@@ -33,9 +33,6 @@ android {
         applicationId rootProject.ext.android.applicationId
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
-        ndk {
-            abiFilters 'armeabi-v7a'
-        }
     }
     buildTypes {
         debug {
@@ -69,6 +66,19 @@ android {
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
         pickFirst 'lib/x86/libc++_shared.so'
         pickFirst 'lib/x86_64/libc++_shared.so'
+    }
+    splits {
+//        density {
+//            enable = true
+//            reset()
+//            include("mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi")
+//        }
+        abi {
+            enable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            universalApk = true
+        }
     }
 }
 

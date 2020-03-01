@@ -39,4 +39,7 @@
     <string name="time_category_current_year">今年</string>
     <string name="time_category_last_year">去年</string>
     <string name="time_category_older">较旧媒体</string>
+
+    <string name="media_library_scan">媒体库扫描</string>
+    <string name="media_library_progress">媒体库扫描进度更新</string>
 </resources>

@@ -3,8 +3,6 @@ package com.seiko.danma
 import com.seiko.danma.model.Danma
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.controller.IDanmakuView
-import master.flame.danmaku.danmaku.model.android.DanmakuContext
-import tv.danmaku.ijk.media.player.IMediaPlayer
 
 interface IDanmakuEngine {
 

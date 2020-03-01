@@ -8,7 +8,6 @@ import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.common.util.toast.toast
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.ui.video.VideoPlayerActivity
 import com.seiko.player.ui.video.VlcVideoPlayerActivity
 import com.seiko.player.util.extensions.getRealPath
 import com.seiko.player.util.getFileNameFromPath
@@ -23,13 +22,13 @@ class StartActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("onCreate")
+//        Timber.d("onCreate")
         checkIntent()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Timber.d("onDestroy")
+//        Timber.d("onDestroy")
     }
 
     private fun checkIntent() {
@@ -70,10 +69,6 @@ class StartActivity : FragmentActivity() {
             videoTitle = videoPath.getFileNameFromPath()
         }
 
-//        VideoPlayerActivity.launch(this, PlayParam(
-//            videoPath = videoPath,
-//            videoTitle = videoTitle
-//        ))
         VlcVideoPlayerActivity.launch(this, PlayParam(
             videoPath = videoPath,
             videoTitle = videoTitle

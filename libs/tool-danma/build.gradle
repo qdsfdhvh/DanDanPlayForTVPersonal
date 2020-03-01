@@ -2,8 +2,6 @@ apply plugin: 'com.android.library'
 apply from: rootProject.file('libbase.gradle')
 
 dependencies {
-    // IjkPlayer Java
-    implementation dependence.libIjkplayer
     // 弹幕
     api 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
     implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'

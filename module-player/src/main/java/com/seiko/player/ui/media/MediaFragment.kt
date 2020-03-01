@@ -15,20 +15,20 @@ import com.seiko.player.R
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.databinding.PlayerFragmentBrowserBinding
 import com.seiko.player.ui.adapter.MediaTvListAdapter
-import com.seiko.player.ui.video.VideoPlayerActivity
 import com.seiko.player.ui.video.VlcVideoPlayerActivity
 import com.seiko.player.util.RecyclerViewUtils
 import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.vm.VideosViewModel
 import kotlinx.coroutines.yield
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 
 class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItemClickListener {
 
-    private val viewModel: VideosViewModel by viewModel()
+    private val viewModel: VideosViewModel by sharedViewModel()
 
     private lateinit var binding: PlayerFragmentBrowserBinding
     private lateinit var backgroundManager: BackgroundManager
@@ -113,10 +113,6 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(item) {
             is MediaWrapper  -> {
-//                VideoPlayerActivity.launch(requireActivity(), PlayParam(
-//                    item.uri.path!!,
-//                    item.title
-//                ))
                 VlcVideoPlayerActivity.launch(requireActivity(), PlayParam(
                     item.uri.path!!,
                     item.title

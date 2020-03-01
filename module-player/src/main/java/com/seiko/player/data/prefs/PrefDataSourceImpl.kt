@@ -16,6 +16,8 @@ class PrefDataSourceImpl(prefs: PreferenceDataStore): PrefDataSource {
     override var mPixelFormat by prefs.string("PREF_PIXEL_FORMAT", "")
     override var showDanma by prefs.boolean("PREF_OPEN_DANMA", true)
 
+    override var isInitVlcMedia by prefs.boolean("PREF_IS_INIT_VLC_MEDIA", false)
+
 //    override var timeStretch by prefs.boolean("PREF_TIME_STRETCH", false)
 //    override var subtitlesEncoding by prefs.string("PREF_SUBTITLES_ENCODING", "")
 //    override var enableFrameSkip by prefs.boolean("PREF_ENABLE_FRAME_SKIP", false)
