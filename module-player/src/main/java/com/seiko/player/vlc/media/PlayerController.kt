@@ -236,10 +236,10 @@ class PlayerController(
                 updateProgress(duration = event.lengthChanged)
             }
             MediaPlayer.Event.TimeChanged -> {
-                val time = event.timeChanged
-                if (abs(time - lastTime) > 950L) {
-                    updateProgress(position = time)
-                    lastTime = time
+                val position = event.timeChanged
+                if (abs(position - lastTime) > 950L) {
+                    updateProgress(position = position)
+                    lastTime = position
                 }
             }
         }

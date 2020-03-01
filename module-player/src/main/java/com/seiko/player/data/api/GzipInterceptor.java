@@ -20,8 +20,8 @@ public class GzipInterceptor implements Interceptor {
             if (response.code() == 200 && response.body() != null) {
                 MediaType mediaType = response.body().contentType();
                 byte[] data = response.body().bytes();
-                if (GZIPUtils.isGzip(response.headers())) {
-                    data = GZIPUtils.uncompress(data);
+                if (GzipUtils.isGzip(response.headers())) {
+                    data = GzipUtils.uncompress(data);
                 }
                 return response.newBuilder()
                         .body(ResponseBody.create(mediaType, data))

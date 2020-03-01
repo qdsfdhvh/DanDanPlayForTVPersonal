@@ -27,6 +27,8 @@
         android:progressDrawable="@drawable/po_seekbar_video_tip"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_thumb_null"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         tools:progress="50"
         tools:max="100"/>
 </LinearLayout>

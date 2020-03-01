@@ -60,9 +60,7 @@ private class PageRowFragmentFactory : BrowseSupportFragment.FragmentFactory<Fra
 
     override fun createFragment(row: Any?): Fragment {
         return when(row) {
-            is SeasonPageRow -> BangumiAreaPageFragment.newInstance(
-                row.season
-            )
+            is SeasonPageRow -> BangumiAreaPageFragment.newInstance(row.season)
             else -> throw IllegalArgumentException(String.format("Invalid row %s", row))
         }
     }

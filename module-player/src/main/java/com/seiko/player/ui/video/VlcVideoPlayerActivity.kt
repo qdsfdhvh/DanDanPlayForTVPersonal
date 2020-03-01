@@ -55,6 +55,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
         private const val FADE_OUT_TIP = 2
         private const val SHOW_INFO = 8
         private const val HIDE_INFO = 9
+        private const val SEEK_TO = 10
 
         fun launch(context: Context, param: PlayParam) {
             val intent = Intent(context, VlcVideoPlayerActivity::class.java)
@@ -87,11 +88,13 @@ class VlcVideoPlayerActivity : FragmentActivity()
                 FADE_OUT_TIP -> fadeOutTipProgress()
                 HIDE_INFO -> hideOverlay(true)
                 SHOW_INFO -> showOverlay()
+                SEEK_TO -> seekTo(msg.obj as Long)
             }
         }
     }
 
     private val seekListener = object : SeekBar.OnSeekBarChangeListener {
+        // 在TV端焦点拖动进度条不会触发
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
             isDragging = true
             showOverlayTimeout(OVERLAY_INFINITE)
@@ -105,8 +108,10 @@ class VlcVideoPlayerActivity : FragmentActivity()
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (!isFinishing && fromUser && player.seekable) {
                 val position = progress * player.getCurrentDuration() / MAX_VIDEO_SEEK
-                seekTo(position)
+                handler.removeMessages(SEEK_TO)
+                handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 500)
                 showTipProgress(position, 1000)
+                syncProgress(position)
             }
             if (fromUser) {
                 showOverlay(true)
@@ -204,13 +209,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
 
     private fun bindViewModel() {
         player.getProgressLiveData().observe(this::getLifecycle) { progress ->
-            if (progress == null) return@observe
-            // 更新进度条
-            seekbar.progress = (MAX_VIDEO_SEEK * progress.position / progress.duration).toInt()
-            // 更新文本时间
-            val timeFormat = Tools.millisToString(progress.position)
-            val lengthFormat = Tools.millisToString(progress.duration)
-            bottomControl.playerOverlayLength.text ="%s/%s".format(timeFormat, lengthFormat)
+            syncProgress(progress.position)
         }
         viewModel.showDanma.observe(this::getLifecycle) { show ->
             if (show) {
@@ -246,6 +245,28 @@ class VlcVideoPlayerActivity : FragmentActivity()
     private fun seekTo(position: Long) {
         danmakuEngine.seekTo(position)
         player.seekTo(position)
+        targetPosition = -1L
+    }
+
+    /**
+     * 快进/快退
+     */
+    private var targetPosition = -1L
+    private fun seekDelta(delta: Int) {
+        if (!player.seekable) return
+
+        if (targetPosition == -1L) {
+            targetPosition = player.getCurrentPosition()
+        }
+
+        var position = targetPosition + delta
+        if (position < 0) position = 0
+        targetPosition = position
+
+        handler.removeMessages(SEEK_TO)
+        handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 500)
+        showTipProgress(position, 1000)
+        syncProgress(position)
     }
 
     /**
@@ -290,6 +311,21 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
+     * 更新进度
+     */
+    private fun syncProgress(position: Long) {
+        val duration = player.getCurrentDuration()
+        if (tipProgress.root.visibility != View.VISIBLE) {
+            // 更新进度条
+            seekbar.progress = (MAX_VIDEO_SEEK * position / duration).toInt()
+        }
+        // 更新文本时间
+        val timeFormat = Tools.millisToString(position)
+        val lengthFormat = Tools.millisToString(duration)
+        bottomControl.playerOverlayLength.text ="%s/%s".format(timeFormat, lengthFormat)
+    }
+
+    /**
      * 控件点击
      */
     override fun onClick(v: View?) {
@@ -328,9 +364,6 @@ class VlcVideoPlayerActivity : FragmentActivity()
             }
             MotionEvent.ACTION_UP -> {
                 val touchSlop = ViewConfiguration.get(this).scaledTouchSlop
-
-                handler.removeCallbacksAndMessages(null)
-
                 if (now - touchDownMs > ViewConfiguration.getDoubleTapTimeout()) {
                     numberOfTaps = 0
                     lastTapTimeMs = 0
@@ -345,6 +378,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
                 }
 
                 lastTapTimeMs = now
+
 
                 handler.postDelayed({
                     if (numberOfTaps == 1) {
@@ -361,7 +395,11 @@ class VlcVideoPlayerActivity : FragmentActivity()
     /**
      * 按键
      */
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        // 重置控制界面延时关闭
+        if (isShowing) {
+            hideOverlayTimeout(OVERLAY_TIMEOUT)
+        }
         when(keyCode) {
             // ok键
             KeyEvent.KEYCODE_DPAD_CENTER -> {
@@ -370,24 +408,50 @@ class VlcVideoPlayerActivity : FragmentActivity()
                     return true
                 }
             }
-            // ↑键： TODO 显示/隐藏 播放列表
-            KeyEvent.KEYCODE_DPAD_UP -> {
-                return true
-            }
+//            // ↑键 显示/隐藏 播放列表
+//            KeyEvent.KEYCODE_DPAD_UP -> {
+//                return true
+//            }
             // ↓键 显示 底部控制界面
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-
+                if (!isShowing) {
+                    showOverlayTimeout(OVERLAY_TIMEOUT)
+                    return true
+                } else if (bottomControl.playerBtnOverlayPlay.isFocused) {
+                    hideOverlay(true)
+                    return true
+                }
             }
-            // →键： 快退10秒
+            // →键 快退10秒
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                return true
+                if (!isShowing) {
+                    if (event.isAltPressed && event.isCtrlPressed) {
+                        seekDelta(-300000)
+                    } else if (event.isCtrlPressed) {
+                        seekDelta(-60000)
+                    } else {
+                        seekDelta(-10000)
+                    }
+                    return true
+                }
             }
-            // ←键： 快进10秒
+            // ←键 快进10秒
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                return true
+                if (!isShowing) {
+                    if (event.isAltPressed && event.isCtrlPressed) {
+                        seekDelta(300000)
+                    } else if (event.isCtrlPressed) {
+                        seekDelta(60000)
+                    } else {
+                        seekDelta(10000)
+                    }
+                    return true
+                }
             }
-            // 菜单键： 显示/ 隐藏 菜单
+            // 菜单键 显示/ 隐藏 菜单
             KeyEvent.KEYCODE_MENU -> {
+                val what = if (isShowing) HIDE_INFO else SHOW_INFO
+                handler.sendEmptyMessage(what)
                 return true
             }
         }
@@ -399,7 +463,6 @@ class VlcVideoPlayerActivity : FragmentActivity()
      */
     private var overlayTimeout = 0
     private fun showOverlay(forceCheck: Boolean = false) {
-        Timber.d("showOverlay forceCheck=$forceCheck isShowing=$isShowing")
         if (forceCheck) {
             overlayTimeout = 0
         }
@@ -424,12 +487,14 @@ class VlcVideoPlayerActivity : FragmentActivity()
             bottomControl.playerBtnOverlayPlay.requestFocus()
 
             disStatusBar(false)
-
         }
+        hideOverlayTimeout(overlayTimeout)
+    }
+
+    private fun hideOverlayTimeout(timeout: Int) {
         handler.removeMessages(FADE_OUT)
-        if (overlayTimeout != OVERLAY_INFINITE) {
-            Timber.d("delay hideOverlay time=$overlayTimeout")
-            handler.sendMessageDelayed(handler.obtainMessage(FADE_OUT), overlayTimeout.toLong())
+        if (timeout != OVERLAY_INFINITE) {
+            handler.sendMessageDelayed(handler.obtainMessage(FADE_OUT), timeout.toLong())
         }
     }
 
@@ -437,7 +502,6 @@ class VlcVideoPlayerActivity : FragmentActivity()
      * hide overlay
      */
     private fun hideOverlay(fromUser: Boolean) {
-        Timber.d("hideOverlay fromUser=$fromUser isShowing=$isShowing")
         if (isShowing) {
             isShowing = false
             handler.removeMessages(FADE_OUT)
@@ -475,17 +539,6 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
-     * 播放器事件监听
-     */
-    override fun onEvent(event: MediaPlayer.Event?) {
-        if (event == null) return
-        when(event.type) {
-            MediaPlayer.Event.Playing,
-            MediaPlayer.Event.Paused -> updateOverlayPlayPause()
-        }
-    }
-
-    /**
      * 更新播放按钮
      */
     private val playToPause by lazyAndroid { AnimatedVectorDrawableCompat.create(this, R.drawable.anim_play_pause)!! }
@@ -509,6 +562,22 @@ class VlcVideoPlayerActivity : FragmentActivity()
         }
     }
 
+    /**
+     * 播放器事件监听
+     */
+    override fun onEvent(event: MediaPlayer.Event?) {
+        if (event == null) return
+        when(event.type) {
+            MediaPlayer.Event.Playing,
+            MediaPlayer.Event.Paused -> updateOverlayPlayPause()
+            MediaPlayer.Event.Stopped -> finish()
+
+        }
+    }
+
+    /**
+     * 返回
+     */
     override fun onBackPressed() {
         if (isShowing) {
             hideOverlay(true)
@@ -519,7 +588,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
             pause()
 
             DialogSelectFragment.Builder()
-                .setTitle("你真的确认退出播放吗？")
+                .setTitle(getString(R.string.dialog_exit_player))
                 .setConfirmText(getString(R.string.ok))
                 .setCancelText(getString(R.string.cancel))
                 .setConfirmClickListener { finish() }

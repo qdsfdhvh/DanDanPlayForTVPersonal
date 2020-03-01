@@ -1,6 +1,7 @@
 package com.seiko.common.ui.dialog
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,13 @@ class DialogSelectFragment : BaseDialogFragment() {
         dialog?.let {
             it.setCancelable(false)
             it.setCanceledOnTouchOutside(false)
+            it.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0) {
+                    dismiss()
+                    onDismiss?.invoke()
+                }
+                false
+            }
         }
     }
 

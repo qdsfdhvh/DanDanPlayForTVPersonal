@@ -2,21 +2,7 @@
 <resources>
     <string name="player_app_name">DanDanPlay-TV播放器</string>
 
-    <string name="demux_bitrate">Demux bitrate</string>
-    <string name="input_bitrate">Input bitrate</string>
-    <string name="channels">Channels</string>
-    <string name="resolution">Resolution</string>
-    <string name="resolution_value">%1$dx%2$d</string>
-    <string name="framerate">Framerate</string>
-    <string name="framerate_value">%1$.3f</string>
-    <string name="bitrate_value">%1$s/s</string>
-    <string name="language">Language</string>
-    <string name="track_samplerate">Sample rate</string>
-    <string name="track_samplerate_value">%1$d Hz\n</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="codec">Codec</string>
-    <string name="text">Text</string>
-    <string name="unknown">Unknown</string>
+    <string name="dialog_exit_player">确定要退出播放吗？</string>
 
     <string name="playback_multiple_errors">Multiple media cannot be played</string>
     <string name="widget_default_text" translatable="false">VLC mini player</string>

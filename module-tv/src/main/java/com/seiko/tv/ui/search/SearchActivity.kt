@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
+import com.seiko.tv.util.setupSharedElementTransition
 
 class SearchActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupSharedElementTransition()
         if (supportFragmentManager.findFragmentByTag(TAG) == null) {
             val fragment: Fragment = when(intent.getIntExtra(ARGS_TYPE, TYPE_BANGUMI)) {
                 TYPE_MAGNET -> SearchMagnetFragment.newInstance(intent.extras!!)

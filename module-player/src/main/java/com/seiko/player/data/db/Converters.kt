@@ -2,13 +2,10 @@ package com.seiko.player.data.db
 
 import android.util.Base64
 import androidx.room.TypeConverter
-import com.seiko.player.data.api.GZIPUtils
-import com.seiko.player.data.api.model.DanmaDownloadResponse
+import com.seiko.player.data.api.GzipUtils
 import com.seiko.player.data.model.DanmaCommentBean
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import org.koin.core.KoinComponent
-import timber.log.Timber
 
 internal class DanmaDownloadBeanConverter {
 
@@ -22,14 +19,14 @@ internal class DanmaDownloadBeanConverter {
     fun stringToDanmaDownloadBean(databaseValue: String?): List<DanmaCommentBean> {
         if (databaseValue.isNullOrEmpty()) return emptyList()
         val bas64 = Base64.decode(databaseValue, Base64.DEFAULT)
-        val json = GZIPUtils.uncompressToString(bas64)
+        val json = GzipUtils.uncompressToString(bas64)
         return adapter.fromJson(json) ?: emptyList()
     }
 
     @TypeConverter
     fun danmaDownloadBeanToString(danma: List<DanmaCommentBean>): String {
         val json = adapter.toJson(danma)
-        val gzip = GZIPUtils.compress(json)
+        val gzip = GzipUtils.compress(json)
         return Base64.encodeToString(gzip, Base64.DEFAULT)
     }
 

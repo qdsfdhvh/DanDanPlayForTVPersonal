@@ -12,7 +12,7 @@ import okhttp3.Headers;
 /**
  * Created by gaozhen on 2017/12/4.
  */
-public class GZIPUtils {
+public class GzipUtils {
 
     public static final String ENCODE_UTF_8 = "UTF-8";
 

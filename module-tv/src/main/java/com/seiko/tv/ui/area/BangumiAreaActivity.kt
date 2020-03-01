@@ -6,11 +6,13 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
+import com.seiko.tv.util.setupSharedElementTransition
 
 class BangumiAreaActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupSharedElementTransition()
         if (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
             val fragment = BangumiAreaFragmentV2.newInstance()
             supportFragmentManager.commit {

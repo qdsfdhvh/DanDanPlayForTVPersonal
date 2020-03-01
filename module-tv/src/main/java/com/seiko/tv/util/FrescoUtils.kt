@@ -2,9 +2,11 @@ package com.seiko.tv.util
 
 import android.app.Activity
 import android.app.Application
+import android.app.SharedElementCallback
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.view.View
 import com.facebook.cache.disk.DiskCacheConfig
 import com.facebook.common.util.ByteConstants
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -62,6 +64,21 @@ fun Activity.setupSharedElementTransition() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.sharedElementEnterTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 进入
         window.sharedElementReturnTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 返回
+        setExitSharedElementCallback(object : SharedElementCallback() {
+            override fun onSharedElementEnd(
+                sharedElementNames: MutableList<String>?,
+                sharedElements: MutableList<View>?,
+                sharedElementSnapshots: MutableList<View>?
+            ) {
+                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
+                if (sharedElements.isNullOrEmpty()) return
+                sharedElements.filter { it.visibility != View.VISIBLE }
+                    .forEach { it.visibility = View.VISIBLE }
+//                for (view in sharedElements) {
+//                    view.visibility = View.VISIBLE
+//                }
+            }
+        })
     }
 }
 

@@ -703,7 +703,7 @@ class VideoPlayerActivity: FragmentActivity()
 
         if (supportFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
             DialogSelectFragment.Builder()
-                .setTitle("你真的确认退出播放吗？")
+                .setTitle(getString(R.string.dialog_exit_player))
                 .setConfirmText(getString(R.string.ok))
                 .setCancelText(getString(R.string.cancel))
                 .setConfirmClickListener { finish() }
