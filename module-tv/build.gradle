@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation project(':common')
-    implementation project(':libs:thunder')
+//    implementation project(':libs:thunder')
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
 

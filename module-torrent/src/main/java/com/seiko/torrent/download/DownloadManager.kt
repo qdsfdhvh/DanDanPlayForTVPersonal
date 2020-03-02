@@ -32,6 +32,8 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
+private typealias MagnetParseResultListener = (TorrentMetaInfo) -> Unit
+
 @ExperimentalCoroutinesApi
 class DownloadManager(
     private val options: TorrentEngineOptions,
@@ -51,14 +53,15 @@ class DownloadManager(
 
     /**
      * 种子下载引擎
-     * PS: 由于关闭一个引擎特别耗时，使用单一的引擎，会在开启时等待它关闭，特别浪费时间且毫无意义。
+     * PS: 由于关闭一个引擎特别耗时，使用单一的引擎，会在开启时等待它关闭，特别浪费时间。
      */
     private lateinit var torrentEngine: TorrentEngine
 
-    /**
-     * 磁力信息通道
-     */
-    private val magnetMap = ConcurrentHashMap<String, EventData<TorrentMetaInfo>>()
+//    /**
+//     * 磁力信息通道
+//     */
+//    private val magnetMap = ConcurrentHashMap<String, EventData<TorrentMetaInfo>>()
+    private var magnetParseResultListener: MagnetParseResultListener? = null
 
     /**
      * 是否已经初始化
@@ -85,8 +88,9 @@ class DownloadManager(
      */
     private fun closeEngine() {
         runBlocking(Dispatchers.Main) { torrentStatesMap.clear() }
+        magnetParseResultListener = null
         downloadScope.cancel()
-        magnetMap.clear()
+//        magnetMap.clear()
         torrentEngine.setCallback(null)
         // 引擎的关闭非常耗时，启用单独的线程去关闭它
         thread(
@@ -202,15 +206,17 @@ class DownloadManager(
         }
 
         val magnetInfo = torrentEngine.fetchMagnet(source).toMagnetInfo(source)
-        magnetMap.safeGetEvent(magnetInfo.sha1hash).set(function)
+//        magnetMap.safeGetEvent(magnetInfo.sha1hash).set(function)
+        magnetParseResultListener = function
         return magnetInfo
     }
 
     override fun cancelFetchMagnet(hash: String) {
-        magnetMap[hash]?.let { event ->
-            event.cancel()
-            magnetMap.remove(hash)
-        }
+//        magnetMap[hash]?.let { event ->
+//            event.cancel()
+//            magnetMap.remove(hash)
+//        }
+        magnetParseResultListener = null
         torrentEngine.cancelFetchMagnet(hash)
     }
 
@@ -378,7 +384,10 @@ class DownloadManager(
                 Timber.tag(TAG).e(e)
                 return@launch
             }
-            magnetMap[hash]?.post(info)
+            withContext(Dispatchers.Main) {
+                magnetParseResultListener?.invoke(info)
+            }
+//            magnetMap[hash]?.post(info)
         }
     }
 
@@ -398,15 +407,15 @@ class DownloadManager(
         Timber.tag(TAG).e(errorMsg)
     }
 
-    private fun <T> ConcurrentHashMap<String, EventData<T>>.safeGetEvent(hash: String): EventData<T> {
-        return if (containsKey(hash)) {
-            get(hash)!!
-        } else {
-            val event = EventData<T>(downloadScope)
-            put(hash, event)
-            event
-        }
-    }
+//    private fun <T> ConcurrentHashMap<String, EventData<T>>.safeGetEvent(hash: String): EventData<T> {
+//        return if (containsKey(hash)) {
+//            get(hash)!!
+//        } else {
+//            val event = EventData<T>(downloadScope)
+//            put(hash, event)
+//            event
+//        }
+//    }
 }
 
 
@@ -421,42 +430,42 @@ private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
     )
 }
 
-@ExperimentalCoroutinesApi
-data class EventData<T>(
-    val coroutineScope: CoroutineScope
-) {
-
-    private val channel = ConflatedBroadcastChannel<T>()
-    private var job: Job? = null
-
-    private var callback: ((T) -> Unit)? = null
-    private var value: T? = null
-
-    init {
-        job = coroutineScope.launch(Dispatchers.Main) {
-            channel.openSubscription().consumeEach {
-                callback?.invoke(it)
-            }
-        }
-    }
-
-    fun set(callback: ((T) -> Unit)?) {
-        value?.let { callback?.invoke(it) }
-        this.callback = callback
-    }
-
-    fun post(data: T) {
-        if (!channel.isClosedForSend) {
-            coroutineScope.launch {
-                value = data
-                channel.send(data)
-            }
-        }
-    }
-
-    fun cancel() {
-        callback = null
-        job?.cancel()
-        channel.cancel()
-    }
-}
+//@ExperimentalCoroutinesApi
+//data class EventData<T>(
+//    val coroutineScope: CoroutineScope
+//) {
+//
+//    private val channel = ConflatedBroadcastChannel<T>()
+//    private var job: Job? = null
+//
+//    private var callback: ((T) -> Unit)? = null
+//    private var value: T? = null
+//
+//    init {
+//        job = coroutineScope.launch(Dispatchers.Main) {
+//            channel.openSubscription().consumeEach {
+//                callback?.invoke(it)
+//            }
+//        }
+//    }
+//
+//    fun set(callback: ((T) -> Unit)?) {
+//        value?.let { callback?.invoke(it) }
+//        this.callback = callback
+//    }
+//
+//    fun post(data: T) {
+//        if (!channel.isClosedForSend) {
+//            coroutineScope.launch {
+//                value = data
+//                channel.send(data)
+//            }
+//        }
+//    }
+//
+//    fun cancel() {
+//        callback = null
+//        job?.cancel()
+//        channel.cancel()
+//    }
+//}

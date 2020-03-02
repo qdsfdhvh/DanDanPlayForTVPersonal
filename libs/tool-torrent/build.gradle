@@ -5,7 +5,7 @@ dependencies {
     implementation dependence.libAnnotation
 
     // Torrent
-    def libtorrent4j = "1.2.2.0"
+    def libtorrent4j = "1.2.3.0"
     api "org.libtorrent4j:libtorrent4j:${libtorrent4j}"
     implementation "org.libtorrent4j:libtorrent4j-android-arm:${libtorrent4j}"
     implementation "org.libtorrent4j:libtorrent4j-android-arm64:${libtorrent4j}"
