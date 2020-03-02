@@ -8,6 +8,7 @@ build/
 .externalNativeBuild
 .cxx
 gradlew*
+.vscode
 
 /repo
 
@@ -15,4 +16,4 @@ gradlew*
 componentrelease
 app-bl
 schemas
-key.propertiesg
+key.properties

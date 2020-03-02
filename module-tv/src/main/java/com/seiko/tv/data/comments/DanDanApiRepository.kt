@@ -17,7 +17,7 @@ internal class DanDanApiRepository(
      * 获取新番列表
      * // @param filterAdultContent 是否过滤成人内容
      */
-    suspend fun getBangumiList(): Result<List<BangumiIntroEntity>> {
+    suspend fun getSeriesBangumiList(): Result<List<BangumiIntroEntity>> {
         val response: BangumiListResponse
         try {
             response = api.getBangumiList()

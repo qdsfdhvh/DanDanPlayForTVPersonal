@@ -8,15 +8,15 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
 
-    single { GetBangumiAirDayBeansUseCase() }
     single { GetBangumiDetailsUseCase() }
     single { GetBangumiFavoriteFixedUseCase() }
     single { GetBangumiFavoriteUseCase() }
     single { GetBangumiHistoryFixedUseCase() }
     single { GetBangumiHistoryUseCase() }
-    single { GetBangumiListUseCase() }
     single { GetBangumiListWithSeasonUseCase() }
     single { GetBangumiSeasonsUseCase() }
+    single { GetSeriesBangumiAirDayBeansUseCase() }
+    single { GetSeriesBangumiListUseCase() }
     single { SaveBangumiFavoriteUseCase() }
     single { SaveBangumiHistoryUseCase() }
 

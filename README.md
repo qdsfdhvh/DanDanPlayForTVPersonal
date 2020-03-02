@@ -4,13 +4,13 @@
 
 ## 项目截图
 
-![Home](./screen/device-2020-02-04-145554.webp)
-![Area](./screen/device-2020-02-04-145451.webp)
-![TimeLine](./screen/device-2020-02-04-145416.webp)
-![Detail1](./screen/device-2020-02-04-145718.webp)
-![Detail2](./screen/device-2020-02-04-145736.webp)
-![Torrent](./screen/device-2020-02-04-145341.webp)
-![Player](./screen/device-2020-02-06-210626.webp)
+![1](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145554.webp)
+![2](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145416.webp)
+![3](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145451.webp)
+![4](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145718.webp)
+![5](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145736.webp)
+![6](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-04-145341.webp)
+![7](https://gitee.com/seduce/img/raw/master/markdown/device-2020-02-06-210626.webp)
 
 ## Clean架构
 
@@ -36,53 +36,65 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 ### app-tv
 
+* [Fresco](https://github.com/facebook/fresco)
+
+* [WorkManager](https://developer.android.google.cn/topic/libraries/architecture/workmanager)
+
+* [tv-samples](https://github.com/android/tv-samples)
+
 * [UKIKU](https://github.com/jordyamc/UKIKU)
 
-* [StarFxc](https://github.com/leginigel/StarFxc)
+* [~~androidtv-list-sample~~](https://github.com/androidmunich/androidtv-list-sample)
 
-* [aos-Video](https://github.com/archos-sa/aos-Video)
+* [~~aos-Video~~](https://github.com/archos-sa/aos-Video)
 
-* [androidtv-list-sample](https://github.com/androidmunich/androidtv-list-sample)
-
-* [AndroidTvTorrent](https://github.com/zh79325/AndroidTvTorrent)
+* [~~StarFxc~~](https://github.com/leginigel/StarFxc)
 
 ### torrent
 
 * [jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
 
-* [simple-torrent-android](https://github.com/masterwok/simple-torrent-android)
+* [libtorrent4j](https://github.com/aldenml/libtorrent4j)
 
 * [libretorrent](https://github.com/proninyaroslav/libretorrent)
 
-* [libtorrent4j](https://github.com/aldenml/libtorrent4j)
+* [simple-torrent-android](https://github.com/masterwok/simple-torrent-android)
+
+* [~~AndroidTvTorrent~~](https://github.com/zh79325/AndroidTvTorrent)
 
 ### player
 
-* [Exoplayer](https://github.com/google/ExoPlayer)
-
-* [ijkplayer](https://github.com/bilibili/ijkplayer)
+* [vlc-android](https://github.com/videolan/vlc-android)
 
 * [DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
 
 * [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
 
-* [IJKPlayer-android](https://github.com/DyncKathline/IJKPlayer-android)
-
 * [SubtitleForAndroid](https://github.com/averyzhong/SubtitleForAndroid)
 
-* [MQPlayer](https://github.com/joffychim/MQPlayer)
+* [~~Exoplayer~~](https://github.com/google/ExoPlayer)
+
+* [~~ijkplayer~~](https://github.com/bilibili/ijkplayer)
+
+* [~~IJKPlayer-android~~](https://github.com/DyncKathline/IJKPlayer-android)
+
+* [~~MQPlayer~~](https://github.com/joffychim/MQPlayer)
 
 ### common
+
+* [okio](https://github.com/square/okio)
 
 * [okhttp](https://github.com/square/okhttp)
 
 * [retrofit](https://github.com/square/retrofi)
 
-* [Koin](https://github.com/InsertKoinIO/koin)
-
 * [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 
-* [Fresco](https://github.com/facebook/fresco)
+* [koin](https://github.com/InsertKoinIO/koin)
+
+* [room](https://developer.android.com/training/data-storage/room)
+
+* [ARouter](https://github.com/alibaba/ARouter)
 
 * [MMKV](https://github.com/Tencent/MMKV)
 
@@ -90,6 +102,6 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [AndroidAutoSize](https://github.com/JessYanCoding/AndroidAutoSize)
 
-* [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)
+* [Timber](https://github.com/naman14/Timber)
 
-* [okio](https://github.com/square/okio)
+* [DToast](https://github.com/Dovar66/DToast)

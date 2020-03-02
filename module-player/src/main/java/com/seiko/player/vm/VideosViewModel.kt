@@ -8,10 +8,7 @@ import com.seiko.player.vlc.provider.MediaLibraryProvider
 import com.seiko.player.vlc.provider.VideosProvider
 import org.videolan.medialibrary.media.MediaLibraryItem
 
-class VideosViewModel(
-    app: Application,
-    private val prefDataSource: PrefDataSource
-) : MediaLibraryViewModel(app) {
+class VideosViewModel(app: Application) : MediaLibraryViewModel(app) {
 
     val provider = VideosProvider(null, null, app, this)
 
@@ -20,14 +17,6 @@ class VideosViewModel(
 
     init {
         watchMedia()
-    }
-
-    val isInitVlcMedia = liveData(viewModelScope.coroutineContext) {
-        emit(prefDataSource.isInitVlcMedia)
-    }
-
-    fun setHasInitVlcMedia() {
-        prefDataSource.isInitVlcMedia = true
     }
 
 }

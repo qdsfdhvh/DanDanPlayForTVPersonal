@@ -7,6 +7,9 @@ import com.seiko.tv.util.toHomeImageBean
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * 获取本地动漫浏览历史（List）
+ */
 class GetBangumiHistoryFixedUseCase : KoinComponent {
 
     private val historyRepo: BangumiHistoryRepository by inject()

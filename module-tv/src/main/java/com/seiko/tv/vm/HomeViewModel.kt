@@ -2,12 +2,11 @@ package com.seiko.tv.vm
 
 import androidx.lifecycle.*
 import androidx.paging.PagedList
-import com.seiko.tv.domain.bangumi.GetBangumiAirDayBeansUseCase
+import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.common.data.Result
-import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,7 +14,7 @@ import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(
-    private val getWeekBangumiList: GetBangumiAirDayBeansUseCase,
+    private val getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
     private val getFavoriteBangumiList: GetBangumiFavoriteUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ): ViewModel() {

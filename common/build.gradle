@@ -4,12 +4,8 @@ apply plugin: 'com.gfd.comswitch'
 apply from:rootProject.file('libbase.gradle')
 
 dependencies {
-    api 'androidx.multidex:multidex:2.0.1'
-
-    // 屏幕适配
-    implementation 'me.jessyan:autosize:1.1.2'
-
     // Support
+    api 'androidx.multidex:multidex:2.0.1'
 //    api dependence.libAppCompat
     api dependence.libConstraintlayout
     api dependence.libLeanback
@@ -21,11 +17,10 @@ dependencies {
     api dependence.libPaging
     api dependence.libPagingKtx
 
-    // Log
-    api 'com.jakewharton.timber:timber:4.7.1'
-
-    // Toast
-    implementation 'com.github.Dovar66:DToast:1.1.6'
+    // NetWork
+    api 'com.squareup.retrofit2:retrofit:2.7.1'
+    api 'com.squareup.retrofit2:converter-moshi:2.7.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.4.0'
 
     // 协程
     api dependence.libCoroutinesCore
@@ -34,14 +29,6 @@ dependencies {
     // 注入
     api dependence.libKoinViewModel
 
-    // Prefs
-    implementation 'com.tencent:mmkv:1.0.24'
-
-    // NetWork
-    api 'com.squareup.retrofit2:retrofit:2.7.1'
-    api 'com.squareup.retrofit2:converter-moshi:2.7.1'
-    api 'com.squareup.okhttp3:logging-interceptor:4.4.0'
-
     // Database
     api dependence.libRoomRuntime
     api dependence.libRoomKtx
@@ -49,7 +36,19 @@ dependencies {
     // 路由
     api dependence.libArouter
 
+    // Prefs
+    implementation 'com.tencent:mmkv:1.0.24'
+
     // EventBus
     api 'org.greenrobot:eventbus:3.1.1'
+
+    // 屏幕适配
+    implementation 'me.jessyan:autosize:1.1.2'
+
+    // Log
+    api 'com.jakewharton.timber:timber:4.7.1'
+
+    // Toast
+    implementation 'com.github.Dovar66:DToast:1.1.6'
 
 }

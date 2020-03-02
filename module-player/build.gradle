@@ -32,22 +32,11 @@ this.beforeEvaluate {
 
 dependencies {
     implementation project(':common')
-
     kapt dependence.libArouterCompiler
     kapt dependence.libRoomCompiler
     // AppCompat
     implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha05"
-//    // ExoPlayer
-//    implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
-//    implementation 'com.google.android.exoplayer:extension-leanback:2.11.1'
-//    implementation 'com.google.android.exoplayer:extension-okhttp:2.11.1'
-//    implementation project(':libs:exoplayer_ffmpeg') // only armv7a
-//    // IjkPlayer
-//    implementation dependence.libIjkplayer
-//    implementation dependence.libIjkplayer_armv7a
-//    implementation dependence.libIjkplayer_x86
-//    implementation dependence.libIjkplayer_x86_64
     // 弹幕
     implementation project(':libs:tool-danma')
 //    // 字幕

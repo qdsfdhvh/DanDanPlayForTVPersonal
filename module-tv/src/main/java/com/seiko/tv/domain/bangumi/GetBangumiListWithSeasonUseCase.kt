@@ -10,6 +10,9 @@ import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * 获取某一季度的动漫列表
+ */
 class GetBangumiListWithSeasonUseCase : KoinComponent {
 
     private val repo: DanDanApiRepository by inject()

@@ -8,6 +8,9 @@ import com.seiko.tv.util.toHomeImageBean
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * 获取本地收藏动漫（PagedList）
+ */
 class GetBangumiFavoriteUseCase : KoinComponent {
 
     private val detailsRepo: BangumiDetailsRepository by inject()
