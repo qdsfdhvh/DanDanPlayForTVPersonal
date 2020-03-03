@@ -21,7 +21,7 @@ import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.util.extensions.setInvisible
 import com.seiko.player.util.extensions.setVisible
-import com.seiko.player.vlc.media.PlayerManager
+import com.seiko.player.media.vlc.media.VlcPlayerListManager
 import com.seiko.player.vm.PlayerViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,7 +30,6 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
 import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.Medialibrary
-import timber.log.Timber
 import kotlin.math.abs
 
 class VlcVideoPlayerActivity : FragmentActivity()
@@ -73,7 +72,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
 
     private val viewModel: PlayerViewModel by inject()
     private val danmakuEngine: IDanmakuEngine by inject()
-    private val player: PlayerManager by inject()
+    private val player: VlcPlayerListManager by inject()
 
     private lateinit var displayManager: DisplayManager
 

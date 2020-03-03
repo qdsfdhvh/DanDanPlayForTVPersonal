@@ -2,8 +2,8 @@ package com.seiko.player.vm
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.seiko.player.vlc.provider.MediaLibraryProvider
-import com.seiko.player.vlc.provider.SortableModel
+import com.seiko.player.media.vlc.provider.MediaLibraryProvider
+import com.seiko.player.media.vlc.provider.SortableModel
 import org.videolan.medialibrary.media.MediaLibraryItem
 
 abstract class MediaLibraryViewModel(app: Application) : SortableModel(app), ICallBackHandler by CallBackDelegate() {

@@ -10,15 +10,12 @@ import androidx.leanback.app.BackgroundManager
 import com.seiko.common.util.extensions.getScreenHeight
 import com.seiko.common.util.extensions.getScreenWidth
 import com.seiko.player.R
-import com.seiko.player.vlc.util.blurBitmap
 import kotlinx.coroutines.*
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 
-class ImageLoader(
-    private val provider: ThumbnailsProvider
-) {
+class ImageLoader(private val provider: ThumbnailsProvider) {
 
     private var defaultImageWidthTV = 0
 
@@ -64,16 +61,11 @@ class ImageLoader(
         withContext(Dispatchers.IO) {
             val artworkMrl = item.artworkMrl
             if (!TextUtils.isEmpty(artworkMrl)) {
-                var cover: Bitmap? = readCoverBitmap(
-                    Uri.decode(artworkMrl),
-                    512
-                ) ?: return@withContext
+                var cover: Bitmap? = BitmapUtils.readCoverBitmap(Uri.decode(artworkMrl), 512) ?: return@withContext
                 if (cover != null) {
-                    cover = BitmapUtil.centerCrop(cover, cover.width, (cover.width / screenRatio).toInt())
+                    cover = BitmapUtils.centerCrop(cover, cover.width, (cover.width / screenRatio).toInt())
                 }
-                val blurred =
-                    blurBitmap(activity, cover, 10f)
-
+                val blurred = BitmapUtils.blurBitmap(activity, cover, 10f)
                 if (!isActive) return@withContext
                 bm.color = 0
                 bm.drawable = BitmapDrawable(activity.resources, blurred)
@@ -82,8 +74,7 @@ class ImageLoader(
     }
 
     fun clearBackground(bm: BackgroundManager?) {
-        if (bm === null) return
-        bm.drawable = null
+        bm?.drawable = null
     }
 }
 

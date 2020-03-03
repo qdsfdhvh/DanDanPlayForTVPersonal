@@ -1,6 +1,6 @@
 package com.seiko.player.vm
 
-import com.seiko.player.vlc.extensions.conflatedActor
+import com.seiko.player.media.vlc.extensions.conflatedActor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.SendChannel
 import org.videolan.medialibrary.interfaces.Medialibrary

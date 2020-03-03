@@ -1,5 +1,6 @@
-package com.seiko.player.vlc.media
+package com.seiko.player.media.vlc.media
 
+import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -12,10 +13,11 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IVLCVout
 import timber.log.Timber
+import java.net.URI
 import kotlin.math.abs
 
-class PlayerController(
-    private val instance: VlcInstance
+class VlcPlayerController(
+    private val instance: VlcLibManager
 ): IPlayerController
     , IVLCVout.Callback
     , MediaPlayer.EventListener {
@@ -143,8 +145,12 @@ class PlayerController(
     /**
      * 设置播放源
      */
-    override suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long) {
+    override suspend fun startPlayback(uri: Uri, listener: MediaPlayer.EventListener?, time: Long) {
         this.listener = listener
+
+        val media = instance.getFromUri(uri)
+        media.addOption(":start-time=${time/1000L}")
+
         setPlaybackStarted(time, media.duration)
 
         mediaPlayer.setEventListener(null)
@@ -169,6 +175,7 @@ class PlayerController(
      * 注销播放器
      */
     override suspend fun release() {
+        instance.release()
         releasePlayer(_mediaPlayer)
         _mediaPlayer = null
         withContext(Dispatchers.Main) {
@@ -252,6 +259,9 @@ class PlayerController(
 
 }
 
+/**
+ * 注销Vlc播放器
+ */
 private suspend fun releasePlayer(player: MediaPlayer?) {
     if (player == null || player.isReleased) return
 

@@ -1,34 +1,31 @@
 package com.seiko.player.service
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.util.Log
+import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.seiko.player.R
 import com.seiko.player.util.helper.NotificationHelper
-import com.seiko.player.vlc.util.AndroidDevices
 import kotlinx.coroutines.*
 import org.videolan.medialibrary.interfaces.DevicesDiscoveryCb
 import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
 import java.io.File
-import kotlin.coroutines.CoroutineContext
 
-//@ObsoleteCoroutinesApi
-//@ExperimentalCoroutinesApi
-class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscoveryCb {
+private val EXTERNAL_PUBLIC_DIRECTORY: String = Environment.getExternalStorageDirectory().path
+
+class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
 
     companion object {
-        const val ACTION_INIT = "medialibrary_init"
-        const val ACTION_RELOAD = "medialibrary_reload"
-        const val ACTION_FORCE_RELOAD = "medialibrary_force_reload"
-        const val ACTION_DISCOVER = "medialibrary_discover"
-        const val ACTION_DISCOVER_DEVICE = "medialibrary_discover_device"
-        const val ACTION_CHECK_STORAGES = "medialibrary_check_storages"
+        const val ACTION_INIT = "media_library_init"
+        const val ACTION_RELOAD = "media_library_reload"
+//        const val ACTION_FORCE_RELOAD = "media_library_force_reload"
+//        const val ACTION_DISCOVER = "media_library_discover"
+//        const val ACTION_DISCOVER_DEVICE = "media_library_discover_device"
+//        const val ACTION_CHECK_STORAGES = "media_library_check_storages"
 
         private const val EXTRA_UPGRADE = "extra_upgrade"
         private const val EXTRA_PARSE = "extra_parse"
@@ -46,8 +43,11 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
             ContextCompat.startForegroundService(context, intent)
         }
 
+        /**
+         * 扫描设备中新增或删除的媒体文件
+         */
         @JvmStatic
-        fun reloadMediaLibrary(context: Context, path: String? = null) {
+        fun scanDiscovery(context: Context, path: String? = null) {
             val intent = Intent(context, MediaParsingService::class.java)
             intent.action = ACTION_RELOAD
             if (!path.isNullOrEmpty()) {
@@ -59,48 +59,49 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
 
     private lateinit var mediaLibrary: Medialibrary
 
-    private var scanPaused = false
+    /**
+     * 是否已经扫描过媒体库
+     */
     @Volatile private var scanActivated = false
-    @Volatile private var serviceLock = false
-    @Volatile private var discoverTriggered = false
-
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + Dispatchers.IO
 
     override fun onCreate() {
         super.onCreate()
+        // 安卓8.0以上，必须对通知添加channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationHelper.createNotificationChannels(this)
+            NotificationHelper.createNotificationChannels(applicationContext)
         }
+        // 获取Vlc媒体库单列
         mediaLibrary = Medialibrary.getInstance()
         mediaLibrary.addDeviceDiscoveryCb(this)
+        // 监听Vlc媒体库运行状态
+        Medialibrary.getState().observe(this::getLifecycle) { running ->
+            if (!running) {
+                exitCommand()
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mediaLibrary.removeDeviceDiscoveryCb(this)
-        cancel()
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    private fun forceForeground() {
-        val notification = NotificationHelper.createScanNotification(
-            applicationContext, getString(R.string.loading_medialibrary), scanPaused)
-        startForeground(43, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            forceForeground()
-        }
         super.onStartCommand(intent, flags, startId)
         if (intent == null) {
             exitCommand()
             return START_NOT_STICKY
         }
+
+        // 安卓8.0以上 启动后台服务5s内必须创建一个通知
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notification = NotificationHelper.createScanNotification(
+                applicationContext, getString(R.string.loading_medialibrary))
+            startForeground(43, notification)
+        }
+
         when(intent.action) {
             ACTION_INIT -> {
-                Timber.d("onStartCommand ACTION_INIT")
                 val upgrade = intent.getBooleanExtra(EXTRA_UPGRADE, false)
                 val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
                 setupMediaLibrary(upgrade, parse)
@@ -113,39 +114,34 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         return START_NOT_STICKY
     }
 
-    private fun setupMediaLibrary(upgrade: Boolean, parse: Boolean) = launch {
-        Timber.d("setupMediaLibrary upgrade=$upgrade, parse=$parse")
-        if (mediaLibrary.isInitiated) {
-            mediaLibrary.resumeBackgroundOperations()
-            if (parse && !scanActivated) {
-                Timber.d("setupMediaLibrary StartScan")
-                actionStartScan(upgrade)
+    /**
+     * 初始化媒体库
+     */
+    private fun setupMediaLibrary(upgrade: Boolean, parse: Boolean) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (mediaLibrary.isInitiated) {
+                mediaLibrary.resumeBackgroundOperations()
+                if (parse && !scanActivated) {
+                    addDevices()
+                    startScan(false, upgrade)
+                }
+            } else {
+                initMediaLibrary(upgrade, parse)
             }
-        } else {
-            Timber.d("setupMediaLibrary Init")
-            actionInit(upgrade, parse)
         }
     }
 
-    private fun reload(path: String?) = launch {
-        if (path.isNullOrEmpty()) {
-            mediaLibrary.reload()
-        } else {
-            mediaLibrary.reload(path)
-        }
-    }
-
-    private fun actionInit(upgrade: Boolean, parse: Boolean) {
-        Timber.d("actions Init")
+    /**
+     * 创建媒体库
+     */
+    private fun initMediaLibrary(upgrade: Boolean, parse: Boolean) {
         if (mediaLibrary.isInitiated) {
             exitCommand()
             return
         }
 
-        val context = this@MediaParsingService
         var shouldInit = !dbExists()
-        Timber.d("actionInit shouldInit=$shouldInit")
-        val initCode = mediaLibrary.init(context)
+        val initCode = mediaLibrary.init(this)
         if (initCode != Medialibrary.ML_INIT_ALREADY_INITIALIZED) {
             shouldInit = shouldInit or
                     (initCode == Medialibrary.ML_INIT_DB_RESET) or
@@ -159,15 +155,11 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         exitCommand()
     }
 
-    private fun actionStartScan(upgrade: Boolean) {
-        Timber.d("actionStartScan")
-        addDevices(true)
-        startScan(false, upgrade)
-    }
-
+    /**
+     * 启动Vlc媒体库
+     */
     private fun initMediaLib(parse: Boolean, shouldInit: Boolean, upgrade: Boolean) {
-        Timber.d("initMedialib parse=$parse, shouldInit=$shouldInit, upgrade=$upgrade")
-        addDevices(parse)
+        addDevices()
         if (upgrade) {
             mediaLibrary.forceParserRetry()
         }
@@ -179,20 +171,21 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         }
     }
 
+    /**
+     * 开始扫描
+     */
     private fun startScan(shouldInit: Boolean, upgrade: Boolean) {
-        Timber.d("startScan shouldInit=$shouldInit")
         scanActivated = true
         when {
             shouldInit -> {
                 for (folder in Medialibrary.getBlackList()) {
-                    mediaLibrary.banFolder(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY + folder)
+                    mediaLibrary.banFolder(EXTERNAL_PUBLIC_DIRECTORY + folder)
                 }
-                Timber.d("discover ${AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY}")
-                mediaLibrary.discover(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY)
+                mediaLibrary.discover(EXTERNAL_PUBLIC_DIRECTORY)
             }
             upgrade -> {
-                mediaLibrary.unbanFolder("${AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/")
-                mediaLibrary.banFolder("${AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/Media/WhatsApp Animated Gifs/")
+                mediaLibrary.unbanFolder("${EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/")
+                mediaLibrary.banFolder("${EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/Media/WhatsApp Animated Gifs/")
             }
             else -> {
                 exitCommand()
@@ -200,74 +193,37 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         }
     }
 
-    private fun addDevices(addExternal: Boolean) {
-        val mainStorage = AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY
-        Timber.d("addDevice : $mainStorage")
+    /**
+     * 添加目录
+     */
+    private fun addDevices() {
+        val mainStorage = EXTERNAL_PUBLIC_DIRECTORY
         mediaLibrary.addDevice("main-storage", mainStorage, true)
-
-        val devices = AndroidDevices.externalStorageDirectories
-        for (device in devices) {
-            val uuid = device.substringBeforeLast('/')
-            Timber.d(uuid)
-            if (device.isEmpty() || !device.scanAllowed()) continue
-
-            Timber.d("addDevice : $uuid")
-            mediaLibrary.addDevice(uuid, device, false)
-        }
     }
 
-    private fun String.scanAllowed(): Boolean {
-        val file = File(Uri.parse(this@scanAllowed).path ?: return false)
-        if (!file.exists() || !file.canRead()) return false
-        return true
-    }
-
-    private fun updateStorageList() {
-        serviceLock = true
-        val devices = AndroidDevices.externalStorageDirectories
-        val knownDevices = mediaLibrary.devices
-        val missingDevices = knownDevices.toMutableList()
-        missingDevices.remove("file://${AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY}")
-        for (device in devices) {
-            val uuid = device.substringBeforeLast('/')
-            if (device.isEmpty() || !device.scanAllowed()) continue
-            if (containsDevice(knownDevices, device)) {
-                missingDevices.remove("file://$device")
-                continue
+    /**
+     * 重新扫描xx文件夹媒体文件
+     */
+    private fun reload(path: String?) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (path.isNullOrEmpty()) {
+                mediaLibrary.reload()
+            } else {
+                mediaLibrary.reload(path)
             }
-            mediaLibrary.addDevice(uuid, device, true)
         }
-        for (device in missingDevices) {
-            val uri = Uri.parse(device)
-            mediaLibrary.removeDevice(uri.lastPathSegment, uri.path)
-        }
-        serviceLock = false
-        exitCommand()
-    }
-
-    private fun containsDevice(devices: Array<String>, device: String): Boolean {
-        if (devices.isNullOrEmpty()) return false
-        for (dev in devices) if (device.startsWith(dev.removeFileProtocole())) return true
-        return false
-    }
-
-    private fun String.removeFileProtocole(): String {
-        return if (this.startsWith("file://"))
-            this.substring(7)
-        else
-            this
     }
 
     /**
      * 退出命令
      */
     private fun exitCommand() {
-        if (!mediaLibrary.isWorking && !serviceLock && !discoverTriggered) {
-//            if (wakeLock.isHeld) {
-//                wakeLock.release()
-//            }
+        if (!mediaLibrary.isWorking) {
             stopForeground(true)
-            stopService(Intent(applicationContext, MediaParsingService::class.java))
+            lifecycleScope.launch {
+                delay(100)
+                stopService(Intent(applicationContext, MediaParsingService::class.java))
+            }
         }
     }
 
@@ -279,24 +235,23 @@ class MediaParsingService : LifecycleService(), CoroutineScope, DevicesDiscovery
         Timber.d("onReloadCompleted: %s", entryPoint)
     }
 
-    override fun onDiscoveryStarted(entryPoint: String?) {
-        Timber.d("onDiscoveryStarted: %s", entryPoint)
-    }
-
     override fun onParsingStatsUpdated(percent: Int) {
         Timber.d("onParsingStatsUpdated: %s", percent.toString())
     }
 
-    override fun onDiscoveryCompleted(entryPoint: String?) {
-        Timber.d("onDiscoveryCompleted: %s", entryPoint)
+    override fun onDiscoveryStarted(entryPoint: String?) {
+        Timber.d("onDiscoveryStarted: %s", entryPoint)
     }
 
     override fun onDiscoveryProgress(entryPoint: String?) {
         Timber.d("onDiscoveryProgress: %s", entryPoint)
     }
 
-}
+    override fun onDiscoveryCompleted(entryPoint: String?) {
+        Timber.d("onDiscoveryCompleted: %s", entryPoint)
+    }
 
+}
 
 /**
  * VLC Media 数据库是否存在

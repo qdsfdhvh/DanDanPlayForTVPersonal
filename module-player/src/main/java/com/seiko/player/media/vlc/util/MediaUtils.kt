@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.util
+package com.seiko.player.media.vlc.util
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -40,43 +40,4 @@ fun VideoGroup.getAll(sort: Int = Medialibrary.SORT_DEFAULT, desc: Boolean = fal
         index += pageCount
     }
     return all
-}
-
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-@JvmOverloads
-fun blurBitmap(context: Context, bitmap: Bitmap?, radius: Float = 15.0f): Bitmap? {
-    if (bitmap == null || bitmap.config == null) return null
-    try {
-        //Let's create an empty bitmap with the same size of the bitmap we want to blur
-        val outBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-
-        //Instantiate a new Renderscript
-        val rs = RenderScript.create(context)
-
-        //Create an Intrinsic Blur Script using the Renderscript
-        val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
-
-
-        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
-        val allIn = Allocation.createFromBitmap(rs, bitmap)
-        val allOut = Allocation.createFromBitmap(rs, outBitmap)
-
-        //Set the radius of the blur
-        blurScript.setRadius(radius)
-
-        //Perform the Renderscript
-        blurScript.setInput(allIn)
-        blurScript.forEach(allOut)
-
-        //Copy the final bitmap created by the out Allocation to the outBitmap
-        allOut.copyTo(outBitmap)
-
-        //After finishing everything, we destroy the Renderscript.
-        rs.destroy()
-
-        return outBitmap
-    } catch (ignored: RSInvalidStateException) {
-        return null
-    }
-
 }

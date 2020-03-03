@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.extensions
+package com.seiko.player.media.vlc.extensions
 
 import org.videolan.medialibrary.interfaces.media.Album
 import org.videolan.medialibrary.interfaces.media.MediaWrapper

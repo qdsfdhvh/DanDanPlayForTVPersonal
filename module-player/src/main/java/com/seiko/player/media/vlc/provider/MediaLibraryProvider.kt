@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.provider
+package com.seiko.player.media.vlc.provider
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -6,9 +6,9 @@ import androidx.paging.Config
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
 import androidx.paging.toLiveData
-import com.seiko.player.vlc.interfaces.SortModule
-import com.seiko.player.vlc.util.MEDIA_LIBRARY_PAGE_SIZE
-import com.seiko.player.vlc.util.ModelsHelper
+import com.seiko.player.media.vlc.interfaces.SortModule
+import com.seiko.player.media.vlc.util.MEDIA_LIBRARY_PAGE_SIZE
+import com.seiko.player.media.vlc.util.helper.ModelsHelper
 import kotlinx.coroutines.CompletableDeferred
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.media.MediaLibraryItem

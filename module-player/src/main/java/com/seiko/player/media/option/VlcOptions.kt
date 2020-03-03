@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.media
+package com.seiko.player.media.option
 
 import android.content.Context
 import android.media.AudioManager
@@ -8,11 +8,11 @@ import java.io.File
 /**
  * VLC配置
  */
-class VlcOptions(private val context: Context) {
+object VlcOptions {
 
     private var audioTrackSessionId = 0
 
-    fun createOptions(): List<String> {
+    fun createOptions(context: Context): List<String> {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && audioTrackSessionId == 0) {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager

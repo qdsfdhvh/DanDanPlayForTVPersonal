@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.provider
+package com.seiko.player.media.vlc.provider
 
 import androidx.annotation.MainThread
 import androidx.collection.SparseArrayCompat

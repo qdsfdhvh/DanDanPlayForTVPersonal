@@ -1,12 +1,12 @@
-package com.seiko.player.vlc.util
+package com.seiko.player.media.vlc.util.helper
 
 import android.content.Context
 import com.seiko.player.R
-import com.seiko.player.vlc.extensions.*
-import com.seiko.player.vlc.extensions.getDiscNumber
-import com.seiko.player.vlc.extensions.getLength
-import com.seiko.player.vlc.extensions.getYear
-import com.seiko.player.vlc.extensions.lengthToCategory
+import com.seiko.player.media.vlc.extensions.*
+import com.seiko.player.media.vlc.extensions.getDiscNumber
+import com.seiko.player.media.vlc.extensions.getLength
+import com.seiko.player.media.vlc.extensions.getYear
+import com.seiko.player.media.vlc.extensions.lengthToCategory
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
@@ -78,7 +78,9 @@ object ModelsHelper {
             )
             else {
                 val prevCat =
-                    getTimeCategory((aboveItem as MediaWrapper).lastModified)
+                    getTimeCategory(
+                        (aboveItem as MediaWrapper).lastModified
+                    )
                 if (prevCat != category) getTimeCategoryString(
                     context,
                     category

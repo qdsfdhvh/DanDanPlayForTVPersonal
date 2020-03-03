@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.extensions
+package com.seiko.player.media.vlc.extensions
 
 import java.text.DecimalFormat
 import kotlin.math.floor

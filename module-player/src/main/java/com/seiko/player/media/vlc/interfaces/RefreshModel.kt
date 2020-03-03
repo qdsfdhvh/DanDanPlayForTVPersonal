@@ -1,4 +1,4 @@
-package com.seiko.player.vlc.interfaces
+package com.seiko.player.media.vlc.interfaces
 
 interface RefreshModel {
     fun refresh()

@@ -1,13 +1,13 @@
-package com.seiko.player.vlc.media
+package com.seiko.player.media.vlc.media
 
 import android.net.Uri
+import com.seiko.player.media.vlc.util.MediaWrapperList
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
 
-class PlayerManager(
-    private val instance: VlcInstance,
-    private val player: PlayerController
+class VlcPlayerListManager(
+    private val player: VlcPlayerController
 ) : IPlayerController by player
     , MediaPlayer.EventListener
     , MediaWrapperList.EventListener {
@@ -82,10 +82,8 @@ class PlayerManager(
         val chapter = mw.getMetaLong(MediaWrapper.META_CHAPTER)
         if (chapter > 0) uri = Uri.parse("$uri:$chapter")
         val start = 0L
-        val media = instance.getFromUri(uri)
-        media.addOption(":start-time=${start/1000L}")
 
-        player.startPlayback(media, this, start)
+        player.startPlayback(uri, this, start)
     }
 
     override fun play() {
@@ -101,7 +99,6 @@ class PlayerManager(
     override suspend fun release() {
         listener = null
         mediaList.clear()
-        instance.clear()
         player.release()
     }
 

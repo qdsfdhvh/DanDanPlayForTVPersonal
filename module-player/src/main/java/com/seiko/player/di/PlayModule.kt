@@ -3,16 +3,14 @@ package com.seiko.player.di
 import android.content.Context
 import com.seiko.danma.DanmakuEngine
 import com.seiko.danma.IDanmakuEngine
-import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.media.PlayerOptions
+import com.seiko.player.media.option.DanmaOptions
 import com.seiko.player.util.constants.PLAYER_DATA_DIR
 import com.seiko.player.util.constants.PLAYER_THUMBNAIL_DIR
 import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.util.bitmap.ThumbnailsProvider
-import com.seiko.player.vlc.media.PlayerController
-import com.seiko.player.vlc.media.PlayerManager
-import com.seiko.player.vlc.media.VlcInstance
-import com.seiko.player.vlc.media.VlcOptions
+import com.seiko.player.media.vlc.media.VlcPlayerController
+import com.seiko.player.media.vlc.media.VlcPlayerListManager
+import com.seiko.player.media.vlc.media.VlcLibManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -28,10 +26,9 @@ val playModule = module {
     single { createThumbnailsProvider(get(named(PLAYER_THUMBNAIL_DIR))) }
     single { createImageLoader(get()) }
 
-    single { createVlcOptions(androidContext()) }
-    single { createVlcInstance(androidContext(), get()) }
-    single { createPlayerController(get()) }
-    single { createPlayerListManager(get(), get()) }
+    single { createVlcLibManager(androidContext()) }
+    single { createVlcPlayerController(get()) }
+    single { createVlcPlayerListManager(get()) }
 }
 
 /**
@@ -48,30 +45,44 @@ private fun createPlayerThumbnailDir(dataDir: File): File {
     return File(dataDir, Medialibrary.MEDIALIB_FOLDER_NAME)
 }
 
-private fun createDanmakuEngine(): IDanmakuEngine {
-    return DanmakuEngine(PlayerOptions.createDanmakuOptions())
-}
-
+/**
+ * 视频缩略图生成工具
+ */
 private fun createThumbnailsProvider(cacheDir: File): ThumbnailsProvider {
     return ThumbnailsProvider(cacheDir)
 }
 
+/**
+ * 图片加载工具
+ */
 private fun createImageLoader(provider: ThumbnailsProvider): ImageLoader {
     return ImageLoader(provider)
 }
 
-private fun createVlcOptions(context: Context): VlcOptions {
-    return VlcOptions(context)
+/**
+ * 弹幕引擎
+ */
+private fun createDanmakuEngine(): IDanmakuEngine {
+    return DanmakuEngine(DanmaOptions.createOptions())
 }
 
-private fun createVlcInstance(context: Context, options: VlcOptions): VlcInstance {
-    return VlcInstance(context, options)
+/**
+ * VlcLib管理工具
+ */
+private fun createVlcLibManager(context: Context): VlcLibManager {
+    return VlcLibManager(context)
 }
 
-private fun createPlayerController(instance: VlcInstance): PlayerController {
-    return PlayerController(instance)
+/**
+ * Vlc播放器控制
+ */
+private fun createVlcPlayerController(instance: VlcLibManager): VlcPlayerController {
+    return VlcPlayerController(instance)
 }
 
-private fun createPlayerListManager(instance: VlcInstance, player: PlayerController): PlayerManager {
-    return PlayerManager(instance, player)
+/**
+ * Vlc列表管理
+ */
+private fun createVlcPlayerListManager(player: VlcPlayerController): VlcPlayerListManager {
+    return VlcPlayerListManager(player)
 }

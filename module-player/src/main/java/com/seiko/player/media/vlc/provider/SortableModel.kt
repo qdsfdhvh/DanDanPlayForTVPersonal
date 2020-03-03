@@ -1,10 +1,9 @@
-package com.seiko.player.vlc.provider
+package com.seiko.player.media.vlc.provider
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import com.seiko.player.vlc.interfaces.RefreshModel
-import com.seiko.player.vlc.interfaces.SortModule
+import com.seiko.player.media.vlc.interfaces.RefreshModel
+import com.seiko.player.media.vlc.interfaces.SortModule
 import org.videolan.medialibrary.interfaces.Medialibrary
 
 abstract class SortableModel(app: Application) : AndroidViewModel(app), RefreshModel, SortModule {

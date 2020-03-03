@@ -1,11 +1,8 @@
 package com.seiko.player.vm
 
 import android.app.Application
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.vlc.provider.MediaLibraryProvider
-import com.seiko.player.vlc.provider.VideosProvider
+import com.seiko.player.media.vlc.provider.MediaLibraryProvider
+import com.seiko.player.media.vlc.provider.VideosProvider
 import org.videolan.medialibrary.media.MediaLibraryItem
 
 class VideosViewModel(app: Application) : MediaLibraryViewModel(app) {

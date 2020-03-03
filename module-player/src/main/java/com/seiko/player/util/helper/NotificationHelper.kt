@@ -15,12 +15,12 @@ import com.seiko.player.ui.StartActivity
 object NotificationHelper {
 
     private const val MEDIA_LIBRARY_CHANNEL_ID = "player_media_library"
-    private const val ACTION_RESUME_SCAN = "action_resume_scan"
-    private const val ACTION_PAUSE_SCAN = "action_pause_scan"
+//    const val ACTION_RESUME_SCAN = "action_resume_scan"
+//    const val ACTION_PAUSE_SCAN = "action_pause_scan"
 
 //    private val notificationIntent = Intent()
 
-    fun createScanNotification(ctx: Context, progressText: String, paused: Boolean): Notification {
+    fun createScanNotification(ctx: Context, progressText: String): Notification {
         val intent = Intent(ctx, StartActivity::class.java)
         intent.action = Intent.ACTION_VIEW
 

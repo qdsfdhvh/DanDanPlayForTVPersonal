@@ -1,7 +1,8 @@
-package com.seiko.player.vlc.media
+package com.seiko.player.media.vlc.media
 
 import android.content.Context
 import android.net.Uri
+import com.seiko.player.media.option.VlcOptions
 import org.videolan.libvlc.FactoryManager
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.ILibVLC
@@ -9,9 +10,8 @@ import org.videolan.libvlc.interfaces.ILibVLCFactory
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IMediaFactory
 
-class VlcInstance(
-    private val context: Context,
-    private val vlcOptions: VlcOptions
+class VlcLibManager(
+    private val context: Context
 ) {
 
     private val mediaFactory = FactoryManager.getFactory(IMediaFactory.factoryId) as IMediaFactory
@@ -22,13 +22,13 @@ class VlcInstance(
     @Synchronized
     private fun getLibVlc(): ILibVLC {
         if (libVlc == null) {
-            libVlc = libVLCFactory.getFromOptions(context, vlcOptions.createOptions())
+            libVlc = libVLCFactory.getFromOptions(context, VlcOptions.createOptions(context))
         }
         return libVlc!!
     }
 
     @Synchronized
-    fun clear() {
+    fun release() {
         if (libVlc != null) {
             libVlc!!.release()
             libVlc = null

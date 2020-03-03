@@ -1,15 +1,15 @@
-package com.seiko.player.media
+package com.seiko.player.media.option
 
 import com.seiko.common.util.getRealTextSizeScale
 import com.seiko.danma.DanmakuEngineOptions
 import master.flame.danmaku.danmaku.model.IDisplayer
 
-object PlayerOptions {
+/**
+ * 弹幕配置
+ */
+object DanmaOptions {
 
-    /**
-     * 弹幕配置
-     */
-    fun createDanmakuOptions(): DanmakuEngineOptions {
+    fun createOptions(): DanmakuEngineOptions {
         return DanmakuEngineOptions {
             setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 2f)
 //            //设置防弹幕重叠

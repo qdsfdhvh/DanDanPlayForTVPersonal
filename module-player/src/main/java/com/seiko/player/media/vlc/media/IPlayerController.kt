@@ -1,5 +1,6 @@
-package com.seiko.player.vlc.media
+package com.seiko.player.media.vlc.media
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.seiko.player.data.model.Progress
 import org.videolan.libvlc.MediaPlayer
@@ -55,12 +56,7 @@ interface IPlayerController {
     /**
      * 设置播放源
      */
-    suspend fun startPlayback(media: IMedia, listener: MediaPlayer.EventListener?, time: Long)
-
-//    /**
-//     * 重启播放器
-//     */
-//    suspend fun restart()
+    suspend fun startPlayback(uri: Uri, listener: MediaPlayer.EventListener?, time: Long)
 
     /**
      * 注销播放器

@@ -4,17 +4,14 @@ import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.collection.LruCache
-import com.seiko.player.BuildConfig
-import com.seiko.player.vlc.extensions.readableSize
 
 @SuppressLint("LogNotTimber")
 object BitmapCache {
 
     private val mMemCache: LruCache<String, Bitmap> by lazy {
-        // Use 20% of the available memory for this memory cache.
-        val cacheSize = Runtime.getRuntime().maxMemory() / 5
+        // Use 16% of the available memory for this memory cache.
+        val cacheSize = Runtime.getRuntime().maxMemory() / 6
 
         object : LruCache<String, Bitmap>(cacheSize.toInt()) {
             override fun sizeOf(key: String, value: Bitmap): Int {

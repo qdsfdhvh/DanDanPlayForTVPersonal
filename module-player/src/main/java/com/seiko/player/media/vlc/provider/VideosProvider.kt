@@ -1,7 +1,7 @@
-package com.seiko.player.vlc.provider
+package com.seiko.player.media.vlc.provider
 
 import android.content.Context
-import com.seiko.player.vlc.util.getAll
+import com.seiko.player.media.vlc.util.getAll
 import org.videolan.medialibrary.interfaces.media.Folder
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.interfaces.media.VideoGroup
