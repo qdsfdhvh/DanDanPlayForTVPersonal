@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
+import com.seiko.tv.util.removeWindowInTransitionManager
 import com.seiko.tv.util.setupSharedElementTransition
 
 class SearchActivity : FragmentActivity(R.layout.activity_container) {
@@ -23,6 +24,11 @@ class SearchActivity : FragmentActivity(R.layout.activity_container) {
                 add(R.id.container, fragment, TAG)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeWindowInTransitionManager()
     }
 
     companion object {

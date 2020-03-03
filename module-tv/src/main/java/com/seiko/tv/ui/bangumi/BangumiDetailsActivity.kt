@@ -12,6 +12,7 @@ import androidx.fragment.app.commit
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.seiko.tv.R
+import com.seiko.tv.util.removeWindowInTransitionManager
 import com.seiko.tv.util.setupSharedElementTransition
 
 class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
@@ -25,6 +26,11 @@ class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
                 add(R.id.container, fragment, BangumiDetailsFragment.TAG)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeWindowInTransitionManager()
     }
 
     companion object {

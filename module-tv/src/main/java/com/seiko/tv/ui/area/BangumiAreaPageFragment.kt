@@ -2,7 +2,10 @@ package com.seiko.tv.ui.area
 
 import android.os.Bundle
 import android.view.View
+import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
@@ -14,11 +17,12 @@ import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiAreaPageViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class BangumiAreaPageFragment : GridFragment()
+class BangumiAreaPageFragment : VerticalGridSupportFragment()
+    , BrowseSupportFragment.MainFragmentAdapterProvider
     , OnItemViewClickedListener {
 
     companion object {
-        private const val COLUMNS = 6
+        private const val COLUMNS = 5
         private const val ARGS_SEASON = "ARGS_SEASON"
 
         fun newInstance(season: BangumiSeason): BangumiAreaPageFragment {
@@ -34,7 +38,7 @@ class BangumiAreaPageFragment : GridFragment()
 
     private val viewModel: BangumiAreaPageViewModel by viewModel()
 
-    private lateinit var arrayAdapter: ArrayObjectAdapter
+    private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +50,36 @@ class BangumiAreaPageFragment : GridFragment()
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     private fun setupUI() {
-        val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
+        val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
-        verticalGridPresenter.setItemSpacing(25)
+        verticalGridPresenter.setItemSpacing(40)
 
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
 
         val presenterSelector = BangumiPresenterSelector()
-        arrayAdapter = ArrayObjectAdapter(presenterSelector)
+        arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
+
+        prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
         viewModel.bangumiList.observe(this::getLifecycle) { bangumiList ->
-            arrayAdapter.setItems(bangumiList, HomeImageBeanDiffCallback())
+            arrayAdapter.submitList(bangumiList)
+            startEntranceTransition()
         }
         viewModel.season.value = season
+    }
+
+    private fun unBindViewModel() {
+        viewModel.bangumiList.removeObservers(this::getLifecycle)
     }
 
     override fun onItemClicked(
@@ -79,4 +95,11 @@ class BangumiAreaPageFragment : GridFragment()
             }
         }
     }
+
+    private val mainFragmentAdapter = BrowseSupportFragment.MainFragmentAdapter(this)
+
+    override fun getMainFragmentAdapter(): BrowseSupportFragment.MainFragmentAdapter<*> {
+        return mainFragmentAdapter
+    }
+
 }

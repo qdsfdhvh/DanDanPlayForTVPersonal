@@ -18,8 +18,9 @@ class HomeSettingBeanPresenter : Presenter() {
         cardView.bind(bean)
     }
 
-    override fun onUnbindViewHolder(viewHolder: ViewHolder?) {
-
+    override fun onUnbindViewHolder(holder: ViewHolder) {
+        val cardView = holder.view as MainMyCardView
+        cardView.unbind()
     }
 
 }

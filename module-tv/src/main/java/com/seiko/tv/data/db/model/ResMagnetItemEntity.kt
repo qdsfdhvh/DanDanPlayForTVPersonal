@@ -22,7 +22,6 @@ import com.squareup.moshi.Json
         Index(value = ["hash"], unique = true) // hash应该唯一
     ]
 )
-
 data class ResMagnetItemEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,

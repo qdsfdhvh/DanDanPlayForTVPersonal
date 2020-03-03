@@ -7,6 +7,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.service.TorrentService
 import com.seiko.tv.R
+import com.seiko.tv.util.clearFrescoMemory
+import com.seiko.tv.util.removeWindowInTransitionManager
 import com.seiko.tv.util.setupSharedElementTransition
 
 @Route(path = Routes.DanDanPlay.PATH_TV)
@@ -29,6 +31,8 @@ class MainActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onDestroy() {
         super.onDestroy()
+        removeWindowInTransitionManager()
+        clearFrescoMemory()
         TorrentService.get()?.shutDown(this)
     }
 

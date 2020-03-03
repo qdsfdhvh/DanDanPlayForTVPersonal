@@ -19,7 +19,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     , OnItemViewClickedListener {
 
     companion object {
-        private const val COLUMNS = 6
+        private const val COLUMNS = 5
 
         fun newInstance(): BangumiHistoryFragment {
             return BangumiHistoryFragment()
@@ -43,7 +43,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     private fun setupRowAdapter() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
-        verticalGridPresenter.setItemSpacing(25)
+        verticalGridPresenter.setItemSpacing(40)
 
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter

@@ -26,6 +26,7 @@ class HomeViewModel(
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
                 is Result.Success -> {
+                    delay(200)
                     emit(result.data)
                 }
                 is Result.Error -> Timber.w(result.exception)
@@ -38,7 +39,6 @@ class HomeViewModel(
     val todayBangumiList: LiveData<List<HomeImageBean>> = weekBangumiList.switchMap { data ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             val bangumiList = if (data.isNotEmpty()) data[0].bangumiList else emptyList()
-//            delay(250)
             emit(bangumiList)
         }
     }
@@ -48,7 +48,6 @@ class HomeViewModel(
      */
     val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-//            delay(250)
             emitSource(getFavoriteBangumiList.invoke(10))
         }
 
@@ -57,7 +56,6 @@ class HomeViewModel(
      */
     val historyBangumiList: LiveData<PagedList<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            delay(250)
             emitSource(getBangumiHistoryList.invoke(10))
         }
 

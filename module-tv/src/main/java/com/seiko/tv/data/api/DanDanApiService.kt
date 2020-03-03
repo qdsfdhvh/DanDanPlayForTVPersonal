@@ -9,6 +9,7 @@ internal interface DanDanApiService {
      * 获取官方的新番列表
      * // @param filterAdultContent 是否过滤成人内容 @Query("filterAdultContent") filterAdultContent: Boolean
      */
+    @Headers("Cache-Control: public, max-age=3600")
     @GET("api/v2/bangumi/shin")
     suspend fun getBangumiList(): BangumiListResponse
 

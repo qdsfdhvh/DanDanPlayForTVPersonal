@@ -7,6 +7,7 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.R
 import com.seiko.player.util.helper.NotificationHelper
 import kotlinx.coroutines.*
@@ -15,13 +16,11 @@ import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
 import java.io.File
 
-private val EXTERNAL_PUBLIC_DIRECTORY: String = Environment.getExternalStorageDirectory().path
-
 class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
 
     companion object {
-        const val ACTION_INIT = "media_library_init"
-        const val ACTION_RELOAD = "media_library_reload"
+        private const val ACTION_INIT = "media_library_init"
+        private const val ACTION_RELOAD = "media_library_reload"
 //        const val ACTION_FORCE_RELOAD = "media_library_force_reload"
 //        const val ACTION_DISCOVER = "media_library_discover"
 //        const val ACTION_DISCOVER_DEVICE = "media_library_discover_device"
@@ -57,22 +56,16 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         }
     }
 
-    private lateinit var mediaLibrary: Medialibrary
-
-    /**
-     * 是否已经扫描过媒体库
-     */
-    @Volatile private var scanActivated = false
+    private val delegate by lazyAndroid { MediaParsingDelegate() }
 
     override fun onCreate() {
         super.onCreate()
+        delegate.onCreate()
+        delegate.setDeviceDiscoveryCb(this)
         // 安卓8.0以上，必须对通知添加channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationHelper.createNotificationChannels(applicationContext)
         }
-        // 获取Vlc媒体库单列
-        mediaLibrary = Medialibrary.getInstance()
-        mediaLibrary.addDeviceDiscoveryCb(this)
         // 监听Vlc媒体库运行状态
         Medialibrary.getState().observe(this::getLifecycle) { running ->
             if (!running) {
@@ -83,7 +76,7 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaLibrary.removeDeviceDiscoveryCb(this)
+        delegate.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -104,121 +97,26 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
             ACTION_INIT -> {
                 val upgrade = intent.getBooleanExtra(EXTRA_UPGRADE, false)
                 val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
-                setupMediaLibrary(upgrade, parse)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    delegate.setupMediaLibrary(this@MediaParsingService, upgrade, parse)
+                }
             }
             ACTION_RELOAD -> {
                 val path = intent.getStringExtra(EXTRA_PATH)
-                reload(path)
+                lifecycleScope.launch {
+                    delegate.reload(path)
+                }
             }
         }
         return START_NOT_STICKY
     }
 
     /**
-     * 初始化媒体库
-     */
-    private fun setupMediaLibrary(upgrade: Boolean, parse: Boolean) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            if (mediaLibrary.isInitiated) {
-                mediaLibrary.resumeBackgroundOperations()
-                if (parse && !scanActivated) {
-                    addDevices()
-                    startScan(false, upgrade)
-                }
-            } else {
-                initMediaLibrary(upgrade, parse)
-            }
-        }
-    }
-
-    /**
-     * 创建媒体库
-     */
-    private fun initMediaLibrary(upgrade: Boolean, parse: Boolean) {
-        if (mediaLibrary.isInitiated) {
-            exitCommand()
-            return
-        }
-
-        var shouldInit = !dbExists()
-        val initCode = mediaLibrary.init(this)
-        if (initCode != Medialibrary.ML_INIT_ALREADY_INITIALIZED) {
-            shouldInit = shouldInit or
-                    (initCode == Medialibrary.ML_INIT_DB_RESET) or
-                    (initCode == Medialibrary.ML_INIT_DB_CORRUPTED)
-            if (initCode != Medialibrary.ML_INIT_FAILED) {
-                initMediaLib(parse, shouldInit, upgrade)
-                return
-            }
-        }
-
-        exitCommand()
-    }
-
-    /**
-     * 启动Vlc媒体库
-     */
-    private fun initMediaLib(parse: Boolean, shouldInit: Boolean, upgrade: Boolean) {
-        addDevices()
-        if (upgrade) {
-            mediaLibrary.forceParserRetry()
-        }
-        mediaLibrary.start()
-        if (parse) {
-            startScan(shouldInit, upgrade)
-        } else {
-            exitCommand()
-        }
-    }
-
-    /**
-     * 开始扫描
-     */
-    private fun startScan(shouldInit: Boolean, upgrade: Boolean) {
-        scanActivated = true
-        when {
-            shouldInit -> {
-                for (folder in Medialibrary.getBlackList()) {
-                    mediaLibrary.banFolder(EXTERNAL_PUBLIC_DIRECTORY + folder)
-                }
-                mediaLibrary.discover(EXTERNAL_PUBLIC_DIRECTORY)
-            }
-            upgrade -> {
-                mediaLibrary.unbanFolder("${EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/")
-                mediaLibrary.banFolder("${EXTERNAL_PUBLIC_DIRECTORY}/WhatsApp/Media/WhatsApp Animated Gifs/")
-            }
-            else -> {
-                exitCommand()
-            }
-        }
-    }
-
-    /**
-     * 添加目录
-     */
-    private fun addDevices() {
-        val mainStorage = EXTERNAL_PUBLIC_DIRECTORY
-        mediaLibrary.addDevice("main-storage", mainStorage, true)
-    }
-
-    /**
-     * 重新扫描xx文件夹媒体文件
-     */
-    private fun reload(path: String?) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            if (path.isNullOrEmpty()) {
-                mediaLibrary.reload()
-            } else {
-                mediaLibrary.reload(path)
-            }
-        }
-    }
-
-    /**
      * 退出命令
      */
     private fun exitCommand() {
-        if (!mediaLibrary.isWorking) {
+        Timber.d("exitCommand")
+        if (!delegate.isWorking) {
             stopForeground(true)
             lifecycleScope.launch {
                 delay(100)
@@ -251,11 +149,4 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         Timber.d("onDiscoveryCompleted: %s", entryPoint)
     }
 
-}
-
-/**
- * VLC Media 数据库是否存在
- */
-private fun Context.dbExists(): Boolean {
-    return File(getDir("db", Context.MODE_PRIVATE).toString() + Medialibrary.VLC_MEDIA_DB_NAME).exists()
 }

@@ -3,7 +3,7 @@ package com.seiko.player.provider
 import android.app.Application
 import com.seiko.common.provider.IProviderApplication
 import com.seiko.player.di.*
-import com.seiko.player.service.MediaParsingService
+import com.seiko.player.service.MediaParsingIntentService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class ProviderApplication : IProviderApplication {
         FactoryManager.registerFactory(ILibVLCFactory.factoryId, LibVLCFactory())
 
         GlobalScope.launch(Dispatchers.IO) {
-            MediaParsingService.startMediaLibrary(application, upgrade = true)
+            MediaParsingIntentService.startMediaLibrary(application, upgrade = true)
         }
     }
 

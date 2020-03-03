@@ -19,7 +19,7 @@ internal val networkModule = module {
 
 private fun createCache(context: Context): Cache {
     val file = File(context.cacheDir, "HttpResponseCache")
-    return Cache(file, 10 * 1024 * 1024)
+    return Cache(file, 50 * 1024 * 1024)
 }
 
 private fun createSingleHttpClient(cache: Cache): OkHttpClient {

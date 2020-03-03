@@ -18,6 +18,7 @@ class BangumiAreaPageViewModel(
     val season = MutableLiveData<BangumiSeason>()
     val bangumiList: LiveData<List<HomeImageBean>> = season.distinctUntilChanged().switchMap { season ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            delay(200)
             when(val result = getBangumiListWithSeason.invoke(season)) {
                 is Result.Error -> Timber.e(result.exception)
                 is Result.Success -> emit(result.data)

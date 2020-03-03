@@ -34,6 +34,11 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     private fun setupUI() {
         title = "放送表"
         brandColor = Color.parseColor("#424242")
@@ -42,13 +47,20 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
         adapter = rowsAdapter
         onItemViewClickedListener = this
+
+        prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
         viewModel.weekBangumiList.observe(this::getLifecycle) { bangumiList ->
             updateAirDayBangumiList(bangumiList)
+
+            startEntranceTransition()
         }
-//        viewModel.getBangumiList(false)
+    }
+
+    private fun unBindViewModel() {
+        viewModel.weekBangumiList.removeObservers(this::getLifecycle)
     }
 
     private fun updateAirDayBangumiList(list: List<AirDayBangumiBean>) {

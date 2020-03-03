@@ -449,5 +449,7 @@
         </activity>
 
         <service android:name=".service.MediaParsingService"/>
+        <service android:name=".service.MediaParsingIntentService"/>
+
     </application>
 </manifest>

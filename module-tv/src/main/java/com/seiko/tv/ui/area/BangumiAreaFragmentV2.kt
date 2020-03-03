@@ -33,14 +33,16 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     private fun setupUI() {
-        headersState = HEADERS_ENABLED
-        isHeadersTransitionOnBackEnabled = false
         title = getString(R.string.bangumi_area)
         brandColor = Color.parseColor("#424242")
-        mainFragmentRegistry.registerFragment(SeasonPageRow::class.java,
-            PageRowFragmentFactory()
-        )
+
+        mainFragmentRegistry.registerFragment(SeasonPageRow::class.java, PageRowFragmentFactory())
     }
 
     private fun bindViewModel() {
@@ -52,6 +54,10 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
             }
             adapter = rowsAdapter
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.bangumiSeasons.removeObservers(this::getLifecycle)
     }
 
 }

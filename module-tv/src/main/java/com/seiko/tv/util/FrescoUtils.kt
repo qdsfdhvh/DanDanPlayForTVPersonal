@@ -60,28 +60,6 @@ fun clearFrescoMemory() {
     ImagePipelineFactory.getInstance().imagePipeline.clearMemoryCaches()
 }
 
-fun Activity.setupSharedElementTransition() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        window.sharedElementEnterTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 进入
-        window.sharedElementReturnTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 返回
-        setExitSharedElementCallback(object : SharedElementCallback() {
-            override fun onSharedElementEnd(
-                sharedElementNames: MutableList<String>?,
-                sharedElements: MutableList<View>?,
-                sharedElementSnapshots: MutableList<View>?
-            ) {
-                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
-                if (sharedElements.isNullOrEmpty()) return
-                sharedElements.filter { it.visibility != View.VISIBLE }
-                    .forEach { it.visibility = View.VISIBLE }
-//                for (view in sharedElements) {
-//                    view.visibility = View.VISIBLE
-//                }
-            }
-        })
-    }
-}
-
 fun GenericDraweeView.loadImage(url: String?) {
     if (url.isNullOrEmpty()) return
     val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))

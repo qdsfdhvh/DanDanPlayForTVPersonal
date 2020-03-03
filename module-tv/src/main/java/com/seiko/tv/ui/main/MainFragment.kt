@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.lifecycleScope
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
@@ -24,6 +25,8 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.yield
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : BrowseSupportFragment()
@@ -80,11 +83,16 @@ class MainFragment : BrowseSupportFragment()
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     /**
      * 生成相关UI
      */
     private fun setupUI() {
-        headersState = HEADERS_ENABLED
+//        headersState = HEADERS_ENABLED
 //        isHeadersTransitionOnBackEnabled = true
         title = getString(R.string.app_name)
         brandColor = Color.parseColor("#424242")
@@ -138,11 +146,30 @@ class MainFragment : BrowseSupportFragment()
      */
     private fun bindViewModel() {
         viewModel.todayBangumiList.observe(this::getLifecycle) { list ->
-            startEntranceTransition()
-            areaAdapter.submitList(list)
+            lifecycleScope.launchWhenStarted {
+                yield()
+                startEntranceTransition()
+                areaAdapter.submitList(list)
+            }
         }
-        viewModel.favoriteBangumiList.observe(this::getLifecycle, favoriteAdapter::submitList)
-        viewModel.historyBangumiList.observe(this::getLifecycle, historyAdapter::submitList)
+        viewModel.favoriteBangumiList.observe(this::getLifecycle) { list ->
+            lifecycleScope.launchWhenStarted {
+                yield()
+                favoriteAdapter.submitList(list)
+            }
+        }
+        viewModel.historyBangumiList.observe(this::getLifecycle) { list ->
+            lifecycleScope.launchWhenStarted {
+                yield()
+                historyAdapter.submitList(list)
+            }
+        }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.todayBangumiList.removeObservers(this::getLifecycle)
+        viewModel.favoriteBangumiList.removeObservers(this::getLifecycle)
+        viewModel.historyBangumiList.removeObservers(this::getLifecycle)
     }
 
     /**
