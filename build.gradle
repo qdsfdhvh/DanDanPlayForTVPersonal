@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath dependence.libGradlePlugin
         classpath dependence.libKotlinGradlePlugin
+        // 先在settings.gradle只保留plugin，再在右侧gradle中plugin-upload-uploadArchives
         classpath 'com.gfd.plugin:plugin:1.0.0'
     }
 }
@@ -21,7 +22,3 @@ allprojects {
         maven { url "https://dl.bintray.com/videolan/Android" }
     }
 }
-
-//task clean(type: Delete) {
-//    delete rootProject.buildDir
-//}
