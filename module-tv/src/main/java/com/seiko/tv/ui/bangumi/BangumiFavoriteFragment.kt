@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
@@ -26,7 +27,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     private val viewModel: BangumiFavoriteViewModel by viewModel()
 
-    private lateinit var arrayAdapter: ArrayObjectAdapter
+    private lateinit var arrayAdapter: AsyncPagedObjectAdapter<HomeImageBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         gridPresenter = verticalGridPresenter
 
         val presenterSelector = BangumiPresenterSelector()
-        arrayAdapter = ArrayObjectAdapter(presenterSelector)
+        arrayAdapter = AsyncPagedObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 
         prepareEntranceTransition()
@@ -55,7 +56,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     private fun bindViewModel() {
         viewModel.favoriteBangumiList.observe(this::getLifecycle) { bangumiList ->
-            arrayAdapter.setItems(bangumiList, HomeImageBeanDiffCallback())
+            arrayAdapter.submitList(bangumiList)
             title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
             startEntranceTransition()
         }

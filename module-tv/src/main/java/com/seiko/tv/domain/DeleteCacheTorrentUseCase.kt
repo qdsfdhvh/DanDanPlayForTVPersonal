@@ -15,7 +15,7 @@ class DeleteCacheTorrentUseCase : KoinComponent {
     private val prefs: PrefDataSource by inject()
 
     operator fun invoke() {
-        deleteDirTorrent(File(prefs.downloadFolder), PAST_TIME)
+//        deleteDirTorrent(File(prefs.downloadFolder), PAST_TIME)
     }
 }
 

@@ -7,6 +7,7 @@ import com.seiko.tv.data.api.DanDanApiService
 import com.seiko.tv.data.api.ResDanDanApiService
 import com.seiko.tv.data.api.model.ResMagnetSearchResponse
 import com.seiko.tv.data.api.model.SearchAnimeResponse
+import com.seiko.tv.util.apiCall
 
 internal class SearchRepository(
     private val api: DanDanApiService,
@@ -24,16 +25,12 @@ internal class SearchRepository(
      *             'other', 'jpmovie', 'jpdrama', 'unknown']
      */
     suspend fun searchBangumiList(keyword: String, type: String): Result<List<SearchAnimeDetails>> {
-        val response: SearchAnimeResponse
-        try {
-            response = api.searchBangumiList(keyword, type)
-        } catch (e: Exception) {
-            return Result.Error(e)
-        }
-        if (!response.success) {
-            return Result.Error(Exception("${response.errorCode} ${response.errorMessage}"))
-        }
-        return Result.Success(response.animes)
+        return apiCall(
+            request = { api.searchBangumiList(keyword, type) },
+            success = { response ->
+                Result.Success(response.animes)
+            }
+        )
     }
 
     /**

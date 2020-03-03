@@ -26,10 +26,6 @@ class DanDanApiRepository(
 
     suspend fun getVideoMatchList(request: MatchRequest) : Result<Pair<Boolean, List<MatchResult>>> {
         try {
-//            val requestJson = moshi.adapter(MatchRequest::class.java).toJson(request)
-//            Timber.d(requestJson)
-//            val requestBody = requestJson.toRequestBody("application/json".toMediaType())
-//            val requestBody = requestJson.toRequestBody("application/json".toMediaType())
             val response = api.getVideoMatch(request)
             if (!response.success) {
                 return Result.Error(Exception("(${response.errorCode}) ${response.errorMessage}"))

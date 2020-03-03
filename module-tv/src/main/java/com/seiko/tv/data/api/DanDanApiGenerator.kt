@@ -1,11 +1,7 @@
 package com.seiko.tv.data.api
 
-import android.content.Context
 import com.seiko.tv.BuildConfig
 import com.seiko.tv.util.constants.DANDAN_API_BASE_URL
-import com.seiko.tv.data.prefs.PrefDataSource
-import com.seiko.tv.util.http.cookie.CookiesManager
-import com.seiko.tv.util.http.interceptor.RetrofitCacheInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter

@@ -21,17 +21,6 @@ internal const val PREFS_NAME_DEFAULT = "DanDanPlayForTV_Prefs"
 internal const val PREFS_NAME_COOKIES = "DanDanPlayForTV_Cookies_Prefs"
 
 /**
- * 路径配置
- * 待替换
- */
-// 分割符
-private val SEP = File.separator
-// 下载路径
-val DEFAULT_DOWNLOAD_PATH = "${Environment.getExternalStorageDirectory().absolutePath}${SEP}DanDanPlay$SEP"
-// 缓存路径
-val DEFAULT_CACHE_FOLDER_PATH = "$DEFAULT_DOWNLOAD_PATH.cache$SEP"
-
-/**
  * 本地历史上限
  */
-internal val MAX_BANGUMI_HISTORY_SIZE = 200
+internal const val MAX_BANGUMI_HISTORY_SIZE = 200

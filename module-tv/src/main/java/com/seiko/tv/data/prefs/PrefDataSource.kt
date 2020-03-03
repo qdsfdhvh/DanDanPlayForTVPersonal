@@ -7,10 +7,5 @@ interface PrefDataSource {
      */
     var token: String
 
-    /**
-     * 番剧下载目录
-     */
-    var downloadFolder: String
-
 
 }

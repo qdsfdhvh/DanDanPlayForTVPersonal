@@ -40,11 +40,7 @@ internal class BangumiDetailsRepository(
      * 获得本地收藏的全部动漫
      */
     fun getBangumiDetailsList(count: Int): DataSource.Factory<Int, BangumiDetailsEntity> {
-        return bangumiDetailsDao.all(count)
-    }
-
-    fun getBangumiDetailsListFixed(): List<BangumiDetailsEntity> {
-        return bangumiDetailsDao.allFixed()
+        return if (count <= 0) bangumiDetailsDao.all() else bangumiDetailsDao.allLimit(count)
     }
 
     /**

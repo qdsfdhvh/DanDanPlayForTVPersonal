@@ -8,6 +8,8 @@ import com.seiko.tv.data.api.DanDanApiService
 import com.seiko.tv.data.api.model.BangumiDetailsResponse
 import com.seiko.tv.data.api.model.BangumiListResponse
 import com.seiko.tv.data.api.model.BangumiSeasonListResponse
+import com.seiko.tv.data.api.model.JsonResultResponse
+import com.seiko.tv.util.apiCall
 
 internal class DanDanApiRepository(
     private val api: DanDanApiService
@@ -18,33 +20,24 @@ internal class DanDanApiRepository(
      * // @param filterAdultContent 是否过滤成人内容
      */
     suspend fun getSeriesBangumiList(): Result<List<BangumiIntroEntity>> {
-        val response: BangumiListResponse
-        try {
-            response = api.getBangumiList()
-        } catch (e: Exception) {
-            return Result.Error(e)
-        }
-
-        if (!response.success) {
-            return Result.Error(Exception("${response.errorCode} ${response.errorMessage}"))
-        }
-        return Result.Success(response.bangumiList)
+        return apiCall(
+            request = { api.getBangumiList() },
+            success = { response ->
+                Result.Success(response.bangumiList)
+            }
+        )
     }
 
     /**
      * 获取动画类型番剧季度的列表
      */
     suspend fun getBangumiSeasons(): Result<List<BangumiSeason>> {
-        val response: BangumiSeasonListResponse
-        try {
-            response = api.getBangumiSeasons()
-        } catch (e: Exception) {
-            return Result.Error(e)
-        }
-        if (!response.success) {
-            return Result.Error(Exception("${response.errorCode} ${response.errorMessage}"))
-        }
-        return Result.Success(response.seasons)
+        return apiCall(
+            request = { api.getBangumiSeasons() },
+            success = { response ->
+                Result.Success(response.seasons)
+            }
+        )
     }
 
     /**
@@ -53,17 +46,12 @@ internal class DanDanApiRepository(
      * // @param filterAdultContent 是否过滤成人内容
      */
     suspend fun getBangumiListWithSeason(season: BangumiSeason): Result<List<BangumiIntroEntity>> {
-        val response: BangumiListResponse
-        try {
-            response = api.getBangumiListWithSeason(season.year, season.month)
-        } catch (e: Exception) {
-            return Result.Error(e)
-        }
-
-        if (!response.success) {
-            return Result.Error(Exception("${response.errorCode} ${response.errorMessage}"))
-        }
-        return Result.Success(response.bangumiList)
+        return apiCall(
+            request = { api.getBangumiListWithSeason(season.year, season.month) },
+            success = { response ->
+                Result.Success(response.bangumiList)
+            }
+        )
     }
 
     /**
@@ -71,16 +59,11 @@ internal class DanDanApiRepository(
      * @param animeId 作品编号
      */
     suspend fun getBangumiDetails(animeId: Long): Result<BangumiDetailsEntity> {
-        val response: BangumiDetailsResponse
-        try {
-            response =  api.getBangumiDetails(animeId)
-        } catch (e: Exception) {
-            return Result.Error(e)
-        }
-        if (!response.success) {
-            return Result.Error(Exception("${response.errorCode} ${response.errorMessage}"))
-        }
-        return Result.Success(response.bangumi)
+        return apiCall(
+            request = { api.getBangumiDetails(animeId) },
+            success = { response ->
+                Result.Success(response.bangumi)
+            }
+        )
     }
-
 }

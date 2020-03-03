@@ -9,7 +9,6 @@ import org.koin.dsl.module
 val useCaseModule = module {
 
     single { GetBangumiDetailsUseCase() }
-    single { GetBangumiFavoriteFixedUseCase() }
     single { GetBangumiFavoriteUseCase() }
     single { GetBangumiHistoryFixedUseCase() }
     single { GetBangumiHistoryUseCase() }

@@ -12,10 +12,10 @@ import com.seiko.tv.data.db.model.BangumiDetailsEntity
 interface BangumiDetailsDao {
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC LIMIT :count")
-    fun all(count: Int): DataSource.Factory<Int, BangumiDetailsEntity>
+    fun allLimit(count: Int): DataSource.Factory<Int, BangumiDetailsEntity>
 
-    @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC")
-    fun allFixed(): List<BangumiDetailsEntity>
+    @Query("SELECT * FROM BangumiDetails ORDER BY addedDate")
+    fun all(): DataSource.Factory<Int, BangumiDetailsEntity>
 
     @Query("UPDATE BangumiDetails SET updateDate=:updateDate WHERE animeId=:animeId")
     suspend fun update(animeId: Long, updateDate: Long)
