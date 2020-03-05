@@ -3,16 +3,18 @@ package com.seiko.player.vm
 import androidx.lifecycle.*
 import com.seiko.common.data.Result
 import com.seiko.player.data.model.DanmaCommentBean
+import com.seiko.player.data.model.DanmaResultBean
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.domain.danma.GetDanmaUseCase
+import com.seiko.player.domain.danma.GetDanmaCommentsUseCase
+import com.seiko.player.domain.danma.GetDanmaResultUseCase
 import com.seiko.player.domain.subtitle.GetSubtitleUseCase
 import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
 
 class PlayerViewModel(
     private val prefDataSource: PrefDataSource,
-    private val getDanma: GetDanmaUseCase,
+    private val getDanma: GetDanmaResultUseCase,
     private val getSubtitle: GetSubtitleUseCase
 ) : ViewModel() {
 
@@ -21,7 +23,7 @@ class PlayerViewModel(
     /**
      * 弹幕资源
      */
-    val danma: LiveData<List<DanmaCommentBean>> = _videoParam.switchMap { param ->
+    val danma: LiveData<DanmaResultBean> = _videoParam.switchMap { param ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             when(val result = getDanma.invoke(param)) {
                 is Result.Success -> emit(result.data)

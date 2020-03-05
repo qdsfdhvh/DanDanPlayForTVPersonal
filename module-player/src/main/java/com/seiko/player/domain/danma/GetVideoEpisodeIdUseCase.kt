@@ -11,6 +11,9 @@ import org.koin.core.inject
 import java.io.File
 import java.io.FileNotFoundException
 
+/**
+ * 获取视频对应的集数id
+ */
 class GetVideoEpisodeIdUseCase : KoinComponent {
 
     private val danmaApiRepo: DanDanApiRepository by inject()
@@ -30,7 +33,7 @@ class GetVideoEpisodeIdUseCase : KoinComponent {
         }
 
         // 获取视频Md5
-        val videoMd5 = videoFile.getVideoMd5()
+        val videoMd5 = param.videoMd5
 
         // 尝试从数据库中获取
         val episodeList = workMatchRepo.getEpisodeIdList(videoMd5, isMatched)
@@ -44,6 +47,7 @@ class GetVideoEpisodeIdUseCase : KoinComponent {
             is Result.Success -> {
                 val matched = result.data.first
                 val matchList = result.data.second
+
                 // 将结果存入数据，不管是否精确关联
                 workMatchRepo.saveMatchResult(videoMd5, matchList)
 

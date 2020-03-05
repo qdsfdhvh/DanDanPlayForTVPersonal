@@ -25,5 +25,8 @@ data class VideoMatch(
     var episodeId: Int = -1,
 
     // 准确匹配
-    var isMatched: Boolean = false
+    var isMatched: Boolean = false,
+
+    // 弹幕偏移时间
+    var shift: Long = 0
 )

@@ -2,19 +2,21 @@ package com.seiko.player.domain.danma
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.db.model.VideoDanmaku
-import com.seiko.player.data.comments.VideoDanmaDbRepository
+import com.seiko.player.data.comments.VideoDanmaRepository
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.PlayParam
-import com.seiko.player.util.getVideoMd5
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 
-class GetDanmaUseCase : KoinComponent {
+/**
+ * 获取弹幕集合
+ */
+class GetDanmaCommentsUseCase : KoinComponent {
 
-    private val danmaDbRepo: VideoDanmaDbRepository by inject()
+    private val danmaDbRepo: VideoDanmaRepository by inject()
     private val downloadDanma: DownloadDanmaUseCase by inject()
 
     suspend operator fun invoke(param: PlayParam): Result<List<DanmaCommentBean>> {
@@ -25,7 +27,7 @@ class GetDanmaUseCase : KoinComponent {
         }
 
         // 获得视频md5
-        val videoMD5 = File(param.videoPath).getVideoMd5()
+        val videoMD5 = param.videoMd5
 
         // 尝试从本地数据库获取弹幕
         var start = System.currentTimeMillis()

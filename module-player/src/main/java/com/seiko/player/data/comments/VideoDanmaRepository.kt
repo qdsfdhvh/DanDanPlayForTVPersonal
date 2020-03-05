@@ -5,7 +5,7 @@ import com.seiko.player.data.db.dao.VideoDanmakuDao
 import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.model.DanmaCommentBean
 
-class VideoDanmaDbRepository(private val danmaDao: VideoDanmakuDao) {
+class VideoDanmaRepository(private val danmaDao: VideoDanmakuDao) {
 
     suspend fun saveDanmaDownloadBean(bean: VideoDanmaku): Boolean {
         bean.downloadDate = System.currentTimeMillis()

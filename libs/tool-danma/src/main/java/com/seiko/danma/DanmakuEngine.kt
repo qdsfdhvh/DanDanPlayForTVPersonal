@@ -18,6 +18,8 @@ class DanmakuEngine(
     private var danmaParser: BaseDanmakuParser? = null
     private var showDanma = true
 
+    private var shift = 0L
+
     /**
      * 填充弹幕
      */
@@ -46,8 +48,9 @@ class DanmakuEngine(
         setDanmaShow()
     }
 
-    override fun setDanmaList(danma: List<Danma>) {
+    override fun setDanmaList(danma: List<Danma>, shift: Long) {
         danmaParser = JsonDanmakuParser(danma)
+        this.shift = shift
         prepareDanma()
     }
 
@@ -66,6 +69,7 @@ class DanmakuEngine(
     }
 
     override fun release() {
+        shift = 0
         danmaParser = null
         danmaView?.release()
         danmaView = null
@@ -87,7 +91,7 @@ class DanmakuEngine(
     }
 
     override fun seekTo(position: Long) {
-        danmaView?.seekTo(position)
+        danmaView?.seekTo(position + shift)
     }
 
     override fun drawingFinished() {

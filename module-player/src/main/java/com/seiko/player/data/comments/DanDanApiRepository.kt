@@ -11,8 +11,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import timber.log.Timber
 
 class DanDanApiRepository(
-    private val api: DanDanApiService,
-    private val moshi: Moshi
+    private val api: DanDanApiService
 ) {
 
     suspend fun downloadDanma(episodeId: Int): Result<List<DanmaCommentBean>> {

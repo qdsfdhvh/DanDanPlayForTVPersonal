@@ -7,6 +7,9 @@ import com.seiko.player.data.model.PlayParam
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * 下载弹幕集合
+ */
 class DownloadDanmaUseCase : KoinComponent {
 
     private val getVideoEpisodeId: GetVideoEpisodeIdUseCase by inject()

@@ -219,7 +219,9 @@ class VlcVideoPlayerActivity : FragmentActivity()
                 bottomControl.playerBtnOverlayDanma.isSelected = false
             }
         }
-        viewModel.danma.observe(this::getLifecycle, danmakuEngine::setDanmaList)
+        viewModel.danma.observe(this::getLifecycle) { result ->
+            danmakuEngine.setDanmaList(result.comments, result.shift)
+        }
     }
 
     /**
@@ -263,7 +265,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
         targetPosition = position
 
         handler.removeMessages(SEEK_TO)
-        handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 500)
+        handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 800)
         showTipProgress(position, 1000)
         syncProgress(position)
     }

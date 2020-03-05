@@ -14,8 +14,10 @@ interface IDanmakuEngine {
 
     /**
      * 弹幕集合
+     * @param danma 弹幕集合
+     * @param shift 偏移时间
      */
-    fun setDanmaList(danma: List<Danma>)
+    fun setDanmaList(danma: List<Danma>, shift: Long)
 
     /**
      * 开始
