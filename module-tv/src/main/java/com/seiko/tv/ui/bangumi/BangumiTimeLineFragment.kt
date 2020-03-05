@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
@@ -52,7 +53,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     }
 
     private fun bindViewModel() {
-        viewModel.weekBangumiList.observe(this::getLifecycle) { bangumiList ->
+        viewModel.weekBangumiList.observe(this) { bangumiList ->
             updateAirDayBangumiList(bangumiList)
 
             startEntranceTransition()
@@ -60,7 +61,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     }
 
     private fun unBindViewModel() {
-        viewModel.weekBangumiList.removeObservers(this::getLifecycle)
+        viewModel.weekBangumiList.removeObservers(this)
     }
 
     private fun updateAirDayBangumiList(list: List<AirDayBangumiBean>) {

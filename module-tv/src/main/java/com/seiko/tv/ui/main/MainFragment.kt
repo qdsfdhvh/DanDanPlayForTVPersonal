@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
@@ -145,20 +146,20 @@ class MainFragment : BrowseSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.todayBangumiList.observe(this::getLifecycle) { list ->
+        viewModel.todayBangumiList.observe(this) { list ->
             lifecycleScope.launchWhenStarted {
                 yield()
                 startEntranceTransition()
                 areaAdapter.submitList(list)
             }
         }
-        viewModel.favoriteBangumiList.observe(this::getLifecycle) { list ->
+        viewModel.favoriteBangumiList.observe(this) { list ->
             lifecycleScope.launchWhenStarted {
                 yield()
                 favoriteAdapter.submitList(list)
             }
         }
-        viewModel.historyBangumiList.observe(this::getLifecycle) { list ->
+        viewModel.historyBangumiList.observe(this) { list ->
             lifecycleScope.launchWhenStarted {
                 yield()
                 historyAdapter.submitList(list)
@@ -167,9 +168,9 @@ class MainFragment : BrowseSupportFragment()
     }
 
     private fun unBindViewModel() {
-        viewModel.todayBangumiList.removeObservers(this::getLifecycle)
-        viewModel.favoriteBangumiList.removeObservers(this::getLifecycle)
-        viewModel.historyBangumiList.removeObservers(this::getLifecycle)
+        viewModel.todayBangumiList.removeObservers(this)
+        viewModel.favoriteBangumiList.removeObservers(this)
+        viewModel.historyBangumiList.removeObservers(this)
     }
 
     /**

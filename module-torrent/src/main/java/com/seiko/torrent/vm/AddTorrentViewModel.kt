@@ -62,7 +62,7 @@ class AddTorrentViewModel(
     /**
      * 种子下载路径
      */
-    private val _downloadDir = MutableLiveData<File>()
+    private val _downloadDir = MutableLiveData<File>().apply { value = torrentDownloadDir }
     val downloadDir: LiveData<File> = _downloadDir
 
     // 自动下载
@@ -74,10 +74,6 @@ class AddTorrentViewModel(
 
     private var source = ""
     private var fromMagnet = false
-
-    fun loadData() {
-        _downloadDir.value = torrentDownloadDir
-    }
 
     fun decodeUri(uri: Uri) = viewModelScope.launch {
         val path = uri.toString()

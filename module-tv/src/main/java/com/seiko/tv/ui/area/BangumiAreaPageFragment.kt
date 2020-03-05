@@ -5,6 +5,7 @@ import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
@@ -71,7 +72,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiList.observe(this::getLifecycle) { bangumiList ->
+        viewModel.bangumiList.observe(this) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
             startEntranceTransition()
         }
@@ -79,7 +80,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     }
 
     private fun unBindViewModel() {
-        viewModel.bangumiList.removeObservers(this::getLifecycle)
+        viewModel.bangumiList.removeObservers(this)
     }
 
     override fun onItemClicked(

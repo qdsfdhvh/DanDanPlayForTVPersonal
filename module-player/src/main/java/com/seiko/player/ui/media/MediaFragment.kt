@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.app.BackgroundManager
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.util.extensions.getScreenWidth
@@ -53,6 +54,11 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
         setupGridNum()
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -105,9 +111,13 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
     }
 
     private fun bindViewModel() {
-        viewModel.provider.pagedList.observe(this::getLifecycle) { list ->
+        viewModel.provider.pagedList.observe(this) { list ->
             adapter.submitList(list)
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.provider.pagedList.removeObservers(this)
     }
 
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {

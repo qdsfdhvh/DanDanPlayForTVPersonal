@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
@@ -39,6 +40,11 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     private fun setupRowAdapter() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
@@ -55,11 +61,15 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     private fun bindViewModel() {
-        viewModel.favoriteBangumiList.observe(this::getLifecycle) { bangumiList ->
+        viewModel.favoriteBangumiList.observe(this) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
             title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
             startEntranceTransition()
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.favoriteBangumiList.removeObservers(this)
     }
 
     override fun onItemClicked(

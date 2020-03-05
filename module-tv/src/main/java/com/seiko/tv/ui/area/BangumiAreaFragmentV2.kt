@@ -8,6 +8,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRowPresenter
+import androidx.lifecycle.observe
 import com.seiko.tv.R
 import com.seiko.tv.data.model.SeasonPageRow
 import com.seiko.tv.vm.BangumiAreaViewModel
@@ -46,7 +47,7 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiSeasons.observe(this::getLifecycle) { seasonList ->
+        viewModel.bangumiSeasons.observe(this) { seasonList ->
             val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
             seasonList.mapIndexed { i, season ->
                 val headerItem = HeaderItem(i.toLong(), season.seasonName)
@@ -57,7 +58,7 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     }
 
     private fun unBindViewModel() {
-        viewModel.bangumiSeasons.removeObservers(this::getLifecycle)
+        viewModel.bangumiSeasons.removeObservers(this)
     }
 
 }

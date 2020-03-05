@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
@@ -83,7 +84,11 @@ class TorrentListFragment : Fragment()
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItems.observe(this::getLifecycle, adapter::submitList)
+        viewModel.torrentItems.observe(this, adapter::submitList)
+    }
+
+    private fun unBindViewModel() {
+        viewModel.torrentItems.removeObservers(this)
     }
 
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {

@@ -1,9 +1,6 @@
 package com.seiko.torrent.ui.add
 
 import android.Manifest
-import android.app.Activity
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +8,7 @@ import android.view.*
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.extensions.checkPermissions
@@ -18,11 +16,9 @@ import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.data.Result
-import com.seiko.common.router.Navigator
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService
-import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.AddTorrentViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -72,6 +68,11 @@ class AddTorrentFragment : Fragment()
         registerKeyEvent()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     /**
      * 绑定按键监听到Activity
      */
@@ -86,13 +87,16 @@ class AddTorrentFragment : Fragment()
     }
 
     private fun bindViewModel() {
-        viewModel.state.observe(this::getLifecycle) { result ->
+        viewModel.state.observe(this) { result ->
             when(result) {
                 is Result.Success -> updateStateUI(result.data)
                 is Result.Error -> handleException(result.exception)
             }
         }
-        viewModel.loadData()
+    }
+
+    private fun unBindViewModel() {
+        viewModel.state.removeObservers(this)
     }
 
     /**

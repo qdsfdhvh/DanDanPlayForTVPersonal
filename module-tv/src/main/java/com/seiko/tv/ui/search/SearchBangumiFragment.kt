@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
 import com.seiko.common.router.Navigator
@@ -80,8 +81,13 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiList.observe(this::getLifecycle, bangumiAdapter::submitList)
-        viewModel.magnetList.observe(this::getLifecycle, magnetAdapter::submitList)
+        viewModel.bangumiList.observe(this, bangumiAdapter::submitList)
+        viewModel.magnetList.observe(this, magnetAdapter::submitList)
+    }
+
+    private fun unBindViewModel() {
+        viewModel.bangumiList.removeObservers(this)
+        viewModel.magnetList.removeObservers(this)
     }
 
     override fun recognizeSpeech() {

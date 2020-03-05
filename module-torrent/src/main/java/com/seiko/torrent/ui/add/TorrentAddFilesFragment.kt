@@ -7,17 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.observe
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddFilesBinding
 import com.seiko.torrent.util.extensions.fixItemAnim
 
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
-import com.seiko.torrent.data.model.filetree.FileNode
 import com.seiko.torrent.vm.AddTorrentViewModel
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import kotlin.collections.ArrayList
 
 class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
 
@@ -53,6 +51,7 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
     override fun onDestroyView() {
         adapter.setOnItemClickListener(null)
         super.onDestroyView()
+        unBindViewModel()
     }
 
     private fun setupUI() {
@@ -64,10 +63,14 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private fun bindViewModel() {
         // 磁力信息
-        viewModel.fileTree.observe(this::getLifecycle) { fileTree ->
+        viewModel.fileTree.observe(this) { fileTree ->
             adapter.setFileTree(fileTree)
             updateFileSize()
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.fileTree.removeObservers(this)
     }
 
     override fun onItemClicked(node: BencodeFileTree) {

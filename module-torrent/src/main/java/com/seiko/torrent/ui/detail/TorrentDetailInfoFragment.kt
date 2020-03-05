@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.observe
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.MainViewModel
@@ -26,11 +27,7 @@ class TorrentDetailInfoFragment : Fragment() {
 
     private lateinit var binding: TorrentFragmentDetailInfoBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = TorrentFragmentDetailInfoBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
@@ -41,6 +38,11 @@ class TorrentDetailInfoFragment : Fragment() {
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     private fun setupUI() {
         binding.folderChooserButton.setOnClickListener {
 
@@ -48,7 +50,7 @@ class TorrentDetailInfoFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItem.observe(this::getLifecycle) { item ->
+        viewModel.torrentItem.observe(this) { item ->
             if (item == null) {
                 binding.uploadTorrentInto.text = ""
                 binding.freeSpace.text = ""
@@ -62,7 +64,7 @@ class TorrentDetailInfoFragment : Fragment() {
                     .format(Date(item.dateAdded))
             }
         }
-        viewModel.torrentMetaInfo.observe(this::getLifecycle) { info ->
+        viewModel.torrentMetaInfo.observe(this) { info ->
             if (info == null) {
                 binding.torrentName.text = ""
                 binding.torrentHashSum.text = ""
@@ -82,6 +84,11 @@ class TorrentDetailInfoFragment : Fragment() {
                     .format(Date(info.creationDate))
             }
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.torrentItem.removeObservers(this)
+        viewModel.torrentMetaInfo.removeObservers(this)
     }
 
 }

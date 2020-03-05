@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
@@ -61,7 +62,12 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadData()
+        bindViewModel()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
     }
 
     private fun setupUI() {
@@ -84,10 +90,14 @@ class SearchMagnetFragment : SearchSupportFragment(),
         rowsAdapter.add(listRow)
     }
 
-    private fun loadData() {
-        viewModel.magnetList.observe(this::getLifecycle) { magnets ->
+    private fun bindViewModel() {
+        viewModel.magnetList.observe(this) { magnets ->
             magnetAdapter.submitList(magnets)
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.magnetList.removeObservers(this)
     }
 
     override fun recognizeSpeech() {

@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.observe
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
-import com.seiko.torrent.data.model.filetree.FileNode
 import com.seiko.torrent.databinding.TorrentFragmentDetailFileBinding
 import com.seiko.torrent.util.FileUtil
 import com.seiko.torrent.util.extensions.fixItemAnim
@@ -55,6 +55,7 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
     override fun onDestroyView() {
         adapter.setOnItemClickListener(null)
         super.onDestroyView()
+        unBindViewModel()
     }
 
     private fun setupUI() {
@@ -64,12 +65,16 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
     }
 
     private fun bindViewModel() {
-        viewModel.torrentMetaInfo.observe(this::getLifecycle) { info ->
+        viewModel.torrentMetaInfo.observe(this) { info ->
             if (info == null) {
                 return@observe
             }
             adapter.setFileTree(info.fileList.toFileTree())
         }
+    }
+
+    private fun unBindViewModel() {
+        viewModel.torrentMetaInfo.removeObservers(this)
     }
 
     override fun onItemClicked(node: BencodeFileTree) {

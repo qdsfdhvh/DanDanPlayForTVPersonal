@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import androidx.lifecycle.lifecycleScope
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.R
@@ -60,6 +61,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
     override fun onDestroyView() {
         super.onDestroyView()
+        unBindViewModel()
         onItemViewClickedListener = null
         mDetailsOverviewPrevState = mDescriptionRowPresenter.mPreviousState
     }
@@ -87,8 +89,12 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.bangumiDetailsBean.observe(this::getLifecycle, this::updateDetails)
+        viewModel.bangumiDetailsBean.observe(this, this::updateDetails)
         viewModel.animeId.value = animeId
+    }
+
+    private fun unBindViewModel() {
+        viewModel.bangumiDetailsBean.removeObservers(this)
     }
 
     /**

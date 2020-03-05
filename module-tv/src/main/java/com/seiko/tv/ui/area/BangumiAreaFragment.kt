@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.tv.R
 import com.seiko.tv.databinding.FragmentAreaBinding
@@ -80,8 +81,9 @@ class BangumiAreaFragment : Fragment(),
      * 注销Item选择监听
      */
     override fun onDestroyView() {
-        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
+        unBindViewModel()
+        handler.removeCallbacksAndMessages(null)
     }
 
     /**
@@ -160,7 +162,7 @@ class BangumiAreaFragment : Fragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiSeasons.observe(this::getLifecycle) { seasons ->
+        viewModel.bangumiSeasons.observe(this) { seasons ->
             seasonAdapter.submitList(seasons)
             if (seasons.isNotEmpty()) {
                 var position = seasonSelectedPosition
@@ -172,6 +174,10 @@ class BangumiAreaFragment : Fragment(),
             }
         }
         viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
+    }
+
+    private fun unBindViewModel() {
+        viewModel.bangumiSeasons.removeObservers(this)
     }
 
     /**
