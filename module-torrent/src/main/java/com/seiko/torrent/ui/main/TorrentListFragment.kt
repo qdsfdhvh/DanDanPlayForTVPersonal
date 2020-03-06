@@ -52,6 +52,11 @@ class TorrentListFragment : Fragment()
         bindViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        unBindViewModel()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.torrentList.adapter = adapter
@@ -111,15 +116,10 @@ class TorrentListFragment : Fragment()
                         }
                     }
                 }
-//                popWindow.binding.torrentBtnPlay.setOnClickListener(listener)
                 popWindow.binding.torrentBtnPause.setOnClickListener(listener)
                 popWindow.binding.torrentBtnDelete.setOnClickListener(listener)
                 popWindow.show(holder.itemView)
             }
-//            R.id.torrent_btn_pause -> {
-//                item as TorrentListItem
-//                downloader.pauseResumeTorrent(item.hash)
-//            }
         }
     }
 

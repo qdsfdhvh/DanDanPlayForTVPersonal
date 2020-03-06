@@ -43,47 +43,6 @@ data class TorrentListItem(
     var peers: Int = 0
 ) : Comparable<TorrentListItem> {
 
-    constructor(task: TorrentTask) : this(
-        hash = task.hash,
-        title = task.name,
-        downloadPath = task.downloadPath,
-        dateAdded = task.addedDate,
-        error = task.error
-    )
-
-    constructor(state: TorrentSessionStatus) : this(
-        hash = state.hash,
-        title = state.title,
-        stateCode = state.state,
-        downloadPath = state.downloadPath,
-        dateAdded = state.dateAdded,
-        error = state.error,
-
-        progress = state.progress,
-        receivedBytes = state.receivedBytes,
-        uploadedBytes = state.uploadedBytes,
-        totalBytes = state.totalBytes,
-        downloadSpeed = state.downloadRate,
-        uploadSpeed = state.uploadRate,
-        ETA = state.eta,
-        totalPeers = state.totalPeers,
-        peers = state.connectPeers
-    )
-
-    fun update(state: TorrentSessionStatus) {
-        stateCode = state.state
-        progress = state.progress
-        receivedBytes = state.receivedBytes
-        uploadedBytes = state.uploadedBytes
-        totalBytes = state.totalBytes
-        downloadSpeed = state.downloadRate
-        uploadSpeed = state.uploadRate
-        ETA = state.eta
-        totalPeers = state.totalPeers
-        peers = state.connectPeers
-        error = state.error
-    }
-
     override fun compareTo(other: TorrentListItem): Int {
         return hash.compareTo(other.hash)
     }

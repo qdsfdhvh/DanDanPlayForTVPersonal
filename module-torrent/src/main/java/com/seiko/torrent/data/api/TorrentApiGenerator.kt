@@ -9,10 +9,9 @@ internal class TorrentApiGenerator(okHttpClient: OkHttpClient) {
     private val retrofit = Retrofit.Builder()
         .baseUrl(DOWNLOAD_BASE_URL)
         .client(okHttpClient)
-        .build()
 
     fun create(): TorrentApiService {
-        return retrofit.create(TorrentApiService::class.java)
+        return retrofit.build().create(TorrentApiService::class.java)
     }
 
 }

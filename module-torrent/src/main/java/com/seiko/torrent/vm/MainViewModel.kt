@@ -6,6 +6,7 @@ import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -17,11 +18,9 @@ class MainViewModel(
     /**
      * 种子信息集合
      */
-    val torrentItems: LiveData<List<TorrentListItem>> = downloader.getTorrentStateMap().switchMap { stateMap ->
-        liveData(viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(stateMap.map { TorrentListItem(it.value) }.sortedByDescending { it.dateAdded })
-        }
-    }
+    val torrentItems: LiveData<List<TorrentListItem>> = downloader.getTorrentStatusList()
+        .map { list -> list.sortedByDescending { it.dateAdded } }
+        .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
 
     private val _torrentItem = MutableLiveData<TorrentListItem?>()
     val torrentItem: LiveData<TorrentListItem?> = _torrentItem

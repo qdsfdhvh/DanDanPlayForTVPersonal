@@ -1,10 +1,7 @@
 package com.seiko.torrent.download
 
-import androidx.lifecycle.LiveData
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
 import com.seiko.common.data.Result
-import com.seiko.common.util.livedata.LiveDataMap
-import com.seiko.common.util.livedata.LiveDataSet
 import com.seiko.download.torrent.TorrentEngine
 import com.seiko.download.torrent.TorrentEngineCallback
 import com.seiko.download.torrent.TorrentEngineOptions
@@ -13,22 +10,18 @@ import com.seiko.download.torrent.model.TorrentMetaInfo
 import com.seiko.download.torrent.model.TorrentSessionStatus
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
+import com.seiko.torrent.data.model.TorrentListItem
 import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
-import kotlinx.coroutines.flow.Flow
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.flow.*
 import org.libtorrent4j.AddTorrentParams
-import org.libtorrent4j.TorrentStatus
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
@@ -57,10 +50,9 @@ class DownloadManager(
      */
     private lateinit var torrentEngine: TorrentEngine
 
-//    /**
-//     * 磁力信息通道
-//     */
-//    private val magnetMap = ConcurrentHashMap<String, EventData<TorrentMetaInfo>>()
+    /**
+     * 磁力信息回调
+     */
     private var magnetParseResultListener: MagnetParseResultListener? = null
 
     /**
@@ -71,59 +63,62 @@ class DownloadManager(
     /**
      * 所有的种子下载状态
      */
-    private val torrentStatesMap = LiveDataMap<String, TorrentSessionStatus>()
+    private val statusMap = HashMap<String, TorrentSessionStatus>()
+    private lateinit var channel: BroadcastChannel<Map<String, TorrentSessionStatus>>
 
     /**
      * 启动引擎
      */
     private fun startEngine() {
-        downloadScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-        torrentEngine = TorrentEngine(options)
-        torrentEngine.setCallback(this)
-        torrentEngine.start()
+        if (isAlreadyRunning.compareAndSet(false, true)) {
+            downloadScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            channel = ConflatedBroadcastChannel()
+            torrentEngine = TorrentEngine(options)
+            torrentEngine.setCallback(this)
+            torrentEngine.start()
+        }
     }
 
     /**
      * 关闭引擎
      */
     private fun closeEngine() {
-        runBlocking(Dispatchers.Main) { torrentStatesMap.clear() }
-        magnetParseResultListener = null
-        downloadScope.cancel()
-//        magnetMap.clear()
-        torrentEngine.setCallback(null)
-        // 引擎的关闭非常耗时，启用单独的线程去关闭它
-        thread(
-            start = true,
-            isDaemon = true,
-            name = UUID.randomUUID().toString()
-        ) {
-            torrentEngine.stop()
-            Timber.d("Close TorrentEngine.")
+        if (isAlreadyRunning.compareAndSet(true, false)) {
+            magnetParseResultListener = null
+            statusMap.clear()
+            channel.close()
+            downloadScope.cancel()
+            torrentEngine.setCallback(null)
+            // 引擎的关闭非常耗时，启用单独的线程去关闭它
+            thread(
+                start = true,
+                isDaemon = true,
+                name = UUID.randomUUID().toString()
+            ) {
+                torrentEngine.stop()
+                Timber.d("Close TorrentEngine.")
+            }
         }
     }
 
     /**
      * 重启已有的种子任务
      */
-    override suspend fun restoreDownloads(tasks: Collection<TorrentTask>) {
+    override fun restoreDownloads(tasks: Collection<TorrentTask>) {
         if (tasks.isEmpty()) return
 
-        val map = torrentStatesMap.value
-        val newTask = tasks.filter { !map.contains(it.hash) }
+        val newTask = tasks.filter { !statusMap.contains(it.hash) }
         if (newTask.isEmpty()) return
 
-        if (isAlreadyRunning.compareAndSet(false, true)) {
-            startEngine()
-        }
+        startEngine()
 
-        val maps = HashMap<String, TorrentSessionStatus>(newTask.size)
-        for (task in newTask) {
-            maps[task.hash] = TorrentSessionStatus.createInstance(task)
-        }
-        torrentEngine.restoreDownloads(newTask)
-        withContext(Dispatchers.Main) {
-            torrentStatesMap.addAll(maps)
+        downloadScope.launch {
+            val maps = HashMap<String, TorrentSessionStatus>(newTask.size)
+            for (task in newTask) {
+                maps[task.hash] = TorrentSessionStatus.createInstance(task)
+            }
+            torrentEngine.restoreDownloads(newTask)
+            statusMap.putAll(maps)
         }
     }
 
@@ -131,9 +126,7 @@ class DownloadManager(
      * 下载种子
      */
     override suspend fun addTorrent(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean> {
-        if (isAlreadyRunning.compareAndSet(false, true)) {
-            startEngine()
-        }
+        startEngine()
 
         when {
             // 来自磁力
@@ -200,22 +193,15 @@ class DownloadManager(
     /**
      * 解析磁力
      */
-    override suspend fun fetchMagnet(source: String, function: (item: TorrentMetaInfo) -> Unit): MagnetInfo {
-        if (isAlreadyRunning.compareAndSet(false, true)) {
-            startEngine()
-        }
+    override fun fetchMagnet(source: String, function: (item: TorrentMetaInfo) -> Unit): MagnetInfo {
+        startEngine()
 
         val magnetInfo = torrentEngine.fetchMagnet(source).toMagnetInfo(source)
-//        magnetMap.safeGetEvent(magnetInfo.sha1hash).set(function)
         magnetParseResultListener = function
         return magnetInfo
     }
 
     override fun cancelFetchMagnet(hash: String) {
-//        magnetMap[hash]?.let { event ->
-//            event.cancel()
-//            magnetMap.remove(hash)
-//        }
         magnetParseResultListener = null
         torrentEngine.cancelFetchMagnet(hash)
     }
@@ -224,7 +210,7 @@ class DownloadManager(
      * 获取已有的种子信息
      */
     override fun getTorrentMetaInfo(hash: String): TorrentMetaInfo? {
-        if (!isAlreadyRunning.get()) return null
+        startEngine()
         val task = torrentEngine.getDownloadTask(hash) ?: return null
         val info = task.torrentInfo ?: return null
         return TorrentMetaInfo(info)
@@ -248,23 +234,40 @@ class DownloadManager(
     /**
      * 删除种子
      */
-    override suspend fun deleteTorrent(hash: String, withFile: Boolean) {
-        val id = torrentRepo.deleteTorrent(hash)
-        Timber.d("deleteTorrent: $hash, $id")
-        torrentEngine.removeTorrent(hash, withFile)
+    override fun deleteTorrent(hash: String, withFile: Boolean) {
+        downloadScope.launch {
+            val id = torrentRepo.deleteTorrent(hash)
+            Timber.d("deleteTorrent: $hash, $id")
+            torrentEngine.removeTorrent(hash, withFile)
+        }
     }
 
     /**
      * 停止所有种子
      */
     override fun release() {
-        if (isAlreadyRunning.compareAndSet(true, false)) {
-            closeEngine()
-        }
+        closeEngine()
     }
 
-    override fun getTorrentStateMap(): LiveData<MutableMap<String, TorrentSessionStatus>> {
-        return torrentStatesMap
+    /**
+     * 获得持续的种子下载状态
+     */
+    @FlowPreview
+    override fun getTorrentStatusList(): Flow<List<TorrentListItem>> {
+        startEngine()
+
+//        val updateTime = AtomicLong(0)
+        return channel.asFlow()
+//            .filter {
+//                val current = System.currentTimeMillis()
+//                return@filter if (current - updateTime.get() > 400) {
+//                    updateTime.set(current)
+//                    true
+//                } else false
+//            }
+            .map { statusMap ->
+                statusMap.map { it.value.toTorrentListItem() }
+            }
     }
 
     override fun onEngineStarted() {
@@ -278,7 +281,8 @@ class DownloadManager(
 
     private suspend fun updateUI(hash: String, status: TorrentSessionStatus) {
         withContext(Dispatchers.Main) {
-            torrentStatesMap.add(hash, status)
+            statusMap[hash] = status
+            channel.offer(statusMap)
         }
     }
 
@@ -297,7 +301,8 @@ class DownloadManager(
      */
     override fun onTorrentRemoved(hash: String) {
         downloadScope.launch(Dispatchers.Main) {
-            torrentStatesMap.remove(hash)
+            statusMap.remove(hash)
+            channel.offer(statusMap)
         }
     }
 
@@ -387,7 +392,6 @@ class DownloadManager(
             withContext(Dispatchers.Main) {
                 magnetParseResultListener?.invoke(info)
             }
-//            magnetMap[hash]?.post(info)
         }
     }
 
@@ -407,17 +411,27 @@ class DownloadManager(
         Timber.tag(TAG).e(errorMsg)
     }
 
-//    private fun <T> ConcurrentHashMap<String, EventData<T>>.safeGetEvent(hash: String): EventData<T> {
-//        return if (containsKey(hash)) {
-//            get(hash)!!
-//        } else {
-//            val event = EventData<T>(downloadScope)
-//            put(hash, event)
-//            event
-//        }
-//    }
 }
 
+private fun TorrentSessionStatus.toTorrentListItem(): TorrentListItem {
+    return TorrentListItem(
+        hash = hash,
+        title = title,
+        stateCode = state,
+        downloadPath = downloadPath,
+        dateAdded = dateAdded,
+        error = error,
+
+        progress = progress,
+        receivedBytes = receivedBytes,
+        uploadedBytes = uploadedBytes,
+        totalBytes = totalBytes,
+        downloadSpeed = downloadRate,
+        uploadSpeed = uploadRate,
+        ETA = eta,
+        totalPeers = totalPeers,
+        peers = connectPeers)
+}
 
 private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
     val hash = infoHash().toHex()
@@ -429,43 +443,3 @@ private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
         filePriorities = filePriorities()?.toList() ?: emptyList()
     )
 }
-
-//@ExperimentalCoroutinesApi
-//data class EventData<T>(
-//    val coroutineScope: CoroutineScope
-//) {
-//
-//    private val channel = ConflatedBroadcastChannel<T>()
-//    private var job: Job? = null
-//
-//    private var callback: ((T) -> Unit)? = null
-//    private var value: T? = null
-//
-//    init {
-//        job = coroutineScope.launch(Dispatchers.Main) {
-//            channel.openSubscription().consumeEach {
-//                callback?.invoke(it)
-//            }
-//        }
-//    }
-//
-//    fun set(callback: ((T) -> Unit)?) {
-//        value?.let { callback?.invoke(it) }
-//        this.callback = callback
-//    }
-//
-//    fun post(data: T) {
-//        if (!channel.isClosedForSend) {
-//            coroutineScope.launch {
-//                value = data
-//                channel.send(data)
-//            }
-//        }
-//    }
-//
-//    fun cancel() {
-//        callback = null
-//        job?.cancel()
-//        channel.cancel()
-//    }
-//}

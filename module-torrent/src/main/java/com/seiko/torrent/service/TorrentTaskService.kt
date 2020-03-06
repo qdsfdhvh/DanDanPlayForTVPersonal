@@ -113,7 +113,6 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
      */
     private fun delTorrent(hash: String, withFile: Boolean) = runBlocking(coroutineContext) {
         downloader.deleteTorrent(hash, withFile)
-//        EventBusScope.getDefault().post(PostEvent.TorrentRemoved(hash))
     }
 
     /**
