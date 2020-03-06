@@ -24,7 +24,7 @@ import java.io.File
 
 private val MAX_HEAP_SIZE = Runtime.getRuntime().maxMemory().toInt()
 private val MAX_MEMORY_CACHE_SIZE = MAX_HEAP_SIZE / 4
-private const val MAX_DISK_CACHE_SIZE = 40L * ByteConstants.MB
+private const val MAX_DISK_CACHE_SIZE = 50L * ByteConstants.MB
 
 fun Application.initFresco() {
     val diskCacheConfig = DiskCacheConfig.newBuilder(this@initFresco)
@@ -42,11 +42,11 @@ fun Application.initFresco() {
                 Int.MAX_VALUE,
                 Int.MAX_VALUE)
         }
-        .setDownsampleEnabled(true)
-        .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
-        .setResizeAndRotateEnabledForNetwork(true)
-        .setBitmapsConfig(Bitmap.Config.RGB_565)
         .setMainDiskCacheConfig(diskCacheConfig)
+        .setDownsampleEnabled(true)
+//        .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
+//        .setResizeAndRotateEnabledForNetwork(true)
+        .setBitmapsConfig(Bitmap.Config.RGB_565)
         .build()
 
     Fresco.initialize(this@initFresco, config)
@@ -63,7 +63,7 @@ fun clearFrescoMemory() {
 fun GenericDraweeView.loadImage(url: String?) {
     if (url.isNullOrEmpty()) return
     val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
-        .setResizeOptions(ResizeOptions.forSquareSize(360))
+        .setResizeOptions(ResizeOptions.forSquareSize(240))
         .setProgressiveRenderingEnabled(false)
         .build()
 
@@ -74,26 +74,26 @@ fun GenericDraweeView.loadImage(url: String?) {
         .build()
 }
 
-fun GenericDraweeView.loadFileImage(path: String) {
-    val uri = Uri.fromFile(File(path))
-    val request =ImageRequestBuilder.newBuilderWithSource(uri)
-        .build()
-    controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(request)
-        .setOldController(controller)
-        .setAutoPlayAnimations(true)
-        .build()
-}
-
-fun GenericDraweeView.loadImage(url: String, resizeOptions: ResizeOptions) {
-    val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
-        .setResizeOptions(resizeOptions)
-        .setProgressiveRenderingEnabled(false)
-        .build()
-
-    controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(request)
-        .setOldController(controller)
-        .setAutoPlayAnimations(true)
-        .build()
-}
+//fun GenericDraweeView.loadFileImage(path: String) {
+//    val uri = Uri.fromFile(File(path))
+//    val request =ImageRequestBuilder.newBuilderWithSource(uri)
+//        .build()
+//    controller = Fresco.newDraweeControllerBuilder()
+//        .setImageRequest(request)
+//        .setOldController(controller)
+//        .setAutoPlayAnimations(true)
+//        .build()
+//}
+//
+//fun GenericDraweeView.loadImage(url: String, resizeOptions: ResizeOptions) {
+//    val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+//        .setResizeOptions(resizeOptions)
+//        .setProgressiveRenderingEnabled(false)
+//        .build()
+//
+//    controller = Fresco.newDraweeControllerBuilder()
+//        .setImageRequest(request)
+//        .setOldController(controller)
+//        .setAutoPlayAnimations(true)
+//        .build()
+//}

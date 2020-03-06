@@ -3,6 +3,7 @@ package com.seiko.common.provider
 import android.app.Application
 import com.seiko.common.di.moshiModule
 import com.seiko.common.di.networkModule
+import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,6 +30,8 @@ class ProviderApplication : IProviderApplication {
             networkModule
         ))
 
+        application.providerAppManager()
+
         GlobalScope.launch(Dispatchers.IO) {
             // 初始化MMKV
             application.initMMKV()
@@ -38,4 +41,5 @@ class ProviderApplication : IProviderApplication {
     override fun onTerminate() {
 
     }
+
 }

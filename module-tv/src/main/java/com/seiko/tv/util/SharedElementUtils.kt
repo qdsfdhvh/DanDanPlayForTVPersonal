@@ -9,22 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
+import com.facebook.drawee.view.SimpleDraweeView
 import com.seiko.tv.util.helper.LeakFreeSupportSharedElementCallback
 import java.lang.ref.WeakReference
 
 fun Activity.setupSharedElementTransition() {
-    window.sharedElementEnterTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP)  // 进入
-    window.sharedElementReturnTransition = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP) // 返回
-    setEnterSharedElementCallback(LeakFreeSupportSharedElementCallback())
+    // 修复 Fresco 在 Android N 平台使用 SharedElement 时，返回上一级 Activity 后 ImageView 消失的问题
     setExitSharedElementCallback(object : SharedElementCallback() {
-        override fun onSharedElementEnd(
-            sharedElementNames: MutableList<String>?,
-            sharedElements: MutableList<View>?,
-            sharedElementSnapshots: MutableList<View>?
-        ) {
+        override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>, sharedElementSnapshots: MutableList<View>?) {
             super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
-            if (sharedElements.isNullOrEmpty()) return
-            sharedElements.filter { it.visibility != View.VISIBLE }
+            sharedElements.filterIsInstance<SimpleDraweeView>()
                 .forEach { it.visibility = View.VISIBLE }
         }
     })

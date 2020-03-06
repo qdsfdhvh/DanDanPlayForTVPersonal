@@ -1,29 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="DanDanTvTheme" parent="Theme.Leanback">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
+<!--    <style name="DanDanTvTheme" parent="Theme.Leanback">-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@android:color/transparent</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
+
+<!--        <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>-->
+<!--        &lt;!&ndash;<item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>&ndash;&gt;-->
+<!--        <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>-->
+<!--        <item name="android:windowSharedElementReenterTransition">@transition/share_element_transition</item>-->
+<!--        <item name="android:windowEnterTransition">@transition/window_enter_explode</item>-->
+<!--    </style>-->
 
     <style name="DanDanTvTheme.Browse" parent="Theme.Leanback.Browse">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
+<!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
+        <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/share_element_transition</item>
+        <item name="android:windowEnterTransition">@transition/window_enter_explode</item>
     </style>
 
     <style name="DanDanTvTheme.Details" parent="Theme.Leanback.Details">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
+<!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
+        <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/share_element_transition</item>
+        <item name="android:windowEnterTransition">@transition/window_enter_explode</item>
     </style>
 
     <style name="DanDanTvTheme.Search" parent="Theme.Leanback.Details.NoSharedElementTransition">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
+<!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
+        <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/share_element_transition</item>
+        <item name="android:windowEnterTransition">@transition/window_enter_explode</item>
     </style>
 
     <style name="DanDanTvTheme.VerticalGrid" parent="Theme.Leanback.VerticalGrid">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
+<!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
+        <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/share_element_transition</item>
+        <item name="android:windowEnterTransition">@transition/window_enter_explode</item>
+    </style>
+
+    <style name="ActivityAnimStyle" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
     </style>
 </resources>

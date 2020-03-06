@@ -16,7 +16,7 @@ internal class DanDanApiGenerator(
     converterFactory: Converter.Factory
 ) {
     private val newOkHttpClient = okHttpClient.newBuilder()
-        .retryOnConnectionFailure(false) // 连接失败后是否重新连接
+//        .retryOnConnectionFailure(false) // 连接失败后是否重新连接
         .addInterceptor(HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
                 level = HttpLoggingInterceptor.Level.HEADERS
