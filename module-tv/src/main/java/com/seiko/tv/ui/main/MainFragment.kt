@@ -113,7 +113,7 @@ class MainFragment : BrowseSupportFragment()
      * 生成Rows
      */
     private fun setupRows() {
-        rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        rowsAdapter = ArrayObjectAdapter(ListRowPresenter(FocusHighlight.ZOOM_FACTOR_SMALL))
         val presenterSelector = BangumiPresenterSelector()
         val homeImageBeanDiffCallback = HomeImageBeanDiffCallback()
         // 工具中心

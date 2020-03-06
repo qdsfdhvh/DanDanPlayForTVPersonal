@@ -6,18 +6,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.leanback.widget.BaseCardView
+import com.seiko.common.R
 
-abstract class AbsCardView<T> : BaseCardView {
+abstract class AbsCardView<T> @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.baseCardViewStyle
+) : BaseCardView(context, attrs, defStyleAttr) {
 
-    constructor(context: Context) : super(context) {
-        initLayout(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initLayout(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    init {
         initLayout(context)
     }
 
