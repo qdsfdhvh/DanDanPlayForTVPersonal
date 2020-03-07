@@ -33,6 +33,7 @@ class VideoHistoryRepository(private val videoHistoryDao: VideoHistoryDao) {
      * 保存视频播放进度
      */
     suspend fun savePosition(videoPath: String, position: Long): Boolean {
+        Timber.d("保存进度：${videoPath} - $position")
         return videoHistoryDao.savePosition(videoPath, position) > 0
     }
 

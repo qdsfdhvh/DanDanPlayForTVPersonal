@@ -31,3 +31,8 @@ internal const val MAX_VIDEO_MD5_SIZE_DEFAULT = 16L * 1024 * 1024
  */
 internal const val PLAYER_DATA_DIR = "PLAYER_DATA_DIR"
 internal const val PLAYER_THUMBNAIL_DIR = "PLAYER_THUMBNAIL_DIR"
+
+/**
+ * 超过5s才保存视频进度
+ */
+internal const val PLAYER_MIN_SAVE_POSITION = 5000

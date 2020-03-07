@@ -2,7 +2,6 @@ package com.seiko.player.ui.video
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.*
 import android.view.*
 import android.view.animation.AnimationUtils
@@ -22,15 +21,15 @@ import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.util.extensions.setInvisible
 import com.seiko.player.util.extensions.setVisible
 import com.seiko.player.media.vlc.control.VlcPlayerListManager
+import com.seiko.player.util.AnimatorUtils
+import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
 import com.seiko.player.vm.PlayerViewModel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
-import org.videolan.medialibrary.MLServiceLocator
-import org.videolan.medialibrary.interfaces.Medialibrary
-import timber.log.Timber
 import kotlin.math.abs
 
 class VlcVideoPlayerActivity : FragmentActivity()
@@ -45,6 +44,11 @@ class VlcVideoPlayerActivity : FragmentActivity()
          * 控制界面显示4s后关闭
          */
         private const val OVERLAY_TIMEOUT = 4000
+
+        /**
+         * 自动续播通知4s后关闭
+         */
+        private const val TIP_POSITION_TIMEOUT = 3000L
 
         /**
          * 不自动关闭控制界面
@@ -70,6 +74,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
     private val bottomControl get() = binding.playerViewController.playerLayoutControlBottom
     private val seekbar get() = bottomControl.playerOverlaySeekbar
     private val tipProgress get() = binding.playerViewController.playerTipLayout
+    private val tipPosition get() = binding.playerViewController.playerLayoutTipPosition
 
     private val viewModel: PlayerViewModel by inject()
     private val danmakuEngine: IDanmakuEngine by inject()
@@ -569,24 +574,75 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
+     * 显示/隐藏 续播提示
+     */
+    private var isFirstOpen = true
+    private var isFirstOpenWithReplay = false
+    private fun checkTipPosition() {
+        if (!isFirstOpen) return
+        isFirstOpen = false
+
+        lifecycleScope.launchWhenStarted {
+            delay(600)
+            val position = player.getCurrentPosition()
+            // 当前位置到过5s，认为自动续播
+            if (position > PLAYER_MIN_SAVE_POSITION) {
+                tipPosition.title.text = getString(R.string.video_tip_position_title, Tools.millisToString(position))
+                showTipPosition()
+                delay(TIP_POSITION_TIMEOUT)
+                hideTipPosition()
+            }
+        }
+    }
+
+    private fun showTipPosition() {
+        if (isFirstOpenWithReplay) return
+        isFirstOpenWithReplay = true
+        handler.post {
+            AnimatorUtils.translationXShow(tipPosition.root) {
+                tipPosition.root.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun hideTipPosition() {
+        if (!isFirstOpenWithReplay) return
+        isFirstOpenWithReplay = false
+        handler.post {
+            AnimatorUtils.translationXHide(tipPosition.root) {
+                tipPosition.root.visibility = View.GONE
+            }
+        }
+    }
+
+    /**
      * 播放器事件监听
      */
     override fun onEvent(event: MediaPlayer.Event?) {
         if (event == null) return
         when(event.type) {
+            MediaPlayer.Event.Opening -> checkTipPosition()
             MediaPlayer.Event.Playing,
             MediaPlayer.Event.Paused -> updateOverlayPlayPause()
             MediaPlayer.Event.Stopped -> finish()
-
         }
     }
 
     /**
      * 返回
      */
+
     override fun onBackPressed() {
+        // 隐藏控制界面
         if (isShowing) {
             hideOverlay(true)
+            return
+        }
+
+        // 打开视频时，自动续播，x秒内，点击返回 视频重播
+        if (isFirstOpenWithReplay) {
+            hideTipPosition()
+            seekTo(0)
             return
         }
 

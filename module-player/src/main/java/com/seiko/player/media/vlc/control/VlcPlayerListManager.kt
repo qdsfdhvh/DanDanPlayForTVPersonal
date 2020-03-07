@@ -5,6 +5,7 @@ import com.seiko.player.data.comments.VideoHistoryRepository
 import com.seiko.player.data.db.model.VideoHistory
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.media.vlc.util.MediaWrapperList
+import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -124,11 +125,12 @@ class VlcPlayerListManager(
      * 保存视频播放历史
      */
     private suspend fun saveVideoHistory(param: PlayParam, media: MediaWrapper) {
+
         historyRepo.saveVideoHistory(VideoHistory(
             videoMd5 = param.videoMd5,
             videoPath = param.videoPath,
             videoTitle = media.title,
-            videoThumbnail = media.artworkURL,
+            videoThumbnail = media.artworkMrl ?: "",
             videoSize = File(param.videoPath).length(),
             videoDuration = media.length))
     }
@@ -142,7 +144,7 @@ class VlcPlayerListManager(
         var position = getCurrentPosition()
         if (media.type == MediaWrapper.TYPE_VIDEO) {
             // 少于5s，不保存进度
-            if (position < 5000) {
+            if (position < PLAYER_MIN_SAVE_POSITION) {
                 position = 0
             } else {
                 val duration = getCurrentDuration()

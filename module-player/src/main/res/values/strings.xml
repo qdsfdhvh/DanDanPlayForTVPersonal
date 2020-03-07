@@ -42,4 +42,6 @@
 
     <string name="media_library_scan">媒体库扫描</string>
     <string name="media_library_progress">媒体库扫描进度更新</string>
+
+    <string name="video_tip_position_title">自动为您续播到%1$s  按&quot;⬅&quot;键重新播放</string>
 </resources>

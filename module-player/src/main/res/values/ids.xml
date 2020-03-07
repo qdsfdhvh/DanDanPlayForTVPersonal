@@ -5,6 +5,7 @@
     <item name="player_layout_control_bottom" type="id"/>
     <item name="player_layout_control_ab_repeat" type="id"/>
     <item name="player_layout_control_options" type="id"/>
+    <item name="player_layout_tip_position" type="id"/>
 
     <item name="player_container_hud" type="id"/>
 

@@ -15,22 +15,10 @@
         android:layout_marginTop="12dp"
         vlc:layout_constraintTop_toTopOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"/>
-    <!-- A-B 循环 -->
-<!--    <include-->
-<!--        layout="@layout/view_ab_repeat"-->
-<!--        android:id="@id/player_layout_control_ab_repeat"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:visibility="gone"-->
-<!--        tools:visibility="visible"-->
-<!--        vlc:layout_constraintStart_toStartOf="@+id/player_layout_control_bottom"-->
-<!--        vlc:layout_constraintBottom_toTopOf="@+id/player_layout_control_bottom" />-->
-    
     <!-- 底部控制 -->
     <include
-        layout="@layout/view_player_control"
         android:id="@id/player_layout_control_bottom"
+        layout="@layout/view_player_control"
         android:layout_width="@dimen/player_control_bottom_width"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -53,4 +41,15 @@
         vlc:layout_constraintBottom_toBottomOf="parent"
         vlc:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/player_item_option"/>
+    <!-- 续播提示 -->
+    <include
+        android:id="@id/player_layout_tip_position"
+        layout="@layout/view_tip_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        vlc:layout_constraintBottom_toBottomOf="parent"
+        vlc:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
