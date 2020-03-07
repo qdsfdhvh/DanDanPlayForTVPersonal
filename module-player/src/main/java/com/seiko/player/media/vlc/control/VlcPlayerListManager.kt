@@ -107,7 +107,6 @@ class VlcPlayerListManager(
     }
 
     override fun stop() {
-        Timber.d("stop")
         GlobalScope.launch(Dispatchers.IO) {
             val mw = getCurrentMedia() ?: return@launch
             saveMediaMeta(mw)

@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.provider.MediaStore
-import android.text.TextUtils
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -42,10 +41,10 @@ class ThumbnailsProvider(private val cacheDir: File) {
 
     @WorkerThread
     fun getMediaThumbnail(item: MediaWrapper, width: Int): Bitmap? {
-        return if (item.type == MediaWrapper.TYPE_VIDEO && TextUtils.isEmpty(item.artworkMrl))
-            getVideoThumbnail(item, width)
-        else
-            BitmapUtils.readCoverBitmap(Uri.decode(item.artworkMrl), width)
+        if (item.type == MediaWrapper.TYPE_VIDEO) {
+            return getVideoThumbnail(item, width)
+        }
+        return null
     }
 
     @WorkerThread
@@ -58,13 +57,16 @@ class ThumbnailsProvider(private val cacheDir: File) {
         }
 
         val thumbPath = getMediaThumbnailPath(true, media) ?: return null
-        if (File(thumbPath).exists()) {
+        val thumbFile = File(thumbPath)
+        if (thumbFile.exists() && thumbFile.length() > 10 * 1024) { // 大于10kb
             return BitmapUtils.readCoverBitmap(thumbPath, width)
         }
+
         if (media.isThumbnailGenerated) return null
         val bitmap = synchronized(this) {
             ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND)
         }
+
         if (bitmap != null) {
             BitmapCache.addBitmapToMemCache(thumbPath, bitmap)
             val hasCache = cacheDir.exists() || cacheDir.mkdirs()
