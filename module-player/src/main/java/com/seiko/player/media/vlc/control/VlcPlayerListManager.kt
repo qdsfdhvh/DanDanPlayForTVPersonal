@@ -139,23 +139,19 @@ class VlcPlayerListManager(
      * 保存视频播放进度
      */
     private suspend fun saveMediaMeta(mw: MediaWrapper) {
-        val media = Medialibrary.getInstance().findMedia(mw) ?: return
-        if (media.id == 0L) return
         var position = getCurrentPosition()
-        if (media.type == MediaWrapper.TYPE_VIDEO) {
-            // 少于5s，不保存进度
-            if (position < PLAYER_MIN_SAVE_POSITION) {
+        // 少于5s，不保存进度
+        if (position < PLAYER_MIN_SAVE_POSITION) {
+            position = 0
+        } else {
+            val duration = getCurrentDuration()
+            val progress = position / duration.toFloat()
+            // 播放超过95%或还剩10s，不保存进度
+            if (progress > 0.95f || duration - position < 10000) {
                 position = 0
-            } else {
-                val duration = getCurrentDuration()
-                val progress = position / duration.toFloat()
-                // 播放超过95%或还剩10s，不保存进度
-                if (progress > 0.95f || duration - position < 10000) {
-                    position = 0
-                }
             }
-            historyRepo.savePosition(media.uri.path!!, position)
         }
+        historyRepo.savePosition(mw.uri.path!!, position)
     }
 
     private suspend fun getStartTime(mw: MediaWrapper): Long {

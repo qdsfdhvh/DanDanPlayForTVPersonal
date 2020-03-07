@@ -7,6 +7,7 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.seiko.common.ui.dialog.DialogSelectFragment
@@ -24,12 +25,14 @@ import com.seiko.player.media.vlc.control.VlcPlayerListManager
 import com.seiko.player.util.AnimatorUtils
 import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
 import com.seiko.player.vm.PlayerViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
+import timber.log.Timber
 import kotlin.math.abs
 
 class VlcVideoPlayerActivity : FragmentActivity()
@@ -210,9 +213,11 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     private fun bindViewModel() {
-        player.getProgressLiveData().observe(this::getLifecycle) { progress ->
-            syncProgress(progress.position)
-        }
+        player.getProgressLiveData()
+            .asLiveData(lifecycleScope.coroutineContext + Dispatchers.IO)
+            .observe(this::getLifecycle) { progress ->
+                syncProgress(progress.position)
+            }
         viewModel.showDanma.observe(this::getLifecycle) { show ->
             if (show) {
                 danmakuEngine.show()

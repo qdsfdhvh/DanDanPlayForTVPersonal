@@ -2,19 +2,22 @@ package com.seiko.player.media.vlc.control
 
 import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.data.model.Progress
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.withContext
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.IVLCVout
-import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
 import kotlin.math.abs
 
+@ExperimentalCoroutinesApi
 class VlcPlayerController(
     private val instance: VlcLibManager
 ): IPlayerController
@@ -29,6 +32,7 @@ class VlcPlayerController(
         get() {
             if (_mediaPlayer == null) {
                 _mediaPlayer = newMediaPlayer()
+                progressChannel = ConflatedBroadcastChannel()
             }
             return _mediaPlayer!!
         }
@@ -63,27 +67,29 @@ class VlcPlayerController(
     /**
      * 进度LiveData
      */
-    private val progress by lazyAndroid { MutableLiveData<Progress>().apply { value = Progress() } }
+    private val progressValue by lazyAndroid { Progress() }
+    private lateinit var progressChannel: BroadcastChannel<Progress>
 
     /**
      * 获取进度LiveData
      */
-    override fun getProgressLiveData(): LiveData<Progress> {
-        return progress
+    @FlowPreview
+    override fun getProgressLiveData(): Flow<Progress> {
+        return progressChannel.asFlow()
     }
 
     /**
      * 获取当前视频进度
      */
     override fun getCurrentPosition(): Long {
-        return progress.value?.position ?: 0
+        return progressValue.position
     }
 
     /**
      * 获取当前视频长度
      */
     override fun getCurrentDuration(): Long {
-        return progress.value?.duration ?: 1
+        return progressValue.duration
     }
 
     /**
@@ -177,6 +183,7 @@ class VlcPlayerController(
         instance.release()
         releasePlayer(_mediaPlayer)
         _mediaPlayer = null
+        progressChannel.close()
         withContext(Dispatchers.Main) {
             setPlaybackStopped()
         }
@@ -185,21 +192,22 @@ class VlcPlayerController(
     /**
      * 更新进度
      */
-    @MainThread
     private fun updateProgress(
-        position: Long = progress.value?.position ?: 0,
-        duration: Long = progress.value?.duration ?: 1
+        position: Long = progressValue.position,
+        duration: Long = progressValue.duration
     ) {
-        progress.value = progress.value?.apply {
+        progressValue.apply {
             this.position = position
             this.duration = duration
+        }
+        if (!progressChannel.isClosedForSend) {
+            progressChannel.offer(progressValue)
         }
     }
 
     /**
      * 开始播放
      */
-    @MainThread
     private fun setPlaybackStarted(position: Long, duration: Long) {
         seekable = true
         pausable = true
@@ -210,7 +218,6 @@ class VlcPlayerController(
     /**
      * 停止播放，状态重置
      */
-    @MainThread
     private fun setPlaybackStopped() {
         playbackState = PlaybackStateCompat.STATE_STOPPED
         updateProgress(0, 1)

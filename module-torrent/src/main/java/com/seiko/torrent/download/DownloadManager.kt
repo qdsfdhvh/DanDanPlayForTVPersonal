@@ -264,11 +264,9 @@ class DownloadManager(
     /**
      * 更新UI
      */
-    private suspend fun updateUI(hash: String, status: TorrentStatus) {
-        withContext(Dispatchers.Main) {
-            statusMap[hash] = status
-            channel.offer(statusMap)
-        }
+    private fun updateUI(hash: String, status: TorrentStatus) {
+        statusMap[hash] = status
+        channel.offer(statusMap)
     }
 
     /**

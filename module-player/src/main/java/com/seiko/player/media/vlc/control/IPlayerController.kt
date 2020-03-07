@@ -1,8 +1,8 @@
 package com.seiko.player.media.vlc.control
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
 import com.seiko.player.data.model.Progress
+import kotlinx.coroutines.flow.Flow
 import org.videolan.libvlc.MediaPlayer
 
 interface IPlayerController {
@@ -10,7 +10,7 @@ interface IPlayerController {
     /**
      * 获取进度LiveData
      */
-    fun getProgressLiveData(): LiveData<Progress>
+    fun getProgressLiveData(): Flow<Progress>
 
     /**
      * 获取当前视频进度
