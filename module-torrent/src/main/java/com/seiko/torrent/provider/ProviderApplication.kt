@@ -4,6 +4,9 @@ import android.app.Application
 import com.seiko.common.provider.IProviderApplication
 import com.seiko.torrent.di.*
 import com.seiko.torrent.service.TorrentTaskService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -26,7 +29,9 @@ class ProviderApplication : IProviderApplication {
             viewModelModule
         ))
 
-        TorrentTaskService.loadTrackers(application)
+        GlobalScope.launch(Dispatchers.IO) {
+            TorrentTaskService.loadTrackers(application)
+        }
     }
 
     override fun onTerminate() {

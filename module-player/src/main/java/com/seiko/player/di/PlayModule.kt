@@ -3,14 +3,15 @@ package com.seiko.player.di
 import android.content.Context
 import com.seiko.danma.DanmakuEngine
 import com.seiko.danma.IDanmakuEngine
+import com.seiko.player.data.comments.VideoHistoryRepository
 import com.seiko.player.media.option.DanmaOptions
 import com.seiko.player.util.constants.PLAYER_DATA_DIR
 import com.seiko.player.util.constants.PLAYER_THUMBNAIL_DIR
 import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.util.bitmap.ThumbnailsProvider
-import com.seiko.player.media.vlc.media.VlcPlayerController
-import com.seiko.player.media.vlc.media.VlcPlayerListManager
-import com.seiko.player.media.vlc.media.VlcLibManager
+import com.seiko.player.media.vlc.control.VlcPlayerController
+import com.seiko.player.media.vlc.control.VlcPlayerListManager
+import com.seiko.player.media.vlc.control.VlcLibManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -28,7 +29,7 @@ val playModule = module {
 
     single { createVlcLibManager(androidContext()) }
     single { createVlcPlayerController(get()) }
-    single { createVlcPlayerListManager(get()) }
+    single { createVlcPlayerListManager(get(), get()) }
 }
 
 /**
@@ -83,6 +84,6 @@ private fun createVlcPlayerController(instance: VlcLibManager): VlcPlayerControl
 /**
  * Vlc列表管理
  */
-private fun createVlcPlayerListManager(player: VlcPlayerController): VlcPlayerListManager {
-    return VlcPlayerListManager(player)
+private fun createVlcPlayerListManager(player: VlcPlayerController, historyRepo: VideoHistoryRepository): VlcPlayerListManager {
+    return VlcPlayerListManager(player, historyRepo)
 }

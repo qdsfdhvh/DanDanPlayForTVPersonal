@@ -21,7 +21,7 @@ import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.util.extensions.setInvisible
 import com.seiko.player.util.extensions.setVisible
-import com.seiko.player.media.vlc.media.VlcPlayerListManager
+import com.seiko.player.media.vlc.control.VlcPlayerListManager
 import com.seiko.player.vm.PlayerViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,6 +30,7 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
 import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.Medialibrary
+import timber.log.Timber
 import kotlin.math.abs
 
 class VlcVideoPlayerActivity : FragmentActivity()
@@ -145,6 +146,11 @@ class VlcVideoPlayerActivity : FragmentActivity()
         super.onPause()
     }
 
+    override fun onStop() {
+        super.onStop()
+        stop()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -162,23 +168,15 @@ class VlcVideoPlayerActivity : FragmentActivity()
         val intent = intent ?: return
         val param: PlayParam = intent.getParcelableExtra(ARGS_VIDEO_PARAMS) ?: return
 
-        var media = Medialibrary.getInstance().getMedia(param.videoPath)
-        if (media == null) {
-            media = MLServiceLocator.getAbstractMediaWrapper(Uri.parse(param.videoPath))
-        }
-
         // 加载视频标题
-        var videoTitle = param.videoTitle
-        if (videoTitle.isEmpty()) {
-            videoTitle = media.title
-        }
-        bottomControl.playerOverlayTitle.text = videoTitle
+        bottomControl.playerOverlayTitle.text = param.videoTitle
 
         // 加载弹幕
         viewModel.videoParam.value = param
 
+        // 加载视频
         lifecycleScope.launch {
-            player.load(media, this@VlcVideoPlayerActivity)
+            player.load(param, this@VlcVideoPlayerActivity)
         }
     }
 
@@ -238,6 +236,13 @@ class VlcVideoPlayerActivity : FragmentActivity()
     private fun pause() {
         danmakuEngine.pause()
         player.pause()
+    }
+
+    /**
+     * 停止
+     */
+    private fun stop() {
+        player.stop()
     }
 
     /**

@@ -1,10 +1,9 @@
-package com.seiko.player.media.vlc.media
+package com.seiko.player.media.vlc.control
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.seiko.player.data.model.Progress
 import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.interfaces.IMedia
 
 interface IPlayerController {
 

@@ -1,4 +1,4 @@
-package com.seiko.player.media.vlc.media
+package com.seiko.player.media.vlc.control
 
 import android.content.Context
 import android.net.Uri

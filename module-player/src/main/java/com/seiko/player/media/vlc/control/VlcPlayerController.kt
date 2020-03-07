@@ -1,4 +1,4 @@
-package com.seiko.player.media.vlc.media
+package com.seiko.player.media.vlc.control
 
 import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
@@ -10,10 +10,9 @@ import com.seiko.player.data.model.Progress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.libvlc.interfaces.IVLCVout
+import org.videolan.medialibrary.interfaces.Medialibrary
 import timber.log.Timber
-import java.net.URI
 import kotlin.math.abs
 
 class VlcPlayerController(
@@ -84,7 +83,7 @@ class VlcPlayerController(
      * 获取当前视频长度
      */
     override fun getCurrentDuration(): Long {
-        return progress.value?.duration ?: 0
+        return progress.value?.duration ?: 1
     }
 
     /**
@@ -189,7 +188,7 @@ class VlcPlayerController(
     @MainThread
     private fun updateProgress(
         position: Long = progress.value?.position ?: 0,
-        duration: Long = progress.value?.duration ?: 0
+        duration: Long = progress.value?.duration ?: 1
     ) {
         progress.value = progress.value?.apply {
             this.position = position
@@ -214,7 +213,7 @@ class VlcPlayerController(
     @MainThread
     private fun setPlaybackStopped() {
         playbackState = PlaybackStateCompat.STATE_STOPPED
-        updateProgress(0, 0)
+        updateProgress(0, 1)
         lastTime = 0
     }
 

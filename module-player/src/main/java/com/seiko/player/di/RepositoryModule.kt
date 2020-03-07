@@ -5,9 +5,8 @@ import com.seiko.player.data.api.DanDanApiService
 import com.seiko.player.data.comments.DanDanApiRepository
 import com.seiko.player.data.comments.VideoDanmaRepository
 import com.seiko.player.data.comments.VideoMatchRepository
-import com.seiko.player.data.comments.VideoMediaRepository
+import com.seiko.player.data.comments.VideoHistoryRepository
 import com.seiko.player.data.db.PlayerDatabase
-import com.squareup.moshi.Moshi
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -29,6 +28,6 @@ private fun createVideoMatchRepository(database: PlayerDatabase): VideoMatchRepo
     return VideoMatchRepository(database.videoMatchDao())
 }
 
-private fun createVideoMediaRepository(database: PlayerDatabase): VideoMediaRepository {
-    return VideoMediaRepository(database.videoMediaDao())
+private fun createVideoMediaRepository(database: PlayerDatabase): VideoHistoryRepository {
+    return VideoHistoryRepository(database.videoMediaDao())
 }
