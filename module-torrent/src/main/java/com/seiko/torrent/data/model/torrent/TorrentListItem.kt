@@ -16,11 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with LibreTorrent.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.seiko.torrent.data.model
+package com.seiko.torrent.data.model.torrent
 
-import com.seiko.download.torrent.constants.TorrentStateCode
-import com.seiko.download.torrent.model.TorrentSessionStatus
-import com.seiko.download.torrent.model.TorrentTask
+import com.seiko.download.torrent.annotation.TorrentStateCode
 
 /*
  * An item of TorrentListAdapter

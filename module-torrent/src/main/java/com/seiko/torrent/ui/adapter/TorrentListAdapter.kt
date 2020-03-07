@@ -11,8 +11,8 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.seiko.common.ui.adapter.BaseListAdapter
 import com.seiko.torrent.R
 import com.seiko.torrent.util.constants.INFINITY_SYMBOL
-import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.download.torrent.constants.TorrentStateCode
+import com.seiko.torrent.data.model.torrent.TorrentListItem
+import com.seiko.download.torrent.annotation.TorrentStateCode
 import com.seiko.torrent.databinding.TorrentItemListBinding
 import com.seiko.torrent.util.diff.TorrentListItemDiffCallback
 import java.util.concurrent.atomic.AtomicReference

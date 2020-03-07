@@ -12,12 +12,12 @@ import com.seiko.common.data.Result
 import com.seiko.torrent.util.extensions.find
 import com.seiko.torrent.util.extensions.getLeaves
 import com.seiko.torrent.util.extensions.toFileTree
-import com.seiko.torrent.data.model.AddTorrentParams
+import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.ui.add.State
-import com.seiko.download.torrent.model.MagnetInfo
-import com.seiko.download.torrent.model.TorrentMetaInfo
+import com.seiko.torrent.data.model.torrent.MagnetInfo
+import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.domain.BuildTorrentTaskUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.torrent.util.extensions.isMagnet
@@ -112,7 +112,11 @@ class AddTorrentViewModel(
                     is Result.Success -> {
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
-                        updateTorrentInfo(TorrentMetaInfo(source))
+                        updateTorrentInfo(
+                            TorrentMetaInfo(
+                                source
+                            )
+                        )
                     }
                     is Result.Error -> {
                         handleException(result.exception)
@@ -123,7 +127,11 @@ class AddTorrentViewModel(
                 updateState(State.DECODE_TORRENT_FILE)
                 delay(50)
                 source = uri.path!!
-                updateTorrentInfo(TorrentMetaInfo(source))
+                updateTorrentInfo(
+                    TorrentMetaInfo(
+                        source
+                    )
+                )
                 updateState(State.DECODE_TORRENT_COMPLETED)
             }
             URLUtil.isContentUrl(path) -> {
@@ -134,7 +142,11 @@ class AddTorrentViewModel(
                         updateState(State.DECODE_TORRENT_COMPLETED)
 
                         source = result.data
-                        updateTorrentInfo(TorrentMetaInfo(source))
+                        updateTorrentInfo(
+                            TorrentMetaInfo(
+                                source
+                            )
+                        )
                     }
                     is Result.Error -> {
                         handleException(result.exception)

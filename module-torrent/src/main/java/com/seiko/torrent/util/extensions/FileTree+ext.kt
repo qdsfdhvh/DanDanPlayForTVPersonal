@@ -3,7 +3,7 @@ package com.seiko.torrent.util.extensions
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.data.model.filetree.FileNode
 import com.seiko.torrent.data.model.filetree.FileTree
-import com.seiko.download.torrent.model.BencodeFileItem
+import com.seiko.torrent.data.model.torrent.BencodeFileItem
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList

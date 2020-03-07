@@ -4,7 +4,9 @@ import org.libtorrent4j.Priority
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * 种子下载任务
+ */
 open class TorrentTask(
     open var hash: String = "",
     open var source: String = "",

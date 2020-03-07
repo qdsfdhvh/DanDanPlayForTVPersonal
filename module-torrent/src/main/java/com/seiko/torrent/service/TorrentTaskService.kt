@@ -6,9 +6,10 @@ import android.content.Intent
 import com.seiko.common.eventbus.EventBusScope
 import com.seiko.common.util.toast.toast
 import com.seiko.common.data.Result
-import com.seiko.torrent.data.model.AddTorrentParams
+import com.seiko.download.torrent.TorrentEngineOptions
+import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.PostEvent
-import com.seiko.torrent.data.model.toTask
+import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
@@ -18,6 +19,7 @@ import kotlin.coroutines.CoroutineContext
 class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
 
     companion object {
+        private const val ACTION_LOAD_TRACKERS = "ACTION_LOAD_TRACKERS"
         private const val ACTION_ADD_TORRENT = "ACTION_ADD_TORRENT"
         private const val ACTION_DEL_TORRENT = "ACTION_DEL_TORRENT"
         private const val ACTION_SHUT_DOWN = "ACTION_SHUT_DOWN"
@@ -25,6 +27,15 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
         private const val EXTRA_ADD_TORRENT_PARAMS = "EXTRA_ADD_TORRENT_PARAMS"
         private const val EXTRA_DEL_HASH = "EXTRA_DEL_HASH"
         private const val EXTRA_WITH_FILE = "EXTRA_WITH_FILE"
+
+        /**
+         * 加载Tracker跟踪器
+         */
+        fun loadTrackers(context: Context) {
+            val intent = Intent(context, TorrentTaskService::class.java)
+            intent.action = ACTION_LOAD_TRACKERS
+            context.startService(intent)
+        }
 
         /**
          * 添加种子任务
@@ -71,6 +82,9 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
     override fun onHandleIntent(intent: Intent?) {
         if (intent == null) return
         when(intent.action) {
+            ACTION_LOAD_TRACKERS -> {
+                loadTrackers()
+            }
             ACTION_ADD_TORRENT -> {
                 if (intent.hasExtra(EXTRA_ADD_TORRENT_PARAMS)) {
                     val params: AddTorrentParams = intent.getParcelableExtra(EXTRA_ADD_TORRENT_PARAMS)!!
@@ -93,10 +107,22 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
     private val downloader: Downloader by inject()
 
     /**
+     * 加载Tracker跟踪器
+     */
+    private fun loadTrackers() = runBlocking(coroutineContext) {
+        val options: TorrentEngineOptions by inject()
+        val getTorrentTrackers: GetTorrentTrackersUseCase by inject()
+        when(val result = getTorrentTrackers.invoke()) {
+            is Result.Success -> options.trackers.addAll(result.data)
+            is Result.Error -> Timber.e(result.exception)
+        }
+    }
+
+    /**
      * 添加 种子任务
      */
     private fun addTorrent(params: AddTorrentParams) = runBlocking(coroutineContext) {
-        val task = params.toTask()
+        val task = params.entity
         when(val result = downloader.addTorrent(task, params.fromMagnet)) {
             is Result.Success -> {
                 EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))

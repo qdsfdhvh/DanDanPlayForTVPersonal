@@ -1,4 +1,4 @@
-package com.seiko.download.torrent.model
+package com.seiko.torrent.data.model.torrent
 
 import org.libtorrent4j.FileStorage
 import org.libtorrent4j.TorrentInfo

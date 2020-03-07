@@ -1,6 +1,6 @@
 package com.seiko.download.torrent.extensions
 
-import com.seiko.download.torrent.constants.TorrentStateCode
+import com.seiko.download.torrent.annotation.TorrentStateCode
 import org.libtorrent4j.TorrentFlags
 import org.libtorrent4j.TorrentHandle
 import org.libtorrent4j.TorrentStatus
@@ -13,7 +13,7 @@ internal fun TorrentStatus.isPaused(): Boolean {
 /**
  * 当前状态
  */
-//@TorrentStateCode
+@TorrentStateCode
 internal fun TorrentHandle.getStateCode(): Int {
     val status = status() ?: return TorrentStateCode.ERROR
     val isPaused = status().isPaused()

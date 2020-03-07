@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.widget.PopupWindowCompat
-import com.seiko.download.torrent.constants.TorrentStateCode
+import com.seiko.download.torrent.annotation.TorrentStateCode
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentPopListBinding
-import com.seiko.torrent.data.model.TorrentListItem
+import com.seiko.torrent.data.model.torrent.TorrentListItem
 
 class TorrentListPopWindow(context: Context, item: TorrentListItem) : PopupWindow(context) {
 

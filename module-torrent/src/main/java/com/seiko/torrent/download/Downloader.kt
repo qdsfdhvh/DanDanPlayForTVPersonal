@@ -1,10 +1,10 @@
 package com.seiko.torrent.download
 
 import com.seiko.common.data.Result
-import com.seiko.download.torrent.model.MagnetInfo
-import com.seiko.download.torrent.model.TorrentMetaInfo
-import com.seiko.download.torrent.model.TorrentTask
-import com.seiko.torrent.data.model.TorrentListItem
+import com.seiko.torrent.data.db.TorrentEntity
+import com.seiko.torrent.data.model.torrent.MagnetInfo
+import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
+import com.seiko.torrent.data.model.torrent.TorrentListItem
 import kotlinx.coroutines.flow.Flow
 
 interface Downloader {
@@ -12,7 +12,7 @@ interface Downloader {
     /**
      * 重启已有的种子任务
      */
-    fun restoreDownloads(tasks: Collection<TorrentTask>)
+    fun restoreDownloads(tasks: Collection<TorrentEntity>)
 
     /**
      * 解析磁力
@@ -29,7 +29,7 @@ interface Downloader {
     /**
      * 添加种子
      */
-    suspend fun addTorrent(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean>
+    suspend fun addTorrent(task: TorrentEntity, isFromMagnet: Boolean): Result<Boolean>
 
     /**
      * 删除种子任务

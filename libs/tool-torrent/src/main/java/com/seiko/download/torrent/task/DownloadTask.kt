@@ -1,24 +1,20 @@
 package com.seiko.download.torrent.task
 
 import android.util.Log
-import com.seiko.download.torrent.constants.SAVE_RESUME_SYNC_TIME
 import com.seiko.download.torrent.extensions.isPaused
-import com.seiko.download.torrent.model.TorrentSessionStatus
+import com.seiko.download.torrent.model.TorrentStatus
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.download.torrent.utils.*
 import org.libtorrent4j.*
 import java.io.File
 import kotlin.collections.HashSet
 
-/**
- * 待移除
- */
-class DownloadTask(
-    val torrentHandle: TorrentHandle,
-    var task: TorrentTask
-) {
+class DownloadTask(val torrentHandle: TorrentHandle, var task: TorrentTask) {
+
     companion object {
         private const val TAG = "DownloadTask"
+
+        private const val SAVE_RESUME_SYNC_TIME = 10000 // ms
     }
 
     private var lastSaveResumeTime = 0L
@@ -139,7 +135,7 @@ class DownloadTask(
 
     val isPaused: Boolean get() = torrentHandle.status(true).isPaused()
 
-    val status: TorrentSessionStatus get() = TorrentSessionStatus.createInstance(task, torrentHandle)
+    val status: TorrentStatus get() = TorrentStatus.createInstance(task, torrentHandle)
 
     val torrentInfo: TorrentInfo? get() = torrentHandle.torrentFile()
 

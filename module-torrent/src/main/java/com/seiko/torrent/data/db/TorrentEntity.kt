@@ -1,6 +1,8 @@
 package com.seiko.torrent.data.db
 
+import android.os.Parcelable
 import androidx.room.*
+import kotlinx.android.parcel.Parcelize
 import org.libtorrent4j.Priority
 
 @Entity(
@@ -9,6 +11,7 @@ import org.libtorrent4j.Priority
         Index(value = ["hash"], unique = true)  // 创建索引，键值唯一
     ]
 )
+@Parcelize
 data class TorrentEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,
@@ -28,4 +31,4 @@ data class TorrentEntity(
 
     var addedDate: Long = 0,
     var error: String = ""
-)
+) : Parcelable

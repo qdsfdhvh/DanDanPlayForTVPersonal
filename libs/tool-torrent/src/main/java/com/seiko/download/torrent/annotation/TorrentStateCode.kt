@@ -1,4 +1,4 @@
-package com.seiko.download.torrent.constants
+package com.seiko.download.torrent.annotation
 
 import androidx.annotation.IntDef
 

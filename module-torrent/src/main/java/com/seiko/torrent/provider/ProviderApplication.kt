@@ -3,6 +3,7 @@ package com.seiko.torrent.provider
 import android.app.Application
 import com.seiko.common.provider.IProviderApplication
 import com.seiko.torrent.di.*
+import com.seiko.torrent.service.TorrentTaskService
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -24,6 +25,8 @@ class ProviderApplication : IProviderApplication {
             // viewModel
             viewModelModule
         ))
+
+        TorrentTaskService.loadTrackers(application)
     }
 
     override fun onTerminate() {

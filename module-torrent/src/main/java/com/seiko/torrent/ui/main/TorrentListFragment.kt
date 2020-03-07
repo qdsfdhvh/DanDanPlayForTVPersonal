@@ -12,7 +12,7 @@ import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentListBinding
-import com.seiko.torrent.data.model.TorrentListItem
+import com.seiko.torrent.data.model.torrent.TorrentListItem
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.vm.MainViewModel
@@ -65,7 +65,7 @@ class TorrentListFragment : Fragment()
     override fun onStart() {
         super.onStart()
         Timber.tag("Navigator").d("TorrentListFragment - onStart")
-        viewModel.loadData(false)
+//        viewModel.loadData(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

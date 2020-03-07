@@ -1,6 +1,5 @@
 package com.seiko.download.torrent.extensions
 
-import com.seiko.download.torrent.TorrentEngine
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 

@@ -9,6 +9,7 @@ import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 
 class DownloadTorrentWithNetUseCase : KoinComponent {
@@ -30,7 +31,11 @@ class DownloadTorrentWithNetUseCase : KoinComponent {
         val inputStream = (downloadResult as Result.Success).data
 
         val contentTemp = File(tempDir, UUID.randomUUID().toString() + ".torrent")
-        contentTemp.writeInputStream(inputStream)
+        try {
+            contentTemp.writeInputStream(inputStream)
+        } catch (e: IOException) {
+            return Result.Error(e)
+        }
         if (!contentTemp.exists()) {
             return Result.Error(IllegalArgumentException("Unknown path to the torrent file"))
         }

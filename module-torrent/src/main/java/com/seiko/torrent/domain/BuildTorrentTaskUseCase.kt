@@ -1,8 +1,9 @@
 package com.seiko.torrent.domain
 
 import com.seiko.common.data.Result
-import com.seiko.download.torrent.model.TorrentMetaInfo
-import com.seiko.torrent.data.model.AddTorrentParams
+import com.seiko.torrent.data.db.TorrentEntity
+import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
+import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import org.koin.core.KoinComponent
 import org.libtorrent4j.Priority
 
@@ -34,14 +35,18 @@ class BuildTorrentTaskUseCase : KoinComponent {
         }
 
         val params = AddTorrentParams(
-            source = source,
-            fromMagnet = fromMagnet,
-            sha1hash = info.sha1Hash,
-            name = name,
-            filePriorities = priorities,
-            pathToDownload = downloadPath,
-            sequentialDownload = isSequentialDownload,
-            addPaused = !autoStart)
+            entity = TorrentEntity(
+                source = source,
+                hash = info.sha1Hash,
+                name = name,
+                priorityList = priorities,
+                downloadPath = downloadPath,
+                sequentialDownload = isSequentialDownload,
+                paused = !autoStart,
+                addedDate = System.currentTimeMillis()
+            ),
+            fromMagnet = fromMagnet
+        )
         return Result.Success(params)
     }
 }

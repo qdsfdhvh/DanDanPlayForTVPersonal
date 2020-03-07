@@ -5,13 +5,14 @@ import com.seiko.common.data.Result
 import com.seiko.download.torrent.TorrentEngine
 import com.seiko.download.torrent.TorrentEngineCallback
 import com.seiko.download.torrent.TorrentEngineOptions
-import com.seiko.download.torrent.model.MagnetInfo
-import com.seiko.download.torrent.model.TorrentMetaInfo
-import com.seiko.download.torrent.model.TorrentSessionStatus
+import com.seiko.download.torrent.annotation.TorrentStateCode
+import com.seiko.torrent.data.model.torrent.MagnetInfo
+import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
+import com.seiko.download.torrent.model.TorrentStatus
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.data.comments.TorrentRepository
-import com.seiko.torrent.data.model.TorrentListItem
-import com.seiko.torrent.domain.GetTorrentTrackersUseCase
+import com.seiko.torrent.data.db.TorrentEntity
+import com.seiko.torrent.data.model.torrent.TorrentListItem
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
@@ -31,9 +32,8 @@ private typealias MagnetParseResultListener = (TorrentMetaInfo) -> Unit
 class DownloadManager(
     private val options: TorrentEngineOptions,
     private val torrentRepo: TorrentRepository,
-    private val getTorrentInfoFile: GetTorrentInfoFileUseCase,
-    private val getTorrentTrackers: GetTorrentTrackersUseCase
-) : Downloader, TorrentEngineCallback {
+    private val getTorrentInfoFile: GetTorrentInfoFileUseCase
+) : Downloader {
 
     companion object {
         private const val TAG = "DownloadManager"
@@ -63,8 +63,8 @@ class DownloadManager(
     /**
      * 所有的种子下载状态
      */
-    private val statusMap = HashMap<String, TorrentSessionStatus>()
-    private lateinit var channel: BroadcastChannel<Map<String, TorrentSessionStatus>>
+    private val statusMap = HashMap<String, TorrentStatus>()
+    private lateinit var channel: BroadcastChannel<Map<String, TorrentStatus>>
 
     /**
      * 启动引擎
@@ -74,7 +74,7 @@ class DownloadManager(
             downloadScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
             channel = ConflatedBroadcastChannel()
             torrentEngine = TorrentEngine(options)
-            torrentEngine.setCallback(this)
+            torrentEngine.setCallback(torrentEntityCallback)
             torrentEngine.start()
         }
     }
@@ -104,18 +104,18 @@ class DownloadManager(
     /**
      * 重启已有的种子任务
      */
-    override fun restoreDownloads(tasks: Collection<TorrentTask>) {
+    override fun restoreDownloads(tasks: Collection<TorrentEntity>) {
         if (tasks.isEmpty()) return
 
-        val newTask = tasks.filter { !statusMap.contains(it.hash) }
+        val newTask = tasks.filter { !statusMap.contains(it.hash) }.map { it.toTask() }
         if (newTask.isEmpty()) return
 
         startEngine()
 
         downloadScope.launch {
-            val maps = HashMap<String, TorrentSessionStatus>(newTask.size)
+            val maps = HashMap<String, TorrentStatus>(newTask.size)
             for (task in newTask) {
-                maps[task.hash] = TorrentSessionStatus.createInstance(task)
+                maps[task.hash] = task.toStatus()
             }
             torrentEngine.restoreDownloads(newTask)
             statusMap.putAll(maps)
@@ -125,7 +125,7 @@ class DownloadManager(
     /**
      * 下载种子
      */
-    override suspend fun addTorrent(task: TorrentTask, isFromMagnet: Boolean): Result<Boolean> {
+    override suspend fun addTorrent(task: TorrentEntity, isFromMagnet: Boolean): Result<Boolean> {
         startEngine()
 
         when {
@@ -158,7 +158,7 @@ class DownloadManager(
 
                     // 数据库存在此种子信息，尝试并入现有任务
                     if (torrentRepo.exitTorrent(task.hash)) {
-                        torrentEngine.mergeTorrent(task, bencode)
+                        torrentEngine.mergeTorrent(task.toTask(), bencode)
                     }
 
                     // 写入or更新 数据库
@@ -170,7 +170,7 @@ class DownloadManager(
 
                 // 数据库存在此种子信息，尝试并入现有任务
                 if (torrentRepo.exitTorrent(task.hash)) {
-                    torrentEngine.mergeTorrent(task)
+                    torrentEngine.mergeTorrent(task.toTask())
                 }
 
                 // 写入 数据库种子信息
@@ -186,7 +186,7 @@ class DownloadManager(
             return Result.Error(Exception("Task priorityList is null or empty"))
         }
 
-        torrentEngine.download(task)
+        torrentEngine.download(task.toTask())
         return Result.Success(true)
     }
 
@@ -256,30 +256,15 @@ class DownloadManager(
     override fun getTorrentStatusList(): Flow<List<TorrentListItem>> {
         startEngine()
 
-//        val updateTime = AtomicLong(0)
         return channel.asFlow()
-//            .filter {
-//                val current = System.currentTimeMillis()
-//                return@filter if (current - updateTime.get() > 400) {
-//                    updateTime.set(current)
-//                    true
-//                } else false
-//            }
-            .map { statusMap ->
-                statusMap.map { it.value.toTorrentListItem() }
-            }
+            .debounce(200)
+            .map { statusMap -> statusMap.map { it.value.toTorrentListItem() } }
     }
 
-    override fun onEngineStarted() {
-        downloadScope.launch {
-            when(val result = getTorrentTrackers.invoke()) {
-                is Result.Success -> options.trackers.addAll(result.data)
-                is Result.Error -> Timber.tag(TAG).e(result.exception)
-            }
-        }
-    }
-
-    private suspend fun updateUI(hash: String, status: TorrentSessionStatus) {
+    /**
+     * 更新UI
+     */
+    private suspend fun updateUI(hash: String, status: TorrentStatus) {
         withContext(Dispatchers.Main) {
             statusMap[hash] = status
             channel.offer(statusMap)
@@ -287,133 +272,142 @@ class DownloadManager(
     }
 
     /**
-     * 种子任务已添加
+     * 硬气回调
      */
-    override fun onTorrentAdded(hash: String) {
-        downloadScope.launch {
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            updateUI(hash, downloadTask.status)
+    private val torrentEntityCallback = object : TorrentEngineCallback {
+        override fun onEngineStarted() {
+
         }
-    }
 
-    /**
-     * 种子任务已删除
-     */
-    override fun onTorrentRemoved(hash: String) {
-        downloadScope.launch(Dispatchers.Main) {
-            statusMap.remove(hash)
-            channel.offer(statusMap)
-        }
-    }
-
-    /**
-     * 种子任务状态变化
-     */
-    override fun onTorrentStateChanged(hash: String) {
-        downloadScope.launch {
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            updateUI(hash, downloadTask.status)
-        }
-    }
-
-    /**
-     * 种子任务已完成
-     */
-    override fun onTorrentFinished(hash: String) {
-        downloadScope.launch {
-            val task = torrentRepo.getTorrent(hash) ?: return@launch
-            task.finished = true
-            torrentRepo.insertTorrent(task)
-
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task
-            updateUI(hash, downloadTask.status)
-        }
-    }
-
-    /**
-     * 种子任务已暂停
-     */
-    override fun onTorrentPaused(hash: String) {
-        downloadScope.launch {
-            val task = torrentRepo.getTorrent(hash) ?: return@launch
-            task.paused = true
-            torrentRepo.insertTorrent(task)
-
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task
-            updateUI(hash, downloadTask.status)
-        }
-    }
-
-    /**
-     * 种子任务已恢复
-     */
-    override fun onTorrentResumed(hash: String) {
-        Timber.tag(TAG).i("onTorrentResumed hash: $hash")
-        downloadScope.launch {
-            val task = torrentRepo.getTorrent(hash) ?: return@launch
-            task.paused = false
-            task.error = ""
-            torrentRepo.insertTorrent(task)
-
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task
-            updateUI(hash, downloadTask.status)
-        }
-    }
-
-    /**
-     * 种子任务异常
-     */
-    override fun onTorrentError(hash: String, errorMsg: String) {
-        Timber.tag(TAG).e("Torrent Error $hash: $errorMsg")
-        downloadScope.launch {
-            val task = torrentRepo.getTorrent(hash) ?: return@launch
-            task.error = errorMsg
-            torrentRepo.insertTorrent(task)
-
-            val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
-            downloadTask.task = task
-            downloadTask.pause()
-            updateUI(hash, downloadTask.status)
-        }
-    }
-
-    override fun onMagnetLoaded(hash: String, bencode: ByteArray) {
-        Timber.d("onMagnetLoaded: $hash")
-        downloadScope.launch {
-            val info = try {
-                TorrentMetaInfo(bencode)
-            } catch (e: IOException) {
-                Timber.tag(TAG).e(e)
-                return@launch
-            }
-            withContext(Dispatchers.Main) {
-                magnetParseResultListener?.invoke(info)
+        /**
+         * 种子任务已添加
+         */
+        override fun onTorrentAdded(hash: String) {
+            downloadScope.launch {
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                updateUI(hash, downloadTask.status)
             }
         }
-    }
 
-    override fun onTorrentMetadataLoaded(hash: String, error: Exception?) {
-        Timber.tag(TAG).w("Torrent Metadata Loaded ($hash), error = ${error?.message}")
-    }
+        /**
+         * 种子任务已删除
+         */
+        override fun onTorrentRemoved(hash: String) {
+            downloadScope.launch(Dispatchers.Main) {
+                statusMap.remove(hash)
+                channel.offer(statusMap)
+            }
+        }
 
-    override fun onRestoreSessionError(hash: String) {
-        Timber.tag(TAG).e("Restore Session Error: $hash")
-    }
+        /**
+         * 种子任务状态变化
+         */
+        override fun onTorrentStateChanged(hash: String) {
+            downloadScope.launch {
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                updateUI(hash, downloadTask.status)
+            }
+        }
 
-    override fun onSessionError(errorMsg: String) {
-        Timber.tag(TAG).e(errorMsg)
-    }
+        /**
+         * 种子任务已完成
+         */
+        override fun onTorrentFinished(hash: String) {
+            downloadScope.launch {
+                val task = torrentRepo.getTorrent(hash) ?: return@launch
+                task.finished = true
+                torrentRepo.insertTorrent(task)
 
-    override fun onNatError(errorMsg: String) {
-        Timber.tag(TAG).e(errorMsg)
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                downloadTask.task = task.toTask()
+                updateUI(hash, downloadTask.status)
+            }
+        }
+
+        /**
+         * 种子任务已暂停
+         */
+        override fun onTorrentPaused(hash: String) {
+            downloadScope.launch {
+                val task = torrentRepo.getTorrent(hash) ?: return@launch
+                task.paused = true
+                torrentRepo.insertTorrent(task)
+
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                downloadTask.task = task.toTask()
+                updateUI(hash, downloadTask.status)
+            }
+        }
+
+        /**
+         * 种子任务已恢复
+         */
+        override fun onTorrentResumed(hash: String) {
+            Timber.tag(TAG).i("onTorrentResumed hash: $hash")
+            downloadScope.launch {
+                val task = torrentRepo.getTorrent(hash) ?: return@launch
+                task.paused = false
+                task.error = ""
+                torrentRepo.insertTorrent(task)
+
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                downloadTask.task = task.toTask()
+                updateUI(hash, downloadTask.status)
+            }
+        }
+
+        /**
+         * 种子任务异常
+         */
+        override fun onTorrentError(hash: String, errorMsg: String) {
+            Timber.tag(TAG).e("Torrent Error $hash: $errorMsg")
+            downloadScope.launch {
+                val task = torrentRepo.getTorrent(hash) ?: return@launch
+                task.error = errorMsg
+                torrentRepo.insertTorrent(task)
+
+                val downloadTask = torrentEngine.getDownloadTask(hash) ?: return@launch
+                downloadTask.task = task.toTask()
+                downloadTask.pause()
+                updateUI(hash, downloadTask.status)
+            }
+        }
+
+        override fun onMagnetLoaded(hash: String, bencode: ByteArray) {
+            Timber.d("onMagnetLoaded: $hash")
+            downloadScope.launch {
+                val info = try {
+                    TorrentMetaInfo(bencode)
+                } catch (e: IOException) {
+                    Timber.tag(TAG).e(e)
+                    return@launch
+                }
+                withContext(Dispatchers.Main) {
+                    magnetParseResultListener?.invoke(info)
+                }
+            }
+        }
+
+        override fun onTorrentMetadataLoaded(hash: String, error: Exception?) {
+            Timber.tag(TAG).w("Torrent Metadata Loaded ($hash), error = ${error?.message}")
+        }
+
+        override fun onRestoreSessionError(hash: String) {
+            Timber.tag(TAG).e("Restore Session Error: $hash")
+        }
+
+        override fun onSessionError(errorMsg: String) {
+            Timber.tag(TAG).e(errorMsg)
+        }
+
+        override fun onNatError(errorMsg: String) {
+            Timber.tag(TAG).e(errorMsg)
+        }
     }
 
 }
 
-private fun TorrentSessionStatus.toTorrentListItem(): TorrentListItem {
+private fun TorrentStatus.toTorrentListItem(): TorrentListItem {
     return TorrentListItem(
         hash = hash,
         title = title,
@@ -430,7 +424,8 @@ private fun TorrentSessionStatus.toTorrentListItem(): TorrentListItem {
         uploadSpeed = uploadRate,
         ETA = eta,
         totalPeers = totalPeers,
-        peers = connectPeers)
+        peers = connectPeers
+    )
 }
 
 private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
@@ -441,5 +436,35 @@ private fun AddTorrentParams.toMagnetInfo(source: String): MagnetInfo {
         sha1hash = hash,
         name = if (name.isEmpty()) hash else name,
         filePriorities = filePriorities()?.toList() ?: emptyList()
+    )
+}
+
+private fun TorrentEntity.toTask(): TorrentTask {
+    return TorrentTask(
+        hash = hash,
+        source = source,
+        downloadPath = downloadPath,
+
+        name = name,
+        priorityList = priorityList,
+
+        sequentialDownload = sequentialDownload,
+        paused = paused,
+        finished = finished,
+        downloadingMetadata = downloadingMetadata,
+
+        addedDate = addedDate,
+        error = error
+    )
+}
+
+private fun TorrentTask.toStatus(): TorrentStatus {
+    return TorrentStatus(
+        hash = hash,
+        title = name,
+        downloadPath = downloadPath,
+        dateAdded = addedDate,
+        error = error,
+        state = TorrentStateCode.UNKNOWN
     )
 }

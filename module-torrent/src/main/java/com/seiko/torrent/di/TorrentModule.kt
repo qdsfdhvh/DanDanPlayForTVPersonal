@@ -1,12 +1,10 @@
 package com.seiko.torrent.di
 
-import android.content.ContentResolver
 import android.content.Context
 import android.os.Environment
 import com.seiko.download.torrent.TorrentEngineOptions
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.domain.GetTorrentInfoFileUseCase
-import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import com.seiko.torrent.download.DownloadManager
 import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.util.constants.TORRENT_CONFIG_DIR
@@ -30,7 +28,7 @@ internal val torrentModule = module {
     // Torrent引擎配置参数
     single { TorrentEngineOptions(get(named(TORRENT_DATA_DIR))) }
     // Torrent下载
-    single { createDownloader(get(), get(), get(), get()) }
+    single { createDownloader(get(), get(), get()) }
 }
 
 /**
@@ -63,11 +61,7 @@ private fun createTorrentConfigDir(dataDir: File): File {
 
 private fun createDownloader(options: TorrentEngineOptions,
                              torrentRepo: TorrentRepository,
-                             getTorrentInfoFile: GetTorrentInfoFileUseCase,
-                             getTorrentTrackers: GetTorrentTrackersUseCase
+                             getTorrentInfoFile: GetTorrentInfoFileUseCase
 ): Downloader {
-    return DownloadManager(options,
-        torrentRepo,
-        getTorrentInfoFile,
-        getTorrentTrackers)
+    return DownloadManager(options, torrentRepo, getTorrentInfoFile)
 }

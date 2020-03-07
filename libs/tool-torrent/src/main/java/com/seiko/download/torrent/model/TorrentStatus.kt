@@ -1,10 +1,13 @@
 package com.seiko.download.torrent.model
 
-import com.seiko.download.torrent.constants.TorrentStateCode
+import com.seiko.download.torrent.annotation.TorrentStateCode
 import com.seiko.download.torrent.extensions.*
 import org.libtorrent4j.TorrentHandle
 
-class TorrentSessionStatus(
+/**
+ * 种子下载状态
+ */
+class TorrentStatus(
     val hash: String,
     val title: String,
     val downloadPath: String,
@@ -27,20 +30,9 @@ class TorrentSessionStatus(
 
     companion object {
         fun createInstance(
-            task: TorrentTask
-        ): TorrentSessionStatus = TorrentSessionStatus(
-            hash = task.hash,
-            title = task.name,
-            downloadPath = task.downloadPath,
-            dateAdded = task.addedDate,
-            error = task.error,
-            state = TorrentStateCode.UNKNOWN
-        )
-
-        fun createInstance(
             task: TorrentTask,
             torrentHandle: TorrentHandle
-        ): TorrentSessionStatus = TorrentSessionStatus(
+        ) : TorrentStatus = TorrentStatus(
             hash = task.hash,
             title = task.name,
             downloadPath = task.downloadPath,

@@ -1,4 +1,4 @@
-package com.seiko.download.torrent.model
+package com.seiko.torrent.data.model.torrent
 
 import android.os.Parcelable
 import android.text.TextUtils

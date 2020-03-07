@@ -11,7 +11,4 @@ dependencies {
     implementation "org.libtorrent4j:libtorrent4j-android-arm64:${libtorrent4j}"
     implementation "org.libtorrent4j:libtorrent4j-android-x86:${libtorrent4j}"
     implementation "org.libtorrent4j:libtorrent4j-android-x86_64:${libtorrent4j}"
-
-    // Buffer
-    api "com.squareup.okio:okio:2.4.3"
 }

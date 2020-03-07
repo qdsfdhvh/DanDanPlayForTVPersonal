@@ -16,6 +16,7 @@ import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.R
+import com.seiko.torrent.data.db.TorrentEntity
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.ui.add.AddTorrentFragment
 import org.greenrobot.eventbus.Subscribe
@@ -93,7 +94,7 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
         }
     }
 
-    private fun setTorrentResult(task: TorrentTask) {
+    private fun setTorrentResult(task: TorrentEntity) {
         val data = Intent()
         data.putExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, true)
         data.putExtra(Routes.Torrent.RESULT_KEY_ADD_HASH, task.hash)
