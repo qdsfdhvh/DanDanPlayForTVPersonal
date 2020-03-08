@@ -30,6 +30,7 @@ internal class DanDanApiRepository(
         return apiDbCacheCall(
             key = API_KEY_SERIES_BANGUMI_LIST,
             timeOut = ONE_DAY,
+            isEffectCache = { it.bangumiList.isNotEmpty() },
             request = { api.getBangumiList() },
             success = { response -> Result.Success(response.bangumiList) }
         )
@@ -42,6 +43,7 @@ internal class DanDanApiRepository(
         return apiDbCacheCall(
             key = API_KEY_BANGUMI_SEASON,
             timeOut = ONE_WEEK,
+            isEffectCache = { it.seasons.isNotEmpty() },
             request = { api.getBangumiSeasons() },
             success = { response -> Result.Success(response.seasons) }
         )
@@ -56,6 +58,7 @@ internal class DanDanApiRepository(
         return apiDbCacheCall(
             key = "${API_KEY_BANGUMI_WITH_SEASON}}_${season.year}_${season.month}",
             timeOut = ONE_WEEK,
+            isEffectCache = { it.bangumiList.isNotEmpty() },
             request = { api.getBangumiListWithSeason(season.year, season.month) },
             success = { response -> Result.Success(response.bangumiList) }
         )
@@ -79,12 +82,14 @@ internal class DanDanApiRepository(
      */
     private suspend inline fun <reified T : JsonResultResponse, R: Any> apiDbCacheCall(
         key: String, timeOut: Long,
+        noinline isEffectCache: (T) -> Boolean = { true },
         noinline request: suspend () -> T,
         noinline success: (T) -> Result<R>
     ): Result<R> {
         return apiCacheCall(
             isOutDate = { httpDbCache.isOutData(key, timeOut) },
             loadCache = { httpDbCache.getHttpResponse(key, T::class.java) },
+            isEffectCache = isEffectCache,
             request = request,
             success = { response ->
                 httpDbCache.saveHttpResponse(key, response, T::class.java)
