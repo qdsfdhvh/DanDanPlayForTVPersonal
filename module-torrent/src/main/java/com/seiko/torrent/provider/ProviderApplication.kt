@@ -29,9 +29,7 @@ class ProviderApplication : IProviderApplication {
             viewModelModule
         ))
 
-        GlobalScope.launch(Dispatchers.IO) {
-            TorrentTaskService.loadTrackers(application)
-        }
+        TorrentTaskService.loadTrackers(application)
     }
 
     override fun onTerminate() {

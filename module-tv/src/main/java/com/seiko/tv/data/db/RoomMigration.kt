@@ -17,4 +17,11 @@ object RoomMigration {
             database.execSQL("ALTER TABLE BangumiDetails ADD COLUMN `createDate` INTEGER DEFAULT 0 NOT NULL")
         }
     }
+
+    val MIGRATION_3_4 get() = object : Migration(3, 4) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS HttpDbCache_table (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `key` TEXT NOT NULL, `body` TEXT NOT NULL, `updateTime` INTEGER NOT NULL, `createTime` INTEGER NOT NULL)")
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_HttpDbCache_table_key` ON HttpDbCache_table (`key`)")
+        }
+    }
 }

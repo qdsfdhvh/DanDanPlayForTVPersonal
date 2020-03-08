@@ -39,9 +39,7 @@ class ProviderApplication : IProviderApplication {
         FactoryManager.registerFactory(IMediaFactory.factoryId, MediaFactory())
         FactoryManager.registerFactory(ILibVLCFactory.factoryId, LibVLCFactory())
 
-        GlobalScope.launch(Dispatchers.IO) {
-            MediaParsingIntentService.startMediaLibrary(application, upgrade = true)
-        }
+        MediaParsingIntentService.startMediaLibrary(application, upgrade = true)
     }
 
     override fun onTerminate() {
