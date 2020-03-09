@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 
 /**
  * hash与动漫or动漫集数关联表
@@ -17,6 +18,7 @@ import androidx.room.PrimaryKey
         Index(value = ["animeId", "episodeId"], unique = false)
     ]
 )
+@JsonClass(generateAdapter = true)
 data class EpisodeTorrentEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,

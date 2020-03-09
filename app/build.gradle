@@ -1,9 +1,6 @@
-//apply plugin: 'com.android.application'
-apply plugin: 'com.gfd.comswitch'
-
-//apply from: rootProject.file('releaseinfo.gradle')
-apply from: rootProject.file('libbase.gradle')
-//apply from: rootProject.file('libclean.gradle')
+ext.mainApp = true  // 设置为true，表示此module为主app module，一直以application方式编译
+apply from: rootProject.file('app-cc-setting.gradle')
+apply from: rootProject.file('app-common-build.gradle')
 
 kapt {
     arguments {
@@ -30,9 +27,9 @@ android {
         }
     }
     defaultConfig {
-        applicationId rootProject.ext.android.applicationId
-        versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        applicationId Build.applicationId
+        versionCode Build.versionCode
+        versionName Build.versionName
     }
     buildTypes {
         debug {
@@ -68,11 +65,6 @@ android {
         pickFirst 'lib/x86_64/libc++_shared.so'
     }
     splits {
-//        density {
-//            enable = true
-//            reset()
-//            include("mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi")
-//        }
         abi {
             enable = true
             reset()
@@ -83,8 +75,9 @@ android {
 }
 
 dependencies {
-    implementation project(':common')
-
+    addComponent("module-player")
+    addComponent("module-torrent")
+    addComponent("module-tv")
     // Database Debug
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 

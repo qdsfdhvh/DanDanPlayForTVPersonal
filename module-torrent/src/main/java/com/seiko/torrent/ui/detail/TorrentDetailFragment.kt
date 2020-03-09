@@ -17,7 +17,7 @@ import com.seiko.torrent.databinding.TorrentFragmentDetailBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 private const val NUM_FRAGMENTS = 2
 

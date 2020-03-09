@@ -1,5 +1,7 @@
 package com.seiko.tv.data.model.api
 
+import com.squareup.moshi.JsonClass
+
 
 //SearchAnimeDetails {
 //    animeId (integer): 作品ID ,
@@ -12,6 +14,7 @@ package com.seiko.tv.data.model.api
 //    rating (number): 此作品的综合评分（0-10） ,
 //    isFavorited (boolean): 当前用户是否已关注此作品
 //}
+@JsonClass(generateAdapter = true)
 data class SearchAnimeDetails(
     var animeId: Long = 0,
     var animeTitle: String = "",

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: rootProject.file('libbase.gradle')
+apply from: rootProject.file('app-common-build.gradle')
 
 android {
     kotlinOptions {
@@ -8,12 +8,12 @@ android {
 }
 
 dependencies {
-    implementation dependence.libAnnotation
+    implementation Deps.support_annotation
     // IjkPlayer Java
-    implementation dependence.libIjkplayer
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:0.8.8"
     // 编码检测
     implementation 'com.github.albfernandez:juniversalchardet:2.0.2'
     // 协程
-    implementation dependence.libCoroutinesCore
+    implementation Deps.kotlin_coroutines
 }
 

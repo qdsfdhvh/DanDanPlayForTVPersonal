@@ -1,43 +1,50 @@
-//apply plugin: 'com.android.library'
-apply plugin: 'com.gfd.comswitch'
-
-apply from:rootProject.file('libbase.gradle')
+apply plugin: 'com.android.library'
+apply from:rootProject.file('app-common-build.gradle')
 
 dependencies {
     // Support
-    api 'androidx.multidex:multidex:2.0.1'
-//    api dependence.libAppCompat
-    api dependence.libConstraintlayout
-    api dependence.libLeanback
-    api dependence.libLeanbackPreference
-    api dependence.libFragment
-    api dependence.libFragmentKtx
-    api dependence.libLivedata
-    api dependence.libLivedataKtx
-    api dependence.libPaging
-    api dependence.libPagingKtx
+    api(Deps.support_multidex)
+    api(Deps.support_coreKtx)
+    api(Deps.support_appCompat)
+    api(Deps.support_constraintLayout)
+    api(Deps.support_preference)
+    api(Deps.support_preferencex)
+    api(Deps.support_lifecycle)
+    api(Deps.support_lifecycleKtx)
+    api(Deps.support_pagingKtx)
+    api(Deps.support_leanback)
+    api(Deps.support_leanbackPreference)
+    api(Deps.support_fragment)
+    api(Deps.support_fragmentKtx)
 
-    // NetWork
-    api 'com.squareup.retrofit2:retrofit:2.7.1'
-    api 'com.squareup.retrofit2:converter-moshi:2.7.1'
-    api 'com.squareup.okhttp3:logging-interceptor:4.4.0'
+    // DataBase
+    api(Deps.room_ktx)
 
-    // 协程
-    api dependence.libCoroutinesCore
-    api dependence.libCoroutinesAndroid
+    // Work
+    api(Deps.work_runtimeKtx)
 
-    // 注入
-    api dependence.libKoinViewModel
+    // Kotlin
+    api(Deps.kotlin_stdlib)
+    api(Deps.kotlin_coroutines)
 
-    // Database
-    api dependence.libRoomRuntime
-    api dependence.libRoomKtx
-
-    // 路由
-    api dependence.libArouter
+    // Koin注入
+    api(Deps.koin_scope)
+    api(Deps.koin_viewModel)
 
     // Prefs
-    implementation 'com.tencent:mmkv:1.0.24'
+    api(Deps.mmkv_runtime)
+
+    // Network
+    api(Deps.network_retrofit)
+    api(Deps.network_retrofitMoshi)
+    api(Deps.network_loggingInterceptor)
+
+    // Json
+    api(Deps.moshi_core)
+    api(Deps.moshi_adapters)
+
+    // 路由
+    api(Deps.arouter_api)
 
     // EventBus
     api 'org.greenrobot:eventbus:3.1.1'

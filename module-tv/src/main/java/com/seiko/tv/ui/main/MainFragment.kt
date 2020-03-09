@@ -27,7 +27,7 @@ import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import kotlinx.coroutines.yield
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : BrowseSupportFragment()
     , OnItemViewClickedListener

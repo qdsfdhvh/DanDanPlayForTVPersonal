@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.seiko.tv.util.annotation.BangumiIntroType
+import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
 //BangumiIntro {
@@ -25,6 +26,7 @@ import java.io.Serializable
         Index(value = ["fromAnimeId", "fromType"], unique = false)
     ]
 )
+@JsonClass(generateAdapter = true)
 data class BangumiIntroEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,

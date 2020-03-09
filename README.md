@@ -32,7 +32,9 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [DanDanPlayForAndroid](https://github.com/xyoye/DanDanPlayForAndroid)
 
-* [KotlinAndroid](https://github.com/guofudong/KotlinAndroid)
+* [CC](https://github.com/luckybilly/CC)
+
+* [~~KotlinAndroid~~](https://github.com/guofudong/KotlinAndroid)
 
 ### app-tv
 

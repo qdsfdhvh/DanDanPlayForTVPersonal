@@ -16,7 +16,7 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiAreaPageViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BangumiAreaPageFragment : VerticalGridSupportFragment()
     , BrowseSupportFragment.MainFragmentAdapterProvider

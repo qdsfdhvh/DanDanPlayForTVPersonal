@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
-apply from: rootProject.file('libbase.gradle')
+apply from: rootProject.file('app-common-build.gradle')
 
 dependencies {
-    implementation dependence.libAnnotation
+    implementation Deps.support_annotation
 
     // Torrent
     def libtorrent4j = "1.2.3.0"

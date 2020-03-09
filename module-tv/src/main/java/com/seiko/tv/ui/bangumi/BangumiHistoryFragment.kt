@@ -14,7 +14,7 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiHistoryViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BangumiHistoryFragment : VerticalGridSupportFragment()
     , OnItemViewClickedListener {

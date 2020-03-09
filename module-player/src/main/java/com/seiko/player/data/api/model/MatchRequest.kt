@@ -1,5 +1,6 @@
 package com.seiko.player.data.api.model
 
+import com.squareup.moshi.JsonClass
 import java.io.File
 
 //MatchRequest {
@@ -9,7 +10,8 @@ import java.io.File
 //videoDuration (integer): [可选]32位整数的视频时长，单位为秒。默认为0。 ,
 //matchMode (string): [可选]匹配模式。 = ['hashAndFileName', 'fileNameOnly', 'hashOnly']
 //}
-class MatchRequest private constructor(
+@JsonClass(generateAdapter = true)
+class MatchRequest(
     var fileName: String = "",
     var fileHash: String = "",
     var fieSize: Long = 0,

@@ -10,7 +10,7 @@ import androidx.lifecycle.observe
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

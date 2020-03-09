@@ -1,6 +1,7 @@
 package com.seiko.tv.data.api.model
 
 import com.seiko.tv.data.db.model.BangumiIntroEntity
+import com.squareup.moshi.JsonClass
 
 //BangumiListResponse {
 //    bangumiList (Array[BangumiIntro], optional): 番剧列表 ,
@@ -8,6 +9,7 @@ import com.seiko.tv.data.db.model.BangumiIntroEntity
 //    success (boolean, read only): 接口是否调用成功 ,
 //    errorMessage (string, optional, read only): 当发生错误时，说明错误具体原因
 //}
+@JsonClass(generateAdapter = true)
 class BangumiListResponse : JsonResultResponse() {
     var bangumiList: List<BangumiIntroEntity> = emptyList()
 }

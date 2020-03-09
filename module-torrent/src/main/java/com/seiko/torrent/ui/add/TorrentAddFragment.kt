@@ -20,7 +20,7 @@ import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 private const val PERMISSION_REQUEST = 1

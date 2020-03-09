@@ -1,6 +1,7 @@
 package com.seiko.tv.data.db.model
 
 import androidx.room.*
+import com.squareup.moshi.JsonClass
 
 //BangumiDetails {
 //    type (string): 作品类型 = ['tvseries', 'tvspecial', 'ova', 'movie', 'musicvideo', 'web', 'other', 'jpmovie', 'jpdrama', 'unknown'],
@@ -29,6 +30,7 @@ import androidx.room.*
 @Entity(
     tableName = "BangumiDetails"
 )
+@JsonClass(generateAdapter = true)
 data class BangumiDetailsEntity(
     @PrimaryKey(autoGenerate = false)
     var animeId: Long = 0,

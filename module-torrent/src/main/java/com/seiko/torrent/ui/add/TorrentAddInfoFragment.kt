@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentAddTorrentInfoBinding
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 

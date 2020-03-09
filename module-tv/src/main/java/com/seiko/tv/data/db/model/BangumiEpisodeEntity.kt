@@ -1,6 +1,7 @@
 package com.seiko.tv.data.db.model
 
 import androidx.room.*
+import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
 //BangumiEpisode {
@@ -15,6 +16,7 @@ import java.io.Serializable
         Index(value = ["fromAnimeId"], unique = false)
     ]
 )
+@JsonClass(generateAdapter = true)
 data class BangumiEpisodeEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,

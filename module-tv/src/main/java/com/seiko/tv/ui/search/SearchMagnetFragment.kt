@@ -18,7 +18,7 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchMagnetFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,

@@ -16,7 +16,7 @@ import com.seiko.torrent.util.FileUtil
 import com.seiko.torrent.util.extensions.fixItemAnim
 import com.seiko.torrent.util.extensions.toFileTree
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.io.File
 

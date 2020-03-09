@@ -21,7 +21,7 @@ import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.vm.BangumiDetailViewModel
 import kotlinx.coroutines.launch
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class BangumiDetailsFragment : DetailsSupportFragment()

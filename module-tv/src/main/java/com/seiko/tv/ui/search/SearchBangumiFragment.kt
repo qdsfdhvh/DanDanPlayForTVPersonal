@@ -19,7 +19,7 @@ import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
 import com.seiko.tv.ui.card.SearchBangumiCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,

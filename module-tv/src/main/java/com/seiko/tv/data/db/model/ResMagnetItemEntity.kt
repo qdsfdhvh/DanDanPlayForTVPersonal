@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 // {
 // "Title":"【傲娇零&自由字幕组】[刀剑神域III UnderWorld/Sword Art Online - Alicization][01][HEVC-10Bit-1080P AAC][外挂GB/BIG5][WEB-Rip][MP4+ass]",
@@ -22,6 +23,7 @@ import com.squareup.moshi.Json
         Index(value = ["hash"], unique = true) // hash应该唯一
     ]
 )
+@JsonClass(generateAdapter = true)
 data class ResMagnetItemEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     var id: Long = 0,

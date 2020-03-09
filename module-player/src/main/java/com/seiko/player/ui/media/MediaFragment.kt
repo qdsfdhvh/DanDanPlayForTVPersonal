@@ -22,8 +22,7 @@ import com.seiko.player.util.bitmap.ImageLoader
 import com.seiko.player.vm.VideosViewModel
 import kotlinx.coroutines.yield
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 

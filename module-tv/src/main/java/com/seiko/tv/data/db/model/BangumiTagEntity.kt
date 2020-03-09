@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 //BangumiTag {
 //    id (integer): 标签编号 ,
@@ -16,6 +17,7 @@ import com.squareup.moshi.Json
         Index(value = ["fromAnimeId", "id"], unique = false)
     ]
 )
+@JsonClass(generateAdapter = true)
 data class BangumiTagEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id")
     @field:Json(name = "_id")

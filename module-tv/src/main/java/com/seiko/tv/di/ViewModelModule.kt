@@ -1,7 +1,7 @@
 package com.seiko.tv.di
 
 import com.seiko.tv.vm.*
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 internal val viewModelModule = module {

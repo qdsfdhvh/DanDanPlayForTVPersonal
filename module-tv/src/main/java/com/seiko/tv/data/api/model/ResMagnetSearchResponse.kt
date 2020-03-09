@@ -2,6 +2,7 @@ package com.seiko.tv.data.api.model
 
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 /**
  * HasMore : true
@@ -18,6 +19,7 @@ import com.squareup.moshi.Json
  *  }
  * ]
  */
+@JsonClass(generateAdapter = true)
 class ResMagnetSearchResponse {
     @field:Json(name = "HasMore") var hasMore: Boolean = false
     @field:Json(name = "Resources") var resources: List<ResMagnetItemEntity> = emptyList()

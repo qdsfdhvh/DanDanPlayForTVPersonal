@@ -1,10 +1,12 @@
 package com.seiko.tv.data.db.model
 
 import androidx.room.*
+import com.squareup.moshi.JsonClass
 
 @Entity(
     tableName = "BangumiHistory"
 )
+@JsonClass(generateAdapter = true)
 data class BangumiHistoryEntity(
     @PrimaryKey(autoGenerate = false)
     var animeId: Long = 0,

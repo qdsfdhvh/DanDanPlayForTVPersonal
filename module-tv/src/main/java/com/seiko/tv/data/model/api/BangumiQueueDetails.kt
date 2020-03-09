@@ -1,5 +1,7 @@
 package com.seiko.tv.data.model.api
 
+import com.squareup.moshi.JsonClass
+
 //BangumiQueueDetailsV2 {
 //    animeId (integer): 作品编号 ,
 //    animeTitle (string, optional): 作品标题 ,
@@ -9,6 +11,7 @@ package com.seiko.tv.data.model.api
 //    lastWatched (string): 上次观看时间（null表示尚未看过） ,
 //    episodes (Array[BangumiQueueEpisodeV2], optional): 未看剧集的列表
 //}
+@JsonClass(generateAdapter = true)
 data class BangumiQueueDetails(
     val animeId: Int,
     val aimeTitle: String,

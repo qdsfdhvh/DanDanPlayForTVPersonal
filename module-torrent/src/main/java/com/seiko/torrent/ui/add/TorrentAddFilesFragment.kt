@@ -15,7 +15,7 @@ import com.seiko.torrent.util.extensions.fixItemAnim
 
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
 

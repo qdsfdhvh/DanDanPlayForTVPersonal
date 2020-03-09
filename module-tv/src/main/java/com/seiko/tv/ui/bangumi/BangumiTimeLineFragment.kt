@@ -11,7 +11,7 @@ import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
 

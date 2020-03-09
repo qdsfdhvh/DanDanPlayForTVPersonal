@@ -1,6 +1,7 @@
 package com.seiko.player.data.api.model
 
 import com.seiko.player.data.model.MatchResult
+import com.squareup.moshi.JsonClass
 
 //MatchResponseV2 {
 //isMatched (boolean, read only): 是否已精确关联到某个弹幕库 ,
@@ -9,6 +10,7 @@ import com.seiko.player.data.model.MatchResult
 //success (boolean, read only): 接口是否调用成功 ,
 //errorMessage (string, optional, read only): 当发生错误时，说明错误具体原因
 //}
+@JsonClass(generateAdapter = true)
 data class MatchResponse(
     var isMatched: Boolean = false,
     var matches: List<MatchResult> = emptyList(),

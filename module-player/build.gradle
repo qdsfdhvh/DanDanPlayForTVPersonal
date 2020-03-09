@@ -1,8 +1,5 @@
-//apply plugin: 'com.android.library'
-apply plugin: 'com.gfd.comswitch'
-
-apply from: rootProject.file('libbase.gradle')
-apply from: rootProject.file('libclean.gradle')
+apply from: rootProject.file('app-cc-setting.gradle')
+apply from: rootProject.file('app-common-build.gradle')
 
 kapt {
     arguments {
@@ -31,9 +28,9 @@ this.beforeEvaluate {
 }
 
 dependencies {
-    implementation project(':common')
-    kapt dependence.libArouterCompiler
-    kapt dependence.libRoomCompiler
+    kapt Deps.arouter_compiler
+    kapt Deps.room_compiler
+    kapt Deps.moshi_compiler
     // AppCompat
     implementation "androidx.lifecycle:lifecycle-service:2.2.0"
     implementation "com.google.android.material:material:1.2.0-alpha05"

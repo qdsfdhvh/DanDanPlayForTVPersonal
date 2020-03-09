@@ -1,6 +1,7 @@
 package com.seiko.tv.data.api.model
 
 import com.seiko.tv.data.model.api.BangumiQueueIntro
+import com.squareup.moshi.JsonClass
 
 //BangumiQueueIntroResponseV2 {
 //    hasMore (boolean): 是否有更多数据可以展示（显示界面上的“更多”按钮） ,
@@ -9,6 +10,7 @@ import com.seiko.tv.data.model.api.BangumiQueueIntro
 //    success (boolean, read only): 接口是否调用成功 ,
 //    errorMessage (string, optional, read only): 当发生错误时，说明错误具体原因
 //}
+@JsonClass(generateAdapter = true)
 class BangumiQueueIntroResponse : JsonResultResponse() {
     var hasMore: Boolean = false
     var bangumiList: List<BangumiQueueIntro> = emptyList()

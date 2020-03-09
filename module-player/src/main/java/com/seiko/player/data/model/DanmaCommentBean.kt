@@ -1,7 +1,9 @@
 package com.seiko.player.data.model
 
 import com.seiko.danma.model.Danma
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class DanmaCommentBean(
     var cid: Int = 0,
     var p: String = "",
