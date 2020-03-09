@@ -26,7 +26,6 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.yield
 import org.koin.android.viewmodel.ext.android.viewModel
 

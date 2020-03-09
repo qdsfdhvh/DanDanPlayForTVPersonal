@@ -55,6 +55,11 @@ class AddTorrentFragment : Fragment()
 
     private lateinit var binding: TorrentFragmentAddBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        registerKeyEvent()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = TorrentFragmentAddBinding.inflate(inflater, container, false)
         setupUI()
@@ -65,7 +70,6 @@ class AddTorrentFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
         checkPermissions()
-        registerKeyEvent()
     }
 
     override fun onDestroyView() {

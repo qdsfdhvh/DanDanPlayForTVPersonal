@@ -40,10 +40,14 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     }
 
     private fun setupUI() {
+        headersState = HEADERS_ENABLED
+        isHeadersTransitionOnBackEnabled = true
+
         title = getString(R.string.bangumi_area)
         brandColor = Color.parseColor("#424242")
-
         mainFragmentRegistry.registerFragment(SeasonPageRow::class.java, PageRowFragmentFactory())
+
+        prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
@@ -54,6 +58,8 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
                 rowsAdapter.add(SeasonPageRow(headerItem, season))
             }
             adapter = rowsAdapter
+
+            startEntranceTransition()
         }
     }
 

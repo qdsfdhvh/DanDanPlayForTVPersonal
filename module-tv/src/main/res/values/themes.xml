@@ -17,7 +17,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
 
-        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
         <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
 <!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
         <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
@@ -29,7 +29,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
 
-        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
         <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
 <!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
         <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
@@ -41,7 +41,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
 
-        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
         <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
 <!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
         <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>
@@ -53,7 +53,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
 
-        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/ActivityAnimStyle</item>-->
         <item name="android:windowSharedElementEnterTransition">@transition/share_element_transition</item>
 <!--        <item name="android:windowSharedElementExitTransition">@transition/share_element_transition</item>-->
         <item name="android:windowSharedElementReturnTransition">@transition/share_element_transition</item>

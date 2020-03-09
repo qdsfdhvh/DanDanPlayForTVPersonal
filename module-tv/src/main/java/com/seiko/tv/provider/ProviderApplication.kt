@@ -3,6 +3,7 @@ package com.seiko.tv.provider
 import android.app.Application
 import com.seiko.tv.di.*
 import com.seiko.common.provider.IProviderApplication
+import com.seiko.tv.util.fix.InputMethodManagerFix
 import com.seiko.tv.util.initFresco
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,6 +34,8 @@ class ProviderApplication : IProviderApplication {
             // 初始化Fresco
             application.initFresco()
         }
+
+        InputMethodManagerFix.fixFocusedViewLeak(application)
     }
 
     override fun onTerminate() {

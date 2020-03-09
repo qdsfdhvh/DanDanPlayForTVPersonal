@@ -16,12 +16,16 @@ class BangumiAreaViewModel(
     private val getBangumiListWithSeason: GetBangumiListWithSeasonUseCase
 ) : ViewModel() {
 
-    val bangumiSeasons: LiveData<List<BangumiSeason>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-        when(val result = getBangumiSeasons.invoke()) {
-            is Result.Success -> emit(result.data)
-            is Result.Error -> Timber.e(result.exception)
+    val bangumiSeasons: LiveData<List<BangumiSeason>> =
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            when(val result = getBangumiSeasons.invoke()) {
+                is Result.Success -> {
+                    delay(300)
+                    emit(result.data)
+                }
+                is Result.Error -> Timber.e(result.exception)
+            }
         }
-    }
 
     val season = MutableLiveData<BangumiSeason>()
     val bangumiList: LiveData<ResultData<List<HomeImageBean>>> = season.distinctUntilChanged().switchMap { season ->

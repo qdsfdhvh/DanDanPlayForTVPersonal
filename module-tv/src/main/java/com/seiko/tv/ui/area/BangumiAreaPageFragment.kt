@@ -49,6 +49,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
+        getMainFragmentAdapter().fragmentHost.notifyViewCreated(mainFragmentAdapter)
     }
 
     override fun onDestroyView() {
@@ -68,13 +69,13 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 
-        prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
         viewModel.bangumiList.observe(this) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
-            startEntranceTransition()
+
+            getMainFragmentAdapter().fragmentHost.notifyDataReady(mainFragmentAdapter)
         }
         viewModel.season.value = season
     }
@@ -95,6 +96,11 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
                 BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
             }
         }
+    }
+
+    override fun showTitle(show: Boolean) {
+        super.showTitle(show)
+        mainFragmentAdapter.fragmentHost.showTitleView(show)
     }
 
     private val mainFragmentAdapter = BrowseSupportFragment.MainFragmentAdapter(this)

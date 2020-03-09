@@ -63,6 +63,11 @@ class BangumiAreaFragment : Fragment(),
 
     private val handler by lazyAndroid { AreaHandler(this) }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        registerKeyEvent()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAreaBinding.inflate(inflater, container, false)
         setupSeason()
@@ -74,7 +79,6 @@ class BangumiAreaFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
         checkSelectPosition(savedInstanceState)
         bindViewModel()
-        registerKeyEvent()
     }
 
     /**

@@ -32,7 +32,7 @@ fun DispatchKeyEventDispatcher.addCallback(
 fun Fragment.requireDispatchKeyEventDispatcher(): DispatchKeyEventDispatcherOwner {
     val activity = requireActivity()
     if (activity !is DispatchKeyEventDispatcherOwner) {
-        throw IllegalStateException("Fragment $this is not DispatchKeyEventDispatcherOwner");
+        throw IllegalStateException("Fragment $this is not DispatchKeyEventDispatcherOwner")
     }
     return activity
 }
