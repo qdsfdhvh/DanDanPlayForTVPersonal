@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--左上角进度条-->
-    <include
+    <androidx.appcompat.widget.ViewStubCompat
         android:id="@id/player_tip_layout"
-        layout="@layout/view_tip_progress"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
+        android:layout="@layout/view_tip_progress"
         vlc:layout_constraintTop_toTopOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"/>
     <!-- 底部控制 -->
@@ -27,29 +27,10 @@
         vlc:layout_constraintBottom_toBottomOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintEnd_toEndOf="parent"/>
-    <!-- 右侧配置 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@id/player_options_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/advanced_options_background"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        vlc:layout_constraintTop_toTopOf="parent"
-        vlc:layout_constraintBottom_toBottomOf="parent"
-        vlc:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/player_item_option"/>
-    <!-- 续播提示 -->
-    <include
-        android:id="@id/player_layout_tip_position"
-        layout="@layout/view_tip_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        vlc:layout_constraintBottom_toBottomOf="parent"
-        vlc:layout_constraintStart_toStartOf="parent" />
+    <!-- 右侧参数配置界面 -->
+    <androidx.appcompat.widget.ViewStubCompat
+        android:id="@id/player_layout_control_options"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/view_player_options"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

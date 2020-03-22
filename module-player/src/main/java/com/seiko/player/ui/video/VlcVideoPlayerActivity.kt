@@ -1,5 +1,6 @@
 package com.seiko.player.ui.video
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.*
@@ -17,11 +18,15 @@ import com.seiko.danma.SimpleDrawHandlerCallback
 import com.seiko.player.R
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.databinding.PlayerActivityVideoVlcBinding
+import com.seiko.player.databinding.PlayerControllerBinding
+import com.seiko.player.databinding.ViewTipPositionBinding
+import com.seiko.player.databinding.ViewTipProgressBinding
 import com.seiko.player.util.Tools
 import com.seiko.player.util.constants.MAX_VIDEO_SEEK
 import com.seiko.player.util.extensions.setInvisible
 import com.seiko.player.util.extensions.setVisible
 import com.seiko.player.media.vlc.control.VlcPlayerListManager
+import com.seiko.player.ui.helper.PlayerOptionsDelegate
 import com.seiko.player.util.AnimatorUtils
 import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
 import com.seiko.player.vm.PlayerViewModel
@@ -71,13 +76,59 @@ class VlcVideoPlayerActivity : FragmentActivity()
         }
     }
 
+    // 整个界面
     private var _binding: PlayerActivityVideoVlcBinding? = null
     private val binding get() = _binding!!
+    // 播放器
     private val videoLayout get() = binding.playerVideoViewVlc
-    private val bottomControl get() = binding.playerViewController.playerLayoutControlBottom
+    // 控制界面
+    private var _controlBinding: PlayerControllerBinding? = null
+    val controllerBinding: PlayerControllerBinding
+        @SuppressLint("RestrictedApi")
+        get() {
+            if (_controlBinding == null) {
+                val view = binding.playerViewController.inflate()
+                _controlBinding = PlayerControllerBinding.bind(view)
+            }
+            return _controlBinding!!
+        }
+    private val bottomControl get() = controllerBinding.playerLayoutControlBottom
     private val seekbar get() = bottomControl.playerOverlaySeekbar
-    private val tipProgress get() = binding.playerViewController.playerTipLayout
-    private val tipPosition get() = binding.playerViewController.playerLayoutTipPosition
+    // 左上角进度条
+    private var _playerTipLayout: ViewTipProgressBinding? = null
+    private val playerTipLayout: ViewTipProgressBinding
+        @SuppressLint("RestrictedApi")
+        get() {
+            if (_playerTipLayout == null) {
+                val view = controllerBinding.playerTipLayout.inflate()
+                _playerTipLayout = ViewTipProgressBinding.bind(view)
+            }
+            return _playerTipLayout!!
+        }
+    private val tipProgress get() = playerTipLayout
+    // 续播提示
+    private var _tipPosition: ViewTipPositionBinding? = null
+    private val tipPosition: ViewTipPositionBinding
+        @SuppressLint("RestrictedApi")
+        get() {
+            if (_tipPosition == null) {
+                val view = binding.playerLayoutTipPosition.inflate()
+                _tipPosition = ViewTipPositionBinding.bind(view)
+            }
+            return _tipPosition!!
+        }
+
+    /**
+     * 右侧参数列表界面
+     */
+    private var _optionsDelegate: PlayerOptionsDelegate? = null
+    private val optionsDelegate: PlayerOptionsDelegate
+        get() {
+            if (_optionsDelegate == null) {
+                _optionsDelegate = PlayerOptionsDelegate(this)
+            }
+            return _optionsDelegate!!
+        }
 
     private val viewModel: PlayerViewModel by inject()
     private val danmakuEngine: IDanmakuEngine by inject()
@@ -118,7 +169,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
                 val position = progress * player.getCurrentDuration() / MAX_VIDEO_SEEK
                 handler.removeMessages(SEEK_TO)
                 handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 500)
-                showTipProgress(position, 1000)
+                showTipProgress(position)
                 syncProgress(position)
             }
             if (fromUser) {
@@ -281,7 +332,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
 
         handler.removeMessages(SEEK_TO)
         handler.sendMessageDelayed(handler.obtainMessage(SEEK_TO, position), 800)
-        showTipProgress(position, 1000)
+        showTipProgress(position)
         syncProgress(position)
     }
 
@@ -301,7 +352,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
     /**
      * 显示左上角进度条
      */
-    private fun showTipProgress(position: Long, delay: Int) {
+    private fun showTipProgress(position: Long, delay: Int = 1000) {
         if (tipProgress.root.visibility != View.VISIBLE) {
             tipProgress.root.setVisible()
         }
@@ -354,7 +405,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
                 doPlayPause()
             }
             R.id.player_btn_overlay_adv_function -> {
-
+                showAdvancedOptions()
             }
         }
     }
@@ -475,7 +526,15 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
-     * show overlay
+     * 显示右侧配置界面
+     */
+    private fun showAdvancedOptions() {
+        optionsDelegate.show()
+        hideOverlay(false)
+    }
+
+    /**
+     * 显示播放控制界面
      */
     private var overlayTimeout = 0
     private fun showOverlay(forceCheck: Boolean = false) {
@@ -515,7 +574,7 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
-     * hide overlay
+     * 隐藏播放控制界面
      */
     private fun hideOverlay(fromUser: Boolean) {
         if (isShowing) {
@@ -592,20 +651,14 @@ class VlcVideoPlayerActivity : FragmentActivity()
             val position = player.getCurrentPosition()
             // 当前位置到过5s，认为自动续播
             if (position > PLAYER_MIN_SAVE_POSITION) {
-                tipPosition.title.text = getString(R.string.video_tip_position_title, Tools.millisToString(position))
-                showTipPosition()
+                // 显示跳转提示
+                isFirstOpenWithReplay = true
+                tipPosition.title.text = getString(R.string.video_tip_position_title,
+                    Tools.millisToString(position))
+                // 等待x秒
                 delay(TIP_POSITION_TIMEOUT)
+                // 关闭跳转提示
                 hideTipPosition()
-            }
-        }
-    }
-
-    private fun showTipPosition() {
-        if (isFirstOpenWithReplay) return
-        isFirstOpenWithReplay = true
-        handler.post {
-            AnimatorUtils.translationXShow(tipPosition.root) {
-                tipPosition.root.visibility = View.VISIBLE
             }
         }
     }
@@ -613,10 +666,8 @@ class VlcVideoPlayerActivity : FragmentActivity()
     private fun hideTipPosition() {
         if (!isFirstOpenWithReplay) return
         isFirstOpenWithReplay = false
-        handler.post {
-            AnimatorUtils.translationXHide(tipPosition.root) {
-                tipPosition.root.visibility = View.GONE
-            }
+        AnimatorUtils.translationXHide(tipPosition.root) {
+            tipPosition.root.visibility = View.GONE
         }
     }
 
@@ -638,6 +689,12 @@ class VlcVideoPlayerActivity : FragmentActivity()
      */
 
     override fun onBackPressed() {
+        // 隐藏右侧配置界面
+        if (_optionsDelegate?.isShowing == true) {
+            optionsDelegate.hide()
+            return
+        }
+
         // 隐藏控制界面
         if (isShowing) {
             hideOverlay(true)

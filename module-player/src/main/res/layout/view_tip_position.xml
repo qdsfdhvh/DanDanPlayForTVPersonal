@@ -14,5 +14,6 @@
         android:paddingStart="20dp"
         android:paddingEnd="36dp"
         android:background="@drawable/half_circle_tv_left"
-        tools:text="自动为您续播到00:46  按\'⬅\'键重新播放"/>
+        tools:text="自动为您续播到00:46  按\'⬅\'键重新播放"
+        tools:textSize="20sp"/>
 </FrameLayout>
