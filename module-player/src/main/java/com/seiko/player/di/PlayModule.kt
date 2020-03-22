@@ -4,6 +4,7 @@ import android.content.Context
 import com.seiko.danma.DanmakuEngine
 import com.seiko.danma.IDanmakuEngine
 import com.seiko.player.data.comments.VideoHistoryRepository
+import com.seiko.player.data.prefs.PrefDataSource
 import com.seiko.player.media.option.DanmaOptions
 import com.seiko.player.util.constants.PLAYER_DATA_DIR
 import com.seiko.player.util.constants.PLAYER_THUMBNAIL_DIR
@@ -29,7 +30,7 @@ val playModule = module {
 
     single { createVlcLibManager(androidContext()) }
     single { createVlcPlayerController(get()) }
-    single { createVlcPlayerListManager(get(), get()) }
+    single { createVlcPlayerListManager(get(), get(), get()) }
 }
 
 /**
@@ -84,6 +85,10 @@ private fun createVlcPlayerController(instance: VlcLibManager): VlcPlayerControl
 /**
  * Vlc列表管理
  */
-private fun createVlcPlayerListManager(player: VlcPlayerController, historyRepo: VideoHistoryRepository): VlcPlayerListManager {
-    return VlcPlayerListManager(player, historyRepo)
+private fun createVlcPlayerListManager(
+    player: VlcPlayerController,
+    historyRepo: VideoHistoryRepository,
+    prefDataSource: PrefDataSource
+): VlcPlayerListManager {
+    return VlcPlayerListManager(player, historyRepo, prefDataSource)
 }

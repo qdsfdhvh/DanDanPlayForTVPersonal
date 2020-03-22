@@ -43,4 +43,7 @@ class VlcLibManager(
         return mediaFactory.getFromUri(getLibVlc(), uri)
     }
 
+    fun getEqualizerSetFromSettings(): MediaPlayer.Equalizer {
+        return MediaPlayer.Equalizer.createFromPreset(0)
+    }
 }

@@ -1,10 +1,7 @@
 package com.seiko.player.data.prefs
 
 import androidx.preference.PreferenceDataStore
-import com.seiko.common.util.prefs.boolean
-import com.seiko.common.util.prefs.int
-import com.seiko.common.util.prefs.long
-import com.seiko.common.util.prefs.string
+import com.seiko.common.util.prefs.*
 
 class PrefDataSourceImpl(prefs: PreferenceDataStore): PrefDataSource {
 
@@ -15,6 +12,8 @@ class PrefDataSourceImpl(prefs: PreferenceDataStore): PrefDataSource {
     override var mIsUsingSurfaceRenders by prefs.boolean("PREF_IS_USING_SURFACE_RENDERS", false)
     override var mPixelFormat by prefs.string("PREF_PIXEL_FORMAT", "")
     override var showDanma by prefs.boolean("PREF_OPEN_DANMA", true)
+
+    override var videoRate by prefs.float("PREF_VIDEO_RATE", 1.0f)
 
 //    override var timeStretch by prefs.boolean("PREF_TIME_STRETCH", false)
 //    override var subtitlesEncoding by prefs.string("PREF_SUBTITLES_ENCODING", "")

@@ -29,6 +29,7 @@ import com.seiko.player.media.vlc.control.VlcPlayerListManager
 import com.seiko.player.ui.helper.PlayerOptionsDelegate
 import com.seiko.player.util.AnimatorUtils
 import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
+import com.seiko.player.util.extensions.disStatusBar
 import com.seiko.player.vm.PlayerViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -37,7 +38,6 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.DisplayManager
-import timber.log.Timber
 import kotlin.math.abs
 
 class VlcVideoPlayerActivity : FragmentActivity()
@@ -517,8 +517,11 @@ class VlcVideoPlayerActivity : FragmentActivity()
             }
             // 菜单键 显示/ 隐藏 菜单
             KeyEvent.KEYCODE_MENU -> {
-                val what = if (isShowing) HIDE_INFO else SHOW_INFO
-                handler.sendEmptyMessage(what)
+                if (optionsDelegate.isShowing) {
+                    optionsDelegate.hide()
+                } else {
+                    optionsDelegate.show()
+                }
                 return true
             }
         }
@@ -591,29 +594,6 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     /**
-     * Dim the status bar and navigation icons
-     */
-    private fun disStatusBar(dim: Boolean) {
-        if (isNavMenu) return
-
-        var visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        var navBar = 0
-        if (dim) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            navBar = navBar or (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-            visibility = visibility or (View.SYSTEM_UI_FLAG_IMMERSIVE
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
-        } else {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            visibility = visibility or (View.SYSTEM_UI_FLAG_VISIBLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
-        }
-        window.decorView.systemUiVisibility = visibility or navBar
-    }
-
-    /**
      * 更新播放按钮
      */
     private val playToPause by lazyAndroid { AnimatedVectorDrawableCompat.create(this, R.drawable.anim_play_pause)!! }
@@ -681,6 +661,10 @@ class VlcVideoPlayerActivity : FragmentActivity()
             MediaPlayer.Event.Playing,
             MediaPlayer.Event.Paused -> updateOverlayPlayPause()
             MediaPlayer.Event.Stopped -> finish()
+            VlcPlayerListManager.EVENT_RATE_CHANGE -> {
+                val rate = event.positionChanged // 暂时使用Event传值
+                danmakuEngine.setRate(rate)
+            }
         }
     }
 

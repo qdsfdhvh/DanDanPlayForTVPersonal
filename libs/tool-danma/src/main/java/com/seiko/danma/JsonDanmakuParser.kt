@@ -105,12 +105,13 @@ class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser(
     }
 
     private fun parseDanmaText(item: BaseDanmaku, m: String) {
-        // initial specail danmaku data
-        // initial specail danmaku data
         item.text = m
         val text: String = m.trim { it <= ' ' }
-        if (item.type == BaseDanmaku.TYPE_SPECIAL && text.startsWith("[") && text.endsWith("]")) { //text = text.substring(1, text.length() - 1);
-            var textArr: Array<String>? = null //text.split(",", -1);
+        if (item.type == BaseDanmaku.TYPE_SPECIAL
+            && text.startsWith("[")
+            && text.endsWith("]")
+        ) {
+            var textArr: Array<String>? = null
             try {
                 val jsonArray = JSONArray(text)
                 textArr = Array(jsonArray.length()) { jsonArray.getString(it) }

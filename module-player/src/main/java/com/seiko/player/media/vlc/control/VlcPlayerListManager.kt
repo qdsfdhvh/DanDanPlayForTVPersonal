@@ -4,6 +4,7 @@ import android.net.Uri
 import com.seiko.player.data.comments.VideoHistoryRepository
 import com.seiko.player.data.db.model.VideoHistory
 import com.seiko.player.data.model.PlayParam
+import com.seiko.player.data.prefs.PrefDataSource
 import com.seiko.player.media.vlc.util.MediaWrapperList
 import com.seiko.player.util.constants.PLAYER_MIN_SAVE_POSITION
 import kotlinx.coroutines.Dispatchers
@@ -16,18 +17,28 @@ import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import timber.log.Timber
 import java.io.File
 
+//@ExperimentalCoroutinesApi
 class VlcPlayerListManager(
     private val player: VlcPlayerController,
-    private val historyRepo: VideoHistoryRepository
+    private val historyRepo: VideoHistoryRepository,
+    private val prefDataSource: PrefDataSource
 ) : IPlayerController by player
     , MediaPlayer.EventListener
     , MediaWrapperList.EventListener {
+
+    companion object {
+        const val EVENT_RATE_CHANGE = 0x1000
+    }
+
+    private class Event(type: Int, value: Float) : MediaPlayer.Event(type, value)
 
     val mediaPlayer get() = player.mediaPlayer
 
     val seekable get() = player.seekable
 
     val pausable get() = player.pausable
+
+    val rate get() = prefDataSource.videoRate
 
     /**
      * 播放列表
@@ -48,6 +59,12 @@ class VlcPlayerListManager(
         return position in 0 until mediaList.size
     }
 
+    override fun setRate(rate: Float) {
+        player.setRate(rate)
+        prefDataSource.videoRate = rate
+        listener?.onEvent(Event(EVENT_RATE_CHANGE, rate))
+    }
+
     suspend fun load(param: PlayParam, listener: MediaPlayer.EventListener? = null) {
         val uri = Uri.parse(param.videoPath)
         var media = Medialibrary.getInstance().getMedia(uri)
@@ -66,7 +83,14 @@ class VlcPlayerListManager(
         mediaList.removeEventListener(this)
         mediaList.replaceWith(list)
         mediaList.addEventListener(this)
-        player.setRate(1.0f)
+
+        // 设置视频播放速度
+        val rate = prefDataSource.videoRate
+        if (rate != 1.0f) {
+            player.setRate(rate)
+            listener?.onEvent(Event(EVENT_RATE_CHANGE, rate))
+        }
+
         playIndex(position)
     }
 

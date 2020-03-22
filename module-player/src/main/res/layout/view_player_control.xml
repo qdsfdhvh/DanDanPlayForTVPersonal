@@ -85,7 +85,7 @@
         android:paddingEnd="8dp"
         android:progressDrawable="@drawable/po_seekbar_video"
         android:splitTrack="false"
-        android:thumb="@drawable/seekbar_thumb"
+        android:thumb="@drawable/ic_seekbar_thumb"
         tools:progress="50"
         tools:secondaryProgress="69"
         tools:max="100"
@@ -146,12 +146,12 @@
         android:id="@id/player_btn_overlay_danma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
         vlc:layout_constraintEnd_toStartOf="@id/player_btn_overlay_play"
         vlc:layout_constraintStart_toStartOf="parent"
         vlc:layout_constraintTop_toTopOf="@id/player_btn_overlay_play"
         vlc:layout_constraintBottom_toBottomOf="@id/player_btn_overlay_play"
-        android:src="@drawable/ic_danma" />
+        android:src="@drawable/ic_danma"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         style="@style/VLC.ImageButton"
@@ -161,12 +161,12 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:scaleType="center"
-        android:contentDescription="@string/app_name"
         vlc:layout_constraintBottom_toBottomOf="parent"
         vlc:layout_constraintTop_toBottomOf="@id/player_overlay_seekbar"
         vlc:layout_constraintEnd_toEndOf="parent"
         vlc:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_pause_player">
+        android:src="@drawable/ic_pause_player"
+        tools:ignore="ContentDescription">
         <requestFocus/>
     </ImageView>
 
@@ -175,11 +175,11 @@
         android:id="@id/player_btn_overlay_adv_function"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
         vlc:layout_constraintBottom_toBottomOf="@id/player_btn_overlay_play"
         vlc:layout_constraintEnd_toEndOf="parent"
         vlc:layout_constraintStart_toEndOf="@id/player_btn_overlay_play"
         vlc:layout_constraintTop_toTopOf="@id/player_btn_overlay_play"
-        android:src="@drawable/ic_advanced_player" />
+        android:src="@drawable/ic_advanced_player"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

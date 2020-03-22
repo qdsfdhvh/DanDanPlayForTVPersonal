@@ -44,6 +44,11 @@ interface IDanmakuEngine {
      */
     fun hide()
 
+    /**
+     * 播放速度
+     */
+    fun setRate(rate: Float)
+
     fun seekTo(position: Long)
 
     fun setCallback(callback: DrawHandler.Callback?)

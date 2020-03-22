@@ -81,4 +81,22 @@
     <style name="VLCImageCardViewContentStyleTextAppearance" parent="TextAppearance.Leanback.ImageCardView.Content">
         <item name="android:gravity">center_horizontal</item>
     </style>
+
+    <style name="ActionBar.ArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/white</item>
+    </style>
+
+    <!--BottomSheet-->
+    <style name="TransBottomSheetDialogStyle" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+    <!--    fixme : We'll have to revert to Widget.MaterialComponents.BottomSheet.Modal when this issue is fixed: https://github.com/material-components/material-components-android/issues/1086-->
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+    </style>
+
 </resources>

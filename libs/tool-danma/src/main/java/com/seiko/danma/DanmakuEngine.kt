@@ -6,7 +6,9 @@ import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.controller.IDanmakuView
 import master.flame.danmaku.danmaku.model.BaseDanmaku
 import master.flame.danmaku.danmaku.model.DanmakuTimer
+import master.flame.danmaku.danmaku.model.android.DanmakuContext
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser
+import kotlin.math.max
 
 class DanmakuEngine(
     private val config: DanmakuEngineOptions
@@ -16,20 +18,32 @@ class DanmakuEngine(
     private var danmaCallback: DrawHandler.Callback? = null
 
     private var danmaParser: BaseDanmakuParser? = null
+    private var danmaTimer: SpeedDanmakuTimer? = null
+    private var danmaContext: DanmakuContext? = null
     private var showDanma = true
 
+    /**
+     * 弹幕偏移时间
+     */
     private var shift = 0L
+
+    /**
+     * 播放速度
+     */
+    private var rate = 1.0f
+    private var isSpeedJustChange = false
 
     /**
      * 填充弹幕
      */
     private fun prepareDanma() {
         val parser = danmaParser ?: return
-        danmaView?.prepare(parser, config.getDanmaConfig())
+        danmaContext = config.getDanmaConfig()
+        danmaView?.prepare(parser, danmaContext)
     }
 
     /**
-     * 显示/影藏弹幕
+     * 显示/隐藏弹幕
      */
     private fun setDanmaShow() {
         danmaView?.run {
@@ -49,7 +63,8 @@ class DanmakuEngine(
     }
 
     override fun setDanmaList(danma: List<Danma>, shift: Long) {
-        danmaParser = JsonDanmakuParser(danma)
+        danmaTimer = SpeedDanmakuTimer()
+        danmaParser = JsonDanmakuParser(danma).setTimer(danmaTimer)
         this.shift = shift
         prepareDanma()
     }
@@ -70,6 +85,8 @@ class DanmakuEngine(
 
     override fun release() {
         shift = 0
+        rate = 1.0f
+        danmaTimer = null
         danmaParser = null
         danmaView?.release()
         danmaView = null
@@ -90,6 +107,11 @@ class DanmakuEngine(
         }
     }
 
+    override fun setRate(rate: Float) {
+        isSpeedJustChange = true
+        this.rate = max(1.0f, rate)
+    }
+
     override fun seekTo(position: Long) {
         danmaView?.seekTo(position + shift)
     }
@@ -107,7 +129,11 @@ class DanmakuEngine(
         danmaCallback?.prepared()
     }
 
-    override fun updateTimer(timer: DanmakuTimer?) {
+    override fun updateTimer(timer: DanmakuTimer) {
+        if(isSpeedJustChange) {
+            isSpeedJustChange = false
+            danmaTimer?.setSpeed(rate)
+        }
         danmaCallback?.updateTimer(timer)
     }
 

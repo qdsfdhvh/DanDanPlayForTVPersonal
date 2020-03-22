@@ -4,6 +4,7 @@ import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.player.data.model.Progress
+import com.seiko.player.media.option.VlcOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -144,6 +145,7 @@ class VlcPlayerController(
     override fun setRate(rate: Float) {
         if (!mediaPlayer.isReleased) {
             mediaPlayer.rate = rate
+            Timber.d("setRate = $rate")
         }
     }
 
@@ -171,6 +173,7 @@ class VlcPlayerController(
         mediaPlayer.setEventListener(this)
 
         if (!mediaPlayer.isReleased) {
+            mediaPlayer.setEqualizer(instance.getEqualizerSetFromSettings())
             mediaPlayer.setVideoTitleDisplay(MediaPlayer.Position.Disable, 0)
             mediaPlayer.play()
         }
@@ -227,6 +230,8 @@ class VlcPlayerController(
     private fun newMediaPlayer(): MediaPlayer {
         val mediaPlayer = instance.newMediaPlayer()
         mediaPlayer.vlcVout.addCallback(this)
+        mediaPlayer.setAudioDigitalOutputEnabled(false)
+        VlcOptions.getAout()?.let { mediaPlayer.setAudioOutput(it) }
         return mediaPlayer
     }
 

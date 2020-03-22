@@ -43,4 +43,6 @@
     <dimen name="kl_normal">16dp</dimen>
 
     <dimen name="audio_browser_item_size">48dp</dimen>
+
+    <dimen name="default_context_width">512dp</dimen>
 </resources>

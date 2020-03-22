@@ -14,7 +14,7 @@ internal class DanDanApiGenerator(
     private val newOkHttpClient = okHttpClient.newBuilder()
         .addInterceptor(HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
-                level = HttpLoggingInterceptor.Level.HEADERS
+                level = HttpLoggingInterceptor.Level.BODY
             }
         })
 

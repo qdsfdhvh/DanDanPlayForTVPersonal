@@ -34,4 +34,9 @@ interface PrefDataSource {
      */
     var showDanma: Boolean
 
+    /**
+     * 视频播放速度
+     */
+    var videoRate: Float
+
 }
