@@ -155,8 +155,8 @@ class VlcVideoPlayerActivity : FragmentActivity()
     }
 
     override fun onStop() {
-        super.onStop()
         stop()
+        super.onStop()
     }
 
     override fun onDestroy() {

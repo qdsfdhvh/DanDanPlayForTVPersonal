@@ -14,8 +14,8 @@ class DanDanApiGenerator(
 ) {
 
     private val newOkHttpClient = okHttpClient.newBuilder()
-        .connectTimeout(5000, TimeUnit.MILLISECONDS)
-        .readTimeout(5000, TimeUnit.MILLISECONDS)
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
         .addInterceptor(GzipInterceptor())
         .apply {
             if (BuildConfig.DEBUG) {

@@ -2,7 +2,7 @@ package com.seiko.player.data.db
 
 import android.util.Base64
 import androidx.room.TypeConverter
-import com.seiko.player.data.api.GzipUtils
+import com.seiko.player.util.GzipUtils
 import com.seiko.player.data.model.DanmaCommentBean
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
