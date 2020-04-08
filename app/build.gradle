@@ -17,6 +17,10 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    // VLC 需要
+    dataBinding {
+        enabled = true
+    }
     // 签名配置信息
     signingConfigs {
         release {
@@ -81,6 +85,6 @@ dependencies {
     // Database Debug
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
-    // 内存泄漏
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+//    // 内存泄漏
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

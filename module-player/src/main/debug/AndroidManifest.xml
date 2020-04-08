@@ -431,7 +431,7 @@
         </activity>
 
         <!--媒体库-->
-        <activity android:name=".ui.media.MediaActivity"
+        <activity android:name=".ui.MediaActivity"
             android:theme="@style/Theme.VLC.TV"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity"/>

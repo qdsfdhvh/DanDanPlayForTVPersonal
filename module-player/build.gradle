@@ -9,6 +9,10 @@ kapt {
 }
 
 android {
+    // VLC 需要
+    dataBinding {
+        enabled = true
+    }
 //    resourcePrefix "player_"
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
