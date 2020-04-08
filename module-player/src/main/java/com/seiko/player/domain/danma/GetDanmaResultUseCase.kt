@@ -2,7 +2,7 @@ package com.seiko.player.domain.danma
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.comments.VideoMatchRepository
-import com.seiko.player.data.model.DanmaResultBean
+import org.videolan.vlc.danma.DanmaResultBean
 import com.seiko.player.data.model.PlayParam
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -31,8 +31,9 @@ class GetDanmaResultUseCase : KoinComponent {
 
         return Result.Success(
             DanmaResultBean(
-            comments = comments,
-            shift = shift
-        ))
+                comments = comments,
+                shift = shift
+            )
+        )
     }
 }

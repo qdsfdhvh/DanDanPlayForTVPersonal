@@ -2,11 +2,9 @@ package com.seiko.player.vm
 
 import androidx.lifecycle.*
 import com.seiko.common.data.Result
-import com.seiko.player.data.model.DanmaCommentBean
-import com.seiko.player.data.model.DanmaResultBean
+import org.videolan.vlc.danma.DanmaResultBean
 import com.seiko.player.data.model.PlayParam
 import com.seiko.player.data.prefs.PrefDataSource
-import com.seiko.player.domain.danma.GetDanmaCommentsUseCase
 import com.seiko.player.domain.danma.GetDanmaResultUseCase
 import com.seiko.player.domain.subtitle.GetSubtitleUseCase
 import kotlinx.coroutines.Dispatchers

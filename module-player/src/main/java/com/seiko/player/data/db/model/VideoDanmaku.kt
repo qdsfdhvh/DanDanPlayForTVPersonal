@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.seiko.player.data.api.model.DanmaDownloadResponse
 import com.seiko.player.data.model.DanmaCommentBean
 
 @Entity(

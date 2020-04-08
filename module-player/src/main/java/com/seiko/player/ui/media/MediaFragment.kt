@@ -121,7 +121,7 @@ class MediaFragment : Fragment(), MediaTvListAdapter.OnItemFocusListener, OnItem
 
     override fun onClick(holder: RecyclerView.ViewHolder, item: Any, position: Int) {
         when(item) {
-            is MediaWrapper  -> {
+            is MediaWrapper -> {
                 VlcVideoPlayerActivity.launch(requireActivity(), PlayParam(
                     item.uri.path!!,
                     item.title
