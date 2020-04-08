@@ -39,6 +39,8 @@ dependencies {
 //    // 字幕
 //    implementation project(':libs:tool-subtitle')
     // VLC
-    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
-    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"
+//    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
+//    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"
+    implementation project(':libs:tool-vlc:application:vlc-android')
+    implementation project(':libs:tool-vlc:application:television')
 }

@@ -1,6 +1,7 @@
 package com.seiko.torrent.app
 
 import android.app.Application
+import android.content.res.Configuration
 import com.seiko.common.app.InitComponent
 import com.seiko.torrent.di.*
 import com.seiko.torrent.service.TorrentTaskService
@@ -30,6 +31,10 @@ class TorrentInitComponent : InitComponent {
     }
 
     override fun onLowMemory() {
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
 
     }
 }

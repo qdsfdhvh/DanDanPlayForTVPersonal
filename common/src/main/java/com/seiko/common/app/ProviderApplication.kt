@@ -1,6 +1,7 @@
 package com.seiko.common.app
 
 import android.app.Application
+import android.content.res.Configuration
 import com.seiko.common.di.moshiModule
 import com.seiko.common.di.networkModule
 import com.seiko.common.util.helper.providerAppManager
@@ -39,6 +40,10 @@ class ProviderApplication : InitComponent {
     }
 
     override fun onLowMemory() {
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
 
     }
 

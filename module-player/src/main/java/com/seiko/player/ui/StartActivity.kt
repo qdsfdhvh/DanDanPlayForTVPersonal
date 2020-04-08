@@ -13,71 +13,71 @@ import com.seiko.player.util.extensions.getRealPath
 import com.seiko.player.util.getFileNameFromPath
 import timber.log.Timber
 
-@Route(path = Routes.Player.PATH)
-class StartActivity : FragmentActivity() {
-
-    companion object {
-        private const val INTENT_TYPE_VIDEO = "video"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        Timber.d("onCreate")
-        checkIntent()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        Timber.d("onDestroy")
-    }
-
-    private fun checkIntent() {
-        val openIntent = intent
-        if (openIntent == null) {
-            openMediaActivity()
-            return
-        }
-
-        //外部打开
-        val videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
-            if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
-                toast("Bad Intent：$openIntent")
-                openMediaActivity()
-                return
-            }
-            intent.data
-        } else {
-            openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
-        }
-
-        // 没有uri
-        if (videoUri == null) {
-            openMediaActivity()
-            return
-        }
-
-        // 获取真实地址
-        val videoPath = videoUri.getRealPath(this)
-        if (videoPath == null) {
-            openMediaActivity()
-            return
-        }
-
-        // 获取视频标题
-        var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
-        if (videoTitle.isNullOrEmpty()) {
-            videoTitle = videoPath.getFileNameFromPath()
-        }
-
-        VlcVideoPlayerActivity.launch(this, PlayParam(
-            videoPath = videoPath,
-            videoTitle = videoTitle
-        ))
-        finish()
-    }
-
-    private fun openMediaActivity() {
-        Navigator.navToPlayerMedia(this)
-        finish()
-    }
-}
+////@Route(path = Routes.Player.PATH)
+//class StartActivity : FragmentActivity() {
+//
+//    companion object {
+//        private const val INTENT_TYPE_VIDEO = "video"
+//    }
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+////        Timber.d("onCreate")
+//        checkIntent()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+////        Timber.d("onDestroy")
+//    }
+//
+//    private fun checkIntent() {
+//        val openIntent = intent
+//        if (openIntent == null) {
+//            openMediaActivity()
+//            return
+//        }
+//
+//        //外部打开
+//        val videoUri = if (Intent.ACTION_VIEW == openIntent.action) {
+//            if (openIntent.type?.startsWith(INTENT_TYPE_VIDEO) != true) {
+//                toast("Bad Intent：$openIntent")
+//                openMediaActivity()
+//                return
+//            }
+//            intent.data
+//        } else {
+//            openIntent.getParcelableExtra(Routes.Player.ARGS_VIDEO_URI)
+//        }
+//
+//        // 没有uri
+//        if (videoUri == null) {
+//            openMediaActivity()
+//            return
+//        }
+//
+//        // 获取真实地址
+//        val videoPath = videoUri.getRealPath(this)
+//        if (videoPath == null) {
+//            openMediaActivity()
+//            return
+//        }
+//
+//        // 获取视频标题
+//        var videoTitle: String? = openIntent.getStringExtra(Routes.Player.ARGS_VIDEO_TITLE)
+//        if (videoTitle.isNullOrEmpty()) {
+//            videoTitle = videoPath.getFileNameFromPath()
+//        }
+//
+//        VlcVideoPlayerActivity.launch(this, PlayParam(
+//            videoPath = videoPath,
+//            videoTitle = videoTitle
+//        ))
+//        finish()
+//    }
+//
+//    private fun openMediaActivity() {
+//        Navigator.navToPlayerMedia(this)
+//        finish()
+//    }
+//}

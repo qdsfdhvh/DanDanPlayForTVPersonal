@@ -1,0 +1,3 @@
+[submodule "libs/tool-vlc"]
+	path = libs/tool-vlc
+	url = git@github.com:videolan/vlc-android.git

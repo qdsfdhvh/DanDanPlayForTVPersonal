@@ -1,0 +1,80 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven { url("https://jitpack.io") }
+    }
+    dependencies {
+        classpath(Deps.plugin_gradle)
+        classpath(Deps.plugin_kotlin)
+        classpath(Deps.plugin_cc)
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven{ url("https://jitpack.io") }
+        maven{ url("https://dl.bintray.com/videolan/Android") }
+    }
+}
+
+ext {
+    android_plugin_version = '3.6.1'
+    kotlin_version = '1.3.70'
+    kotlinx_version = '1.3.4'
+    appId = Build.applicationId
+    versionName = '3.3.0-dev'
+    versionCode = 3030000
+    libvlcVersion = '3.3.0-eap05'
+    medialibraryVersion = '0.7.0-eap05'
+    minSdkVersion = 17
+    targetSdkVersion = 29
+    compileSdkVersion = 29
+    androidxLegacyVersion = '1.0.0'
+    androidxCoreVersion = '1.1.0'
+    lifecycleVersion = '2.2.0'
+    androidxPreferencesVersion = '1.1.0'
+    androidxVersion = '1.1.0'
+    androidxActivityVersion = '1.1.0'
+    androidxFragmentVersion = '1.2.0'
+    androidxAnnotationVersion = '1.1.0'
+    androidxAppcompatVersion = '1.1.0'
+    androidxRecyclerviewVersion = '1.1.0'
+    androidxMediaVersion = '1.1.0'
+    androidxLeanbackVersion = '1.0.0'
+    //fixme : When we update this dep, please verify of this issue is fixed: https://github.com/material-components/material-components-android/issues/1086
+    // if so, revert application/vlc-android/res/values[-v21]/styles.xml -> AppModalStyle
+    androidxMaterialVersion = '1.1.0-rc02'
+    constraintLayoutVersion = '1.1.3'
+    archVersion = '2.1.0'
+    roomVersion = '2.2.3'
+    pagingVersion = '2.1.1'
+    junitVersion = '4.12'
+    mockito = '2.8.9'
+    retrofit = '2.6.1'
+    moshi = '1.8.0'
+    powerMock = '2.0.2'
+    espressoVersion = '3.1.1'
+    livedataTest = '1.1.0'
+    robolectric = '4.3.1'
+    mockk = '1.9.3'
+    supportTest = '1.1.0'
+//    versionCode scheme is T M NN RR AA
+//    T: Target/Flavour (1 for Android, 2 for Chrome?)
+//    M: Major version from 0 to 9
+//    NN: Minor version from 00 to 99
+//    RR: Micro/Revision version from 00 to 99
+//    AA: ABI from 0 to 99
+//    0 is dev
+//    1 was ARMv5        (deprecated)
+//    2 was ARMv6-nofpu  (deprecated)
+//    3 was ARMv6-fpu    (deprecated)
+//    4 is ARMv7-A
+//    5 is x86
+//    6 is MIPS
+//    7 is ARMv8
+//    8 is x86_64
+//    9 is MIPS64
+}

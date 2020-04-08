@@ -1,10 +1,12 @@
 package com.seiko.common.app
 
 import android.app.Application
+import android.content.res.Configuration
 
 interface AppDelegate {
     fun Application.setupApplication()
     fun Application.clearOnLowMemory()
+    fun Application.configurationChanged(newConfig: Configuration)
 }
 
 class AppSetupDelegate : AppDelegate {
@@ -21,6 +23,12 @@ class AppSetupDelegate : AppDelegate {
     override fun Application.clearOnLowMemory() {
         for (entry in map) {
             entry.value.onLowMemory()
+        }
+    }
+
+    override fun Application.configurationChanged(newConfig: Configuration) {
+        for (entry in map) {
+            entry.value.onConfigurationChanged(newConfig)
         }
     }
 

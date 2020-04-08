@@ -2,6 +2,7 @@ package com.dandanplay.tv
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.os.StrictMode
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
@@ -41,6 +42,11 @@ class App : Application(), AppDelegate by AppSetupDelegate() {
         setupApplication()
 
         strictMode()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        configurationChanged(newConfig)
     }
 
     override fun onLowMemory() {

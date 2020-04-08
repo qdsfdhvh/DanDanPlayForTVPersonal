@@ -1,6 +1,7 @@
 package com.seiko.tv.app
 
 import android.app.Application
+import android.content.res.Configuration
 import com.seiko.tv.di.*
 import com.seiko.common.app.InitComponent
 import com.seiko.tv.util.clearFrescoMemory
@@ -41,5 +42,9 @@ class DanDanInitComponent : InitComponent {
 
     override fun onLowMemory() {
         clearFrescoMemory()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+
     }
 }
