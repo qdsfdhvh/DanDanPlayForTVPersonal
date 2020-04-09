@@ -2,6 +2,7 @@ package com.seiko.danma
 
 import com.seiko.danma.model.Danma
 import com.seiko.danma.util.log
+import master.flame.danmaku.controller.DimensionTimer
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.controller.IDanmakuView
 import master.flame.danmaku.danmaku.model.BaseDanmaku
@@ -18,7 +19,6 @@ class DanmakuEngine(
     private var danmaCallback: DrawHandler.Callback? = null
 
     private var danmaParser: BaseDanmakuParser? = null
-    private var danmaTimer: SpeedDanmakuTimer? = null
     private var danmaContext: DanmakuContext? = null
     private var showDanma = true
 
@@ -26,12 +26,6 @@ class DanmakuEngine(
      * 弹幕偏移时间
      */
     private var shift = 0L
-
-    /**
-     * 播放速度
-     */
-    private var rate = 1.0f
-    private var isSpeedJustChange = false
 
     /**
      * 填充弹幕
@@ -63,8 +57,7 @@ class DanmakuEngine(
     }
 
     override fun setDanmaList(danma: List<Danma>, shift: Long) {
-        danmaTimer = SpeedDanmakuTimer()
-        danmaParser = JsonDanmakuParser(danma).setTimer(danmaTimer)
+        danmaParser = JsonDanmakuParser(danma)
         this.shift = shift
         prepareDanma()
     }
@@ -85,8 +78,7 @@ class DanmakuEngine(
 
     override fun release() {
         shift = 0
-        rate = 1.0f
-        danmaTimer = null
+        DimensionTimer.getInstance().setTimeRate(1.0f)
         danmaParser = null
         danmaView?.release()
         danmaView = null
@@ -108,8 +100,7 @@ class DanmakuEngine(
     }
 
     override fun setRate(rate: Float) {
-        isSpeedJustChange = true
-        this.rate = max(1.0f, rate)
+        DimensionTimer.getInstance().setTimeRate(max(0f, rate))
     }
 
     override fun seekTo(position: Long) {
@@ -130,10 +121,6 @@ class DanmakuEngine(
     }
 
     override fun updateTimer(timer: DanmakuTimer) {
-        if(isSpeedJustChange) {
-            isSpeedJustChange = false
-            danmaTimer?.setSpeed(rate)
-        }
         danmaCallback?.updateTimer(timer)
     }
 

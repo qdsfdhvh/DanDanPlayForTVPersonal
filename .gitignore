@@ -17,3 +17,7 @@ componentrelease
 app-bl
 schemas
 key.properties
+
+.project
+.classpath
+org.eclipse.buildship.core.prefs

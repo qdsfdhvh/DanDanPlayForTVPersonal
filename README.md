@@ -64,15 +64,17 @@ Clean思想由Uncle Bob提出的，相关内容详见[The Clean Code Blog](https
 
 * [~~AndroidTvTorrent~~](https://github.com/zh79325/AndroidTvTorrent)
 
-### player
+### ~~player~~
+
+> 为了降低开发难度，计划直接使用VLC，不再重写。
 
 * [vlc-android](https://github.com/videolan/vlc-android)
 
-* [DanmakuFlameMaster](https://github.com/bilibili/DanmakuFlameMaster)
+* [~~DanmakuFlameMaster~~](https://github.com/bilibili/DanmakuFlameMaster)
 
-* [juniversalchardet](https://github.com/albfernandez/juniversalchardet)
+* [~~juniversalchardet~~](https://github.com/albfernandez/juniversalchardet)
 
-* [SubtitleForAndroid](https://github.com/averyzhong/SubtitleForAndroid)
+* [~~SubtitleForAndroid~~](https://github.com/averyzhong/SubtitleForAndroid)
 
 * [~~Exoplayer~~](https://github.com/google/ExoPlayer)
 

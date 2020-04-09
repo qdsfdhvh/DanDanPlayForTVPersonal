@@ -14,7 +14,7 @@ android {
     dataBinding {
         enabled = true
     }
-//    resourcePrefix "player_"
+    resourcePrefix "player_"
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }
@@ -36,14 +36,9 @@ dependencies {
     kapt Deps.arouter_compiler
     kapt Deps.room_compiler
     kapt Deps.moshi_compiler
-    // AppCompat
-    implementation "androidx.lifecycle:lifecycle-service:2.2.0"
-    implementation "com.google.android.material:material:1.2.0-alpha05"
     // 弹幕
     implementation project(':libs:tool-danma')
     // VLC
-//    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
-//    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"
     implementation project(':libs:tool-vlc:application:vlc-android')
     implementation project(':libs:tool-vlc:application:television')
 }
