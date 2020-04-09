@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.seiko.player">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!-- USe foreground services -->
@@ -9,31 +8,10 @@
 
         <!--中转-->
         <activity
-            android:name=".ui.StartActivity"
-            android:label="@string/player_app_name"
-            android:theme="@style/Theme.VLC.Transparent.NoUI">
-        </activity>
+            android:name=".ui.StartActivity"/>
 
         <!--媒体库-->
-        <activity android:name=".ui.MediaActivity"
-            android:theme="@style/Theme.VLC.TV"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <!--播放器VLC-->
-        <activity
-            android:name=".ui.video.VlcVideoPlayerActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation"
-            android:exported="true"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.VLC.Player"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
-
-        <service android:name=".service.MediaParsingService"/>
-        <service android:name=".service.MediaParsingIntentService"/>
+        <activity android:name=".ui.MediaActivity"/>
 
     </application>
 </manifest>

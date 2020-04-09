@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.res.Configuration
 import com.seiko.common.app.InitComponent
 import com.seiko.player.di.*
-import com.seiko.player.util.bitmap.BitmapCache
 import org.koin.core.context.loadKoinModules
 import org.videolan.libvlc.Dialog
+import org.videolan.tools.BitmapCache
 import org.videolan.vlc.util.DialogDelegate
 import timber.log.Timber
 
@@ -22,14 +22,10 @@ class PlayerInitComponent : InitComponent
         loadKoinModules(listOf(
             // 本地配置、数据库、网络请求
             prefModule, dbModule, networkModule,
-            // 播放器
-            playModule,
             // ...
             repositoryModule,
             // 实例
-            useCaseModule,
-            // viewModel
-            viewModelModule
+            useCaseModule
         ))
 
         application.setupApplication()

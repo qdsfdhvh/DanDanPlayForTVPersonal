@@ -1,3 +1,4 @@
+ext.alwaysLib = true // VLC配置的appId目前是固定的，子module暂时不单独编译
 apply from: rootProject.file('app-cc-setting.gradle')
 apply from: rootProject.file('app-common-build.gradle')
 
@@ -40,8 +41,6 @@ dependencies {
     implementation "com.google.android.material:material:1.2.0-alpha05"
     // 弹幕
     implementation project(':libs:tool-danma')
-//    // 字幕
-//    implementation project(':libs:tool-subtitle')
     // VLC
 //    implementation "org.videolan.android:medialibrary-all:0.7.0-eap03"
 //    implementation "org.videolan.android:libvlc-all:3.3.0-eap02"

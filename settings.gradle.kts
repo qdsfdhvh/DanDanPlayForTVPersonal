@@ -8,7 +8,6 @@ include(":app",
         ":libs:thunder",
         ":libs:file-picker",
         ":libs:tool-danma",
-        ":libs:tool-subtitle",
         ":libs:tool-torrent")
 
 include(":libs:tool-vlc")
