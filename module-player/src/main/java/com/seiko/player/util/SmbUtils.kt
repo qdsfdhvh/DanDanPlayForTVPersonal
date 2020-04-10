@@ -9,22 +9,14 @@ import jcifs.smb.SmbFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.net.MalformedURLException
 import java.util.*
 import kotlin.collections.HashMap
 
 object SmbUtils {
 
-    private const val TAG = "SmbUtils"
-
     private val maps = HashMap<String, CIFSContext>(2)
 
-    fun getFileWithUri(uri: Uri): SmbFile? {
-        //TODO 目前测试写死，待从vlc中获取。
-        val account = "share"
-        val password = "123456"
-
+    fun getFileWithUri(uri: Uri, account: String, password: String): SmbFile {
         val host = uri.host!!
         val path = uri.path
         val authUrl ="smb://$account:$password@$host$path"
@@ -35,20 +27,8 @@ object SmbUtils {
             maps[host] = cifsContext
         }
 
-        val smbFile = try {
-            SmbFile(authUrl, cifsContext)
-        } catch (e: MalformedURLException) {
-            Timber.tag(TAG).e(e)
-            return null
-        }
-
-        try {
-            smbFile.connect()
-        } catch (e: Exception) {
-            Timber.tag(TAG).e(e)
-            return null
-        }
-
+        val smbFile = SmbFile(authUrl, cifsContext)
+        smbFile.connect()
         return smbFile
     }
 

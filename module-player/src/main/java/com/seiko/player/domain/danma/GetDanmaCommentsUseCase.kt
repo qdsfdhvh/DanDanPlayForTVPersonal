@@ -58,44 +58,4 @@ class GetDanmaCommentsUseCase : KoinComponent {
         }
     }
 
-//    /**
-//     * @param fileName 资源名称
-//     * @param isMatched 是否精确匹配
-//     */
-//    suspend fun name(fileName: String, isMatched: Boolean): Result<List<DanmaCommentBean>> {
-//
-//        // 资源名称的MD5
-//        val fileNameMd5 = fileName.getMD5()
-//
-//        // 尝试从本地数据库获取弹幕
-//        var start = System.currentTimeMillis()
-//        when(val result = danmaDbRepo.getDanmaDownloadBean(fileNameMd5)) {
-//            is Result.Success -> {
-//                Timber.d("danma from db, 耗时：${System.currentTimeMillis() - start}")
-//                return Result.Success(result.data)
-//            }
-//        }
-//
-//        // 此视频相应的episodeId
-//        val episodeId = when(val result = getVideoEpisodeId.name(fileName, isMatched)) {
-//            is Result.Success -> result.data
-//            is Result.Error -> return result
-//        }
-//
-//        // 下载弹幕
-//        start = System.currentTimeMillis()
-//        return when(val result = danmaApiRepo.downloadDanma(episodeId)) {
-//            is Result.Success -> {
-//                Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
-//                // 保存到数据库
-//                danmaDbRepo.saveDanmaDownloadBean(VideoDanmaku(
-//                    videoMd5 = fileNameMd5,
-//                    danma = result.data
-//                ))
-//                result
-//            }
-//            is Result.Error -> result
-//        }
-//    }
-
 }

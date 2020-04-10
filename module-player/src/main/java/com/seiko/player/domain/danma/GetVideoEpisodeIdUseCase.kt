@@ -25,7 +25,6 @@ class GetVideoEpisodeIdUseCase : KoinComponent {
      * @param isMatched 是否精确匹配
      */
     suspend fun hash(videoMd5: String, isMatched: Boolean): Result<Int> {
-
         // 尝试从数据库中获取
         val episodeList = workMatchRepo.getEpisodeIdList(videoMd5, isMatched)
         if (episodeList.isNotEmpty()) {
@@ -51,39 +50,5 @@ class GetVideoEpisodeIdUseCase : KoinComponent {
             is Result.Error -> result
         }
     }
-
-//    /**
-//     * @param fileName 资源名称
-//     * @param isMatched 是否精确匹配
-//     */
-//    suspend fun name(fileName: String, isMatched: Boolean): Result<Int> {
-//
-//        // 资源名称的MD5
-//        val fileNameMd5 = fileName.getMD5()
-//
-//        // 尝试从数据库中获取
-//        val episodeList = workMatchRepo.getEpisodeIdList(fileNameMd5, isMatched)
-//        if (episodeList.isNotEmpty()) {
-//            return Result.Success(episodeList[0])
-//        }
-//
-//        val request = MatchRequest.name(fileName)
-//        return when(val result = danmaApiRepo.getVideoMatchList(request)) {
-//            is Result.Success -> {
-//                val matched = result.data.first
-//                val matchList = result.data.second
-//
-//                // 将结果存入数据，不管是否精确关联
-//                workMatchRepo.saveMatchResult(fileNameMd5, matchList, matched)
-//
-//                if (isMatched == matched) {
-//                    Result.Success(matchList[0].episodeId)
-//                } else {
-//                    Result.Error(Exception("DanDanApi is not match this fileName:$fileName"))
-//                }
-//            }
-//            is Result.Error -> result
-//        }
-//    }
 
 }
