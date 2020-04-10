@@ -41,4 +41,7 @@ dependencies {
     // VLC
     implementation project(':libs:tool-vlc:application:vlc-android')
     implementation project(':libs:tool-vlc:application:television')
+
+    // SMB
+    implementation("eu.agno3.jcifs:jcifs-ng:2.1.4")
 }

@@ -16,7 +16,7 @@ class MatchRequest(
     var fileHash: String = "",
     var fieSize: Long = 0,
     var videoDuration: Int = 0,
-    var matchModel: String = ""
+    var matchMode: String = ""
 ) {
     companion object {
         private const val MATCH_MODE_DETAIL = "hashAndFileName"
@@ -26,17 +26,18 @@ class MatchRequest(
         fun hash(fileHash: String) = MatchRequest(
             fileHash = fileHash,
             fileName = "a",
-            matchModel = MATCH_MODE_HASH_ONLY)
+            matchMode = MATCH_MODE_HASH_ONLY)
 
         fun name(fileName: String) = MatchRequest(
             fileName = fileName,
-            matchModel = MATCH_MODE_FILE_NAME_ONLY)
+            fileHash = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            matchMode = MATCH_MODE_FILE_NAME_ONLY)
 
         fun detail(fileName: String, fileHash: String, fileSize: Long, videoDuration: Int) = MatchRequest(
             fileName = fileName,
             fileHash = fileHash,
             fieSize = fileSize,
             videoDuration = videoDuration,
-            matchModel = MATCH_MODE_DETAIL)
+            matchMode = MATCH_MODE_DETAIL)
     }
 }

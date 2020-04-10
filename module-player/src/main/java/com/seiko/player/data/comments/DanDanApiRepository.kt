@@ -25,7 +25,7 @@ class DanDanApiRepository(
             if (!response.success) {
                 return Result.Error(Exception("(${response.errorCode}) ${response.errorMessage}"))
             }
-            return Result.Success(response.isMatched to response.matches)
+            return Result.Success(response.isMatched to (response.matches ?: emptyList()))
         } catch (e: Exception) {
             return Result.Error(e)
         }

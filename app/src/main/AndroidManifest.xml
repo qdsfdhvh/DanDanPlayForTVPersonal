@@ -23,7 +23,9 @@
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true"
         android:largeHeap="true"
-        tools:targetApi="n"
+        android:extractNativeLibs="false"
+        android:requestLegacyExternalStorage="true"
+        tools:targetApi="q"
         tools:ignore="GoogleAppIndexingWarning">
         <!--主界面-->
         <activity android:name=".SplashActivity"

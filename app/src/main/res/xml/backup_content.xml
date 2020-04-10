@@ -2,8 +2,15 @@
 <full-backup-content>
     <exclude domain="root" path="app_upgrade" />
     <exclude domain="root" path="app_bugly" />
+
     <exclude domain="sharedpref" path="environment_prefs.xml" />
+
     <exclude domain="file" path="log" />
     <exclude domain="file" path="data" />
     <exclude domain="file" path="bili_params.dat" />
+
+    <exclude domain="root" path="db"/>
+    <exclude domain="root" path="app_db"/>
+    <exclude domain="root" path="keystore"/>
+    <exclude domain="root" path="app_keystore"/>
 </full-backup-content>

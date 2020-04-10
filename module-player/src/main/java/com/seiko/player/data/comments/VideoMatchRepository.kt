@@ -13,13 +13,14 @@ class VideoMatchRepository(private val videoMatchDao: VideoMatchDao) {
     /**
      * 保存视频的弹幕匹配结果合集
      */
-    suspend fun saveMatchResult(videoMd5: String, matchResultList: List<MatchResult>): Boolean {
+    suspend fun saveMatchResult(videoMd5: String, matchResultList: List<MatchResult>, isMatched: Boolean): Boolean {
         return videoMatchDao.insert(matchResultList.map { item ->
             VideoMatch(
                 videoMd5 = videoMd5,
                 animeId = item.animeId,
                 episodeId = item.episodeId,
-                shift = item.shift
+                shift = item.shift,
+                isMatched = isMatched
             )
         }).contains(0).not()
     }

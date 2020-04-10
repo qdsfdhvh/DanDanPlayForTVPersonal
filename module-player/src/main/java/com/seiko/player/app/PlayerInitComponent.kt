@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import com.seiko.common.app.InitComponent
 import com.seiko.player.di.*
+import com.seiko.player.util.SmbUtils
 import org.koin.core.context.loadKoinModules
 import org.videolan.libvlc.Dialog
 import org.videolan.tools.BitmapCache
@@ -33,6 +34,7 @@ class PlayerInitComponent : InitComponent
 
     override fun onLowMemory() {
         BitmapCache.clear()
+        SmbUtils.clear()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

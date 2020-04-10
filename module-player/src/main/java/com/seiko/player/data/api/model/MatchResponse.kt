@@ -13,7 +13,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class MatchResponse(
     var isMatched: Boolean = false,
-    var matches: List<MatchResult> = emptyList(),
+    var matches: List<MatchResult>? = emptyList(),
     var success: Boolean = false,
     var errorCode: Int = 0,
     var errorMessage: String = ""
