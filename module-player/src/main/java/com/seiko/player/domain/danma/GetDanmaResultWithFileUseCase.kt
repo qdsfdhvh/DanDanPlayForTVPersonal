@@ -5,7 +5,6 @@ import com.seiko.player.util.getVideoMd5
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.videolan.vlc.danma.DanmaResultBean
-import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -25,7 +24,6 @@ class GetDanmaResultWithFileUseCase : KoinComponent {
 
         // 获取视频Md5
         val videoMd5 = videoFile.getVideoMd5()
-        Timber.d("file md5=$videoMd5")
 
         return getResult.invoke(videoMd5, isMatched)
     }

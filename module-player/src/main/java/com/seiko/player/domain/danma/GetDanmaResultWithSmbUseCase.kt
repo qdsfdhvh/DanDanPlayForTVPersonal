@@ -72,6 +72,7 @@ class GetDanmaResultWithSmbUseCase : KoinComponent {
 
         // 获取视频Md5，需要下载16mb资源，比较耗时。
         val start = System.currentTimeMillis()
+        Timber.d("get videoMd5 with smb...")
         val videoMd5 = videoFile.getVideoMd5()
         Timber.d("get videoMd5 with smb, 耗时：${System.currentTimeMillis() - start}")
 

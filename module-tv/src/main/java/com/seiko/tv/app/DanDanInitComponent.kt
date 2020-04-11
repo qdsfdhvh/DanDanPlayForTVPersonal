@@ -32,10 +32,8 @@ class DanDanInitComponent : InitComponent {
             viewModelModule
         ))
 
-        GlobalScope.launch(Dispatchers.IO) {
-            // 初始化Fresco
-            application.initFresco()
-        }
+        // 初始化Fresco
+        application.initFresco()
 
         InputMethodManagerFix.fixFocusedViewLeak(application)
     }

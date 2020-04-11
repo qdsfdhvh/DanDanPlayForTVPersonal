@@ -12,7 +12,6 @@ class MediaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val intent = Intent(applicationContext, org.videolan.vlc.StartActivity::class.java)
-        intent.action = Intent.ACTION_MAIN
         startActivity(intent)
         finish()
     }
