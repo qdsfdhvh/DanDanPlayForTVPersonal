@@ -21,8 +21,6 @@ import com.seiko.common.data.ResultData
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import com.seiko.tv.ui.widget.SpaceItemDecoration
-import com.seiko.common.util.getPercentHeightSize
-import com.seiko.common.util.getPercentWidthSize
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.BangumiIntroEntity
@@ -140,8 +138,8 @@ class BangumiAreaFragment : Fragment(),
         bangumiAdapter.setOnItemClickListener(this)
         // 自动计算count，由于用到了width，需要等界面绘制完，因此在post里运行
         binding.gridBangumi.post {
-            val top = getPercentHeightSize(ITEM_TOP_PADDING_PX)
-            val right = getPercentWidthSize(ITEM_RIGHT_PADDING_PX)
+            val top = ITEM_TOP_PADDING_PX
+            val right = ITEM_RIGHT_PADDING_PX
             binding.gridBangumi.addItemDecoration(SpaceItemDecoration(top, right))
 
             // recView宽度，item宽度

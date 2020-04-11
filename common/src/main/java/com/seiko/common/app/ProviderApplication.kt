@@ -4,12 +4,11 @@ import android.app.Application
 import android.content.res.Configuration
 import com.seiko.common.di.moshiModule
 import com.seiko.common.di.networkModule
+import com.seiko.common.util.AndroidDevices
+import com.seiko.common.util.autosize.AutoSizeConfig
+import com.seiko.common.util.helper.AppAutoAdaptStrategy
 import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import me.jessyan.autosize.AutoSizeConfig
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -21,9 +20,6 @@ class ProviderApplication : InitComponent {
     override fun onCreate(application: Application) {
         Timber.tag("Provider").d("start register common.")
 
-        // 关闭AutoSize日志
-        AutoSizeConfig.getInstance().setLog(false)
-
         loadKoinModules( listOf(
             // JSON
             moshiModule,
@@ -31,12 +27,15 @@ class ProviderApplication : InitComponent {
             networkModule
         ))
 
+        // AutoSize
+        AndroidDevices.init(application)
+        AutoSizeConfig.init(application, strategy = AppAutoAdaptStrategy())
+
+        // VLC
         application.providerAppManager()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            // 初始化MMKV
-            application.initMMKV()
-        }
+        // 初始化MMKV
+        application.initMMKV()
     }
 
     override fun onLowMemory() {

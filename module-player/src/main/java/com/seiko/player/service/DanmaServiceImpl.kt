@@ -3,7 +3,6 @@ package com.seiko.player.service
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.data.Result
-import com.seiko.common.util.getRealTextSizeScale
 import com.seiko.danma.DanmakuEngineOptions
 import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.domain.danma.GetDanmaResultWithFileUseCase
@@ -35,7 +34,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
             //弹幕滚动速度
             setScrollSpeedFactor(1.4f)
             //弹幕文字大小
-            setScaleTextSize(getRealTextSizeScale(3f))
+            setScaleTextSize(3f)
 //        //弹幕文字透明度
 //        .setDanmakuTransparency(0.8f)
             // 是否显示滚动弹幕

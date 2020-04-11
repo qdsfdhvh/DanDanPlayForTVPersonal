@@ -94,7 +94,7 @@ class MainFragment : BrowseSupportFragment()
     private fun setupUI() {
 //        headersState = HEADERS_ENABLED
 //        isHeadersTransitionOnBackEnabled = true
-        title = getString(R.string.app_name)
+        title = "弹弹Play"
         brandColor = Color.parseColor("#424242")
 
         // 设置搜索键
