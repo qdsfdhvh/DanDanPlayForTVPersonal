@@ -1,5 +1,6 @@
 package com.seiko.player.data.comments
 
+import android.net.Uri
 import com.seiko.player.data.db.dao.SmbMrlDao
 import com.seiko.player.data.db.model.SmbMrl
 import timber.log.Timber
@@ -24,7 +25,7 @@ class SmbMrlRepository(private val dao: SmbMrlDao) {
         if (list.isEmpty()) return null
         var host: String
         for (bean in list) {
-            host = bean.mrl.replace("smb://", "")
+            host = Uri.parse(bean.mrl)?.host ?: continue
             Timber.d("比较：uri=$uri, host=$host")
             if (uri.contains(host)) {
                 Timber.d("匹配到host=$host")

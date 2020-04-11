@@ -34,7 +34,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
             //弹幕滚动速度
             setScrollSpeedFactor(1.4f)
             //弹幕文字大小
-            setScaleTextSize(3f)
+            setScaleTextSize(2.5f)
 //        //弹幕文字透明度
 //        .setDanmakuTransparency(0.8f)
             // 是否显示滚动弹幕
@@ -55,7 +55,10 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
         val result = when(media.uri.scheme) {
             "file" -> getDanmaResultWithFile.invoke(File(media.uri.path!!), isMatched)
             "smb" -> getDanmaResultWithSmb.invoke(media.uri, isMatched)
-            else -> return null
+            else -> {
+                Timber.d("danma service do not support url -> ${media.uri}")
+                return null
+            }
         }
         return when(result) {
             is Result.Success -> result.data
