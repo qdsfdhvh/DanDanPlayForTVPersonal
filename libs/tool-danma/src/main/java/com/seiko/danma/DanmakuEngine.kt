@@ -20,12 +20,27 @@ class DanmakuEngine(
 
     private var danmaParser: BaseDanmakuParser? = null
     private var danmaContext: DanmakuContext? = null
+
+    /**
+     * 弹幕是否显示
+     */
     private var showDanma = true
+
+    /**
+     * 弹幕是否播放
+     * PS:danmaView.isPaused有延时，定义此变量做辅助
+     */
+    private var isDanmaPlay = true
 
     /**
      * 弹幕偏移时间
      */
     private var shift = 0L
+
+    /**
+     * 跳转
+     */
+    private var seekPosition = -1L
 
     /**
      * 填充弹幕
@@ -46,7 +61,6 @@ class DanmakuEngine(
     }
 
     override fun bindDanmakuView(danmaView: IDanmakuView) {
-        log("bindToMediaPlayer")
         this.danmaView = danmaView
         danmaView.setDrawingThreadType(config.drawType)
         danmaView.showFPS(config.showFps)
@@ -65,19 +79,26 @@ class DanmakuEngine(
     override fun play() {
         val danmaView = danmaView ?: return
         if (danmaView.isPrepared && danmaView.isPaused) {
+            isDanmaPlay = true
             danmaView.resume()
+            if (seekPosition >= 0) {
+                danmaView.seekTo(seekPosition)
+                seekPosition = -1
+            }
         }
     }
 
     override fun pause() {
         val danmaView = danmaView ?: return
         if (danmaView.isPrepared && !danmaView.isPaused) {
+            isDanmaPlay = false
             danmaView.pause()
         }
     }
 
     override fun release() {
         shift = 0
+        seekPosition = -1
         DimensionTimer.getInstance().setTimeRate(1.0f)
         danmaParser = null
         danmaView?.release()
@@ -104,7 +125,14 @@ class DanmakuEngine(
     }
 
     override fun seekTo(position: Long) {
-        danmaView?.seekTo(position + shift)
+        val danmaView = danmaView ?: return
+        if (danmaView.isPrepared) {
+            if (isDanmaPlay) {
+                danmaView.seekTo(position + shift)
+            } else {
+                seekPosition = position + shift
+            }
+        }
     }
 
     override fun drawingFinished() {
