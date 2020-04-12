@@ -9,6 +9,7 @@ internal val useCaseModule = module {
     single { GetDanmaCommentsUseCase() }
     single { GetDanmaResultUseCase() }
     single { GetDanmaResultWithFileUseCase() }
+    single { GetDanmaResultWithFtpUseCase() }
     single { GetDanmaResultWithNetUseCase() }
     single { GetDanmaResultWithSmbUseCase() }
     single { GetVideoEpisodeIdUseCase() }

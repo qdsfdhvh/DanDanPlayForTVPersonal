@@ -44,4 +44,6 @@ dependencies {
 
     // SMB
     implementation("eu.agno3.jcifs:jcifs-ng:2.1.4")
+    // sftp
+    implementation("com.jcraft:jsch:0.1.55")
 }

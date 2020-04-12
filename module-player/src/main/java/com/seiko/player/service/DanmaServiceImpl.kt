@@ -6,6 +6,7 @@ import com.seiko.common.data.Result
 import com.seiko.danma.DanmakuEngineOptions
 import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.domain.danma.GetDanmaResultWithFileUseCase
+import com.seiko.player.domain.danma.GetDanmaResultWithFtpUseCase
 import com.seiko.player.domain.danma.GetDanmaResultWithNetUseCase
 import com.seiko.player.domain.danma.GetDanmaResultWithSmbUseCase
 import master.flame.danmaku.danmaku.model.IDisplayer
@@ -23,6 +24,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
     private val getDanmaResultWithFile: GetDanmaResultWithFileUseCase by inject()
     private val getDanmaResultWithSmb: GetDanmaResultWithSmbUseCase by inject()
     private val getDanmaResultWithNet: GetDanmaResultWithNetUseCase by inject()
+    private val getDanmaResultWithFtp: GetDanmaResultWithFtpUseCase by inject()
 
     private val smbMrlRepo: SmbMrlRepository by inject()
 
@@ -54,10 +56,11 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
 
     override suspend fun getDanmaResult(media: IMedia): DanmaResultBean? {
         val isMatched = true
-        val result = when(media.uri.scheme) {
+        val result = when(val scheme = media.uri.scheme) {
             "file" -> getDanmaResultWithFile.invoke(File(media.uri.path!!), isMatched)
             "smb" -> getDanmaResultWithSmb.invoke(media.uri, isMatched)
             "http", "https" -> getDanmaResultWithNet.invoke(media.uri.toString(), isMatched)
+            "ftp", "sftp" -> getDanmaResultWithFtp.invoke(media.uri, isMatched, scheme)
             else -> {
                 Timber.d("danma service do not support url -> ${media.uri}")
                 return null

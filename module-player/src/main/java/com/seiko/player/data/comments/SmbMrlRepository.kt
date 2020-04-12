@@ -20,14 +20,20 @@ class SmbMrlRepository(private val dao: SmbMrlDao) {
         )) > 0
     }
 
-    suspend fun getSmbMrl(uri: String): SmbMrl? {
+    suspend fun getSmbMrl(url: String, scheme: String): SmbMrl? {
         val list = dao.all()
         if (list.isEmpty()) return null
+
+        var uri: Uri
         var host: String
+
         for (bean in list) {
-            host = Uri.parse(bean.mrl)?.host ?: continue
-            Timber.d("比较：uri=$uri, host=$host")
-            if (uri.contains(host)) {
+            uri = Uri.parse(bean.mrl) ?: continue
+            if (uri.scheme == null || uri.scheme != scheme) continue
+
+            host = uri.host ?: continue
+            Timber.d("比较：url=$url, host=${host}")
+            if (url.contains(host)) {
                 Timber.d("匹配到host=$host")
                 return bean
             }

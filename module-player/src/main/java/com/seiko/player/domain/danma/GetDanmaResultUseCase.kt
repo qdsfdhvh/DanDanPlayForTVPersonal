@@ -20,6 +20,10 @@ class GetDanmaResultUseCase : KoinComponent {
      * @param isMatched 是否精确匹配
      */
     suspend operator fun invoke(videoMd5: String, isMatched: Boolean): Result<DanmaResultBean> {
+        if (videoMd5.isEmpty()) {
+            return Result.Error(RuntimeException("videoMd5 is empty."))
+        }
+
         // 弹幕集合
         val comments = when(val result = getDanmaComments.hash(videoMd5, isMatched)) {
             is Result.Success -> result.data
