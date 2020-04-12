@@ -33,7 +33,9 @@ class GetTorrentTrackersUseCase : KoinComponent {
         if (!trackersFile.exists()) {
             try {
                 val app: Application by inject()
-                trackersFile.writeInputStream(app.assets.open(ASSETS_TRACKER_NAME))
+                withContext(Dispatchers.IO) {
+                    trackersFile.writeInputStream(app.assets.open(ASSETS_TRACKER_NAME))
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
                 return Result.Error(e)

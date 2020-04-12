@@ -4,6 +4,8 @@ import com.seiko.common.util.writeInputStream
 import com.seiko.common.data.Result
 import com.seiko.torrent.util.constants.TORRENT_TEMP_DIR
 import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -32,7 +34,9 @@ class DownloadTorrentWithNetUseCase : KoinComponent {
 
         val contentTemp = File(tempDir, UUID.randomUUID().toString() + ".torrent")
         try {
-            contentTemp.writeInputStream(inputStream)
+            withContext(Dispatchers.IO) {
+                contentTemp.writeInputStream(inputStream)
+            }
         } catch (e: IOException) {
             return Result.Error(e)
         }

@@ -2,6 +2,8 @@ package com.seiko.torrent.domain
 
 import com.seiko.common.data.Result
 import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.libtorrent4j.TorrentInfo
@@ -19,7 +21,7 @@ class DownloadTorrentWithDanDanApiUseCase : KoinComponent {
         }
         // 获得字节
         val inputStream = (downloadResult as Result.Success).data
-        val bytes = inputStream.readBytes()
+        val bytes = withContext(Dispatchers.IO) { inputStream.readBytes() }
         // 加载信息
         val info = TorrentInfo(bytes)
         val hash = info.infoHash().toHex()

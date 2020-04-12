@@ -31,6 +31,11 @@ object FtpUtils {
             return null
         }
 
-        return ins.buffered().use { it.getVideoMd5() }
+        val md5 = ins.buffered().use { it.getVideoMd5() }
+
+        client.logout()
+        client.disconnect()
+
+        return md5
     }
 }
