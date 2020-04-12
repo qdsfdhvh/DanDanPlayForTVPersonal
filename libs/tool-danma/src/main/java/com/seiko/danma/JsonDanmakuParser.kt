@@ -81,7 +81,7 @@ class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser(
             } while (nextIndex != -1)
             singleDanmaList.add(singleDanma)
         }
-        log("Parse danma map: time=${System.currentTimeMillis() - start}")
+        log("Parse danma map: 耗时：${System.currentTimeMillis() - start}")
 
         var item: BaseDanmaku
         var color: Int
@@ -101,7 +101,7 @@ class JsonDanmakuParser(private val danmaList: List<Danma>) : BaseDanmakuParser(
             }
         }
 
-        log("Parse danma finish: time=${System.currentTimeMillis() - start}")
+        log("Parse danma finish: 耗时：${System.currentTimeMillis() - start}")
     }
 
     private fun parseDanmaText(item: BaseDanmaku, m: String) {

@@ -5,6 +5,7 @@ import com.seiko.common.data.Result
 import com.seiko.player.data.comments.SmbMd5Repository
 import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.util.SmbUtils
+import com.seiko.player.util.constants.DANMA_RESULT_TAG
 import com.seiko.player.util.getVideoMd5
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -28,35 +29,21 @@ class GetDanmaResultWithSmbUseCase : KoinComponent {
 
         // 先从数据去查找是否与此url匹配的MD5，没有则连接SMB去获取。
         var videoMd5 = smbMd5Repo.getVideoMd5(urlValue)
-        if (videoMd5 == null) {
-            when(val result = getSmbVideoMd5(videoUri)) {
-                is Result.Success -> {
-                    videoMd5 = result.data
-                    // 保存此url的MD5
-                    smbMd5Repo.saveVideoMd5(urlValue, videoMd5)
-                }
-                is Result.Error -> return result
-            }
+        if (!videoMd5.isNullOrEmpty()) {
+            Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with smb from db")
+            return getResult.invoke(videoMd5, isMatched)
         }
 
-        // 加载弹幕
-        return getResult.invoke(videoMd5, isMatched)
-    }
-
-    /**
-     * 获取此SMB视频连接的MD5
-     */
-    private suspend fun getSmbVideoMd5(videoUri: Uri): Result<String> {
         // 获取SMB的账号密码
-        val urlValue = videoUri.toString()
         val smbMrl = smbMrlRepo.getSmbMrl(urlValue)
             ?: return Result.Error(Exception("Not account and password with $urlValue"))
+
         val account = smbMrl.account
         val password = smbMrl.password
 
         // 获取smb路径
         val videoFile = kotlin.runCatching {
-            SmbUtils.getFileWithUri(videoUri, account, password)
+            SmbUtils.getInstance().getFileWithUri(videoUri, account, password)
         }.getOrElse { error ->
             return Result.Error(error as Exception)
         }
@@ -70,12 +57,18 @@ class GetDanmaResultWithSmbUseCase : KoinComponent {
             return Result.Error(e)
         }
 
-        // 获取视频Md5，需要下载16mb资源，比较耗时。
         val start = System.currentTimeMillis()
-        Timber.d("get videoMd5 with smb...")
-        val videoMd5 = videoFile.getVideoMd5()
-        Timber.d("get videoMd5 with smb, 耗时：${System.currentTimeMillis() - start}")
+        Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with smb...")
 
-        return Result.Success(videoMd5)
+        // 获取视频Md5，需要下载16mb资源，比较耗时。
+        videoMd5 = videoFile.getVideoMd5()
+        smbMd5Repo.saveVideoMd5(urlValue, videoMd5)
+
+        Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with smb, 耗时：%d",
+            System.currentTimeMillis() - start)
+
+        // 加载弹幕
+        return getResult.invoke(videoMd5, isMatched)
     }
+
 }

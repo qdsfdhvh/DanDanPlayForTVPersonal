@@ -6,6 +6,7 @@ import com.seiko.common.data.Result
 import com.seiko.danma.DanmakuEngineOptions
 import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.domain.danma.GetDanmaResultWithFileUseCase
+import com.seiko.player.domain.danma.GetDanmaResultWithNetUseCase
 import com.seiko.player.domain.danma.GetDanmaResultWithSmbUseCase
 import master.flame.danmaku.danmaku.model.IDisplayer
 import org.koin.core.KoinComponent
@@ -21,6 +22,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
 
     private val getDanmaResultWithFile: GetDanmaResultWithFileUseCase by inject()
     private val getDanmaResultWithSmb: GetDanmaResultWithSmbUseCase by inject()
+    private val getDanmaResultWithNet: GetDanmaResultWithNetUseCase by inject()
 
     private val smbMrlRepo: SmbMrlRepository by inject()
 
@@ -34,7 +36,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
             //弹幕滚动速度
             setScrollSpeedFactor(1.4f)
             //弹幕文字大小
-            setScaleTextSize(2.5f)
+            setScaleTextSize(2.2f)
 //        //弹幕文字透明度
 //        .setDanmakuTransparency(0.8f)
             // 是否显示滚动弹幕
@@ -55,6 +57,7 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
         val result = when(media.uri.scheme) {
             "file" -> getDanmaResultWithFile.invoke(File(media.uri.path!!), isMatched)
             "smb" -> getDanmaResultWithSmb.invoke(media.uri, isMatched)
+            "http", "https" -> getDanmaResultWithNet.invoke(media.uri.toString(), isMatched)
             else -> {
                 Timber.d("danma service do not support url -> ${media.uri}")
                 return null

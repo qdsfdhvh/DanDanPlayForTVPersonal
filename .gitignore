@@ -21,3 +21,5 @@ key.properties
 .project
 .classpath
 .settings/
+
+device-*.png

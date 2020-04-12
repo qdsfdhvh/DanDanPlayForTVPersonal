@@ -1,13 +1,13 @@
 package com.seiko.player.data.comments
 
 import com.seiko.common.data.Result
-import com.seiko.player.data.api.DanDanApiService
+import com.seiko.player.data.api.DanDanApi
 import com.seiko.player.data.api.model.MatchRequest
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.MatchResult
 
 class DanDanApiRepository(
-    private val api: DanDanApiService
+    private val api: DanDanApi
 ) {
 
     suspend fun downloadDanma(episodeId: Int): Result<List<DanmaCommentBean>> {

@@ -1,7 +1,7 @@
 package com.seiko.player.di
 
 
-import com.seiko.player.data.api.DanDanApiService
+import com.seiko.player.data.api.DanDanApi
 import com.seiko.player.data.comments.*
 import com.seiko.player.data.db.PlayerDatabase
 import org.koin.dsl.module
@@ -14,7 +14,7 @@ val repositoryModule = module {
     single { createSmbMrlRepository(get()) }
 }
 
-private fun createDanDanApiRepository(api: DanDanApiService): DanDanApiRepository {
+private fun createDanDanApiRepository(api: DanDanApi): DanDanApiRepository {
     return DanDanApiRepository(api)
 }
 

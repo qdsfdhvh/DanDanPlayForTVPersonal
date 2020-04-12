@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class DanDanApiGenerator(
@@ -30,8 +31,8 @@ class DanDanApiGenerator(
         .callFactory(newOkHttpClient.build())
         .addConverterFactory(converterFactory)
 
-    fun create(): DanDanApiService {
-        return retrofit.build().create(DanDanApiService::class.java)
+    fun create(): DanDanApi {
+        return retrofit.build().create()
     }
 
 }

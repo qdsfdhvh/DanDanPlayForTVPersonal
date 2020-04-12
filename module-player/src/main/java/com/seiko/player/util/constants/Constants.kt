@@ -36,3 +36,5 @@ internal const val PLAYER_THUMBNAIL_DIR = "PLAYER_THUMBNAIL_DIR"
  * 超过5s才保存视频进度
  */
 internal const val PLAYER_MIN_SAVE_POSITION = 5000
+
+internal const val DANMA_RESULT_TAG = "DanmaResult"

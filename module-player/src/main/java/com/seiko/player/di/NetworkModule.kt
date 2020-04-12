@@ -1,18 +1,25 @@
 package com.seiko.player.di
 
 import com.seiko.player.data.api.DanDanApiGenerator
-import com.seiko.player.data.api.DanDanApiService
+import com.seiko.player.data.api.DanDanApi
+import com.seiko.player.data.api.DownloadApi
+import com.seiko.player.data.api.DownloadApiGenerator
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Converter
 
 internal val networkModule = module {
-    single { createDanDanCommentApiService(get(), get()) }
+    single { createDanDanApi(get(), get()) }
+    single { createDownloadApi() }
 }
 
-private fun createDanDanCommentApiService(
+private fun createDanDanApi(
     okHttpClient: OkHttpClient,
     converterFactory: Converter.Factory
-): DanDanApiService {
+): DanDanApi {
     return DanDanApiGenerator(okHttpClient, converterFactory).create()
+}
+
+private fun createDownloadApi(): DownloadApi {
+    return DownloadApiGenerator().create()
 }

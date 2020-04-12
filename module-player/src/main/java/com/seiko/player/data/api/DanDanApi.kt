@@ -3,13 +3,12 @@ package com.seiko.player.data.api
 import com.seiko.player.data.api.model.DanmaDownloadResponse
 import com.seiko.player.data.api.model.MatchRequest
 import com.seiko.player.data.api.model.MatchResponse
-import org.json.JSONObject
 import retrofit2.http.*
 
 /**
  * 弹弹Play  弹幕接口
  */
-interface DanDanApiService {
+interface DanDanApi {
 
     /**
      * 下载弹幕

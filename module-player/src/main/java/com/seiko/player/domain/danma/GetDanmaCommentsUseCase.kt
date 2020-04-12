@@ -7,6 +7,7 @@ import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.comments.VideoDanmaRepository
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.PlayParam
+import com.seiko.player.util.constants.DANMA_RESULT_TAG
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -27,11 +28,13 @@ class GetDanmaCommentsUseCase : KoinComponent {
      * @param isMatched 是否精确匹配
      */
     suspend fun hash(videoMd5: String, isMatched: Boolean): Result<List<DanmaCommentBean>> {
+        Timber.tag(DANMA_RESULT_TAG).d("get danma comments...")
         // 尝试从本地数据库获取弹幕
         var start = System.currentTimeMillis()
         when(val result = danmaDbRepo.getDanmaDownloadBean(videoMd5)) {
             is Result.Success -> {
-                Timber.d("danma from db, 耗时：${System.currentTimeMillis() - start}")
+                Timber.tag(DANMA_RESULT_TAG).d("get danma from db, 耗时：%d",
+                    System.currentTimeMillis() - start)
                 return Result.Success(result.data)
             }
         }
@@ -46,7 +49,8 @@ class GetDanmaCommentsUseCase : KoinComponent {
         start = System.currentTimeMillis()
         return when(val result = danmaApiRepo.downloadDanma(episodeId)) {
             is Result.Success -> {
-                Timber.d("danma from net, 耗时：${System.currentTimeMillis() - start}")
+                Timber.tag(DANMA_RESULT_TAG).d("get danma from net, 耗时：%d",
+                    System.currentTimeMillis() - start)
                 // 保存到数据库
                 danmaDbRepo.saveDanmaDownloadBean(VideoDanmaku(
                     videoMd5 = videoMd5,

@@ -42,7 +42,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var bangumiAdapter: AsyncObjectAdapter<SearchAnimeDetails>
-    private lateinit var magnetAdapter: AsyncObjectAdapter<ResMagnetItemEntity>
+    private lateinit var magnetAdapter: ArrayObjectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +70,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         bangumiAdapter = AsyncObjectAdapter(presenterSelector, SearchAnimeDetailsDiffCallback())
         createListRow(ROW_BANGUMI, "相关作品", bangumiAdapter)
 
-        magnetAdapter = AsyncObjectAdapter(presenterSelector, ResMagnetItemDiffCallback())
+        magnetAdapter = ArrayObjectAdapter(presenterSelector)
         createListRow(ROW_MAGNET, "磁力链接", magnetAdapter)
     }
 
@@ -81,13 +81,10 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiList.observe(this, bangumiAdapter::submitList)
-        viewModel.magnetList.observe(this, magnetAdapter::submitList)
-    }
-
-    private fun unBindViewModel() {
-        viewModel.bangumiList.removeObservers(this)
-        viewModel.magnetList.removeObservers(this)
+        viewModel.bangumiList.observe(viewLifecycleOwner, bangumiAdapter::submitList)
+        viewModel.magnetList.observe(viewLifecycleOwner) { list ->
+            magnetAdapter.setItems(list, null)
+        }
     }
 
     override fun recognizeSpeech() {

@@ -34,7 +34,7 @@ class PlayerInitComponent : InitComponent
 
     override fun onLowMemory() {
         BitmapCache.clear()
-        SmbUtils.clear()
+        SmbUtils.getInstance().clear()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

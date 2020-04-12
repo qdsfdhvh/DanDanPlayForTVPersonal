@@ -57,7 +57,10 @@ internal class BangumiDetailsRepository(
      */
     suspend fun saveBangumiDetails(details: BangumiDetailsEntity): Boolean {
         return withContext(Dispatchers.Default) {
-            details.addedDate = System.currentTimeMillis()
+            val current = System.currentTimeMillis()
+            details.addedDate = current
+            details.updateDate = current
+            details.createDate = current
             bangumiDetailsDao.put(details)
 
             val animeId = details.animeId

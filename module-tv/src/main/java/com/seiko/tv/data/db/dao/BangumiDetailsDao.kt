@@ -14,7 +14,7 @@ interface BangumiDetailsDao {
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC LIMIT :count")
     fun allLimit(count: Int): DataSource.Factory<Int, BangumiDetailsEntity>
 
-    @Query("SELECT * FROM BangumiDetails ORDER BY addedDate")
+    @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC")
     fun all(): DataSource.Factory<Int, BangumiDetailsEntity>
 
     @Query("UPDATE BangumiDetails SET updateDate=:updateDate WHERE animeId=:animeId")

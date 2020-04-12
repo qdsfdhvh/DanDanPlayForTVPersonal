@@ -51,7 +51,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
     private val viewModel by viewModel<SearchMagnetViewModel>()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
-    private lateinit var magnetAdapter: AsyncObjectAdapter<ResMagnetItemEntity>
+    private lateinit var magnetAdapter: ArrayObjectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +65,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
         bindViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
-    }
-
     private fun setupUI() {
         setSearchResultProvider(this)
         setOnItemViewClickedListener(this)
@@ -80,7 +75,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
         val presenterSelector = BangumiPresenterSelector()
 
-        magnetAdapter = AsyncObjectAdapter(presenterSelector, ResMagnetItemDiffCallback())
+        magnetAdapter = ArrayObjectAdapter(presenterSelector)
         createListRow(ROW_MAGNET, "磁力链接", magnetAdapter)
     }
 
@@ -91,13 +86,9 @@ class SearchMagnetFragment : SearchSupportFragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.magnetList.observe(this) { magnets ->
-            magnetAdapter.submitList(magnets)
+        viewModel.magnetList.observe(viewLifecycleOwner) { magnets ->
+            magnetAdapter.setItems(magnets, null)
         }
-    }
-
-    private fun unBindViewModel() {
-        viewModel.magnetList.removeObservers(this)
     }
 
     override fun recognizeSpeech() {
