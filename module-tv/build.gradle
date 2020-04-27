@@ -35,5 +35,5 @@ dependencies {
     // Image
     // 2.0.0 CloseableReference: Finalized without closing
     // @see https://github.com/facebook/fresco/issues/2445
-    api 'com.facebook.fresco:fresco:2.1.0'
+    api 'com.facebook.fresco:fresco:2.2.0'
 }

@@ -17,7 +17,6 @@ class BangumiRelateAdapter : BaseListAdapter<HomeImageBean, BangumiRelateAdapter
         return getItem(position)
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BangumiRelateViewHolder {
         val cardView = MainAreaCardView(parent.context)
         return BangumiRelateViewHolder(cardView)
