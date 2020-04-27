@@ -35,13 +35,13 @@ object AutoSizeConfig {
     /**
      * 用来管理 AndroidAutoSize 支持的所有单位, AndroidAutoSize 支持五种单位 (dp、sp、pt、in、mm)
      */
-    var unitsManager = UnitsManager()
+    internal var unitsManager = UnitsManager()
         private set
 
     /**
      * 默认尺寸
      */
-    lateinit var initDisplayMetricsInfo: DisplayMetricsInfo
+    internal lateinit var initDisplayMetricsInfo: DisplayMetricsInfo
 
     /**
      * 设备的屏幕总宽度, 单位 px
@@ -70,7 +70,8 @@ object AutoSizeConfig {
                 val newScaledDensity = Resources.getSystem().displayMetrics.scaledDensity
                 if (newScaledDensity != initDisplayMetricsInfo.scaledDensity) {
                     initDisplayMetricsInfo.scaledDensity = newScaledDensity
-                    Timber.tag(TAG).d("initScaledDensity=%f on ConfigurationChanged", initDisplayMetricsInfo.scaledDensity)
+                    Timber.tag(TAG).d("initScaledDensity=%f on ConfigurationChanged",
+                        initDisplayMetricsInfo.scaledDensity)
                 }
             }
             val newScreenSize = ScreenUtils.getScreenSize(app)
@@ -111,7 +112,8 @@ object AutoSizeConfig {
             screenHeightDp = configuration.screenHeightDp)
         Timber.tag(TAG).d("initDisplayMetricsInfo=$initDisplayMetricsInfo")
 
-        activityLifecycleCallbacks = ActivityLifecycleCallbacksImpl(strategy ?: DefaultAutoAdaptStrategy())
+        activityLifecycleCallbacks = ActivityLifecycleCallbacksImpl(
+            strategy ?: DefaultAutoAdaptStrategy())
         // 适配miui
         MiuiUtils.init(app)
 

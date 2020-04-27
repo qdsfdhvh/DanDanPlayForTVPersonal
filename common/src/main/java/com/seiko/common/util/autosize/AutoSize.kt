@@ -53,8 +53,11 @@ object AutoSize {
      * @param excludeFontScale 是否屏蔽系统字体大小对 AndroidAutoSize 的影响, 如果为 {@code true}, App 内的字体的大小将不会跟随系统设置中字体大小的改变
      * @see <a href="https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA">今日头条官方适配方案</a>
      */
-    fun autoConvertDensity(activity: Activity, sizeInDp: Float, screenSize: Int, privateFontScale: Float = 0f, excludeFontScale: Boolean = false) {
-        val key = "%s|%s|%s".format(sizeInDp, screenSize, AutoSizeConfig.initDisplayMetricsInfo.scaledDensity)
+    fun autoConvertDensity(activity: Activity,
+                           sizeInDp: Float, screenSize: Int,
+                           privateFontScale: Float = 0f, excludeFontScale: Boolean = false) {
+        val key = "%s|%s|%s".format(sizeInDp, screenSize,
+            AutoSizeConfig.initDisplayMetricsInfo.scaledDensity)
         var displayMetricsInfo = mCache[key]
         if (displayMetricsInfo == null) {
             val targetDensity = screenSize * 1.0f / sizeInDp
@@ -77,8 +80,12 @@ object AutoSize {
                 screenWidthDp = targetScreenWidthDp,
                 screenHeightDp = targetScreenHeightDp)
         }
-        setDensity(activity, displayMetricsInfo.density, displayMetricsInfo.densityDpi, displayMetricsInfo.scaledDensity, displayMetricsInfo.xdpi)
-        setScreenSizeDp(activity, displayMetricsInfo.screenWidthDp, displayMetricsInfo.screenHeightDp)
+        setDensity(activity,
+            displayMetricsInfo.density, displayMetricsInfo.densityDpi,
+            displayMetricsInfo.scaledDensity, displayMetricsInfo.xdpi)
+        setScreenSizeDp(activity,
+            displayMetricsInfo.screenWidthDp,
+            displayMetricsInfo.screenHeightDp)
 
         Timber.tag(TAG).d("The %s has been adapted! Info: sizeInDp=%f, screenSize=%d, %s",
             activity.javaClass.simpleName,
@@ -96,7 +103,9 @@ object AutoSize {
      * @param scaledDensity {@link DisplayMetrics#scaledDensity}
      * @param xdpi          {@link DisplayMetrics#xdpi}
      */
-    private fun setDensity(activity: Activity, density: Float, densityDpi: Int, scaledDensity: Float, xdpi: Float) {
+    private fun setDensity(activity: Activity,
+                           density: Float, densityDpi: Int,
+                           scaledDensity: Float, xdpi: Float) {
         if (!MiuiUtils.isMiui) {
             val activityDisplayMetrics = activity.resources.displayMetrics
             setDensity(activityDisplayMetrics, density, densityDpi, scaledDensity, xdpi)
@@ -124,7 +133,9 @@ object AutoSize {
      * @param scaledDensity  {@link DisplayMetrics#scaledDensity}
      * @param xdpi           {@link DisplayMetrics#xdpi}
      */
-    private fun setDensity(displayMetrics: DisplayMetrics, density: Float, densityDpi: Int, scaledDensity: Float, xdpi: Float) {
+    private fun setDensity(displayMetrics: DisplayMetrics,
+                           density: Float, densityDpi: Int,
+                           scaledDensity: Float, xdpi: Float) {
         if (AutoSizeConfig.unitsManager.isSupportDP) {
             displayMetrics.density = density
             displayMetrics.densityDpi = densityDpi
@@ -147,7 +158,9 @@ object AutoSize {
      * @param screenWidthDp  {@link Configuration#screenWidthDp}
      * @param screenHeightDp {@link Configuration#screenHeightDp}
      */
-    private fun setScreenSizeDp(activity: Activity, screenWidthDp: Int, screenHeightDp: Int) {
+    private fun setScreenSizeDp(activity: Activity,
+                                screenWidthDp: Int,
+                                screenHeightDp: Int) {
         val unitsManager = AutoSizeConfig.unitsManager
         if (unitsManager.isSupportDP && unitsManager.isSupportScreenSizeDP) {
             val activityConfiguration = activity.resources.configuration
@@ -165,7 +178,9 @@ object AutoSize {
      * @param screenWidthDp  {@link Configuration#screenWidthDp}
      * @param screenHeightDp {@link Configuration#screenHeightDp}
      */
-    private fun setScreenSizeDp(configuration: Configuration, screenWidthDp: Int, screenHeightDp: Int) {
+    private fun setScreenSizeDp(configuration: Configuration,
+                                screenWidthDp: Int,
+                                screenHeightDp: Int) {
         configuration.screenWidthDp = screenWidthDp
         configuration.screenHeightDp = screenHeightDp
     }

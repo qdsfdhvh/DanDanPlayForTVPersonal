@@ -5,7 +5,7 @@ import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.view.WindowManager
 
-object ScreenUtils {
+internal object ScreenUtils {
 
     /**
      * 获取当前的屏幕尺寸

@@ -23,7 +23,7 @@ import androidx.annotation.IntDef
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-class UnitsManager {
+internal class UnitsManager {
 
     /**
      * 设计图上的总宽度, 建议单位为 px, 当使用者想将旧项目从主单位过渡到副单位, 或从副单位过渡到主单位时使用

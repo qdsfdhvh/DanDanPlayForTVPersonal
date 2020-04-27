@@ -6,7 +6,7 @@ import com.seiko.common.di.moshiModule
 import com.seiko.common.di.networkModule
 import com.seiko.common.util.AndroidDevices
 import com.seiko.common.util.autosize.AutoSizeConfig
-import com.seiko.common.util.helper.AppAutoAdaptStrategy
+import com.seiko.common.util.helper.AutoAdaptStrategyFactory
 import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
 import org.koin.core.context.loadKoinModules
@@ -29,7 +29,8 @@ class ProviderApplication : InitComponent {
 
         // AutoSize
         AndroidDevices.init(application)
-        AutoSizeConfig.init(application, strategy = AppAutoAdaptStrategy())
+        val autoAdaptStrategyFactory = AutoAdaptStrategyFactory.get()
+        AutoSizeConfig.init(application, strategy = autoAdaptStrategyFactory.create())
 
         // VLC
         application.providerAppManager()

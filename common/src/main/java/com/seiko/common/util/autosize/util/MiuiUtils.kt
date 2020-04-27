@@ -6,7 +6,7 @@ import android.content.res.Resources
 import android.util.DisplayMetrics
 import java.lang.reflect.Field
 
-object MiuiUtils {
+internal object MiuiUtils {
 
     /**
      * 是否是 Miui 系统

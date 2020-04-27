@@ -16,7 +16,9 @@ import com.seiko.common.util.autosize.AutoSizeConfig
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-class ActivityLifecycleCallbacksImpl(private var autoAdaptStrategy: AutoAdaptStrategy) : Application.ActivityLifecycleCallbacks {
+internal class ActivityLifecycleCallbacksImpl(
+    private var autoAdaptStrategy: AutoAdaptStrategy
+) : Application.ActivityLifecycleCallbacks {
 
     /**
      * 让 Fragment 支持自定义适配参数

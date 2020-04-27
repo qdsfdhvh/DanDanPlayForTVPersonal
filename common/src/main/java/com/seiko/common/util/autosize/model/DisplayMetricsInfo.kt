@@ -9,7 +9,7 @@ package com.seiko.common.util.autosize.model
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-data class DisplayMetricsInfo(
+internal data class DisplayMetricsInfo(
     var density: Float = 0f,
     var densityDpi: Int = 0,
     var scaledDensity: Float = 0f,

@@ -1,6 +1,5 @@
 package com.seiko.common.util.autosize.callback
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,7 +14,9 @@ import androidx.fragment.app.FragmentManager
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-class FragmentLifecycleCallbacksImpl(var autoAdaptStrategy: AutoAdaptStrategy) : FragmentManager.FragmentLifecycleCallbacks() {
+internal class FragmentLifecycleCallbacksImpl(
+    var autoAdaptStrategy: AutoAdaptStrategy
+) : FragmentManager.FragmentLifecycleCallbacks() {
 
     override fun onFragmentCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
         autoAdaptStrategy.apply(f, f.requireActivity())
