@@ -261,7 +261,33 @@
 -keep public class me.pqpo.librarylog4a.LogBuffer{*;}
 
 #########################################
+# EventBus
+#########################################
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# And if you use AsyncExecutor:
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+#########################################
+# libtorrent4j
+#########################################
+-keep class org.libtorrent4j.swig.**{*;}
+
+#########################################
+# VLC
+#########################################
+-keep class org.videolan.libvlc.**{*;}
+-keep class org.videolan.medialibrary.**{*;}
+
+#########################################
 # App
 #########################################
 -keep public class * extends androidx.fragment.app.Fragment
 -keepnames class androidx.navigation.fragment.NavHostFragment
+

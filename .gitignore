@@ -23,3 +23,5 @@ key.properties
 .settings/
 
 device-*.png
+
+schemas/
