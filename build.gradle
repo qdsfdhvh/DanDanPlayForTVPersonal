@@ -1,7 +1,4 @@
 buildscript {
-    ext {
-        kotlin_version = '1.3.71'
-    }
     repositories {
         google()
         jcenter()
@@ -11,7 +8,10 @@ buildscript {
         classpath(Deps.plugin_gradle)
         classpath(Deps.plugin_kotlin)
         classpath(Deps.plugin_cc)
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        classpath("com.smallsoho.mobcase:McImage:1.5.0")
+        classpath("com.mogujie.gradle:tinyPicPlugin:1.1.4")
+        classpath("com.tencent.mm:AndResGuard-gradle-plugin:1.2.17")
     }
 }
 
@@ -25,24 +25,24 @@ allprojects {
 }
 
 ext {
-    android_plugin_version = '3.6.1'
-    kotlin_version = '1.3.70'
-    kotlinx_version = '1.3.4'
+    android_plugin_version = '3.6.3'
+    kotlin_version = '1.3.72'
+    kotlinx_version = '1.3.5'
     appId = Build.applicationId
-    versionName = '3.3.0-dev'
-    versionCode = 3030000
-    libvlcVersion = '3.3.0-eap05'
-    medialibraryVersion = '0.7.0-eap05'
+    versionName = '3.3.0 Beta 2'
+    versionCode = 3028200
+    libvlcVersion = '3.3.0-eap10'
+    medialibraryVersion = '0.7.0-eap10'
     minSdkVersion = 17
     targetSdkVersion = 29
     compileSdkVersion = 29
     androidxLegacyVersion = '1.0.0'
-    androidxCoreVersion = '1.1.0'
+    androidxCoreVersion = '1.2.0'
     lifecycleVersion = '2.2.0'
-    androidxPreferencesVersion = '1.1.0'
+    androidxPreferencesVersion = '1.1.1'
     androidxVersion = '1.1.0'
     androidxActivityVersion = '1.1.0'
-    androidxFragmentVersion = '1.2.0'
+    androidxFragmentVersion = '1.2.4'
     androidxAnnotationVersion = '1.1.0'
     androidxAppcompatVersion = '1.1.0'
     androidxRecyclerviewVersion = '1.1.0'
@@ -50,11 +50,11 @@ ext {
     androidxLeanbackVersion = '1.0.0'
     //fixme : When we update this dep, please verify of this issue is fixed: https://github.com/material-components/material-components-android/issues/1086
     // if so, revert application/vlc-android/res/values[-v21]/styles.xml -> AppModalStyle
-    androidxMaterialVersion = '1.1.0-rc02'
+    androidxMaterialVersion = '1.1.0'
     constraintLayoutVersion = '1.1.3'
     archVersion = '2.1.0'
-    roomVersion = '2.2.3'
-    pagingVersion = '2.1.1'
+    roomVersion = '2.2.5'
+    pagingVersion = '2.1.2'
     junitVersion = '4.12'
     mockito = '2.8.9'
     retrofit = '2.6.1'
