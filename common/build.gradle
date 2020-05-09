@@ -36,8 +36,9 @@ dependencies {
 
     // Network
     api(Deps.network_retrofit)
-    api(Deps.network_retrofitMoshi)
-    api(Deps.network_loggingInterceptor)
+    api(Deps.network_retrofit_moshi)
+    api(Deps.network_okhttp)
+    api(Deps.network_okhttp_logging)
 
     // Json
     api(Deps.moshi_core)

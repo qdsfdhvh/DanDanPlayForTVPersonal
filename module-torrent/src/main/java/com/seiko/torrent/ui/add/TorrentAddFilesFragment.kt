@@ -6,16 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.observe
 import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.extensions.parentViewModel
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddFilesBinding
 import com.seiko.torrent.util.extensions.fixItemAnim
-
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
 
@@ -25,9 +23,7 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
         }
     }
 
-    private val viewModel: AddTorrentViewModel by sharedViewModel(from = {
-        parentFragment as ViewModelStoreOwner
-    })
+    private val viewModel: AddTorrentViewModel by parentViewModel()
 
     private lateinit var binding: TorrentFragmentAddFilesBinding
 

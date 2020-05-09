@@ -1,7 +1,7 @@
 object Deps {
     const val plugin_gradle = "com.android.tools.build:gradle:${Versions.gradle}"
     const val plugin_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    const val plugin_cc = "com.billy.android:cc-register:${Versions.ccRegister}"
+    const val plugin_cc = "com.billy.android:cc-register:${Versions.cc_register}"
 
     const val support_multidex = "androidx.multidex:multidex:${Versions.multidex}"
     const val support_annotation = "androidx.annotation:annotation:${Versions.appCompat}"
@@ -29,20 +29,20 @@ object Deps {
     const val mmkv_runtime = "com.tencent:mmkv-static:${Versions.mmkv}"
 
     const val network_retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
-    const val network_retrofitMoshi = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
-    const val network_loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.loggingInterceptor}"
+    const val network_retrofit_moshi = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
+    const val network_okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
+    const val network_okhttp_logging = "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
 
     const val moshi_adapters = "com.squareup.moshi:moshi-adapters:${Versions.moshi}"
     const val moshi_core = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val moshi_compiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
 
-    const val arouter_api = "com.alibaba:arouter-api:${Versions.arouterApi}"
-    const val arouter_compiler = "com.alibaba:arouter-compiler:${Versions.arouterCompiler}"
+    const val arouter_api = "com.alibaba:arouter-api:${Versions.arouter_api}"
+    const val arouter_compiler = "com.alibaba:arouter-compiler:${Versions.arouter_compiler}"
 
     const val room_ktx = "androidx.room:room-ktx:${Versions.room}"
     const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
 
     const val work_runtimeKtx = "androidx.work:work-runtime-ktx:${Versions.work}"
 
-    const val cc_api = "com.billy.android:cc:${Versions.ccApi}"
 }

@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
-import androidx.lifecycle.ViewModelStoreOwner
+import com.seiko.common.util.extensions.parentViewModel
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentAddTorrentInfoBinding
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,9 +22,7 @@ class TorrentAddInfoFragment : Fragment() {
         }
     }
 
-    private val viewModel: AddTorrentViewModel by sharedViewModel(from = {
-        parentFragment as ViewModelStoreOwner
-    })
+    private val viewModel: AddTorrentViewModel by parentViewModel()
 
     private lateinit var binding: TorrentAddTorrentInfoBinding
 
