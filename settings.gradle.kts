@@ -5,7 +5,6 @@ include(":app",
         ":module-player",
         ":common",
 
-        ":libs:thunder",
         ":libs:file-picker",
         ":libs:tool-danmaku",
         ":libs:tool-danma",

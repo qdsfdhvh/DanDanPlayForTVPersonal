@@ -24,8 +24,6 @@ dependencies {
     kapt Deps.room_compiler
     kapt Deps.moshi_compiler
 
-//    implementation project(':libs:thunder')
-
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
 
