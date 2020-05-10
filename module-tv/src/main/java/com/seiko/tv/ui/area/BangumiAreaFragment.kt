@@ -79,12 +79,8 @@ class BangumiAreaFragment : Fragment(),
         bindViewModel()
     }
 
-    /**
-     * 注销Item选择监听
-     */
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
+    override fun onDestroy() {
+        super.onDestroy()
         handler.removeCallbacksAndMessages(null)
     }
 
@@ -164,7 +160,7 @@ class BangumiAreaFragment : Fragment(),
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiSeasons.observe(this) { seasons ->
+        viewModel.bangumiSeasons.observe(viewLifecycleOwner) { seasons ->
             seasonAdapter.submitList(seasons)
             if (seasons.isNotEmpty()) {
                 var position = seasonSelectedPosition
@@ -175,11 +171,7 @@ class BangumiAreaFragment : Fragment(),
 //                viewModel.getBangumiListWithSeason(seasons[position], false)
             }
         }
-        viewModel.bangumiList.observe(this::getLifecycle, this::updateBangumiList)
-    }
-
-    private fun unBindViewModel() {
-        viewModel.bangumiSeasons.removeObservers(this)
+        viewModel.bangumiList.observe(viewLifecycleOwner, this::updateBangumiList)
     }
 
     /**

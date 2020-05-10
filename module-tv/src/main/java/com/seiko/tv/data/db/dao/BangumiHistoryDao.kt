@@ -1,11 +1,10 @@
 package com.seiko.tv.data.db.dao
 
-import androidx.paging.DataSource
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiHistoryEntity
 
 
@@ -13,7 +12,7 @@ import com.seiko.tv.data.db.model.BangumiHistoryEntity
 interface BangumiHistoryDao {
 
     @Query("SELECT * FROM BangumiHistory ORDER BY updateDate DESC LIMIT :count")
-    fun all(count: Int): DataSource.Factory<Int, BangumiHistoryEntity>
+    fun all(count: Int): LiveData<List<BangumiHistoryEntity>>
 
     @Query("SELECT * FROM BangumiHistory ORDER BY updateDate DESC LIMIT :count")
     suspend fun allFixed(count: Int): List<BangumiHistoryEntity>

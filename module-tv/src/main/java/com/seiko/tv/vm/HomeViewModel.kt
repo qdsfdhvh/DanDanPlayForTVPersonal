@@ -10,11 +10,15 @@ import com.seiko.common.data.Result
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.*
 
 class HomeViewModel(
-    private val getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
+    getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
     private val getFavoriteBangumiList: GetBangumiFavoriteUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ): ViewModel() {
@@ -23,30 +27,34 @@ class HomeViewModel(
      * 每周更新
      */
     val weekBangumiList: LiveData<List<AirDayBangumiBean>> =
-        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            when(val result = getWeekBangumiList.invoke(getDayOfWeek())) {
-                is Result.Success -> {
-                    delay(200)
-                    emit(result.data)
+        getWeekBangumiList.invoke(getDayOfWeek())
+            .flatMapConcat { result ->
+                flow {
+                    when(result) {
+                        is Result.Success -> emit(result.data)
+                        is Result.Error -> Timber.e(result.exception)
+                    }
                 }
-                is Result.Error -> Timber.w(result.exception)
             }
-        }
+            .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
 
     /**
      * 今日更新
      */
     val todayBangumiList: LiveData<List<HomeImageBean>> = weekBangumiList.switchMap { data ->
-        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            val bangumiList = if (data.isNotEmpty()) data[0].bangumiList else emptyList()
-            emit(bangumiList)
+        liveData<List<HomeImageBean>>(viewModelScope.coroutineContext + Dispatchers.IO) {
+            if (data.isNotEmpty()) {
+                emit(data[0].bangumiList)
+            } else {
+                emit(emptyList())
+            }
         }
     }
 
     /**
      * 我的收藏（动态）
      */
-    val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
+    val favoriteBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(getFavoriteBangumiList.invoke(10))
         }
@@ -54,17 +62,17 @@ class HomeViewModel(
     /**
      * 我的历史（动态），前20条
      */
-    val historyBangumiList: LiveData<PagedList<HomeImageBean>> =
+    val historyBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(getBangumiHistoryList.invoke(10))
         }
 
-    /**
-     * 今天周几
-     * PS: 0代表周日，1-6代表周一至周六。
-     */
-    private fun getDayOfWeek(): Int {
-        return Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
-    }
+}
 
+/**
+ * 今天周几
+ * PS: 0代表周日，1-6代表周一至周六。
+ */
+private fun getDayOfWeek(): Int {
+    return Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
 }

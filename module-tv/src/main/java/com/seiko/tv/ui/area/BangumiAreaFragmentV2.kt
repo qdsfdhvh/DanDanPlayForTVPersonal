@@ -34,11 +34,6 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
         bindViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
-    }
-
     private fun setupUI() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
@@ -51,7 +46,7 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiSeasons.observe(this) { seasonList ->
+        viewModel.bangumiSeasons.observe(viewLifecycleOwner) { seasonList ->
             val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
             seasonList.mapIndexed { i, season ->
                 val headerItem = HeaderItem(i.toLong(), season.seasonName)
@@ -61,10 +56,6 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
 
             startEntranceTransition()
         }
-    }
-
-    private fun unBindViewModel() {
-        viewModel.bangumiSeasons.removeObservers(this)
     }
 
 }

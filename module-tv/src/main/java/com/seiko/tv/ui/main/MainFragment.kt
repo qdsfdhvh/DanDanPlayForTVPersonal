@@ -57,8 +57,8 @@ class MainFragment : BrowseSupportFragment()
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var settingAdapter: ArrayObjectAdapter
     private lateinit var areaAdapter: AsyncObjectAdapter<HomeImageBean>
-    private lateinit var favoriteAdapter: AsyncPagedObjectAdapter<HomeImageBean>
-    private lateinit var historyAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+    private lateinit var favoriteAdapter: AsyncObjectAdapter<HomeImageBean>
+    private lateinit var historyAdapter: AsyncObjectAdapter<HomeImageBean>
 
     private val leftItems by lazyAndroid {
         listOf(
@@ -75,25 +75,18 @@ class MainFragment : BrowseSupportFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        setupRows()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRows()
         bindViewModel()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
     }
 
     /**
      * 生成相关UI
      */
     private fun setupUI() {
-//        headersState = HEADERS_ENABLED
-//        isHeadersTransitionOnBackEnabled = true
         title = "弹弹Play"
         brandColor = Color.parseColor("#424242")
 
@@ -123,10 +116,10 @@ class MainFragment : BrowseSupportFragment()
         areaAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_AREA, getString(R.string.title_area), areaAdapter)
         // 我的收藏
-        favoriteAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        favoriteAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_FAVORITE, getString(R.string.title_favorite), favoriteAdapter)
         // 浏览历史
-        historyAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        historyAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_HISTORY, getString(R.string.title_history), historyAdapter)
 
         adapter = rowsAdapter
@@ -145,31 +138,16 @@ class MainFragment : BrowseSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.todayBangumiList.observe(this) { list ->
-            lifecycleScope.launchWhenStarted {
-                yield()
-                startEntranceTransition()
-                areaAdapter.submitList(list)
-            }
+        viewModel.todayBangumiList.observe(viewLifecycleOwner) { list ->
+            areaAdapter.submitList(list)
+            startEntranceTransition()
         }
-        viewModel.favoriteBangumiList.observe(this) { list ->
-            lifecycleScope.launchWhenStarted {
-                yield()
-                favoriteAdapter.submitList(list)
-            }
+        viewModel.favoriteBangumiList.observe(viewLifecycleOwner) { list ->
+            favoriteAdapter.submitList(list)
         }
-        viewModel.historyBangumiList.observe(this) { list ->
-            lifecycleScope.launchWhenStarted {
-                yield()
-                historyAdapter.submitList(list)
-            }
+        viewModel.historyBangumiList.observe(viewLifecycleOwner) { list ->
+            historyAdapter.submitList(list)
         }
-    }
-
-    private fun unBindViewModel() {
-        viewModel.todayBangumiList.removeObservers(this)
-        viewModel.favoriteBangumiList.removeObservers(this)
-        viewModel.historyBangumiList.removeObservers(this)
     }
 
     /**

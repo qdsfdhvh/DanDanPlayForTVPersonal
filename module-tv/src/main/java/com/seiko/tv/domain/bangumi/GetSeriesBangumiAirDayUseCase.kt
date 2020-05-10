@@ -1,10 +1,13 @@
 package com.seiko.tv.domain.bangumi
 
+
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.util.toHomeImageBean
 import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,19 +23,11 @@ class GetSeriesBangumiAirDayBeansUseCase : KoinComponent {
     /**
      * @param weekDay 已周几开头，输入0~6，假设输入二， 结果数据为：[周二、三、四、五、六、日、一]
      */
-    suspend operator fun invoke(weekDay: Int): Result<List<AirDayBangumiBean>> {
-        when(val result = getBangumiList.invoke()) {
-            is Result.Success -> {
-                val beans: List<AirDayBangumiBean>
-                try {
-                    beans = getAirDayBangumiBeans(weekDay, result.data)
-                } catch (e: Exception) {
-                    return Result.Error(e)
-                }
-                return Result.Success(beans)
-            }
-            is Result.Error -> {
-                return result
+    operator fun invoke(weekDay: Int): Flow<Result<List<AirDayBangumiBean>>> {
+        return getBangumiList.invoke().map { result ->
+            when(result) {
+                is Result.Success -> Result.Success(getAirDayBangumiBeans(weekDay, result.data))
+                is Result.Error -> result
             }
         }
     }
@@ -54,7 +49,7 @@ private suspend fun getAirDayBangumiBeans(weekDay: Int, intros: List<BangumiIntr
 
         // 导入动漫信息
         for (intro in intros) {
-            (weekDays[intro.airDay].bangumiList as ArrayList).add(intro.toHomeImageBean())
+            weekDays[intro.airDay].bangumiList.add(intro.toHomeImageBean())
         }
 
         // 本周 ~ 周六 + 周日 ~ 本周

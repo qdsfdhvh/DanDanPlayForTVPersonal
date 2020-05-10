@@ -11,6 +11,6 @@ class GetBangumiSeasonsUseCase : KoinComponent {
 
     private val repo: DanDanApiRepository by inject()
 
-    suspend operator fun invoke() = repo.getBangumiSeasons()
+    operator fun invoke() = repo.getBangumiSeasons()
 
 }

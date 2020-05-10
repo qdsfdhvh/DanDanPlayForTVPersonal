@@ -35,7 +35,7 @@ public class TransitionUtils {
         }
         int bitmapWidth = (int) (width * scale);
         int bitmapHeight = (int) (height * scale);
-        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
         Rect existingBounds = drawable.getBounds();
         int left = existingBounds.left;
@@ -70,7 +70,7 @@ public class TransitionUtils {
             bitmapHeight *= scale;
             matrix.postTranslate(-bounds.left, -bounds.top);
             matrix.postScale(scale, scale);
-            bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
             canvas.concat(matrix);
             view.draw(canvas);

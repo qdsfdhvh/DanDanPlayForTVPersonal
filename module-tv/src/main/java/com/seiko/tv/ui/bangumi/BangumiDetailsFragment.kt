@@ -61,7 +61,6 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
     override fun onDestroyView() {
         super.onDestroyView()
-        unBindViewModel()
         onItemViewClickedListener = null
         mDetailsOverviewPrevState = mDescriptionRowPresenter.mPreviousState
     }
@@ -89,12 +88,8 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.bangumiDetailsBean.observe(this, this::updateDetails)
+        viewModel.bangumiDetailsBean.observe(viewLifecycleOwner, this::updateDetails)
         viewModel.animeId.value = animeId
-    }
-
-    private fun unBindViewModel() {
-        viewModel.bangumiDetailsBean.removeObservers(this)
     }
 
     /**

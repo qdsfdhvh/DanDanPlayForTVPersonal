@@ -5,6 +5,7 @@ import android.view.View
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
@@ -28,7 +29,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     private val viewModel: BangumiFavoriteViewModel by viewModel()
 
-    private lateinit var arrayAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+    private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +41,6 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         bindViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
-    }
-
     private fun setupRowAdapter() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
@@ -54,22 +50,18 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         gridPresenter = verticalGridPresenter
 
         val presenterSelector = BangumiPresenterSelector()
-        arrayAdapter = AsyncPagedObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
+        arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 
         prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
-        viewModel.favoriteBangumiList.observe(this) { bangumiList ->
+        viewModel.favoriteBangumiList.observe(viewLifecycleOwner) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
             title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
             startEntranceTransition()
         }
-    }
-
-    private fun unBindViewModel() {
-        viewModel.favoriteBangumiList.removeObservers(this)
     }
 
     override fun onItemClicked(

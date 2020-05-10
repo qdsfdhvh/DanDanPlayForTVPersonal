@@ -2,7 +2,7 @@ package com.seiko.tv.data.model
 
 data class AirDayBangumiBean(
     val id: Int,
-    val bangumiList: List<HomeImageBean> = ArrayList()
+    val bangumiList: MutableList<HomeImageBean> = mutableListOf()
 ) {
     override fun toString(): String {
         return "AirDayBangumiBean{" +

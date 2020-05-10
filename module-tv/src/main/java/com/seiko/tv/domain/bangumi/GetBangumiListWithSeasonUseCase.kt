@@ -6,6 +6,8 @@ import com.seiko.tv.data.comments.DanDanApiRepository
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -17,14 +19,13 @@ class GetBangumiListWithSeasonUseCase : KoinComponent {
 
     private val repo: DanDanApiRepository by inject()
 
-    suspend operator fun invoke(season: BangumiSeason): Result<List<HomeImageBean>> {
-        return when(val result = repo.getBangumiListWithSeason(season)) {
-            is Result.Error -> result
-            is Result.Success -> {
-                val list = withContext(Dispatchers.Default) {
-                    result.data.map { it.toHomeImageBean() }
+    operator fun invoke(season: BangumiSeason): Flow<Result<List<HomeImageBean>>> {
+        return repo.getBangumiListWithSeason(season).map { result ->
+            when(result) {
+                is Result.Success -> {
+                    Result.Success(result.data.map { it.toHomeImageBean() })
                 }
-                Result.Success(list)
+                is Result.Error -> result
             }
         }
     }

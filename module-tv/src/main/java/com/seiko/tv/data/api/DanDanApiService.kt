@@ -13,7 +13,6 @@ internal interface DanDanApiService {
     @GET("api/v2/bangumi/shin")
     suspend fun getBangumiList(): BangumiListResponse
 
-
     /**
      * 获取动画类型番剧季度的列表
      */

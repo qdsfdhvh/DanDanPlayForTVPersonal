@@ -39,7 +39,7 @@ internal class BangumiDetailsRepository(
     /**
      * 获得本地收藏的全部动漫
      */
-    fun getBangumiDetailsList(count: Int): DataSource.Factory<Int, BangumiDetailsEntity> {
+    fun getBangumiDetailsList(count: Int): LiveData<List<BangumiDetailsEntity>> {
         return if (count <= 0) bangumiDetailsDao.all() else bangumiDetailsDao.allLimit(count)
     }
 

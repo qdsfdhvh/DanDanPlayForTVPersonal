@@ -1,6 +1,7 @@
 package com.seiko.tv.domain.bangumi
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
@@ -17,19 +18,10 @@ class GetBangumiHistoryUseCase : KoinComponent {
 
     private val historyRepo: BangumiHistoryRepository by inject()
 
-    private val pageSize = 10
-
-    private val config = Config(
-        pageSize = pageSize,
-        prefetchDistance = pageSize / 5,
-        enablePlaceholders = false,
-        initialLoadSizeHint = pageSize,
-        maxSize = pageSize * 2)
-
-    fun invoke(count: Int): LiveData<PagedList<HomeImageBean>> {
-        return historyRepo.getBangumiDetailsList(count)
-            .map { it.toHomeImageBean() }
-            .toLiveData(config)
+    fun invoke(count: Int): LiveData<List<HomeImageBean>> {
+        return historyRepo.getBangumiDetailsList(count).map { list ->
+            list.map { it.toHomeImageBean() }
+        }
     }
 
 }

@@ -17,7 +17,7 @@ class BangumiFavoriteViewModel(
     /**
      * 我的历史，前20条
      */
-    val favoriteBangumiList: LiveData<PagedList<HomeImageBean>> =
+    val favoriteBangumiList: LiveData<List<HomeImageBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             delay(250)
             emitSource(getBangumiHistoryList.invoke(0))

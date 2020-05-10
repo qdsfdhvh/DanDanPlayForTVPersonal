@@ -2,7 +2,6 @@ package com.seiko.tv.vm
 
 import android.graphics.Color
 import androidx.lifecycle.*
-import androidx.palette.graphics.Palette
 import com.seiko.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
@@ -10,18 +9,16 @@ import com.seiko.common.data.Result
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
-import com.seiko.tv.domain.bangumi.SaveBangumiHistoryUseCase
 import com.seiko.tv.util.toHomeImageBean
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.yield
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 class BangumiDetailViewModel(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
-    private val saveBangumiFavorite: SaveBangumiFavoriteUseCase,
-    private val saveBangumiHistory: SaveBangumiHistoryUseCase
+    private val saveBangumiFavorite: SaveBangumiFavoriteUseCase
 ) : ViewModel() {
 
     /**
@@ -33,20 +30,20 @@ class BangumiDetailViewModel(
      * 番剧信息
      */
     private val bangumiDetails: LiveData<BangumiDetailsEntity> = animeId.distinctUntilChanged().switchMap { animeId ->
-        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            when(val result = getBangumiDetails.invoke(animeId)) {
-                is Result.Success -> {
-                    val details = result.data
-                    emit(details)
-
-                    delay(350)
-                    // 保留到浏览历史
-                    saveBangumiHistory.invoke(details)
-                    searchKeyWord = details.searchKeyword
+        getBangumiDetails.invoke(animeId)
+            .flatMapConcat { result ->
+                flow {
+                    when(result) {
+                        is Result.Success -> {
+                            val details = result.data
+                            emit(result.data)
+//                            searchKeyWord = details.searchKeyword
+                        }
+                        is Result.Error -> Timber.w(result.exception)
+                    }
                 }
-                is Result.Error -> Timber.w(result.exception)
             }
-        }
+            .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
     }
 
     /**
@@ -99,8 +96,6 @@ class BangumiDetailViewModel(
         }
     }
 
-    private var searchKeyWord = ""
-
     /**
      * 从标题(第一话 XXXXXX)中提取关键字
      */
@@ -111,7 +106,7 @@ class BangumiDetailViewModel(
             val temp = episode.substring(1, episode.length - 1)
             episode =  temp
         }
-        return "$searchKeyWord $episode"
+        return "${bangumiDetails.value?.searchKeyword} $episode"
     }
 
     /**

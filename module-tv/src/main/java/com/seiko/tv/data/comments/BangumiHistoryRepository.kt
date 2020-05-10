@@ -15,9 +15,7 @@ internal class BangumiHistoryRepository(database: AppDatabase) {
      * PS：插入新数据时，会动态变化
      * @param count 前多少条
      */
-    fun getBangumiDetailsList(count: Int): DataSource.Factory<Int, BangumiHistoryEntity> {
-        return bangumiHistoryDao.all(count)
-    }
+    fun getBangumiDetailsList(count: Int) = bangumiHistoryDao.all(count)
 
     /**
      * 获得本地动漫前x条浏览历史，按浏览时间排序

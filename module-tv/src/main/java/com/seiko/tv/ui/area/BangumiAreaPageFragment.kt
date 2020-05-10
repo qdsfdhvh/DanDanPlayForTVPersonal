@@ -52,11 +52,6 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         getMainFragmentAdapter().fragmentHost.notifyViewCreated(mainFragmentAdapter)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
-    }
-
     private fun setupUI() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
@@ -72,16 +67,12 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     }
 
     private fun bindViewModel() {
-        viewModel.bangumiList.observe(this) { bangumiList ->
+        viewModel.bangumiList.observe(viewLifecycleOwner) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
 
             getMainFragmentAdapter().fragmentHost.notifyDataReady(mainFragmentAdapter)
         }
         viewModel.season.value = season
-    }
-
-    private fun unBindViewModel() {
-        viewModel.bangumiList.removeObservers(this)
     }
 
     override fun onItemClicked(
