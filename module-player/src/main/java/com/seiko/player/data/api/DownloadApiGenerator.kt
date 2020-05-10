@@ -14,7 +14,7 @@ class DownloadApiGenerator {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("http://www.example.com")
-        .client(okHttpClient.build())
+        .callFactory(okHttpClient.build())
 
     fun create(): DownloadApi {
         return retrofit.build().create()
