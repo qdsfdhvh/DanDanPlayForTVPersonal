@@ -60,7 +60,7 @@ class GetDanmaResultWithSmbUseCase : KoinComponent {
         Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with smb...")
 
         // 获取视频Md5，需要下载16mb资源，很慢16~35s。
-        videoMd5 = videoFile.getVideoMd5()
+        videoMd5 = videoFile.inputStream.getVideoMd5()
         smbMd5Repo.saveVideoMd5(urlValue, videoMd5)
 
         Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with smb, 耗时：%d",

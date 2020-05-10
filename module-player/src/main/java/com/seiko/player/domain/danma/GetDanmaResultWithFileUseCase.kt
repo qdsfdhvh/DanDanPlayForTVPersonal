@@ -23,7 +23,7 @@ class GetDanmaResultWithFileUseCase : KoinComponent {
         }
 
         // 获取视频Md5
-        val videoMd5 = videoFile.getVideoMd5()
+        val videoMd5 = videoFile.inputStream().getVideoMd5()
 
         return getResult.invoke(videoMd5, isMatched)
     }

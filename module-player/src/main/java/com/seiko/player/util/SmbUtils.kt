@@ -2,14 +2,12 @@ package com.seiko.player.util
 
 import android.net.Uri
 import jcifs.CIFSContext
-import jcifs.config.PropertyConfiguration
-import jcifs.context.BaseContext
+import jcifs.context.SingletonContext
 import jcifs.smb.NtlmPasswordAuthenticator
 import jcifs.smb.SmbFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.collections.HashMap
 
 class SmbUtils {
@@ -23,7 +21,7 @@ class SmbUtils {
 
         var cifsContext = maps[host]
         if (cifsContext == null) {
-            cifsContext = createCifsContext(host, "", account, password)
+            cifsContext = createCifsContext(host, account, password)
             maps[host] = cifsContext
         }
 
@@ -44,18 +42,13 @@ class SmbUtils {
 
     private fun createCifsContext(
         host: String,
-        domain: String,
         account: String,
         password: String
     ): CIFSContext {
-        val auth = NtlmPasswordAuthenticator(domain, account, password)
+        val auth = NtlmPasswordAuthenticator(account, password)
+        val baseContext = SingletonContext.getInstance()
+        val cifsContext = baseContext.withCredentials(auth)
 
-        val properties = Properties()
-        properties.setProperty("jcifs.smb.client.responseTimeout", "5000")
-//        properties.setProperty("jcifs.smb.client.dfs.disabled", "true")
-        val configuration = PropertyConfiguration(properties)
-
-        val cifsContext = BaseContext(configuration).withCredentials(auth)
         val address = cifsContext.nameServiceClient.getByName(host)
         cifsContext.transportPool.logon(cifsContext, address)
         return cifsContext

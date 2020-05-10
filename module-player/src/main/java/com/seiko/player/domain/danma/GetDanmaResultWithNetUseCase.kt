@@ -38,7 +38,7 @@ class GetDanmaResultWithNetUseCase : KoinComponent {
             ?: return Result.Error(RuntimeException("Response body is NULL"))
 
         // 获取视频Md5，需要下载16mb资源，有点慢5~18s。
-        videoMd5 = body.getVideoMd5()
+        videoMd5 = body.byteStream().getVideoMd5()
         smbMd5Repo.saveVideoMd5(url, videoMd5)
 
         Timber.tag(DANMA_RESULT_TAG).d("get videoMd5 with net download finish, 耗时：%d",
