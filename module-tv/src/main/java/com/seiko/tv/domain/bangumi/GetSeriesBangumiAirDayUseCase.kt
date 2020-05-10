@@ -52,7 +52,21 @@ private suspend fun getAirDayBangumiBeans(weekDay: Int, intros: List<BangumiIntr
             weekDays[intro.airDay].bangumiList.add(intro.toHomeImageBean())
         }
 
-        // 本周 ~ 周六 + 周日 ~ 本周
-        weekDays.subList(weekDay, 7) + weekDays.subList(0, weekDay)
+        // 0 1 2 3 4 5 6
+        // day = 3
+        // 3 ~ 7, 0 ~ 3 = 3 4 5 6 0 1 2
+        // day = 0
+        // 0 ~ 7, 0 ~ 0 = 0 1 2 3 4 5 6
+        // day = 6
+        // 6 ~ 7, 0 ~ 6 = 6 0 1 2 3 4 5
+        val descList = weekDays.subList(weekDay, 7) + weekDays.subList(0, weekDay)
+
+        // day = 3
+        // 3 2 1 0 6 5 4
+        // day = 0
+        // 0 6 5 4 3 2 1
+        // day = 6
+        // 6 5 4 3 2 1 0
+        descList.subList(0, 1) + descList.subList(1, 7).asReversed()
     }
 }
