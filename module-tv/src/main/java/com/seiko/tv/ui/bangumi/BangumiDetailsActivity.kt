@@ -12,6 +12,7 @@ import androidx.fragment.app.commit
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.seiko.tv.R
+import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.removeWindowInTransitionManager
 import com.seiko.tv.util.setupSharedElementTransition
 
@@ -34,10 +35,16 @@ class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
     }
 
     companion object {
-        fun launch(activity: Activity, animeId: Long, imageView: View) {
+        fun launch(activity: Activity, item: HomeImageBean, imageView: View) {
+            launch(activity, item.animeId, item.imageUrl, imageView)
+        }
+
+        fun launch(activity: Activity, animeId: Long, imageUrl: String, imageView: View) {
             val intent = Intent(activity, BangumiDetailsActivity::class.java)
             intent.putExtra(BangumiDetailsFragment.ARGS_ANIME_ID, animeId)
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imageView, BangumiDetailsFragment.TRANSITION_NAME).toBundle()
+            intent.putExtra(BangumiDetailsFragment.ARGS_ANIME_IMAGE_URL, imageUrl)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                activity, imageView, BangumiDetailsFragment.TRANSITION_NAME).toBundle()
             activity.startActivity(intent, options)
         }
     }

@@ -73,7 +73,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         when(item) {
             is HomeImageBean -> {
                 val cardView = holder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
+                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
             }
         }
     }

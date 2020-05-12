@@ -73,7 +73,7 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
+                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
             }
         }
     }

@@ -16,9 +16,9 @@ class BangumiDetailBean(
     val overviewRowBackgroundColor: Int
 ) {
     companion object {
-        fun empty() = BangumiDetailBean(
+        fun empty(imageUrl: String = "") = BangumiDetailBean(
             animeTitle = "",
-            imageUrl = "",
+            imageUrl = imageUrl,
             tags = "",
             description = "",
             rating = 0f,

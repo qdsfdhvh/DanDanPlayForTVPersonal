@@ -53,6 +53,6 @@ fun GenericDraweeView.loadImage(url: String?) {
     controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
         .setOldController(controller)
-        .setAutoPlayAnimations(true)
+        .setAutoPlayAnimations(false)
         .build()
 }

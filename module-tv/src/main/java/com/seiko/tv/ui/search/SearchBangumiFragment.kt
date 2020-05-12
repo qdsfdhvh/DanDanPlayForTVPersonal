@@ -122,7 +122,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         when(item) {
             is SearchAnimeDetails -> {
                 val cardView = holder.view as SearchBangumiCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
+                BangumiDetailsActivity.launch(requireActivity(), item.animeId, item.imageUrl, cardView.getImageView())
 //                findNavController().navigate(
 //                    SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(
 //                        item.animeId

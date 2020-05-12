@@ -35,7 +35,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         }
     }
 
-    private val season by lazyAndroid { arguments!!.getParcelable<BangumiSeason>(ARGS_SEASON)!! }
+    private val season by lazyAndroid { requireArguments().getParcelable<BangumiSeason>(ARGS_SEASON)!! }
 
     private val viewModel: BangumiAreaPageViewModel by viewModel()
 
@@ -84,7 +84,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, cardView.getImageView())
+                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.leanback.widget.DetailsOverviewRow
 import androidx.leanback.widget.Presenter
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.databinding.DetailViewLogoBinding
+import com.seiko.tv.util.loadImage
 
 class FrescoDetailsOverviewLogoPresenter : DetailsOverviewLogoPresenter() {
 
@@ -40,7 +41,7 @@ class DetailsOverviewLogoViewHolder(
     fun bind(item: BangumiDetailBean?) {
         val imageUrl = item?.imageUrl
         if (!imageUrl.isNullOrEmpty()) {
-            binding.detailsOverviewImage.setImageURI(imageUrl)
+            binding.detailsOverviewImage.loadImage(imageUrl)
         }
     }
 

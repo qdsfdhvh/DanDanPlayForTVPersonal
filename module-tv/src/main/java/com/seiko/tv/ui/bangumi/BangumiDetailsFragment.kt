@@ -23,6 +23,7 @@ import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiDetailViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -34,7 +35,8 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     companion object {
         const val TAG = "BangumiDetailsFragment"
         const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
-        const val TRANSITION_NAME = "t_for_transition";
+        const val ARGS_ANIME_IMAGE_URL = "ARGS_ANIME_IMAGE_URL"
+        const val TRANSITION_NAME = "t_for_transition"
         private const val ID_RATING = 1L
         private const val ID_FAVOURITE = 2L
 
@@ -110,7 +112,11 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
         mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
 
-        detailsOverviewRow = AppDetailsOverviewRow(BangumiDetailBean.empty())
+        detailsOverviewRow = AppDetailsOverviewRow(
+            BangumiDetailBean.empty(
+                imageUrl = requireArguments().getString(ARGS_ANIME_IMAGE_URL, "")
+            )
+        )
         detailsOverviewRow.setImageBitmap(requireContext(), null) // 需要此行，原因尚未确定
         detailsOverviewRow.isImageScaleUpAllowed = true
         mAdapter.add(detailsOverviewRow)
@@ -161,9 +167,14 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             mDescriptionRowPresenter.actionsBackgroundColor = details.actionBackgroundColor
         }
 
-        // TODO 待优化
+//        val oldImageUrl = (detailsOverviewRow.item as? BangumiDetailBean)?.imageUrl
         detailsOverviewRow.item = details
-        detailsOverviewRow.notifyImageDrawable()
+//        if (oldImageUrl != details.imageUrl) {
+//            lifecycleScope.launchWhenResumed {
+//                delay(300)
+//                detailsOverviewRow.notifyImageDrawable()
+//            }
+//        }
 
         mActionAdapter = ArrayObjectAdapter()
         mActionAdapter.add(
@@ -218,7 +229,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             is HomeImageBean -> {
                 val card = holder.view
                 card as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, card.getImageView())
+                BangumiDetailsActivity.launch(requireActivity(), item, card.getImageView())
             }
         }
     }
