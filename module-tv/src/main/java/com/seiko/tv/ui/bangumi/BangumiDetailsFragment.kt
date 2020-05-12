@@ -7,18 +7,21 @@ import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
 import androidx.lifecycle.lifecycleScope
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.data.model.HomeImageBean
+import com.seiko.tv.data.model.RelatesListRow
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
 import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
 import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
+import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiDetailViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,14 +45,22 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         }
     }
 
-//    private val args by navArgs<BangumiDetailsFragmentArgs>()
-    private val animeId by lazyAndroid { arguments!!.getLong(ARGS_ANIME_ID) }
-    private val viewModel by viewModel<BangumiDetailViewModel>()
+    private val animeId: Long by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
+    private val viewModel: BangumiDetailViewModel by viewModel()
 
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
     private lateinit var mActionAdapter: ArrayObjectAdapter
     private lateinit var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter
+
+    private lateinit var detailsOverviewRow: AppDetailsOverviewRow
+    private lateinit var episodesAdapter: ArrayObjectAdapter
+    private lateinit var relatedListRow: ListRow
+    private lateinit var relatedAdapter: AsyncObjectAdapter<HomeImageBean>
+    private lateinit var similarListRow: ListRow
+    private lateinit var similarAdapter: AsyncObjectAdapter<HomeImageBean>
+
+    private val homeImageBeanDiffCallback by lazyAndroid { HomeImageBeanDiffCallback() }
 
     private var mDetailsOverviewPrevState = -1
 
@@ -57,6 +68,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         bindViewModel()
+        onItemViewClickedListener = this
     }
 
     override fun onDestroyView() {
@@ -69,45 +81,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 生成相关UI
      */
     private fun setupUI() {
+        // diy listRow确保哈希不同
         mPresenterSelector = ClassPresenterSelector()
+        mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
+        mPresenterSelector.addClassPresenter(RelatesListRow::class.java, ListRowPresenter())
+        mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
-        onItemViewClickedListener = this
-        createDetailsOverviewRowPresenter()
-//        setupEmptyAdapter()
-        prepareEntranceTransition()
         adapter = mAdapter
-    }
-
-//    private fun setupEmptyAdapter() {
-//        val emptyAdapter = ArrayObjectAdapter(mPresenterSelector)
-//        emptyAdapter.add(DetailsOverviewRow(BangumiDetailBean.empty()))
-//        adapter = emptyAdapter
-//    }
-
-    /**
-     * 开始加载数据
-     */
-    private fun bindViewModel() {
-        viewModel.bangumiDetailsBean.observe(viewLifecycleOwner, this::updateDetails)
-        viewModel.animeId.value = animeId
+        setupListRow()
+        prepareEntranceTransition()
     }
 
     /**
-     * 更新动漫详情
+     * 添加简介、集数、其他。相似
      */
-    private fun updateDetails(details: BangumiDetailBean) {
-//        adapter = mAdapter
-        createDetailsOverviewRow(details)
-        createEpisodesRows(details.episodes)
-        createRelatedsRows(details.relateds)
-        createSimilarsRows(details.similars)
-        startEntranceTransition()
-    }
-
-    /**
-     * 添加简介布局选择器
-     */
-    private fun createDetailsOverviewRowPresenter() {
+    private fun setupListRow() {
         val logoPresenter = FrescoDetailsOverviewLogoPresenter()
         val descriptionPresenter = DetailsDescriptionPresenter()
         mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
@@ -121,12 +109,51 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         mDescriptionRowPresenter.isParticipatingEntranceTransition = false
 
         mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
+
+        detailsOverviewRow = AppDetailsOverviewRow(BangumiDetailBean.empty())
+        detailsOverviewRow.setImageBitmap(requireContext(), null) // 需要此行，原因尚未确定
+        detailsOverviewRow.isImageScaleUpAllowed = true
+        mAdapter.add(detailsOverviewRow)
+
+        val presenterSelector = BangumiPresenterSelector()
+
+        episodesAdapter = ArrayObjectAdapter(presenterSelector)
+        mAdapter.add(EpisodesListRow(HeaderItem(0, "分集"), episodesAdapter))
+
+        relatedAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        relatedListRow = RelatesListRow(HeaderItem(0, "其他系列"), relatedAdapter)
+
+        similarAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        similarListRow = ListRow(HeaderItem(0, "相似作品"), similarAdapter)
+    }
+
+
+    /**
+     * 开始加载数据
+     */
+    private fun bindViewModel() {
+        viewModel.bangumiDetailsBean.observe(viewLifecycleOwner) { details ->
+            updateDetailsOverviewRow(details)
+            startEntranceTransition()
+        }
+        viewModel.episodesList.observe(viewLifecycleOwner) { episodes ->
+            episodesAdapter.setItems(episodes, null)
+        }
+        viewModel.relatedsList.observe(viewLifecycleOwner) { relateds ->
+            mAdapter.showHideListList(relatedListRow, relateds)
+            relatedAdapter.submitList(relateds)
+        }
+        viewModel.similarsList.observe(viewLifecycleOwner) { similars ->
+            mAdapter.showHideListList(similarListRow, similars)
+            similarAdapter.submitList(similars)
+        }
+        viewModel.animeId.value = animeId
     }
 
     /**
      * 添加简介布局数据
      */
-    private fun createDetailsOverviewRow(details: BangumiDetailBean) {
+    private fun updateDetailsOverviewRow(details: BangumiDetailBean) {
         if (details.overviewRowBackgroundColor != 0) {
             mDescriptionRowPresenter.backgroundColor = details.overviewRowBackgroundColor
         }
@@ -134,9 +161,10 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             mDescriptionRowPresenter.actionsBackgroundColor = details.actionBackgroundColor
         }
 
-        val detailsOverviewRow = DetailsOverviewRow(details)
-        detailsOverviewRow.setImageBitmap(requireActivity(), null)
-        detailsOverviewRow.isImageScaleUpAllowed = true
+        // TODO 待优化
+        detailsOverviewRow.item = details
+        detailsOverviewRow.notifyImageDrawable()
+
         mActionAdapter = ArrayObjectAdapter()
         mActionAdapter.add(
             Action(ID_RATING, "评分:${details.rating}", null,
@@ -152,49 +180,6 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             }
         )
         detailsOverviewRow.actionsAdapter = mActionAdapter
-        mAdapter.add(detailsOverviewRow)
-    }
-
-    /**
-     * 添加 分集
-     */
-    private fun createEpisodesRows(episodes: List<BangumiEpisodeEntity>) {
-        if (episodes.isNotEmpty()) {
-            val presenterSelector = BangumiPresenterSelector()
-            val episodesAdapter = ArrayObjectAdapter(presenterSelector)
-            episodesAdapter.addAll(0, episodes)
-            val header = HeaderItem(0, "分集")
-            mAdapter.add(EpisodesListRow(header, episodesAdapter))
-            mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
-        }
-    }
-
-    /**
-     * 添加 其他系列
-     */
-    private fun createRelatedsRows(relateds: List<HomeImageBean>) {
-        if (relateds.isNotEmpty()) {
-            val presenterSelector = BangumiPresenterSelector()
-            val relatedAdapter = ArrayObjectAdapter(presenterSelector)
-            relatedAdapter.addAll(0, relateds)
-            val header = HeaderItem(0, "其他系列")
-            mAdapter.add(ListRow(header, relatedAdapter))
-            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-        }
-    }
-
-    /**
-     * 添加 相似作品
-     */
-    private fun createSimilarsRows(similars: List<HomeImageBean>) {
-        if (similars.isNotEmpty()) {
-            val presenterSelector = BangumiPresenterSelector()
-            val relatedAdapter = ArrayObjectAdapter(presenterSelector)
-            relatedAdapter.addAll(0, similars)
-            val header = HeaderItem(0, "相似作品")
-            mAdapter.add(ListRow(header, relatedAdapter))
-            mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-        }
     }
 
     /**
@@ -229,11 +214,6 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             is BangumiEpisodeEntity -> {
                 val keyword = viewModel.getSearchKey(item)
                 SearchActivity.launchMagnet(requireActivity(), keyword, animeId, item.episodeId)
-
-//                val action = BangumiDetailsFragmentDirections.actionBangumiDetailsFragmentToEpisodesSearchFragment(keyword)
-//                action.animeId = animeId
-//                action.episodeId = item.episodeId
-//                findNavController().navigate(action)
             }
             is HomeImageBean -> {
                 val card = holder.view
@@ -243,4 +223,16 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         }
     }
 
+}
+
+private fun <T> ArrayObjectAdapter.showHideListList(listRow: ListRow, list: Collection<T>) {
+    if (list.isEmpty()) {
+        if (indexOf(listRow) >= 0) {
+            remove(listRow)
+        }
+    } else {
+        if (indexOf(listRow) < 0) {
+            add(listRow)
+        }
+    }
 }

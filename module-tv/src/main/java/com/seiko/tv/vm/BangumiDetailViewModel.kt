@@ -7,6 +7,7 @@ import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.common.data.Result
 import com.seiko.tv.data.model.BangumiDetailBean
+import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
 import com.seiko.tv.util.toHomeImageBean
@@ -34,11 +35,7 @@ class BangumiDetailViewModel(
             .flatMapConcat { result ->
                 flow {
                     when(result) {
-                        is Result.Success -> {
-                            val details = result.data
-                            emit(result.data)
-//                            searchKeyWord = details.searchKeyword
-                        }
+                        is Result.Success -> emit(result.data)
                         is Result.Error -> Timber.w(result.exception)
                     }
                 }
@@ -86,14 +83,19 @@ class BangumiDetailViewModel(
                 titleColor = titleColor,
                 bodyColor = bodyColor,
                 overviewRowBackgroundColor = overviewRowBackgroundColor,
-                actionBackgroundColor = actionBackgroundColor,
-
-                episodes = details.episodes,
-                relateds = details.relateds.map { it.toHomeImageBean() },
-                similars = details.similars.map { it.toHomeImageBean() }
+                actionBackgroundColor = actionBackgroundColor
             ))
-
         }
+    }
+
+    val episodesList: LiveData<List<BangumiEpisodeEntity>> = bangumiDetails.map { it.episodes }
+
+    val relatedsList: LiveData<List<HomeImageBean>> = bangumiDetails.map { details ->
+        details.relateds.map { it.toHomeImageBean() }
+    }
+
+    val similarsList: LiveData<List<HomeImageBean>> = bangumiDetails.map { details ->
+        details.similars.map { it.toHomeImageBean() }
     }
 
     /**

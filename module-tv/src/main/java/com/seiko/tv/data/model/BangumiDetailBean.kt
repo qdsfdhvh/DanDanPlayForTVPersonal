@@ -13,11 +13,7 @@ class BangumiDetailBean(
     val titleColor: Int,
     val bodyColor: Int,
     val actionBackgroundColor: Int,
-    val overviewRowBackgroundColor: Int,
-
-    val episodes: List<BangumiEpisodeEntity>,
-    val relateds: List<HomeImageBean>,
-    val similars: List<HomeImageBean>
+    val overviewRowBackgroundColor: Int
 ) {
     companion object {
         fun empty() = BangumiDetailBean(
@@ -31,11 +27,7 @@ class BangumiDetailBean(
             titleColor = 0,
             bodyColor = 0,
             actionBackgroundColor = 0,
-            overviewRowBackgroundColor = 0,
-
-            episodes = emptyList(),
-            relateds = emptyList(),
-            similars = emptyList()
+            overviewRowBackgroundColor = 0
         )
     }
 }

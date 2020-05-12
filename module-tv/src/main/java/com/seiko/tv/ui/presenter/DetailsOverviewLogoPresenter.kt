@@ -38,7 +38,10 @@ class DetailsOverviewLogoViewHolder(
     }
 
     fun bind(item: BangumiDetailBean?) {
-        binding.detailsOverviewImage.setImageURI(item?.imageUrl)
+        val imageUrl = item?.imageUrl
+        if (!imageUrl.isNullOrEmpty()) {
+            binding.detailsOverviewImage.setImageURI(imageUrl)
+        }
     }
 
 }
