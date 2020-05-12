@@ -15,9 +15,9 @@ class AppSetupDelegate : AppDelegate {
 
     override fun Application.setupApplication() {
         initComponents()
-       for (entry in map) {
+        for (entry in map) {
            entry.value.onCreate(this)
-       }
+        }
     }
 
     override fun Application.clearOnLowMemory() {

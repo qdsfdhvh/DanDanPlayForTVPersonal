@@ -3,6 +3,7 @@ apply from: rootProject.file('app-cc-setting.gradle')
 apply from: rootProject.file('app-common-build.gradle')
 apply from: rootProject.file('app-and-res-guard.gradle')
 apply from: rootProject.file('app-mc-image.gradle')
+apply plugin: 'com.didi.dokit'
 
 kapt {
     arguments {
@@ -113,7 +114,9 @@ dependencies {
     addComponent("module-tv")
     // Database Debug
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
-
 //    // 内存泄漏
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    // DoKit
+    debugImplementation "com.didichuxing.doraemonkit:doraemonkit:3.1.5"
+    releaseImplementation "com.didichuxing.doraemonkit:doraemonkit-no-op:3.1.5"
 }
