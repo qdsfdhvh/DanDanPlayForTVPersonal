@@ -13,7 +13,7 @@ object Versions {
     const val fragment = "1.2.4"
 
     const val kotlin = "1.3.72"
-    const val coroutines = "1.3.6" // https://github.com/Kotlin/kotlinx.coroutines
+    const val coroutines = "1.3.7" // https://github.com/Kotlin/kotlinx.coroutines
 
     const val koin = "2.1.5" // https://github.com/InsertKoinIO/koin
     const val mmkv = "1.1.1" // https://github.com/Tencent/MMKV
@@ -28,7 +28,7 @@ object Versions {
     const val room = "2.2.5"
     const val work = "2.3.4"
 
-    const val cc_register = "1.1.2"
+    const val cc_register = "1.1.2" // https://github.com/luckybilly/CC
 }
 
 object Build {
