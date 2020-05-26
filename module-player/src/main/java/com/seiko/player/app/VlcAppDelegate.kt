@@ -73,15 +73,10 @@ class AppVlcSetupDelegate : VlcAppDelegate,
             AppScope.launch(Dispatchers.IO) {
 
                 if (!VLCInstance.testCompatibleCPU(AppContextProvider.appContext)) return@launch
-                Dialog.setCallbacks(VLCInstance[this@backgroundInit], DialogDelegate)
+                Dialog.setCallbacks(VLCInstance.getInstance(this@backgroundInit), DialogDelegate)
             }
             packageManager.setComponentEnabledSetting(ComponentName(this, SendCrashActivity::class.java),
-//                if (BuildConfig.BETA) {
-//                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-//                } else {
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-//                }
-                , PackageManager.DONT_KILL_APP)
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
             SettingsMigration.migrateSettings(this)
         }).start()
     }

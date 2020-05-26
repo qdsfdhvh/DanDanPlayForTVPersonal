@@ -29,12 +29,12 @@ allprojects {
 ext {
     android_plugin_version = '3.6.3'
     kotlin_version = '1.3.72'
-    kotlinx_version = '1.3.5'
+    kotlinx_version = '1.3.6'
     appId = Build.applicationId
-    versionName = '3.3.0 Beta 2'
-    versionCode = 3028200
-    libvlcVersion = '3.3.0-eap10'
-    medialibraryVersion = '0.7.0-eap10'
+    versionName = '3.3.0 Beta 4'
+    versionCode = 3028400
+    libvlcVersion = '3.3.0-eap12'
+    medialibraryVersion = '0.7.0-eap12'
     minSdkVersion = 17
     targetSdkVersion = 29
     compileSdkVersion = 29
