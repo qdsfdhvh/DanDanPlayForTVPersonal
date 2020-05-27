@@ -10,6 +10,9 @@ import com.didichuxing.doraemonkit.DoraemonKit
 import com.seiko.common.app.AppDelegate
 import com.seiko.common.app.AppSetupDelegate
 import com.seiko.common.util.timber.NanoDebugTree
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -91,5 +94,7 @@ private fun setupStrictModel() {
  * 初始化DoKit
  */
 private fun Application.setupDoKit() {
-    DoraemonKit.install(this, "a6098d031d3b08f59fbc76a59c8d8c55")
+    GlobalScope.launch(Dispatchers.IO) {
+        DoraemonKit.install(this@setupDoKit, "a6098d031d3b08f59fbc76a59c8d8c55")
+    }
 }
