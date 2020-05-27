@@ -43,7 +43,7 @@ internal fun <T : JsonResultResponse, R : Any> apiFlowCall(
             emit(success(response))
 
             // 是否需要更新本地缓存
-            if (!isUpdateLocalCache.invoke()) {
+            if (isUpdateLocalCache.invoke()) {
                 return@flow
             }
         }
