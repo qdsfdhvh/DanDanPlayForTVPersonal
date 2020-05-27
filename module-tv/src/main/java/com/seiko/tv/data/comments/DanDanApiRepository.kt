@@ -60,7 +60,7 @@ internal class DanDanApiRepository(
      */
     fun getBangumiListWithSeason(season: BangumiSeason): Flow<Result<List<BangumiIntroEntity>>> {
         return apiDbLiveCall(
-            key = "${API_KEY_BANGUMI_WITH_SEASON}}_${season.year}_${season.month}",
+            key = "${API_KEY_BANGUMI_WITH_SEASON}_${season.year}_${season.month}",
             timeOut = ONE_DAY,
             isEffectCache = { it.bangumiList.isNotEmpty() },
             request = { api.getBangumiListWithSeason(season.year, season.month) },
@@ -88,21 +88,21 @@ internal class DanDanApiRepository(
         key: String, timeOut: Long,
         noinline isEffectCache: (T) -> Boolean = { true },
         noinline request: suspend () -> T,
-        noinline success: (T) -> Result<R>
+        noinline success: suspend (T) -> Result<R>
     ): Flow<Result<R>> {
         return apiFlowCall(
             loadCache =  { httpDbCache.getHttpResponse(key, T::class.java) },
             isEffectCache = isEffectCache,
             isUpdateLocalCache = { httpDbCache.isOutData(key, timeOut) },
-            request = request,
-            success = { response ->
+            saveCache = { response ->
                 coroutineScope {
                     launch {
                         httpDbCache.saveHttpResponse(key, response, T::class.java)
                     }
                 }
-                success.invoke(response)
-            }
+            },
+            request = request,
+            success = success
         )
     }
 }

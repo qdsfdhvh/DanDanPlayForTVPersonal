@@ -26,6 +26,7 @@ internal suspend fun <T : JsonResultResponse, R : Any> apiCall(
  * @param loadCache 加载缓存
  * @param isEffectCache 缓存数据是否有效
  * @param isUpdateLocalCache 是否需要刷新本地缓存
+ * @param saveCache 缓存数据
  * @param request 请求数据
  * @param success 请求成功转换数据
  */
@@ -33,27 +34,41 @@ internal fun <T : JsonResultResponse, R : Any> apiFlowCall(
     loadCache: suspend () -> T?,
     isEffectCache: (T) -> Boolean = { true },
     isUpdateLocalCache: suspend () -> Boolean,
+    saveCache: suspend (T) -> Unit,
     request: suspend () -> T,
     success: suspend (T) -> Result<R>
 ) : Flow<Result<R>> {
     return flow {
-        val response: T? = loadCache.invoke()
+        var response: T? = loadCache.invoke()
         // 先读取本地缓存，如果数据有效加载页面
         if (response != null && isEffectCache.invoke(response)) {
+
+            // 发送缓存数据
             emit(success(response))
 
             // 是否需要更新本地缓存
-            if (isUpdateLocalCache.invoke()) {
+            if (!isUpdateLocalCache.invoke()) {
                 return@flow
             }
         }
 
         // 请求api
-        val result = apiCall(request, success)
-        if (result is Result.Error) {
-            Timber.e(result.exception)
-        } else {
-            emit(result)
+        response = try {
+            request()
+        } catch (e: Exception) {
+            Timber.w(e)
+            return@flow
         }
+
+        if (!response.success) {
+            Timber.w("${response.errorCode} ${response.errorMessage}")
+            return@flow
+        }
+
+        // 缓存到本地
+        saveCache.invoke(response)
+
+        // 发送数据
+        emit(success(response))
     }
 }
