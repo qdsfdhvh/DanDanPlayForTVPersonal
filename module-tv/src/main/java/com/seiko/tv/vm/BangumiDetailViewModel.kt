@@ -88,7 +88,9 @@ class BangumiDetailViewModel(
         }
     }
 
-    val episodesList: LiveData<List<BangumiEpisodeEntity>> = bangumiDetails.map { it.episodes }
+    val episodesList: LiveData<List<BangumiEpisodeEntity>> = bangumiDetails.map {
+        listOf(createAllEpisode()) + it.episodes
+    }
 
     val relatedsList: LiveData<List<HomeImageBean>> = bangumiDetails.map { details ->
         details.relateds.map { it.toHomeImageBean() }
@@ -99,16 +101,24 @@ class BangumiDetailViewModel(
     }
 
     /**
-     * 从标题(第一话 XXXXXX)中提取关键字
+     * 获得搜索关键字
      */
     fun getSearchKey(item: BangumiEpisodeEntity): String {
+        val bangumiSearchKeyboard = bangumiDetails.value?.searchKeyword ?: ""
+
+        // 直接搜索动漫
+        if (item.episodeId == ALL_EPISODE_ID) {
+            return bangumiSearchKeyboard
+        }
+
+        // 截取第几集
         val infoArray = item.episodeTitle.split("\\s".toRegex())
         var episode = if (infoArray.isEmpty()) item.episodeTitle else infoArray[0]
         if (episode.startsWith("第") && episode.endsWith("话")) {
             val temp = episode.substring(1, episode.length - 1)
-            episode =  temp
+            episode = temp
         }
-        return "${bangumiDetails.value?.searchKeyword} $episode"
+        return "$bangumiSearchKeyboard $episode"
     }
 
     /**
@@ -121,4 +131,12 @@ class BangumiDetailViewModel(
         return anime.isFavorited
     }
 
+    companion object {
+        private const val ALL_EPISODE_ID = -999
+
+        fun createAllEpisode() = BangumiEpisodeEntity(
+            episodeId = ALL_EPISODE_ID,
+            episodeTitle = "全集"
+        )
+    }
 }
