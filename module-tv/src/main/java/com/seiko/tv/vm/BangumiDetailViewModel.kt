@@ -6,6 +6,7 @@ import com.seiko.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.common.data.Result
+import com.seiko.tv.data.comments.BangumiKeyboardRepository
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
@@ -19,7 +20,8 @@ import timber.log.Timber
 class BangumiDetailViewModel(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
-    private val saveBangumiFavorite: SaveBangumiFavoriteUseCase
+    private val saveBangumiFavorite: SaveBangumiFavoriteUseCase,
+    private val bangumiKeyboardRepo: BangumiKeyboardRepository
 ) : ViewModel() {
 
     /**
@@ -46,7 +48,7 @@ class BangumiDetailViewModel(
     /**
      * 番剧信息 与 logo色调解析数据
      */
-    val bangumiDetailsBean: LiveData<BangumiDetailBean> = bangumiDetails.switchMap { details ->
+    val details: LiveData<BangumiDetailBean> = bangumiDetails.switchMap { details ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             val palette = getImageUrlPalette.invoke(details.imageUrl)
 
@@ -72,6 +74,9 @@ class BangumiDetailViewModel(
                 actionBackgroundColor = 0
             }
 
+            var keyboard = bangumiKeyboardRepo.getKeyboard(details.animeId)
+            if (keyboard.isNullOrBlank()) keyboard = details.searchKeyword
+
             emit(BangumiDetailBean(
                 animeTitle = details.animeTitle,
                 imageUrl = details.imageUrl,
@@ -79,6 +84,7 @@ class BangumiDetailViewModel(
                 description = details.summary,
                 rating = details.rating,
                 isFavorited = details.isFavorited,
+                keyboard = keyboard,
 
                 titleColor = titleColor,
                 bodyColor = bodyColor,
@@ -104,7 +110,7 @@ class BangumiDetailViewModel(
      * 获得搜索关键字
      */
     fun getSearchKey(item: BangumiEpisodeEntity): String {
-        val bangumiSearchKeyboard = bangumiDetails.value?.searchKeyword ?: ""
+        val bangumiSearchKeyboard = details.value?.keyboard ?: ""
 
         // 直接搜索动漫
         if (item.episodeId == ALL_EPISODE_ID) {
@@ -129,6 +135,19 @@ class BangumiDetailViewModel(
         anime.isFavorited = !anime.isFavorited
         saveBangumiFavorite.invoke(anime)
         return anime.isFavorited
+    }
+
+    /**
+     * 保存关键字
+     */
+    suspend fun saveKeyboard(keyboard: String): String? {
+        val anime = bangumiDetails.value ?: return null
+        val success = bangumiKeyboardRepo.saveKeyboard(anime.animeId, keyboard)
+        if (!success) return null
+
+        val realKeyboard = if (keyboard.isBlank()) anime.searchKeyword else keyboard
+        details.value?.keyboard = realKeyboard // 更新liveData中的数据
+        return realKeyboard
     }
 
     companion object {

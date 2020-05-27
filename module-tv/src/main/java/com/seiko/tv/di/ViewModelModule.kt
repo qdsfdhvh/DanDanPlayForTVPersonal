@@ -7,7 +7,7 @@ import org.koin.dsl.module
 internal val viewModelModule = module {
     viewModel { BangumiAreaViewModel(get(), get()) }
     viewModel { BangumiAreaPageViewModel(get()) }
-    viewModel { BangumiDetailViewModel(get(), get(), get()) }
+    viewModel { BangumiDetailViewModel(get(), get(), get(), get()) }
     viewModel { BangumiFavoriteViewModel(get()) }
     viewModel { BangumiHistoryViewModel(get()) }
     viewModel { HomeViewModel(get(), get(), get()) }

@@ -8,4 +8,5 @@
     <dimen name="detailsFragment_thumbnail_width">274dp</dimen>
     <dimen name="detailsFragment_thumbnail_height">426dp</dimen>
 
+    <dimen name="dandan_radius">6dp</dimen>
 </resources>

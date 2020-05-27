@@ -1,7 +1,5 @@
 package com.seiko.tv.data.model
 
-import com.seiko.tv.data.db.model.BangumiEpisodeEntity
-
 class BangumiDetailBean(
     val animeTitle: String,
     val imageUrl: String,
@@ -9,6 +7,7 @@ class BangumiDetailBean(
     val description: String,
     val rating: Float,
     val isFavorited: Boolean,
+    var keyboard: String,
 
     val titleColor: Int,
     val bodyColor: Int,
@@ -23,6 +22,7 @@ class BangumiDetailBean(
             description = "",
             rating = 0f,
             isFavorited = false,
+            keyboard = "",
 
             titleColor = 0,
             bodyColor = 0,

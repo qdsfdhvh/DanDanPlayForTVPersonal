@@ -12,6 +12,7 @@ import org.koin.dsl.module
 internal val repositoryModule = module {
     single { BangumiDetailsRepository(get()) }
     single { BangumiHistoryRepository(get()) }
+    single { BangumiKeyboardRepository(get()) }
     single { DanDanApiRepository(get(), get()) }
     single { EpisodeTorrentRepository(get()) }
     single { ResMagnetItemRepository(get()) }

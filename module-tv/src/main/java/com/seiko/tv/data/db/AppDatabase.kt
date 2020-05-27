@@ -14,10 +14,11 @@ import com.seiko.tv.util.constants.DB_NAME_DEFAULT
     BangumiIntroEntity::class,
     BangumiTagEntity::class,
     BangumiHistoryEntity::class,
+    BangumiKeyboardEntity::class,
     ResMagnetItemEntity::class,
     EpisodeTorrentEntity::class,
     HttpDbCacheEntity::class
-], version = 4)
+], version = 5)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -26,7 +27,8 @@ abstract class AppDatabase : RoomDatabase() {
                 .addMigrations(
                     RoomMigration.MIGRATION_1_2,
                     RoomMigration.MIGRATION_2_3,
-                    RoomMigration.MIGRATION_3_4
+                    RoomMigration.MIGRATION_3_4,
+                    RoomMigration.MIGRATION_4_5
                 )
                 .build()
         }
@@ -41,6 +43,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bangumiTagDao(): BangumiTagDao
 
     abstract fun bangumiHistoryDao(): BangumiHistoryDao
+
+    abstract fun bangumiKeyboardDao(): BangumiKeyBoardDao
 
     abstract fun resMagnetItemDao(): ResMagnetItemDao
 

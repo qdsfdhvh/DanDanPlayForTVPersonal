@@ -2,7 +2,6 @@ package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -16,14 +15,16 @@ import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.RelatesListRow
 import com.seiko.tv.ui.card.MainAreaCardView
+import com.seiko.tv.ui.dialog.DialogInputFragment
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
 import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
 import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
+import com.seiko.tv.util.extensions.getDrawable
+import com.seiko.tv.util.extensions.hasFragment
 import com.seiko.tv.vm.BangumiDetailViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -37,8 +38,10 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
         const val ARGS_ANIME_IMAGE_URL = "ARGS_ANIME_IMAGE_URL"
         const val TRANSITION_NAME = "t_for_transition"
+
         private const val ID_RATING = 1L
         private const val ID_FAVOURITE = 2L
+        private const val ID_KEYBOARD = 3L
 
         fun newInstance(bundle: Bundle): BangumiDetailsFragment {
             val fragment = BangumiDetailsFragment()
@@ -138,7 +141,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 开始加载数据
      */
     private fun bindViewModel() {
-        viewModel.bangumiDetailsBean.observe(viewLifecycleOwner) { details ->
+        viewModel.details.observe(viewLifecycleOwner) { details ->
             updateDetailsOverviewRow(details)
             startEntranceTransition()
         }
@@ -167,28 +170,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             mDescriptionRowPresenter.actionsBackgroundColor = details.actionBackgroundColor
         }
 
-//        val oldImageUrl = (detailsOverviewRow.item as? BangumiDetailBean)?.imageUrl
         detailsOverviewRow.item = details
-//        if (oldImageUrl != details.imageUrl) {
-//            lifecycleScope.launchWhenResumed {
-//                delay(300)
-//                detailsOverviewRow.notifyImageDrawable()
-//            }
-//        }
 
         mActionAdapter = ArrayObjectAdapter()
         mActionAdapter.add(
-            Action(ID_RATING, "评分:${details.rating}", null,
-                ContextCompat.getDrawable(requireActivity(), R.drawable.ic_rating))
+            Action(ID_RATING, "评分：${details.rating}", null, getDrawable(R.drawable.ic_rating_24dp))
         )
         mActionAdapter.add(
             if (details.isFavorited) {
-                Action(ID_FAVOURITE, "已收藏", null,
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full))
+                Action(ID_FAVOURITE, "已收藏", null, getDrawable(R.drawable.ic_heart_full_24dp))
             } else {
-                Action(ID_FAVOURITE, "未收藏", null,
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty))
+                Action(ID_FAVOURITE, "未收藏", null, getDrawable(R.drawable.ic_heart_empty_24dp))
             }
+        )
+        mActionAdapter.add(
+            Action(ID_KEYBOARD, "搜索关键字：", details.keyboard, getDrawable(R.drawable.ic_keyboard_24dp))
         )
         detailsOverviewRow.actionsAdapter = mActionAdapter
     }
@@ -203,14 +199,31 @@ class BangumiDetailsFragment : DetailsSupportFragment()
                     if (viewModel.setFavourite()) {
                         Timber.d("已收藏")
                         action.label1 = "已收藏"
-                        action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_full)
+                        action.icon = getDrawable(R.drawable.ic_heart_full_24dp)
                     } else {
                         Timber.d("未收藏")
                         action.label1 = "未收藏"
-                        action.icon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_heart_empty)
+                        action.icon = getDrawable(R.drawable.ic_heart_empty_24dp)
                     }
-                    val index = mActionAdapter.indexOf(action)
-                    mActionAdapter.notifyItemRangeChanged(index, 1)
+                    mActionAdapter.notifyItemRangeChanged(action)
+                }
+            }
+            ID_KEYBOARD -> {
+                if (!hasFragment(DialogInputFragment.TAG)) {
+                    DialogInputFragment.Builder()
+                        .setConfirmText("确认")
+                        .setCancelText("取消")
+                        .setValue(action.label2.toString())
+                        .setConfirmClickListener { keyboard ->
+                            lifecycleScope.launch {
+                                viewModel.saveKeyboard(keyboard)?.let { realKeyboard ->
+                                    action.label2 = realKeyboard
+                                    mActionAdapter.notifyItemRangeChanged(action)
+                                }
+                            }
+                        }
+                        .build()
+                        .show(childFragmentManager)
                 }
             }
         }
@@ -245,5 +258,12 @@ private fun <T> ArrayObjectAdapter.showHideListList(listRow: ListRow, list: Coll
         if (indexOf(listRow) < 0) {
             add(listRow)
         }
+    }
+}
+
+private fun ArrayObjectAdapter.notifyItemRangeChanged(action: Action) {
+    val index = indexOf(action)
+    if (index >= 0) {
+        notifyItemRangeChanged(index, 1)
     }
 }

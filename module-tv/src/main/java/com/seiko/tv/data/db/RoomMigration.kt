@@ -24,4 +24,10 @@ object RoomMigration {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_HttpDbCache_table_key` ON HttpDbCache_table (`key`)")
         }
     }
+
+    val MIGRATION_4_5 get() = object : Migration(4, 5) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS BangumiKeyboard (`animeId` INTEGER NOT NULL, `keyboard` TEXT NOT NULL, PRIMARY KEY(`animeId`))")
+        }
+    }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/CommonTheme.DialogLayout">
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@id/dandan_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dandan_selector_edit"
+        android:padding="12dp"
+        android:textSize="24sp"
+        tools:hint="油炸大瓜"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_confirm"
+        app:layout_constraintStart_toStartOf="@id/btn_confirm"
+        app:layout_constraintEnd_toEndOf="@id/btn_cancel"/>
+    <Button
+        style="@style/CommonTheme.DialogButton"
+        android:id="@id/btn_confirm"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        tools:text="确认"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/dandan_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_cancel"/>
+    <Button
+        style="@style/CommonTheme.DialogButton"
+        android:id="@id/btn_cancel"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        tools:text="取消"
+        app:layout_constraintTop_toTopOf="@id/btn_confirm"
+        app:layout_constraintBottom_toBottomOf="@id/btn_confirm"
+        app:layout_constraintStart_toEndOf="@id/btn_confirm"
+        app:layout_constraintEnd_toEndOf="parent">
+        <requestFocus />
+    </Button>
+</androidx.constraintlayout.widget.ConstraintLayout>
