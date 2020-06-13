@@ -34,7 +34,7 @@ class App : Application(), AppDelegate by AppSetupDelegate() {
         }
         setupApplication()
         setupStrictModel()
-        setupDoKit()
+//        setupDoKit()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

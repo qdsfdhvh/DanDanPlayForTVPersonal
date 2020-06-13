@@ -109,9 +109,9 @@ android {
 }
 
 dependencies {
-    addComponent("module-player")
-    addComponent("module-torrent")
-    addComponent("module-tv")
+    addComponent 'component_tv', project(":component:tv")
+    addComponent 'component_torrent', project(":component:torrent")
+    addComponent 'component_player', project(":component:player")
     // Database Debug
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 //    // 内存泄漏

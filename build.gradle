@@ -27,7 +27,6 @@ allprojects {
 }
 
 ext {
-    android_plugin_version = '3.6.3'
     kotlin_version = '1.3.72'
     kotlinx_version = '1.3.6'
     appId = Build.applicationId
