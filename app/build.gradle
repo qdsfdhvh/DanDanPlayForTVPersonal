@@ -1,8 +1,8 @@
 ext.mainApp = true  // 设置为true，表示此module为主app module，一直以application方式编译
-apply from: rootProject.file('app-cc-setting.gradle')
-apply from: rootProject.file('app-common-build.gradle')
-apply from: rootProject.file('app-and-res-guard.gradle')
-apply from: rootProject.file('app-mc-image.gradle')
+apply from: rootProject.file('.buildscript/app-cc-setting.gradle')
+apply from: rootProject.file('.buildscript/app-common-build.gradle')
+apply from: rootProject.file('.buildscript/app-and-res-guard.gradle')
+apply from: rootProject.file('.buildscript/app-mc-image.gradle')
 apply plugin: 'com.didi.dokit'
 
 kapt {

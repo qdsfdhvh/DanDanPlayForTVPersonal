@@ -1,1 +1,0 @@
--keep class org.libtorrent4j.swig.libtorrent_jni {*;}

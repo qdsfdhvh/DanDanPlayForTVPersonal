@@ -1,6 +1,6 @@
 ext.alwaysLib = true // VLC配置的appId目前是固定的，子module暂时不单独编译
-apply from: rootProject.file('app-cc-setting.gradle')
-apply from: rootProject.file('app-common-build.gradle')
+apply from: rootProject.file('.buildscript/app-cc-setting.gradle')
+apply from: rootProject.file('.buildscript/app-common-build.gradle')
 
 kapt {
     arguments {
