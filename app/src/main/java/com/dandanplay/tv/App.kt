@@ -6,13 +6,9 @@ import android.content.res.Configuration
 import android.os.StrictMode
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
-import com.didichuxing.doraemonkit.DoraemonKit
 import com.seiko.common.app.AppDelegate
 import com.seiko.common.app.AppSetupDelegate
 import com.seiko.common.util.timber.NanoDebugTree
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -34,7 +30,6 @@ class App : Application(), AppDelegate by AppSetupDelegate() {
         }
         setupApplication()
         setupStrictModel()
-//        setupDoKit()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -87,14 +82,5 @@ private fun setupStrictModel() {
             .penaltyLog()
             .penaltyDeath()
             .build())
-    }
-}
-
-/**
- * 初始化DoKit
- */
-private fun Application.setupDoKit() {
-    GlobalScope.launch(Dispatchers.IO) {
-        DoraemonKit.install(this@setupDoKit, "a6098d031d3b08f59fbc76a59c8d8c55")
     }
 }
