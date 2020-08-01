@@ -42,6 +42,7 @@ class FilePickerActivity : FragmentActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun startFilePickerFragment() {
         var root: File
         if (!mRootPath.isNullOrEmpty()) {

@@ -1,0 +1,10 @@
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+}
+
+dependencies {
+    implementation(Deps.room_ktx)
+    kapt(Deps.room_compiler)
+}

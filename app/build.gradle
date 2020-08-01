@@ -1,14 +1,5 @@
 ext.mainApp = true  // 设置为true，表示此module为主app module，一直以application方式编译
-apply from: rootProject.file('.buildscript/app-cc-setting.gradle')
-apply from: rootProject.file('.buildscript/app-common-build.gradle')
-apply from: rootProject.file('.buildscript/app-and-res-guard.gradle')
-apply from: rootProject.file('.buildscript/app-mc-image.gradle')
-
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
-    }
-}
+apply from: rootProject.file(".buildscript/configure-android-defaults.gradle")
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = file('key.properties')
@@ -20,9 +11,9 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     // VLC 需要
-    dataBinding {
-        enabled = true
-    }
+//    dataBinding {
+//        enabled = true
+//    }
     // 签名配置信息
     signingConfigs {
         release {
@@ -110,9 +101,5 @@ android {
 dependencies {
     addComponent 'component_tv', project(":component:tv")
     addComponent 'component_torrent', project(":component:torrent")
-    addComponent 'component_player', project(":component:player")
-    // Database Debug
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
-    // 内存泄漏
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
+//    addComponent 'component_player', project(":component:player")
 }

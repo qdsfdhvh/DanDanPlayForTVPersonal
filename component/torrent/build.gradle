@@ -1,12 +1,4 @@
-apply from: rootProject.file('.buildscript/app-cc-setting.gradle')
-apply from: rootProject.file('.buildscript/app-common-build.gradle')
-
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
-        arg("room.schemaLocation", "$projectDir/schemas".toString())
-    }
-}
+apply from: rootProject.file('.buildscript/configure-component-defaults.gradle')
 
 android {
     resourcePrefix "torrent_"
@@ -18,8 +10,6 @@ this.beforeEvaluate {
 }
 
 dependencies {
-    kapt Deps.arouter_compiler
-    kapt Deps.room_compiler
     kapt Deps.moshi_compiler
 
     implementation project(':libs:file-picker')

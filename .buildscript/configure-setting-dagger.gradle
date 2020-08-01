@@ -1,0 +1,7 @@
+apply plugin: 'dagger.hilt.android.plugin'
+
+dependencies {
+    implementation(Deps.daggerHiltAndroid)  // 目前不添加会编译时提示错误
+    kapt(Deps.daggerHiltCompiler)
+    kapt(Deps.hiltCompiler)
+}

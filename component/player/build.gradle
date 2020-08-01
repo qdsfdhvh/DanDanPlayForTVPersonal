@@ -1,13 +1,5 @@
 ext.alwaysLib = true // VLC配置的appId目前是固定的，子module暂时不单独编译
-apply from: rootProject.file('.buildscript/app-cc-setting.gradle')
-apply from: rootProject.file('.buildscript/app-common-build.gradle')
-
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
-        arg("room.schemaLocation", "$projectDir/schemas".toString())
-    }
-}
+apply from: rootProject.file('.buildscript/configure-component-defaults.gradle')
 
 android {
     // VLC 需要
@@ -33,8 +25,6 @@ this.beforeEvaluate {
 }
 
 dependencies {
-    kapt Deps.arouter_compiler
-    kapt Deps.room_compiler
     kapt Deps.moshi_compiler
     // 弹幕
     implementation project(':libs:tool-danma')
@@ -46,4 +36,6 @@ dependencies {
     implementation("eu.agno3.jcifs:jcifs-ng:2.1.4")
     // sftp
     implementation("com.jcraft:jsch:0.1.55")
+    // ftp
+    implementation("commons-net:commons-net:3.6")
 }

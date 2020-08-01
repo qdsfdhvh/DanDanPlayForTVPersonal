@@ -1,6 +1,0 @@
-apply plugin: 'com.android.library'
-apply from: rootProject.file('.buildscript/app-common-build.gradle')
-
-dependencies {
-    api project(':libs:tool-danmaku')
-}
