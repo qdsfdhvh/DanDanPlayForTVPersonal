@@ -9,7 +9,7 @@ import com.seiko.tv.data.api.model.ResMagnetSearchResponse
 import com.seiko.tv.data.api.model.SearchAnimeResponse
 import com.seiko.tv.util.apiCall
 
-internal class SearchRepository(
+class SearchRepository(
     private val api: DanDanApiService,
     private val resApi: ResDanDanApiService
 ) {

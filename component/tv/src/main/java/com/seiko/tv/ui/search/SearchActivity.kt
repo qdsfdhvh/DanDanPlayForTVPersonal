@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

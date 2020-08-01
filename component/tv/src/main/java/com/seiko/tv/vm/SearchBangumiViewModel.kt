@@ -1,6 +1,7 @@
 package com.seiko.tv.vm
 
 import android.net.Uri
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.data.ResultData
@@ -15,7 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SearchBangumiViewModel(
+class SearchBangumiViewModel @ViewModelInject constructor(
     private val searchBangumiList: SearchBangumiListUseCase,
     private val searchMagnetList: SearchMagnetListUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase

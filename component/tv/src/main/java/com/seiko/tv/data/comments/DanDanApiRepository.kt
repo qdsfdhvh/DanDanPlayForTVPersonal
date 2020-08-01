@@ -11,7 +11,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-internal class DanDanApiRepository(
+class DanDanApiRepository(
     private val api: DanDanApiService,
     private val httpDbCache: HttpDbCacheRepository
 )  {

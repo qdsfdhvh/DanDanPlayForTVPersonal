@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
@@ -12,8 +13,9 @@ import androidx.lifecycle.observe
 import com.seiko.tv.R
 import com.seiko.tv.data.model.SeasonPageRow
 import com.seiko.tv.vm.BangumiAreaViewModel
-import org.koin.android.ext.android.inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BangumiAreaFragmentV2 : BrowseSupportFragment() {
 
     companion object {
@@ -22,7 +24,7 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
         }
     }
 
-    private val viewModel: BangumiAreaViewModel by inject()
+    private val viewModel: BangumiAreaViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

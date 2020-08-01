@@ -1,14 +1,13 @@
 package com.seiko.tv.data.comments
 
-import androidx.paging.DataSource
 import com.seiko.common.data.Result
-import com.seiko.tv.data.db.AppDatabase
+import com.seiko.tv.data.db.dao.BangumiHistoryDao
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiHistoryEntity
 
-internal class BangumiHistoryRepository(database: AppDatabase) {
-
-    private val bangumiHistoryDao = database.bangumiHistoryDao()
+class BangumiHistoryRepository(
+    private val bangumiHistoryDao: BangumiHistoryDao
+) {
 
     /**
      * 获得本地动漫前x条浏览历史，按浏览时间排序

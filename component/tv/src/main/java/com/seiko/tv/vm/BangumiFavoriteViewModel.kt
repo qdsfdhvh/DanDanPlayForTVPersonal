@@ -1,5 +1,6 @@
 package com.seiko.tv.vm
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -10,7 +11,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
-class BangumiFavoriteViewModel(
+class BangumiFavoriteViewModel @ViewModelInject constructor(
     private val getBangumiHistoryList: GetBangumiFavoriteUseCase
 ) : ViewModel() {
 

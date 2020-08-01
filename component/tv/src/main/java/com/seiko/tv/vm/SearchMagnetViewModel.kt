@@ -1,6 +1,7 @@
 package com.seiko.tv.vm
 
 import android.net.Uri
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.common.data.ResultData
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class SearchMagnetViewModel(
+class SearchMagnetViewModel @ViewModelInject constructor(
     private val searchMagnetList: SearchMagnetListUseCase,
     private val saveMagnetInfo: SaveMagnetInfoUseCase
 ) : ViewModel() {

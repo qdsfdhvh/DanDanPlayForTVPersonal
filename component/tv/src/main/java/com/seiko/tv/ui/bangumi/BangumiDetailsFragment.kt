@@ -2,6 +2,7 @@ package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -26,12 +27,14 @@ import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.util.extensions.getDrawable
 import com.seiko.tv.util.extensions.hasFragment
 import com.seiko.tv.vm.BangumiDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+@AndroidEntryPoint
 class BangumiDetailsFragment : DetailsSupportFragment()
     , OnItemViewClickedListener
     , OnActionClickedListener {
@@ -54,7 +57,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     }
 
     private val animeId: Long by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
-    private val viewModel: BangumiDetailViewModel by viewModel()
+    private val viewModel: BangumiDetailViewModel by viewModels()
 
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter

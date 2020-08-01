@@ -7,7 +7,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.router.Routes
 import com.seiko.common.service.TorrentService
 import com.seiko.tv.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @Route(path = Routes.DanDanPlay.PATH_TV)
 class MainActivity : FragmentActivity(R.layout.activity_container) {
 

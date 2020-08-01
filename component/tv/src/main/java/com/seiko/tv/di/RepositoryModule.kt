@@ -1,21 +1,102 @@
 package com.seiko.tv.di
 
+import com.seiko.tv.data.api.DanDanApiService
+import com.seiko.tv.data.api.ResDanDanApiService
 import com.seiko.tv.data.comments.*
-import com.seiko.tv.data.comments.BangumiDetailsRepository
-import com.seiko.tv.data.comments.BangumiHistoryRepository
-import com.seiko.tv.data.comments.DanDanApiRepository
-import com.seiko.tv.data.comments.EpisodeTorrentRepository
-import com.seiko.tv.data.comments.ResMagnetItemRepository
-import com.seiko.tv.data.comments.SearchRepository
-import org.koin.dsl.module
+import com.seiko.tv.data.db.AppDatabase
+import com.squareup.moshi.Moshi
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-internal val repositoryModule = module {
-    single { BangumiDetailsRepository(get()) }
-    single { BangumiHistoryRepository(get()) }
-    single { BangumiKeyboardRepository(get()) }
-    single { DanDanApiRepository(get(), get()) }
-    single { EpisodeTorrentRepository(get()) }
-    single { ResMagnetItemRepository(get()) }
-    single { SearchRepository(get(), get()) }
-    single { HttpDbCacheRepository(get(), get()) }
+@Module
+@InstallIn(ApplicationComponent::class)
+object RepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideDanDanApiRepository(
+        api: DanDanApiService,
+        httpDbCache: HttpDbCacheRepository
+    ): DanDanApiRepository {
+        return DanDanApiRepository(api, httpDbCache)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpDbCacheRepository(
+        database: AppDatabase,
+        moshi: Moshi
+    ): HttpDbCacheRepository {
+        return HttpDbCacheRepository(
+            database.httpDbCacheDao(),
+            moshi
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideBangumiDetailsRepository(
+        database: AppDatabase
+    ): BangumiDetailsRepository {
+        return BangumiDetailsRepository(
+            database.bangumiDetailsDao(),
+            database.bangumiEpisodeDao(),
+            database.bangumiIntroDao(),
+            database.bangumiTagDao()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideBangumiHistoryRepository(
+        database: AppDatabase
+    ): BangumiHistoryRepository {
+        return BangumiHistoryRepository(
+            database.bangumiHistoryDao()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideBangumiKeyboardRepository(
+        database: AppDatabase
+    ): BangumiKeyboardRepository {
+        return BangumiKeyboardRepository(
+            database.bangumiKeyboardDao()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideResMagnetItemRepository(
+        database: AppDatabase
+    ): ResMagnetItemRepository {
+        return ResMagnetItemRepository(
+            database.resMagnetItemDao()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideEpisodeTorrentRepository(
+        database: AppDatabase
+    ): EpisodeTorrentRepository {
+        return EpisodeTorrentRepository(
+            database.episodeTorrentDao()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        api: DanDanApiService,
+        resApi: ResDanDanApiService
+    ): SearchRepository {
+        return SearchRepository(
+            api, resApi
+        )
+    }
 }

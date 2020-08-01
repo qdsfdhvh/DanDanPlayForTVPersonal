@@ -2,6 +2,7 @@ package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -14,8 +15,10 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class BangumiFavoriteFragment : VerticalGridSupportFragment()
     , OnItemViewClickedListener {
 
@@ -27,7 +30,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         }
     }
 
-    private val viewModel: BangumiFavoriteViewModel by viewModel()
+    private val viewModel: BangumiFavoriteViewModel by viewModels()
 
     private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 

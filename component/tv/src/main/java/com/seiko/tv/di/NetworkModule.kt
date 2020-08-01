@@ -1,29 +1,71 @@
 package com.seiko.tv.di
 
-import com.seiko.tv.data.api.DanDanApiGenerator
+import com.seiko.tv.BuildConfig
 import com.seiko.tv.data.api.DanDanApiService
-import com.seiko.tv.data.api.ResDanDanApiGenerator
 import com.seiko.tv.data.api.ResDanDanApiService
+import com.seiko.tv.util.constants.DANDAN_API_BASE_URL
+import com.seiko.tv.util.constants.DANDAN_RES_BASE_URL
 import com.seiko.tv.util.http.cookie.CookiesManager
 import com.seiko.tv.util.http.cookie.PersistentCookieStore
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.OkHttpClient
-import org.koin.dsl.module
-import retrofit2.Converter
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.create
+import javax.inject.Singleton
 
-internal val networkModule = module {
-    single { createCookieManager(get()) }
-    single { createApiService(get(), get()) }
-    single { createResApiService(get(), get()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object NetworkModule {
 
-private fun createCookieManager(cookieStore: PersistentCookieStore): CookiesManager {
-    return CookiesManager(cookieStore)
-}
+    @Provides
+    @Singleton
+    fun provideCookiesManager(cookieStore: PersistentCookieStore): CookiesManager {
+        return CookiesManager(cookieStore)
+    }
 
-private fun createApiService(okHttpClient: OkHttpClient, converterFactory: Converter.Factory): DanDanApiService {
-    return DanDanApiGenerator(okHttpClient, converterFactory).create()
-}
+    @Provides
+    @Singleton
+    fun provideDanDanApiService(@DanDanRetrofitQualifier retrofit: Retrofit): DanDanApiService {
+        return retrofit.create()
+    }
 
-private fun createResApiService(okHttpClient: OkHttpClient, converterFactory: Converter.Factory): ResDanDanApiService {
-    return ResDanDanApiGenerator(okHttpClient, converterFactory).create()
+    @Provides
+    @Singleton
+    fun provideResDanDanApiService(@ResDanDanRetrofitQualifier retrofit: Retrofit): ResDanDanApiService {
+        return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    @DanDanRetrofitQualifier
+    fun provideRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
+        return builder.callFactory(client)
+            .baseUrl(DANDAN_API_BASE_URL)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @ResDanDanRetrofitQualifier
+    fun provideResRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
+        return builder.callFactory(client)
+            .baseUrl(DANDAN_RES_BASE_URL)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @DanDanClientQualifier
+    fun provideClient(builder: OkHttpClient.Builder): OkHttpClient {
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        }
+        return builder.build()
+    }
 }

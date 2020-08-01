@@ -1,6 +1,7 @@
 package com.seiko.tv.vm
 
 import android.graphics.Color
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
-class BangumiDetailViewModel(
+class BangumiDetailViewModel @ViewModelInject constructor(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
     private val saveBangumiFavorite: SaveBangumiFavoriteUseCase,

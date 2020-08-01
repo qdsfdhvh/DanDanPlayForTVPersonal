@@ -6,6 +6,7 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
@@ -26,9 +27,11 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.yield
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class MainFragment : BrowseSupportFragment()
     , OnItemViewClickedListener
     , View.OnClickListener {
@@ -52,7 +55,7 @@ class MainFragment : BrowseSupportFragment()
         }
     }
 
-    private val viewModel: HomeViewModel by viewModel()
+    private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var settingAdapter: ArrayObjectAdapter

@@ -2,16 +2,16 @@ package com.seiko.tv.domain.search
 
 import com.seiko.tv.data.comments.SearchRepository
 import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * 搜索动漫
  */
-class SearchBangumiListUseCase : KoinComponent {
-
-    private val repo: SearchRepository by inject()
-
+@Singleton
+class SearchBangumiListUseCase @Inject constructor(
+    private val repo: SearchRepository
+) : KoinComponent {
     suspend operator fun invoke(keyword: String, type: String)
             = repo.searchBangumiList(keyword, type)
-
 }

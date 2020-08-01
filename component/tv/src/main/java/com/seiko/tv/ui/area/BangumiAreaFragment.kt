@@ -20,16 +20,18 @@ import com.seiko.tv.vm.BangumiAreaViewModel
 import com.seiko.common.data.ResultData
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
+import androidx.fragment.app.viewModels
 import com.seiko.tv.ui.widget.SpaceItemDecoration
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
-import org.koin.android.ext.android.inject
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
+@AndroidEntryPoint
 class BangumiAreaFragment : Fragment(),
     OnItemClickListener {
 
@@ -46,7 +48,7 @@ class BangumiAreaFragment : Fragment(),
         private const val ARGS_BANGUMI_SELECTED_POSITION = "ARGS_BANGUMI_SELECTED_POSITION"
     }
 
-    private val viewModel: BangumiAreaViewModel by inject()
+    private val viewModel: BangumiAreaViewModel by viewModels()
 
     private lateinit var binding: FragmentAreaBinding
 

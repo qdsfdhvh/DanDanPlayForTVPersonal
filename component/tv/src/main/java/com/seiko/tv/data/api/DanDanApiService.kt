@@ -3,7 +3,7 @@ package com.seiko.tv.data.api
 import com.seiko.tv.data.api.model.*
 import retrofit2.http.*
 
-internal interface DanDanApiService {
+interface DanDanApiService {
 
     /**
      * 获取官方的新番列表

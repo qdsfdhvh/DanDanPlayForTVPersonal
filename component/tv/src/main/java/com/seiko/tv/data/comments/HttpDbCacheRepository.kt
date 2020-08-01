@@ -1,13 +1,14 @@
 package com.seiko.tv.data.comments
 
-import com.seiko.tv.data.db.AppDatabase
+import com.seiko.tv.data.db.dao.HttpDbCacheDao
 import com.seiko.tv.data.db.model.HttpDbCacheEntity
 import com.squareup.moshi.Moshi
 import timber.log.Timber
 
-class HttpDbCacheRepository(database: AppDatabase, private val moshi: Moshi) {
-
-    private val httpDbCachedDao = database.httpDbCacheDao()
+class HttpDbCacheRepository(
+    private val httpDbCachedDao: HttpDbCacheDao,
+    private val moshi: Moshi
+) {
 
     /**
      * 保存http内容

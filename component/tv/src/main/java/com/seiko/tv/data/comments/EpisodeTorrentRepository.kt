@@ -1,12 +1,11 @@
 package com.seiko.tv.data.comments
 
-import com.seiko.tv.data.db.AppDatabase
 import com.seiko.tv.data.db.dao.EpisodeTorrentDao
 import com.seiko.tv.data.db.model.EpisodeTorrentEntity
 
-internal class EpisodeTorrentRepository(database: AppDatabase) {
-
-    private val episodeTorrentDao = database.episodeTorrentDao()
+class EpisodeTorrentRepository(
+    private val episodeTorrentDao: EpisodeTorrentDao
+) {
 
     /**
      * 通过种子hash查找集数id，并不准确

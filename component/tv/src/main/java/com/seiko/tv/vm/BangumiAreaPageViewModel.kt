@@ -1,5 +1,6 @@
 package com.seiko.tv.vm
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.tv.domain.bangumi.GetBangumiListWithSeasonUseCase
 import com.seiko.tv.data.model.api.BangumiSeason
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
-class BangumiAreaPageViewModel(
+class BangumiAreaPageViewModel @ViewModelInject constructor(
     private val getBangumiListWithSeason: GetBangumiListWithSeasonUseCase
 ) : ViewModel() {
 

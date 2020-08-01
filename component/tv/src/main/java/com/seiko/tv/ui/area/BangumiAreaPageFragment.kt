@@ -2,6 +2,7 @@ package com.seiko.tv.ui.area
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
@@ -16,8 +17,9 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiAreaPageViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BangumiAreaPageFragment : VerticalGridSupportFragment()
     , BrowseSupportFragment.MainFragmentAdapterProvider
     , OnItemViewClickedListener {
@@ -37,7 +39,7 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
 
     private val season by lazyAndroid { requireArguments().getParcelable<BangumiSeason>(ARGS_SEASON)!! }
 
-    private val viewModel: BangumiAreaPageViewModel by viewModel()
+    private val viewModel: BangumiAreaPageViewModel by viewModels()
 
     private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 

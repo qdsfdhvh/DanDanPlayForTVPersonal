@@ -2,16 +2,16 @@ package com.seiko.tv.domain.search
 
 import com.seiko.tv.data.comments.SearchRepository
 import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * 搜索磁力
  */
-class SearchMagnetListUseCase : KoinComponent {
-
-    private val repo: SearchRepository by inject()
-
+@Singleton
+class SearchMagnetListUseCase @Inject constructor(
+    private val repo: SearchRepository
+) : KoinComponent {
     suspend operator fun invoke(keyword: String, typeId: Int, subGroupId: Int)
             = repo.searchMagnetList(keyword, typeId, subGroupId)
-
 }

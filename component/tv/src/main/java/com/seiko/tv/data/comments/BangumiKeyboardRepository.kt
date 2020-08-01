@@ -1,11 +1,9 @@
 package com.seiko.tv.data.comments
 
-import com.seiko.tv.data.db.AppDatabase
+import com.seiko.tv.data.db.dao.BangumiKeyBoardDao
 import com.seiko.tv.data.db.model.BangumiKeyboardEntity
 
-class BangumiKeyboardRepository(database: AppDatabase) {
-
-    private val bangumiKeyBoardDao = database.bangumiKeyboardDao()
+class BangumiKeyboardRepository( private val bangumiKeyBoardDao: BangumiKeyBoardDao) {
 
     suspend fun getKeyboard(animeId: Long): String? {
         return bangumiKeyBoardDao.getKeyboard(animeId)

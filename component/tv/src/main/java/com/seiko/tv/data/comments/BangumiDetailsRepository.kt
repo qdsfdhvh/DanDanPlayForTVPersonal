@@ -14,19 +14,12 @@ import com.seiko.tv.util.annotation.BangumiIntroType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class BangumiDetailsRepository(
+class BangumiDetailsRepository(
     private val bangumiDetailsDao: BangumiDetailsDao,
     private val bangumiEpisodeDao: BangumiEpisodeDao,
     private val bangumiIntroDao: BangumiIntroDao,
     private val bangumiTagDao: BangumiTagDao
 ) {
-
-    constructor(database: AppDatabase) : this(
-        database.bangumiDetailsDao(),
-        database.bangumiEpisodeDao(),
-        database.bangumiIntroDao(),
-        database.bangumiTagDao()
-    )
 
     /**
      * 是否已经收藏了此动漫

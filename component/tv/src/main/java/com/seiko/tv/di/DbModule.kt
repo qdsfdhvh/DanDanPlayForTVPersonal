@@ -1,16 +1,22 @@
 package com.seiko.tv.di
 
-import android.content.Context
-import androidx.room.Room
-import com.seiko.tv.util.constants.DB_NAME_DEFAULT
+import android.app.Application
 import com.seiko.tv.data.db.AppDatabase
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import com.seiko.tv.util.constants.DB_NAME_DEFAULT
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-internal val dbModule = module {
-    single { createAppDatabase(androidContext()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object DbModule {
 
-private fun createAppDatabase(context: Context): AppDatabase {
-    return AppDatabase.create(context, DB_NAME_DEFAULT)
+    @Provides
+    @Singleton
+    fun provideAppDatabase(application: Application): AppDatabase {
+        return AppDatabase.create(application, DB_NAME_DEFAULT)
+    }
+
 }

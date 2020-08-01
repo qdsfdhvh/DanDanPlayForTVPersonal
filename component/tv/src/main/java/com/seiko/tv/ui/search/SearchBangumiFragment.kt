@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -19,8 +20,10 @@ import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
 import com.seiko.tv.ui.card.SearchBangumiCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
     SpeechRecognitionCallback,
@@ -38,7 +41,7 @@ class SearchBangumiFragment : SearchSupportFragment(),
         }
     }
 
-    private val viewModel by viewModel<SearchBangumiViewModel>()
+    private val viewModel: SearchBangumiViewModel by viewModels()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var bangumiAdapter: AsyncObjectAdapter<SearchAnimeDetails>

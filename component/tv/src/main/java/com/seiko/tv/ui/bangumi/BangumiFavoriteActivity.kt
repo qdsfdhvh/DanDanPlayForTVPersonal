@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BangumiFavoriteActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

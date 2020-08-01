@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -18,8 +19,10 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class SearchMagnetFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,
     SpeechRecognitionCallback,
@@ -43,12 +46,11 @@ class SearchMagnetFragment : SearchSupportFragment(),
         }
     }
 
-//    private val args by navArgs<SearchMagnetFragmentArgs>()
-    private val keyword by lazyAndroid { arguments!!.getString(ARGS_KEYWORD)!! }
-    private val animeId by lazyAndroid { arguments!!.getLong(ARGS_ANIME_ID) }
-    private val episodeId by lazyAndroid { arguments!!.getInt(ARGS_EPISODE_ID) }
+    private val keyword by lazyAndroid { requireArguments().getString(ARGS_KEYWORD)!! }
+    private val animeId by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
+    private val episodeId by lazyAndroid { requireArguments().getInt(ARGS_EPISODE_ID) }
 
-    private val viewModel by viewModel<SearchMagnetViewModel>()
+    private val viewModel: SearchMagnetViewModel by viewModels()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var magnetAdapter: ArrayObjectAdapter

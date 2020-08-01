@@ -1,13 +1,11 @@
 package com.seiko.tv.data.comments
 
-import com.seiko.tv.data.db.AppDatabase
+import com.seiko.tv.data.db.dao.ResMagnetItemDao
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 
-internal class ResMagnetItemRepository(
-    database: AppDatabase
+class ResMagnetItemRepository(
+    private val resMagnetItemDao: ResMagnetItemDao
 ) {
-
-    private val resMagnetItemDao = database.resMagnetItemDao()
 
     /**
      * 写入Magnet信息

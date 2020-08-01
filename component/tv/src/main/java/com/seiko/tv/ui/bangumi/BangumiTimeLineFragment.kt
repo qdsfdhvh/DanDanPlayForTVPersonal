@@ -3,6 +3,7 @@ package com.seiko.tv.ui.bangumi
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
@@ -11,8 +12,10 @@ import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
 
     companion object {
@@ -21,7 +24,7 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         }
     }
 
-    private val viewModel by viewModel<HomeViewModel>()
+    private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
 

@@ -10,16 +10,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * 将连载动漫 分成 周日~周六7组
  * PS: 0代表周日，1-6代表周一至周六。
  */
-class GetSeriesBangumiAirDayBeansUseCase : KoinComponent {
-
-    private val getBangumiList: GetSeriesBangumiListUseCase by inject()
+@Singleton
+class GetSeriesBangumiAirDayBeansUseCase @Inject constructor(
+    private val getBangumiList: GetSeriesBangumiListUseCase
+) {
 
     /**
      * @param weekDay 已周几开头，输入0~6，假设输入二， 结果数据为：[周二、三、四、五、六、日、一]

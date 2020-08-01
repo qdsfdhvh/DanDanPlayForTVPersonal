@@ -10,16 +10,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * 获取动漫详情
  */
-class GetBangumiDetailsUseCase : KoinComponent {
-
-    private val repo: DanDanApiRepository by inject()
-    private val detailsRepo: BangumiDetailsRepository by inject()
-    private val saveBangumiHistory: SaveBangumiHistoryUseCase by inject()
+@Singleton
+class GetBangumiDetailsUseCase @Inject constructor(
+    private val repo: DanDanApiRepository,
+    private val detailsRepo: BangumiDetailsRepository,
+    private val saveBangumiHistory: SaveBangumiHistoryUseCase
+) : KoinComponent {
 
     fun invoke(animeId: Long): Flow<Result<BangumiDetailsEntity>> {
         return repo.getBangumiDetails(animeId).map { result ->

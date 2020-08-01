@@ -1,5 +1,6 @@
 package com.seiko.tv.vm
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.*
 
-class HomeViewModel(
+class HomeViewModel @ViewModelInject constructor(
     getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
     private val getFavoriteBangumiList: GetBangumiFavoriteUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryUseCase
@@ -27,16 +28,18 @@ class HomeViewModel(
      * 每周更新
      */
     val weekBangumiList: LiveData<List<AirDayBangumiBean>> =
-        getWeekBangumiList.invoke(getDayOfWeek())
-            .flatMapConcat { result ->
-                flow {
-                    when(result) {
-                        is Result.Success -> emit(result.data)
-                        is Result.Error -> Timber.e(result.exception)
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            emitSource(getWeekBangumiList.invoke(getDayOfWeek())
+                .flatMapConcat { result ->
+                    flow {
+                        when(result) {
+                            is Result.Success -> emit(result.data)
+                            is Result.Error -> Timber.e(result.exception)
+                        }
                     }
                 }
-            }
-            .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
+                .asLiveData())
+        }
 
     /**
      * 今日更新
