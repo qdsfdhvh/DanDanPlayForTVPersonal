@@ -56,4 +56,6 @@ dependencies {
     // Toast
     implementation 'com.github.Dovar66:DToast:1.1.6'
 
+    // 屏幕自适应
+    implementation 'com.seiko.autosize:autosize:0.0.1'
 }

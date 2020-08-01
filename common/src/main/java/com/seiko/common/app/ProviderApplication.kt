@@ -2,10 +2,9 @@ package com.seiko.common.app
 
 import android.app.Application
 import android.content.res.Configuration
+import com.seiko.autosize.AutoSizeConfig
 import com.seiko.common.di.moshiModule
 import com.seiko.common.di.networkModule
-import com.seiko.common.util.AndroidDevices
-import com.seiko.common.util.autosize.AutoSizeConfig
 import com.seiko.common.util.helper.AutoAdaptStrategyFactory
 import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
@@ -28,7 +27,6 @@ class ProviderApplication : InitComponent {
         ))
 
         // AutoSize
-        AndroidDevices.init(application)
         val autoAdaptStrategyFactory = AutoAdaptStrategyFactory.get()
         AutoSizeConfig.init(application, strategy = autoAdaptStrategyFactory.create())
 

@@ -2,10 +2,9 @@ package com.seiko.common.util.helper
 
 import android.app.Activity
 import android.content.res.Configuration
-import com.seiko.common.util.AndroidDevices
-import com.seiko.common.util.autosize.AutoSize
-import com.seiko.common.util.autosize.AutoSizeConfig
-import com.seiko.common.util.autosize.callback.AutoAdaptStrategy
+import com.seiko.autosize.AutoSize
+import com.seiko.autosize.AutoSizeConfig
+import com.seiko.autosize.callback.AutoAdaptStrategy
 import timber.log.Timber
 
 // 忽略适配
@@ -28,7 +27,7 @@ interface AutoAdaptStrategyFactory {
  */
 internal class AutoAdaptStrategyFactoryImpl : AutoAdaptStrategyFactory {
     override fun create(): AutoAdaptStrategy {
-        val strategy = if (AndroidDevices.isTablet) {
+        val strategy = if (AutoSizeConfig.isTablet) {
             TabletAutoAdaptStrategy()
         } else {
             MobileAutoAdaptStrategy()
