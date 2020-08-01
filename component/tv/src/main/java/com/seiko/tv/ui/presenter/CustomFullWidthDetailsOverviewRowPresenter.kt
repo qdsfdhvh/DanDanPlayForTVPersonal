@@ -4,8 +4,6 @@ import android.view.ViewGroup
 import androidx.leanback.widget.DetailsOverviewLogoPresenter
 import androidx.leanback.widget.FullWidthDetailsOverviewRowPresenter
 import androidx.leanback.widget.Presenter
-import androidx.leanback.widget.RowPresenter
-import timber.log.Timber
 
 class CustomFullWidthDetailsOverviewRowPresenter(
     detailsPresenter: Presenter,

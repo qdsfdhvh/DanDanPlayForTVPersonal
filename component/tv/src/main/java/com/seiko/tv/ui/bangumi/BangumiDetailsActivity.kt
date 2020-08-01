@@ -1,37 +1,25 @@
 package com.seiko.tv.ui.bangumi
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
-import com.facebook.drawee.drawable.ScalingUtils
-import com.facebook.drawee.view.DraweeTransition
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.util.removeWindowInTransitionManager
-import com.seiko.tv.util.setupSharedElementTransition
 
 class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupSharedElementTransition()
         if (supportFragmentManager.findFragmentByTag(BangumiDetailsFragment.TAG) == null) {
             val fragment = BangumiDetailsFragment.newInstance(intent.extras!!)
             supportFragmentManager.commit {
                 add(R.id.container, fragment, BangumiDetailsFragment.TAG)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        removeWindowInTransitionManager()
     }
 
     companion object {

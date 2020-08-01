@@ -8,6 +8,7 @@ import androidx.lifecycle.observe
 import androidx.lifecycle.lifecycleScope
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.getDrawable
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
@@ -19,13 +20,15 @@ import com.seiko.tv.ui.dialog.DialogInputFragment
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
 import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
-import com.seiko.tv.ui.presenter.FrescoDetailsOverviewLogoPresenter
+import com.seiko.tv.ui.presenter.DetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.util.extensions.getDrawable
 import com.seiko.tv.util.extensions.hasFragment
 import com.seiko.tv.vm.BangumiDetailViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -58,7 +61,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     private lateinit var mActionAdapter: ArrayObjectAdapter
     private lateinit var mDescriptionRowPresenter: CustomFullWidthDetailsOverviewRowPresenter
 
-    private lateinit var detailsOverviewRow: AppDetailsOverviewRow
+    private lateinit var detailsOverviewRow: DetailsOverviewRow
     private lateinit var episodesAdapter: ArrayObjectAdapter
     private lateinit var relatedListRow: ListRow
     private lateinit var relatedAdapter: AsyncObjectAdapter<HomeImageBean>
@@ -86,42 +89,29 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 生成相关UI
      */
     private fun setupUI() {
-        // diy listRow确保哈希不同
-        mPresenterSelector = ClassPresenterSelector()
-        mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
-        mPresenterSelector.addClassPresenter(RelatesListRow::class.java, ListRowPresenter())
-        mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
-        mAdapter = ArrayObjectAdapter(mPresenterSelector)
-        adapter = mAdapter
-        setupListRow()
-        prepareEntranceTransition()
-    }
-
-    /**
-     * 添加简介、集数、其他。相似
-     */
-    private fun setupListRow() {
-        val logoPresenter = FrescoDetailsOverviewLogoPresenter()
+        val logoPresenter = DetailsOverviewLogoPresenter()
         val descriptionPresenter = DetailsDescriptionPresenter()
         mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
         mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
         mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
+
+        val helper = FullWidthDetailsOverviewSharedElementHelper()
+        helper.setSharedElementEnterTransition(requireActivity(), TRANSITION_NAME)
+        mDescriptionRowPresenter.setListener(helper)
         mDescriptionRowPresenter.isParticipatingEntranceTransition = false
+        prepareEntranceTransition()
 
-        val mHelper = FullWidthDetailsOverviewSharedElementHelper()
-        mHelper.setSharedElementEnterTransition(requireActivity(), TRANSITION_NAME)
-        mDescriptionRowPresenter.setListener(mHelper)
-        mDescriptionRowPresenter.isParticipatingEntranceTransition = false
-
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
-
-        detailsOverviewRow = AppDetailsOverviewRow(
-            BangumiDetailBean.empty(
-                imageUrl = requireArguments().getString(ARGS_ANIME_IMAGE_URL, "")
-            )
-        )
-        detailsOverviewRow.setImageBitmap(requireContext(), null) // 需要此行，原因尚未确定
+        val imageUrl = requireArguments().getString(ARGS_ANIME_IMAGE_URL, "")
+        detailsOverviewRow = DetailsOverviewRow(BangumiDetailBean.empty(imageUrl = imageUrl))
         detailsOverviewRow.isImageScaleUpAllowed = true
+
+        mPresenterSelector = ClassPresenterSelector()
+        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
+        mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
+        mPresenterSelector.addClassPresenter(RelatesListRow::class.java, ListRowPresenter())
+        mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+
+        mAdapter = ArrayObjectAdapter(mPresenterSelector)
         mAdapter.add(detailsOverviewRow)
 
         val presenterSelector = BangumiPresenterSelector()
@@ -131,9 +121,9 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
         relatedAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         relatedListRow = RelatesListRow(HeaderItem(0, "其他系列"), relatedAdapter)
-
         similarAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         similarListRow = ListRow(HeaderItem(0, "相似作品"), similarAdapter)
+        adapter = mAdapter
     }
 
 
@@ -149,11 +139,11 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             episodesAdapter.setItems(episodes, null)
         }
         viewModel.relatedsList.observe(viewLifecycleOwner) { relateds ->
-            mAdapter.showHideListList(relatedListRow, relateds)
+            mAdapter.showHideListRow(relatedListRow, relateds)
             relatedAdapter.submitList(relateds)
         }
         viewModel.similarsList.observe(viewLifecycleOwner) { similars ->
-            mAdapter.showHideListList(similarListRow, similars)
+            mAdapter.showHideListRow(similarListRow, similars)
             similarAdapter.submitList(similars)
         }
         viewModel.animeId.value = animeId
@@ -171,6 +161,10 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         }
 
         detailsOverviewRow.item = details
+        lifecycleScope.launch {
+            val drawable = withContext(Dispatchers.IO) { getDrawable(details.imageUrl) }
+            detailsOverviewRow.imageDrawable = drawable
+        }
 
         mActionAdapter = ArrayObjectAdapter()
         mActionAdapter.add(
@@ -249,7 +243,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
 }
 
-private fun <T> ArrayObjectAdapter.showHideListList(listRow: ListRow, list: Collection<T>) {
+private fun <T> ArrayObjectAdapter.showHideListRow(listRow: ListRow, list: Collection<T>) {
     if (list.isEmpty()) {
         if (indexOf(listRow) >= 0) {
             remove(listRow)

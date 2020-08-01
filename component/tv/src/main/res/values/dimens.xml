@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="homeFragment_area_width">180dp</dimen>
-    <dimen name="homeFragment_area_height">280dp</dimen>
-<!--    <dimen name="homeFragment_area_width">162dp</dimen>-->
-<!--    <dimen name="homeFragment_area_height">252dp</dimen>-->
+    <dimen name="area_logo_width">160dp</dimen>
+    <dimen name="area_logo_height">200dp</dimen>
 
     <dimen name="detailsFragment_thumbnail_width">274dp</dimen>
     <dimen name="detailsFragment_thumbnail_height">426dp</dimen>

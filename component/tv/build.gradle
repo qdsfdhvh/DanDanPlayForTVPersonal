@@ -29,9 +29,4 @@ dependencies {
 
     // @see https://stackoverflow.com/questions/58630667/rejecting-re-init-on-previously-failed-class-in-okhttp
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
-
-    // Image
-    // 2.0.0 CloseableReference: Finalized without closing
-    // @see https://github.com/facebook/fresco/issues/2445
-    api 'com.facebook.fresco:fresco:2.2.0'
 }

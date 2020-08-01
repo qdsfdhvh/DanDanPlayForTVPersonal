@@ -27,6 +27,7 @@ object Versions {
 
     const val room = "2.2.5"
     const val work = "2.3.4"
+    const val glide = "4.11.0" // https://github.com/bumptech/glide
 
     const val cc_register = "1.1.2" // https://github.com/luckybilly/CC
 }

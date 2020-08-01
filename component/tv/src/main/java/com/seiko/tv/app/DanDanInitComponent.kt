@@ -4,12 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import com.seiko.tv.di.*
 import com.seiko.common.app.InitComponent
-import com.seiko.tv.util.clearFrescoMemory
 import com.seiko.tv.util.fix.InputMethodManagerFix
-import com.seiko.tv.util.initFresco
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
@@ -32,14 +27,11 @@ class DanDanInitComponent : InitComponent {
             viewModelModule
         ))
 
-        // 初始化Fresco
-        application.initFresco()
-
         InputMethodManagerFix.fixFocusedViewLeak(application)
     }
 
     override fun onLowMemory() {
-        clearFrescoMemory()
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

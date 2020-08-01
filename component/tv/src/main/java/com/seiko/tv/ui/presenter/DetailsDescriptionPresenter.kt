@@ -58,10 +58,5 @@ class DetailsDescriptionItemViewHolder(
             binding.secondaryTextFirst.setTextColor(details.bodyColor)
             binding.extraText.setTextColor(details.bodyColor)
         }
-//        binding.primaryText(item.imageUrl)
-//        primaryText.setText(card.getTitle())
-//        sndText1.setText(card.getDescription())
-//        sndText2.setText(card.getYear().toString() + "")
-//        extraText.setText(card.getText())
     }
 }

@@ -7,6 +7,7 @@ import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -29,7 +30,7 @@ class GetSeriesBangumiAirDayBeansUseCase : KoinComponent {
                 is Result.Success -> Result.Success(getAirDayBangumiBeans(weekDay, result.data))
                 is Result.Error -> result
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
 }

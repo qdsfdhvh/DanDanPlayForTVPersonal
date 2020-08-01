@@ -132,6 +132,11 @@ class BangumiAreaFragment : Fragment(),
     private fun setupBangumi() {
         bangumiAdapter = BangumiRelateAdapter()
         bangumiAdapter.setOnItemClickListener(this)
+
+        val pool = RecyclerView.RecycledViewPool()
+        pool.setMaxRecycledViews(0, 100)
+        binding.gridBangumi.setRecycledViewPool(pool)
+
         // 自动计算count，由于用到了width，需要等界面绘制完，因此在post里运行
         binding.gridBangumi.post {
             val top = ITEM_TOP_PADDING_PX
@@ -140,7 +145,7 @@ class BangumiAreaFragment : Fragment(),
 
             // recView宽度，item宽度
             val width = binding.gridBangumi.width
-            val itemWidth = requireContext().resources.getDimension(R.dimen.homeFragment_area_width).toInt()
+            val itemWidth = requireContext().resources.getDimension(R.dimen.area_logo_width).toInt()
             // 算出并排数、左右间距
             val count = width / (itemWidth + ITEM_RIGHT_PADDING_PX)
             val padding = (width % (itemWidth + ITEM_RIGHT_PADDING_PX)) / 2
@@ -151,9 +156,6 @@ class BangumiAreaFragment : Fragment(),
 
             binding.gridBangumi.setNumColumns(count)
             binding.gridBangumi.setOnChildViewHolderSelectedListener(mItemSelectedListener)
-            val pool = RecyclerView.RecycledViewPool()
-            pool.setMaxRecycledViews(0, 100)
-            binding.gridBangumi.setRecycledViewPool(pool)
 
             binding.gridBangumi.adapter = bangumiAdapter
         }

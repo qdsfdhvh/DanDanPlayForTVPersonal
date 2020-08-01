@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import com.seiko.tv.databinding.ItemBangumiRelatedBinding
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.common.ui.card.AbsCardView
+import com.seiko.common.util.loadGridImage
+import com.seiko.common.util.loadImage
 import com.seiko.tv.data.model.api.SearchAnimeDetails
-import com.seiko.tv.util.loadImage
 
 class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(context) {
 
@@ -21,14 +22,14 @@ class SearchBangumiCardView(context: Context) : AbsCardView<SearchAnimeDetails>(
     fun getImageView() = binding.img
 
     override fun bind(item: SearchAnimeDetails) {
-        binding.img.loadImage(item.imageUrl)
+        binding.img.loadGridImage(item.imageUrl)
         binding.title.text = item.animeTitle
         binding.chapter.text = String.format("上映时间：%s", item.startDate)
     }
 
     fun bind(bundle: Bundle) {
         if (bundle.containsKey(SearchAnimeDetailsDiffCallback.ARGS_ANIME_IMAGE_URL)) {
-            binding.img.loadImage(bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_IMAGE_URL))
+            binding.img.loadGridImage(bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_IMAGE_URL)!!)
         }
         if (bundle.containsKey(SearchAnimeDetailsDiffCallback.ARGS_ANIME_TITLE)) {
             binding.title.text = bundle.getString(SearchAnimeDetailsDiffCallback.ARGS_ANIME_TITLE)

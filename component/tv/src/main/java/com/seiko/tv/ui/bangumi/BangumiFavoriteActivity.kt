@@ -6,25 +6,17 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.seiko.tv.R
-import com.seiko.tv.util.removeWindowInTransitionManager
-import com.seiko.tv.util.setupSharedElementTransition
 
 class BangumiFavoriteActivity : FragmentActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupSharedElementTransition()
         if (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
             val fragment = BangumiFavoriteFragment.newInstance()
             supportFragmentManager.commit {
                 add(R.id.container, fragment, FRAGMENT_TAG)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        removeWindowInTransitionManager()
     }
 
     companion object {
