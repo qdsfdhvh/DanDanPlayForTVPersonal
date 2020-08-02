@@ -1,16 +1,49 @@
 package com.seiko.player.di
 
-import android.content.Context
-import androidx.room.Room
-import com.seiko.player.util.constants.DB_NAME_DEFAULT
+import android.app.Application
 import com.seiko.player.data.db.PlayerDatabase
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import com.seiko.player.data.db.dao.SmbMd5Dao
+import com.seiko.player.data.db.dao.SmbMrlDao
+import com.seiko.player.data.db.dao.VideoDanmakuDao
+import com.seiko.player.data.db.dao.VideoMatchDao
+import com.seiko.player.util.constants.DB_NAME_DEFAULT
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-val dbModule = module {
-    single { createPlayerDatabase(androidContext()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object DbModule {
 
-private fun createPlayerDatabase(context: Context): PlayerDatabase {
-    return PlayerDatabase.create(context, DB_NAME_DEFAULT)
+    @Provides
+    @Singleton
+    fun providePlayerDatabase(application: Application): PlayerDatabase {
+        return PlayerDatabase.create(application, DB_NAME_DEFAULT)
+    }
+
+    @Provides
+    @Singleton
+    fun provideVideoDanmakuDao(database: PlayerDatabase): VideoDanmakuDao {
+        return database.danmaDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideVideoMatchDao(database: PlayerDatabase): VideoMatchDao {
+        return database.videoMatchDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSmbMd5Dao(database: PlayerDatabase): SmbMd5Dao {
+        return database.smbMd5Dao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSmbMrlDao(database: PlayerDatabase): SmbMrlDao {
+        return database.smbMrlDao()
+    }
 }

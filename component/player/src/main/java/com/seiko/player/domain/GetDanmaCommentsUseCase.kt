@@ -1,27 +1,22 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import com.seiko.common.data.Result
-import com.seiko.common.util.getMD5
 import com.seiko.player.data.comments.DanDanApiRepository
 import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.comments.VideoDanmaRepository
 import com.seiko.player.data.model.DanmaCommentBean
-import com.seiko.player.data.model.PlayParam
 import com.seiko.player.util.constants.DANMA_RESULT_TAG
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import timber.log.Timber
-import java.io.File
-import java.io.FileNotFoundException
+import javax.inject.Inject
 
 /**
  * 获取弹幕集合
  */
-class GetDanmaCommentsUseCase : KoinComponent {
-
-    private val danmaDbRepo: VideoDanmaRepository by inject()
-    private val danmaApiRepo: DanDanApiRepository by inject()
-    private val getVideoEpisodeId: GetVideoEpisodeIdUseCase by inject()
+class GetDanmaCommentsUseCase @Inject constructor(
+    private val danmaDbRepo: VideoDanmaRepository,
+    private val danmaApiRepo: DanDanApiRepository,
+    private val getVideoEpisodeId: GetVideoEpisodeIdUseCase
+) {
 
     /**
      * @param videoMd5 视频前16mb的MD5

@@ -2,31 +2,26 @@ package com.seiko.player.service
 
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.seiko.common.data.Result
+import com.seiko.common.BaseApplication
 import com.seiko.danma.DanmakuEngineOptions
 import com.seiko.player.data.comments.SmbMrlRepository
-import com.seiko.player.domain.danma.GetDanmaResultWithFileUseCase
-import com.seiko.player.domain.danma.GetDanmaResultWithFtpUseCase
-import com.seiko.player.domain.danma.GetDanmaResultWithNetUseCase
-import com.seiko.player.domain.danma.GetDanmaResultWithSmbUseCase
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import master.flame.danmaku.danmaku.model.IDisplayer
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.vlc.danma.DanmaResultBean
 import org.videolan.vlc.danma.DanmaService
-import timber.log.Timber
-import java.io.File
 
 @Route(path = DanmaService.PATH)
-class DanmaServiceImpl : DanmaService, KoinComponent {
+class DanmaServiceImpl : DanmaService {
 
-    private val getDanmaResultWithFile: GetDanmaResultWithFileUseCase by inject()
-    private val getDanmaResultWithSmb: GetDanmaResultWithSmbUseCase by inject()
-    private val getDanmaResultWithNet: GetDanmaResultWithNetUseCase by inject()
-    private val getDanmaResultWithFtp: GetDanmaResultWithFtpUseCase by inject()
+    private lateinit var helper: DanmaServiceHelper
 
-    private val smbMrlRepo: SmbMrlRepository by inject()
+    override fun init(context: Context) {
+        helper = DanmaServiceHelper.get(context)
+    }
 
     override fun loadDanmaOptions(): DanmakuEngineOptions {
         return DanmakuEngineOptions {
@@ -55,32 +50,39 @@ class DanmaServiceImpl : DanmaService, KoinComponent {
     }
 
     override suspend fun getDanmaResult(media: IMedia): DanmaResultBean? {
-        val isMatched = true
-        val result = when(val scheme = media.uri.scheme) {
-            "file" -> getDanmaResultWithFile.invoke(File(media.uri.path!!), isMatched)
-            "smb" -> getDanmaResultWithSmb.invoke(media.uri, isMatched)
-            "http", "https" -> getDanmaResultWithNet.invoke(media.uri.toString(), isMatched)
-            "ftp", "sftp" -> getDanmaResultWithFtp.invoke(media.uri, isMatched, scheme)
-            else -> {
-                Timber.d("danma service do not support url -> ${media.uri}")
-                return null
-            }
-        }
-        return when(result) {
-            is Result.Success -> result.data
-            is Result.Error -> {
-                Timber.e(result.exception)
-                null
-            }
-        }
+        return helper.danmaManager.getDanmaResult(media, true)
     }
 
     override suspend fun saveSmbServer(mrl: String, account: String, password: String) {
-        smbMrlRepo.saveSmbMrl(mrl, account, password)
+        helper.smbMrlRepo.saveSmbMrl(mrl, account, password)
     }
 
-    override fun init(context: Context?) {
-        Timber.d("初始化DanmaService")
+}
+
+/**
+ * 目前hilt无法捕获DanmaService进行编译，暂时新建一个类进行注入
+ */
+internal class DanmaServiceHelper private constructor(context: Context) {
+
+    @InstallIn(ApplicationComponent::class)
+    @EntryPoint
+    interface DanmaInitializerEntryPoint {
+        var danmaManager: DanmaManager
+        var smbMrlRepo: SmbMrlRepository
     }
 
+    val danmaManager: DanmaManager
+    val smbMrlRepo: SmbMrlRepository
+
+    init {
+        val entryPoint = EntryPointAccessors.fromApplication(context, DanmaInitializerEntryPoint::class.java)
+        danmaManager = entryPoint.danmaManager
+        smbMrlRepo = entryPoint.smbMrlRepo
+    }
+
+    companion object {
+        fun get(context: Context): DanmaServiceHelper {
+            return DanmaServiceHelper(context)
+        }
+    }
 }

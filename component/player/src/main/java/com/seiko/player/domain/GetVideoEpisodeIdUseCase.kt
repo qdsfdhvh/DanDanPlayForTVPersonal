@@ -1,24 +1,18 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import com.seiko.common.data.Result
-import com.seiko.common.util.getMD5
 import com.seiko.player.data.api.model.MatchRequest
 import com.seiko.player.data.comments.DanDanApiRepository
 import com.seiko.player.data.comments.VideoMatchRepository
-import com.seiko.player.data.model.PlayParam
-import com.seiko.player.util.getVideoMd5
-import org.koin.core.KoinComponent
-import org.koin.core.inject
-import java.io.File
-import java.io.FileNotFoundException
+import javax.inject.Inject
 
 /**
  * 获取视频对应的集数id
  */
-class GetVideoEpisodeIdUseCase : KoinComponent {
-
-    private val danmaApiRepo: DanDanApiRepository by inject()
-    private val workMatchRepo: VideoMatchRepository by inject()
+class GetVideoEpisodeIdUseCase @Inject constructor(
+    private val danmaApiRepo: DanDanApiRepository,
+    private val workMatchRepo: VideoMatchRepository
+) {
 
     /**
      * @param videoMd5 视频前16mb的MD5

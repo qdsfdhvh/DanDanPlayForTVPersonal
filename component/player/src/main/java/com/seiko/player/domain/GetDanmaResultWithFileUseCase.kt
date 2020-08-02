@@ -1,16 +1,15 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import com.seiko.common.data.Result
 import com.seiko.player.util.getVideoMd5
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.videolan.vlc.danma.DanmaResultBean
 import java.io.File
 import java.io.FileNotFoundException
+import javax.inject.Inject
 
-class GetDanmaResultWithFileUseCase : KoinComponent {
-
-    private val getResult: GetDanmaResultUseCase by inject()
+class GetDanmaResultWithFileUseCase @Inject constructor(
+    private val getResult: GetDanmaResultUseCase
+) {
 
     /**
      * @param videoFile 视频路径

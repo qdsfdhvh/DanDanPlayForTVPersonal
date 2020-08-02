@@ -1,20 +1,19 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.api.DownloadApi
 import com.seiko.player.data.comments.SmbMd5Repository
 import com.seiko.player.util.constants.DANMA_RESULT_TAG
 import com.seiko.player.util.getVideoMd5
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.videolan.vlc.danma.DanmaResultBean
 import timber.log.Timber
+import javax.inject.Inject
 
-class GetDanmaResultWithNetUseCase : KoinComponent {
-
-    private val getResult: GetDanmaResultUseCase by inject()
-    private val smbMd5Repo: SmbMd5Repository by inject()
-    private val downloadApi: DownloadApi by inject()
+class GetDanmaResultWithNetUseCase @Inject constructor(
+    private val getResult: GetDanmaResultUseCase,
+    private val smbMd5Repo: SmbMd5Repository,
+    private val downloadApi: DownloadApi
+) {
 
     /**
      * @param url 视频连接

@@ -4,8 +4,11 @@ import com.seiko.common.data.Result
 import com.seiko.player.data.db.dao.VideoDanmakuDao
 import com.seiko.player.data.db.model.VideoDanmaku
 import com.seiko.player.data.model.DanmaCommentBean
+import javax.inject.Inject
 
-class VideoDanmaRepository(private val danmaDao: VideoDanmakuDao) {
+class VideoDanmaRepository @Inject constructor(
+    private val danmaDao: VideoDanmakuDao
+) {
 
     suspend fun saveDanmaDownloadBean(bean: VideoDanmaku): Boolean {
         bean.downloadDate = System.currentTimeMillis()

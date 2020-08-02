@@ -1,4 +1,4 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import android.net.Uri
 import com.seiko.common.data.Result
@@ -7,17 +7,16 @@ import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.util.SmbUtils
 import com.seiko.player.util.constants.DANMA_RESULT_TAG
 import com.seiko.player.util.getVideoMd5
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.videolan.vlc.danma.DanmaResultBean
 import timber.log.Timber
 import java.io.FileNotFoundException
+import javax.inject.Inject
 
-class GetDanmaResultWithSmbUseCase : KoinComponent {
-
-    private val getResult: GetDanmaResultUseCase by inject()
-    private val smbMd5Repo: SmbMd5Repository by inject()
-    private val smbMrlRepo: SmbMrlRepository by inject()
+class GetDanmaResultWithSmbUseCase @Inject constructor(
+    private val getResult: GetDanmaResultUseCase,
+    private val smbMd5Repo: SmbMd5Repository,
+    private val smbMrlRepo: SmbMrlRepository
+) {
 
     /**
      * @param videoUri 视频SMB路径

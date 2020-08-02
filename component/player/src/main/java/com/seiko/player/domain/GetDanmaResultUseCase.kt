@@ -1,19 +1,18 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import com.seiko.common.data.Result
 import com.seiko.player.data.comments.VideoMatchRepository
 import org.videolan.vlc.danma.DanmaResultBean
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
 
 /**
  * 获取弹幕集合 & 此视频的弹幕偏移时间
  */
-class GetDanmaResultUseCase : KoinComponent {
-
-    private val getDanmaComments: GetDanmaCommentsUseCase by inject()
-    private val getVideoEpisodeId: GetVideoEpisodeIdUseCase by inject()
-    private val videoMatchRepo: VideoMatchRepository by inject()
+class GetDanmaResultUseCase @Inject constructor(
+    private val getDanmaComments: GetDanmaCommentsUseCase,
+    private val getVideoEpisodeId: GetVideoEpisodeIdUseCase,
+    private val videoMatchRepo: VideoMatchRepository
+) {
 
     /**
      * @param videoMd5 视频前16mb的MD5

@@ -19,11 +19,6 @@ android {
     }
 }
 
-this.beforeEvaluate {
-    println 'Player开始执行了'
-    delete buildDir
-}
-
 dependencies {
     kapt Deps.moshi_compiler
     // 弹幕

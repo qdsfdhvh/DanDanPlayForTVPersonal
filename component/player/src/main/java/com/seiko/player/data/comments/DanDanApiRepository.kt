@@ -5,8 +5,9 @@ import com.seiko.player.data.api.DanDanApi
 import com.seiko.player.data.api.model.MatchRequest
 import com.seiko.player.data.model.DanmaCommentBean
 import com.seiko.player.data.model.MatchResult
+import javax.inject.Inject
 
-class DanDanApiRepository(
+class DanDanApiRepository @Inject constructor(
     private val api: DanDanApi
 ) {
 

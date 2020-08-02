@@ -4,12 +4,15 @@ import android.net.Uri
 import com.seiko.player.data.db.dao.SmbMrlDao
 import com.seiko.player.data.db.model.SmbMrl
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * VLC的smb等通讯都是最底层完成的，看都看不懂，不自欺欺人了；暂时使用这种不是很好的方式间接处理。
  * PS：保存和加载都不完善，待优化。
  */
-class SmbMrlRepository(private val dao: SmbMrlDao) {
+class SmbMrlRepository @Inject constructor(
+    private val dao: SmbMrlDao
+) {
 
     suspend fun saveSmbMrl(mrl: String, account: String, password: String): Boolean {
         Timber.d("保存smb -> mrl=$mrl, account=$account, password=$password")

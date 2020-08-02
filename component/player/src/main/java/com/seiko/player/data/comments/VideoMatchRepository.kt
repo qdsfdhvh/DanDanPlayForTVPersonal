@@ -3,8 +3,11 @@ package com.seiko.player.data.comments
 import com.seiko.player.data.db.dao.VideoMatchDao
 import com.seiko.player.data.db.model.VideoMatch
 import com.seiko.player.data.model.MatchResult
+import javax.inject.Inject
 
-class VideoMatchRepository(private val videoMatchDao: VideoMatchDao) {
+class VideoMatchRepository @Inject constructor(
+    private val videoMatchDao: VideoMatchDao
+) {
 
     suspend fun getEpisodeIdList(videoMd5: String, isMatched: Boolean): List<Int> {
         return videoMatchDao.getEpisodeIdList(videoMd5, isMatched)

@@ -1,4 +1,4 @@
-package com.seiko.player.domain.danma
+package com.seiko.player.domain
 
 import android.net.Uri
 import com.seiko.common.data.Result
@@ -7,16 +7,15 @@ import com.seiko.player.data.comments.SmbMrlRepository
 import com.seiko.player.util.FtpUtils
 import com.seiko.player.util.SftpUtils
 import com.seiko.player.util.constants.DANMA_RESULT_TAG
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.videolan.vlc.danma.DanmaResultBean
 import timber.log.Timber
+import javax.inject.Inject
 
-class GetDanmaResultWithFtpUseCase : KoinComponent {
-
-    private val getResult: GetDanmaResultUseCase by inject()
-    private val smbMd5Repo: SmbMd5Repository by inject()
-    private val smbMrlRepo: SmbMrlRepository by inject()
+class GetDanmaResultWithFtpUseCase @Inject constructor(
+    private val getResult: GetDanmaResultUseCase,
+    private val smbMd5Repo: SmbMd5Repository,
+    private val smbMrlRepo: SmbMrlRepository
+) {
 
     /**
      * @param videoUri ftp路径

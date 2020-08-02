@@ -20,15 +20,6 @@ class PlayerInitComponent : InitComponent
 
     override fun onCreate(application: Application) {
         Timber.tag("Provider").d("start register player.")
-        loadKoinModules(listOf(
-            // 本地配置、数据库、网络请求
-            prefModule, dbModule, networkModule,
-            // ...
-            repositoryModule,
-            // 实例
-            useCaseModule
-        ))
-
         application.setupApplication()
     }
 
