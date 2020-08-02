@@ -5,19 +5,19 @@ import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.util.toHomeImageBean
 import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.common.data.Result
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 将连载动漫 分成 周日~周六7组
  * PS: 0代表周日，1-6代表周一至周六。
  */
-@Singleton
+@ActivityRetainedScoped
 class GetSeriesBangumiAirDayBeansUseCase @Inject constructor(
     private val getBangumiList: GetSeriesBangumiListUseCase
 ) {

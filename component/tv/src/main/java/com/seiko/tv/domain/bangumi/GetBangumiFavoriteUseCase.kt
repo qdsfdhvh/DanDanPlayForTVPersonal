@@ -5,22 +5,19 @@ import androidx.lifecycle.map
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.comments.BangumiDetailsRepository
 import com.seiko.tv.util.toHomeImageBean
-import org.koin.core.KoinComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 获取本地收藏动漫（PagedList）
  */
-@Singleton
+@ActivityRetainedScoped
 class GetBangumiFavoriteUseCase @Inject constructor(
     private val detailsRepo: BangumiDetailsRepository
-) : KoinComponent {
-
+) {
     operator fun invoke(count: Int): LiveData<List<HomeImageBean>> {
         return detailsRepo.getBangumiDetailsList(count).map { list ->
             list.map { it.toHomeImageBean() }
         }
     }
-
 }

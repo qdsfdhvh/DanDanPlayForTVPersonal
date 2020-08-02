@@ -13,8 +13,9 @@ import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.util.annotation.BangumiIntroType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BangumiDetailsRepository(
+class BangumiDetailsRepository @Inject constructor(
     private val bangumiDetailsDao: BangumiDetailsDao,
     private val bangumiEpisodeDao: BangumiEpisodeDao,
     private val bangumiIntroDao: BangumiIntroDao,

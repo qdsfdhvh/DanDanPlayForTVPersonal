@@ -1,13 +1,13 @@
 package com.seiko.tv.domain.bangumi
 
 import com.seiko.tv.data.comments.DanDanApiRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 获取连载动漫列表
  */
-@Singleton
+@ActivityRetainedScoped
 class GetSeriesBangumiListUseCase @Inject constructor(
     private val repo: DanDanApiRepository
 ) {

@@ -2,8 +2,9 @@ package com.seiko.tv.data.comments
 
 import com.seiko.tv.data.db.dao.EpisodeTorrentDao
 import com.seiko.tv.data.db.model.EpisodeTorrentEntity
+import javax.inject.Inject
 
-class EpisodeTorrentRepository(
+class EpisodeTorrentRepository @Inject constructor(
     private val episodeTorrentDao: EpisodeTorrentDao
 ) {
 

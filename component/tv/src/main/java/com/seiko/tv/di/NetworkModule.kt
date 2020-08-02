@@ -27,8 +27,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideDanDanApiService(@DanDanRetrofitQualifier retrofit: Retrofit): DanDanApiService {
-        return retrofit.create()
+    @DanDanClientQualifier
+    fun provideClient(builder: OkHttpClient.Builder): OkHttpClient {
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        }
+        return builder.build()
     }
 
     @Provides
@@ -42,13 +48,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @DanDanClientQualifier
-    fun provideClient(builder: OkHttpClient.Builder): OkHttpClient {
-        if (BuildConfig.DEBUG) {
-            builder.addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-        }
-        return builder.build()
+    fun provideDanDanApiService(@DanDanRetrofitQualifier retrofit: Retrofit): DanDanApiService {
+        return retrofit.create()
     }
 }

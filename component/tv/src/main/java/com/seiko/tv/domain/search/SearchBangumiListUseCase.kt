@@ -1,17 +1,16 @@
 package com.seiko.tv.domain.search
 
 import com.seiko.tv.data.comments.DanDanApiRepository
-import org.koin.core.KoinComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 搜索动漫
  */
-@Singleton
+@ActivityRetainedScoped
 class SearchBangumiListUseCase @Inject constructor(
     private val repo: DanDanApiRepository
-) : KoinComponent {
+) {
     suspend operator fun invoke(keyword: String, type: String)
             = repo.searchBangumiList(keyword, type)
 }

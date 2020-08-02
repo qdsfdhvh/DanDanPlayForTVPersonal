@@ -4,7 +4,6 @@ import com.seiko.common.data.Result
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.comments.EpisodeTorrentRepository
 import com.seiko.tv.data.comments.ResMagnetItemRepository
-import org.koin.core.KoinComponent
 import javax.inject.Inject
 
 /**
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class SaveMagnetInfoUseCase @Inject constructor(
     private val repo: ResMagnetItemRepository,
     private val episodeTorrentRepo: EpisodeTorrentRepository
-): KoinComponent {
+) {
 
     suspend operator fun invoke(
         item: ResMagnetItemEntity,

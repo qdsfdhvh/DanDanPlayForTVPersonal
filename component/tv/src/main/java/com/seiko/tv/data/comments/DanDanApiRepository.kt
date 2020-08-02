@@ -14,8 +14,9 @@ import com.seiko.tv.util.apiFlowCall
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DanDanApiRepository(
+class DanDanApiRepository @Inject constructor(
     private val api: DanDanApiService,
     private val httpDbCache: HttpDbCacheRepository
 )  {

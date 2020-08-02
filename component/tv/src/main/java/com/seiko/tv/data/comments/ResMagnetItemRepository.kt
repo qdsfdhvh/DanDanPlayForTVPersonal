@@ -2,8 +2,9 @@ package com.seiko.tv.data.comments
 
 import com.seiko.tv.data.db.dao.ResMagnetItemDao
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
+import javax.inject.Inject
 
-class ResMagnetItemRepository(
+class ResMagnetItemRepository @Inject constructor(
     private val resMagnetItemDao: ResMagnetItemDao
 ) {
 

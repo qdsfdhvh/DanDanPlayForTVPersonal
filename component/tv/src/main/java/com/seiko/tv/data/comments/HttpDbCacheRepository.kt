@@ -4,8 +4,9 @@ import com.seiko.tv.data.db.dao.HttpDbCacheDao
 import com.seiko.tv.data.db.model.HttpDbCacheEntity
 import com.squareup.moshi.Moshi
 import timber.log.Timber
+import javax.inject.Inject
 
-class HttpDbCacheRepository(
+class HttpDbCacheRepository @Inject constructor(
     private val httpDbCachedDao: HttpDbCacheDao,
     private val moshi: Moshi
 ) {

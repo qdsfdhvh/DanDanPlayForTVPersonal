@@ -2,8 +2,11 @@ package com.seiko.tv.data.comments
 
 import com.seiko.tv.data.db.dao.BangumiKeyBoardDao
 import com.seiko.tv.data.db.model.BangumiKeyboardEntity
+import javax.inject.Inject
 
-class BangumiKeyboardRepository( private val bangumiKeyBoardDao: BangumiKeyBoardDao) {
+class BangumiKeyboardRepository @Inject constructor(
+    private val bangumiKeyBoardDao: BangumiKeyBoardDao
+) {
 
     suspend fun getKeyboard(animeId: Long): String? {
         return bangumiKeyBoardDao.getKeyboard(animeId)

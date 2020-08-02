@@ -4,25 +4,23 @@ import com.seiko.common.data.Result
 import com.seiko.tv.data.comments.BangumiDetailsRepository
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.comments.DanDanApiRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 获取动漫详情
  */
-@Singleton
+@ActivityRetainedScoped
 class GetBangumiDetailsUseCase @Inject constructor(
     private val repo: DanDanApiRepository,
     private val detailsRepo: BangumiDetailsRepository,
     private val saveBangumiHistory: SaveBangumiHistoryUseCase
-) : KoinComponent {
-
+) {
     fun invoke(animeId: Long): Flow<Result<BangumiDetailsEntity>> {
         return repo.getBangumiDetails(animeId).map { result ->
             when(result) {
@@ -42,5 +40,4 @@ class GetBangumiDetailsUseCase @Inject constructor(
             }
         }
     }
-
 }

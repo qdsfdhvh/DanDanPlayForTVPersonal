@@ -3,19 +3,20 @@ package com.seiko.tv.di
 import com.seiko.tv.data.api.DanDanApiService
 import com.seiko.tv.data.comments.*
 import com.seiko.tv.data.db.AppDatabase
+import com.seiko.tv.data.db.dao.*
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 object RepositoryModule {
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideDanDanApiRepository(
         api: DanDanApiService,
         httpDbCache: HttpDbCacheRepository
@@ -24,32 +25,35 @@ object RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideHttpDbCacheRepository(
-        database: AppDatabase,
+        httpDbCachedDao: HttpDbCacheDao,
         moshi: Moshi
     ): HttpDbCacheRepository {
         return HttpDbCacheRepository(
-            database.httpDbCacheDao(),
+            httpDbCachedDao,
             moshi
         )
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideBangumiDetailsRepository(
-        database: AppDatabase
+        bangumiDetailsDao: BangumiDetailsDao,
+        bangumiEpisodeDao: BangumiEpisodeDao,
+        bangumiIntroDao: BangumiIntroDao,
+        bangumiTagDao: BangumiTagDao
     ): BangumiDetailsRepository {
         return BangumiDetailsRepository(
-            database.bangumiDetailsDao(),
-            database.bangumiEpisodeDao(),
-            database.bangumiIntroDao(),
-            database.bangumiTagDao()
+            bangumiDetailsDao,
+            bangumiEpisodeDao,
+            bangumiIntroDao,
+            bangumiTagDao
         )
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideBangumiHistoryRepository(
         database: AppDatabase
     ): BangumiHistoryRepository {
@@ -59,32 +63,32 @@ object RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideBangumiKeyboardRepository(
-        database: AppDatabase
+        bangumiKeyBoardDao: BangumiKeyBoardDao
     ): BangumiKeyboardRepository {
         return BangumiKeyboardRepository(
-            database.bangumiKeyboardDao()
+            bangumiKeyBoardDao
         )
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideResMagnetItemRepository(
-        database: AppDatabase
+        resMagnetItemDao: ResMagnetItemDao
     ): ResMagnetItemRepository {
         return ResMagnetItemRepository(
-            database.resMagnetItemDao()
+            resMagnetItemDao
         )
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideEpisodeTorrentRepository(
-        database: AppDatabase
+        episodeTorrentDao: EpisodeTorrentDao
     ): EpisodeTorrentRepository {
         return EpisodeTorrentRepository(
-            database.episodeTorrentDao()
+            episodeTorrentDao
         )
     }
 

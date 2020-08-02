@@ -4,8 +4,9 @@ import com.seiko.common.data.Result
 import com.seiko.tv.data.db.dao.BangumiHistoryDao
 import com.seiko.tv.data.db.model.BangumiDetailsEntity
 import com.seiko.tv.data.db.model.BangumiHistoryEntity
+import javax.inject.Inject
 
-class BangumiHistoryRepository(
+class BangumiHistoryRepository @Inject constructor(
     private val bangumiHistoryDao: BangumiHistoryDao
 ) {
 

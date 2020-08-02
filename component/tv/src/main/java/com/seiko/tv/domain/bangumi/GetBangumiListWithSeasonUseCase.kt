@@ -5,19 +5,18 @@ import com.seiko.tv.data.model.api.BangumiSeason
 import com.seiko.tv.data.comments.DanDanApiRepository
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.toHomeImageBean
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.koin.core.KoinComponent
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 获取某一季度的动漫列表
  */
-@Singleton
+@ActivityRetainedScoped
 class GetBangumiListWithSeasonUseCase @Inject constructor(
     private val repo: DanDanApiRepository
-) : KoinComponent {
+) {
     operator fun invoke(season: BangumiSeason): Flow<Result<List<HomeImageBean>>> {
         return repo.getBangumiListWithSeason(season).map { result ->
             when(result) {
