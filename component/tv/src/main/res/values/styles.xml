@@ -4,20 +4,25 @@
     <style name="DanDanTvTextStyle">
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="DanDanTvTextStyle.Rather" parent="DanDanTvTextStyle">
+        <item name="android:textSize">16sp</item>
+    </style>
     <style name="DanDanTvTextStyle.Min" parent="DanDanTvTextStyle">
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="DanDanTvTextStyle.Title" parent="DanDanTvTextStyle">
+    <style name="DanDanTvTextStyle.Title" parent="DanDanTvTextStyle.Rather">
         <item name="android:lines">2</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     <style name="DanDanTvTextStyle.Chapter" parent="DanDanTvTextStyle.Min">
         <item name="android:textColor">?attr/colorAccent</item>
         <item name="android:padding">4dp</item>
+        <item name="android:lines">1</item>
     </style>
 
 </resources>
