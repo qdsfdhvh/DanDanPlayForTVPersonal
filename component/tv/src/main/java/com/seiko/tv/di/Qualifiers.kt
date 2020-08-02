@@ -8,8 +8,4 @@ annotation class DanDanRetrofitQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ResDanDanRetrofitQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class DanDanClientQualifier

@@ -1,7 +1,6 @@
 package com.seiko.tv.di
 
 import com.seiko.tv.data.api.DanDanApiService
-import com.seiko.tv.data.api.ResDanDanApiService
 import com.seiko.tv.data.comments.*
 import com.seiko.tv.data.db.AppDatabase
 import com.squareup.moshi.Moshi
@@ -89,14 +88,4 @@ object RepositoryModule {
         )
     }
 
-    @Provides
-    @Singleton
-    fun provideSearchRepository(
-        api: DanDanApiService,
-        resApi: ResDanDanApiService
-    ): SearchRepository {
-        return SearchRepository(
-            api, resApi
-        )
-    }
 }

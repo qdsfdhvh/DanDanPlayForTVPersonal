@@ -63,4 +63,17 @@ interface DanDanApiService {
         @Query("type") type: String
     ): SearchAnimeResponse
 
+    /**
+     * 根据关键字搜索磁力信息
+     * @param keyword 关键字
+     * @param typeId 作品类型id
+     * @param subGroupId 字幕组id
+     */
+    @GET
+    suspend fun searchMagnetList(
+        @Url url: String,
+        @Query("keyword") keyword: String,
+        @Query("type") typeId: String,
+        @Query("subgroup") subGroupId: String
+    ): ResMagnetSearchResponse
 }

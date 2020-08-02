@@ -2,9 +2,7 @@ package com.seiko.tv.di
 
 import com.seiko.tv.BuildConfig
 import com.seiko.tv.data.api.DanDanApiService
-import com.seiko.tv.data.api.ResDanDanApiService
 import com.seiko.tv.util.constants.DANDAN_API_BASE_URL
-import com.seiko.tv.util.constants.DANDAN_RES_BASE_URL
 import com.seiko.tv.util.http.cookie.CookiesManager
 import com.seiko.tv.util.http.cookie.PersistentCookieStore
 import dagger.Module
@@ -35,25 +33,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideResDanDanApiService(@ResDanDanRetrofitQualifier retrofit: Retrofit): ResDanDanApiService {
-        return retrofit.create()
-    }
-
-    @Provides
-    @Singleton
     @DanDanRetrofitQualifier
     fun provideRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
         return builder.callFactory(client)
             .baseUrl(DANDAN_API_BASE_URL)
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    @ResDanDanRetrofitQualifier
-    fun provideResRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
-        return builder.callFactory(client)
-            .baseUrl(DANDAN_RES_BASE_URL)
             .build()
     }
 
