@@ -11,6 +11,8 @@ import com.seiko.player.app.delegates.IMediaContentDelegate
 import com.seiko.player.app.delegates.IndexersDelegate
 import com.seiko.player.app.delegates.MediaContentDelegate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
 import org.videolan.libvlc.Dialog
 import org.videolan.libvlc.FactoryManager
@@ -23,7 +25,6 @@ import org.videolan.resources.VLCInstance
 import org.videolan.tools.AppScope
 import org.videolan.tools.Settings
 import org.videolan.vlc.gui.SendCrashActivity
-import org.videolan.vlc.gui.helpers.AudioUtil
 import org.videolan.vlc.gui.helpers.NotificationHelper
 import org.videolan.vlc.util.DialogDelegate
 import org.videolan.vlc.util.SettingsMigration
@@ -41,6 +42,8 @@ class AppVlcSetupDelegate : VlcAppDelegate,
     // Store AppContextProvider to prevent GC
     override val appContextProvider = AppContextProvider
 
+    @ObsoleteCoroutinesApi
+    @ExperimentalCoroutinesApi
     @TargetApi(Build.VERSION_CODES.O)
     override fun Context.setupApplication() {
         appContextProvider.init(this)
@@ -66,8 +69,10 @@ class AppVlcSetupDelegate : VlcAppDelegate,
     }
 
     // init operations executed in background threads
+    @ObsoleteCoroutinesApi
+    @ExperimentalCoroutinesApi
     private fun Context.backgroundInit() {
-        Thread(Runnable {
+        Thread {
             AppContextProvider.setLocale(Settings.getInstance(this).getString("set_locale", ""))
 
             AppScope.launch(Dispatchers.IO) {
@@ -78,6 +83,6 @@ class AppVlcSetupDelegate : VlcAppDelegate,
             packageManager.setComponentEnabledSetting(ComponentName(this, SendCrashActivity::class.java),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
             SettingsMigration.migrateSettings(this)
-        }).start()
+        }.start()
     }
 }

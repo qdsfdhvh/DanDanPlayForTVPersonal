@@ -4,11 +4,6 @@ android {
     resourcePrefix "torrent_"
 }
 
-this.beforeEvaluate {
-    println 'Torrent开始执行了'
-    delete buildDir
-}
-
 dependencies {
     kapt Deps.moshi_compiler
 

@@ -37,6 +37,31 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    testOptions {
+        unitTests {
+            // Fix unit test resources not included with AS3
+            includeAndroidResources = true
+        }
+    }
+    splits {
+        abi {
+            enable = true
+            reset()
+            include("armeabi-v7a", "x86") // "arm64-v8a" "x86_64"
+            universalApk = false
+        }
+    }
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+    aaptOptions {
+        // 在Android的构建流程中，AAPT会使用内置的
+        // 压缩算法来优化res/drawable/目录下的PNG图片，
+        // 但这可能会导致本来已经优化过的图片体积变大，
+        // 因此需要禁止AAPT来优化PNG图片
+        cruncherEnabled = false
+    }
 }
 
 dependencies {
