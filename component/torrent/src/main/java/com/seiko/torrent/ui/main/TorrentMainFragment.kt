@@ -16,12 +16,14 @@ import com.seiko.torrent.databinding.TorrentFragmentMainBinding
 import com.seiko.torrent.ui.detail.TorrentDetailFragment
 import com.seiko.torrent.ui.dialog.DialogInputFragment
 import com.seiko.torrent.util.buildTorrentUri
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import news.androidtv.filepicker.TvFilePicker
 import timber.log.Timber
 
+@AndroidEntryPoint
 class TorrentMainFragment : Fragment(), View.OnClickListener {
 
     companion object {

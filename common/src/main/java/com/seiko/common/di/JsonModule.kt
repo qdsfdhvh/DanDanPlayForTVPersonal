@@ -3,20 +3,28 @@ package com.seiko.common.di
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.Moshi
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-val moshiModule = module {
-    single { createMoshi() }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object JsonModule {
 
-private fun createMoshi(): Moshi {
-    return Moshi.Builder()
-        .add(NullStringAdapter)
-        .add(NullLongAdapter)
-        .add(NullIntAdapter)
-        .add(NullDoubleAdapter)
-        .add(NullBooleanAdapter)
-        .build()
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(NullStringAdapter)
+            .add(NullLongAdapter)
+            .add(NullIntAdapter)
+            .add(NullDoubleAdapter)
+            .add(NullBooleanAdapter)
+            .build()
+    }
+
 }
 
 object NullStringAdapter {

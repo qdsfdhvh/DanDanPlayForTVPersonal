@@ -1,11 +1,12 @@
 package com.seiko.torrent.data.comments
 
+import com.seiko.torrent.data.db.TorrentDao
 import com.seiko.torrent.data.db.TorrentEntity
-import com.seiko.torrent.data.db.TorrentDatabase
+import javax.inject.Inject
 
-class TorrentRepository(database: TorrentDatabase) {
-
-    private val torrentDao by lazy { database.torrentDao() }
+class TorrentRepository @Inject constructor(
+    private val torrentDao: TorrentDao
+) {
 
     suspend fun getTorrents(): List<TorrentEntity> {
         return torrentDao.all()

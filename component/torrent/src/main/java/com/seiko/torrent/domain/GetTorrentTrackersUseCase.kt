@@ -4,27 +4,29 @@ import android.app.Application
 import android.util.Patterns
 import com.seiko.common.data.Result
 import com.seiko.common.util.writeInputStream
+import com.seiko.torrent.di.TorrentConfigDir
 import com.seiko.torrent.util.constants.ASSETS_TRACKER_NAME
-import com.seiko.torrent.util.constants.TORRENT_CONFIG_DIR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.source
-import org.koin.core.KoinComponent
-import org.koin.core.inject
-import org.koin.core.qualifier.named
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * 尝试将assets中的tracker.txt写入本地
  */
-class GetTorrentTrackersUseCase : KoinComponent {
+@Singleton
+class GetTorrentTrackersUseCase @Inject constructor(
+    @TorrentConfigDir private val configDir: File,
+    private val application: Application
+) {
 
     suspend operator fun invoke(): Result<Set<String>> {
-        val configDir: File by inject(named(TORRENT_CONFIG_DIR))
         if (!configDir.exists() && !configDir.mkdirs()) {
             return Result.Error(FileNotFoundException("File not exit: ${configDir.absolutePath}"))
         }
@@ -32,9 +34,8 @@ class GetTorrentTrackersUseCase : KoinComponent {
         val trackersFile = File(configDir, ASSETS_TRACKER_NAME)
         if (!trackersFile.exists()) {
             try {
-                val app: Application by inject()
                 withContext(Dispatchers.IO) {
-                    trackersFile.writeInputStream(app.assets.open(ASSETS_TRACKER_NAME))
+                    trackersFile.writeInputStream(application.assets.open(ASSETS_TRACKER_NAME))
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

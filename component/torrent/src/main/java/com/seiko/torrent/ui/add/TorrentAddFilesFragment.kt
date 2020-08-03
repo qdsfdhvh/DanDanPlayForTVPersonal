@@ -8,13 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.common.util.extensions.parentViewModel
+import com.seiko.common.util.extensions.parentViewModels
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddFilesBinding
 import com.seiko.torrent.util.extensions.fixItemAnim
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.vm.AddTorrentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
 
     companion object {
@@ -23,7 +25,7 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
         }
     }
 
-    private val viewModel: AddTorrentViewModel by parentViewModel()
+    private val viewModel: AddTorrentViewModel by parentViewModels()
 
     private lateinit var binding: TorrentFragmentAddFilesBinding
 
@@ -59,7 +61,7 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private fun bindViewModel() {
         // 磁力信息
-        viewModel.fileTree.observe(this) { fileTree ->
+        viewModel.fileTree.observe(viewLifecycleOwner) { fileTree ->
             adapter.setFileTree(fileTree)
             updateFileSize()
         }

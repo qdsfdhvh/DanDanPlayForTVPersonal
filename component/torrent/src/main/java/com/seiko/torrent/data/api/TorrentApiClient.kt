@@ -1,12 +1,14 @@
-package com.seiko.torrent.data.comments
+package com.seiko.torrent.data.api
 
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.InputStream
 import com.seiko.common.data.Result
-import com.seiko.torrent.data.api.TorrentApiService
+import javax.inject.Inject
 
-internal class TorrentApiRemoteDataSource(private val api: TorrentApiService) {
+class TorrentApiClient @Inject constructor(
+    private val api: TorrentApiService
+) {
 
     suspend fun downloadTorrentWithMagnet(magnet: String): Result<InputStream> {
         return try {

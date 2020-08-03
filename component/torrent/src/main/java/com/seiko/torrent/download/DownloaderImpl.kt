@@ -23,13 +23,14 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
 private typealias MagnetParseResultListener = (TorrentMetaInfo) -> Unit
 
 @ExperimentalCoroutinesApi
-class DownloadManager(
+class DownloaderImpl @Inject constructor(
     private val options: TorrentEngineOptions,
     private val torrentRepo: TorrentRepository,
     private val getTorrentInfoFile: GetTorrentInfoFileUseCase

@@ -2,6 +2,7 @@ package com.seiko.torrent.vm
 
 import android.net.Uri
 import android.webkit.URLUtil
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import com.seiko.torrent.download.Downloader
 import com.seiko.torrent.ui.add.State
 import com.seiko.torrent.data.model.torrent.MagnetInfo
 import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
+import com.seiko.torrent.di.TorrentDownloadDir
 import com.seiko.torrent.domain.BuildTorrentTaskUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.torrent.util.extensions.isMagnet
@@ -26,9 +28,9 @@ import kotlinx.coroutines.launch
 import org.libtorrent4j.Priority
 import java.io.File
 
-class AddTorrentViewModel(
+class AddTorrentViewModel @ViewModelInject constructor(
     private val downloader: Downloader,
-    private val torrentDownloadDir: File,
+    @TorrentDownloadDir private val torrentDownloadDir: File,
     private val downloadTorrentWithDanDanApi: DownloadTorrentWithDanDanApiUseCase,
     private val getTorrentTempWithContentUseCase: GetTorrentTempWithContentUseCase,
     private val getTorrentTempWithNetUseCase: DownloadTorrentWithNetUseCase,

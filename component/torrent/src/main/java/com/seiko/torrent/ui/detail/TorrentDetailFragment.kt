@@ -6,28 +6,26 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
-import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val NUM_FRAGMENTS = 2
 
 private const val FILES_FRAG_POS = 0
 private const val INFO_FRAG_POS = 1
-//private const val STATE_FRAG_POS = 2
-//private const val TRACKERS_FRAG_POS = 3
-//private const val PEERS_FRAG_POS = 4
-//private const val PIECES_FRAG_POS = 5
 
+@AndroidEntryPoint
 class TorrentDetailFragment : Fragment()
     , OnItemClickListener {
 
@@ -40,7 +38,7 @@ class TorrentDetailFragment : Fragment()
         }
     }
 
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentDetailBinding
     private lateinit var tabAdapter: TabTitleAdapter
@@ -50,7 +48,11 @@ class TorrentDetailFragment : Fragment()
      */
     private var tabSelectPosition = -1
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = TorrentFragmentDetailBinding.inflate(inflater, container, false)
         setupUI()
         return binding.root
@@ -93,15 +95,13 @@ class TorrentDetailFragment : Fragment()
 
     private fun setupUI() {
         tabAdapter = TabTitleAdapter(NUM_FRAGMENTS) { tab, position ->
-            tab.setText(when(position) {
-                FILES_FRAG_POS -> getString(R.string.torrent_files)
-                INFO_FRAG_POS -> getString(R.string.torrent_info)
-//                STATE_FRAG_POS -> getString(R.string.torrent_state)
-//                TRACKERS_FRAG_POS -> getString(R.string.torrent_trackers)
-//                PEERS_FRAG_POS -> getString(R.string.torrent_peers)
-//                PIECES_FRAG_POS -> getString(R.string.torrent_pieces)
-                else -> ""
-            })
+            tab.setText(
+                when (position) {
+                    FILES_FRAG_POS -> getString(R.string.torrent_files)
+                    INFO_FRAG_POS -> getString(R.string.torrent_info)
+                    else -> ""
+                }
+            )
         }
         tabAdapter.setOnItemClickListener(this)
         binding.torrentTab.setPadding(25, 0, 25, 0)
@@ -161,7 +161,12 @@ class TorrentDetailFragment : Fragment()
 
 }
 
-private class DetailPagerAdapter(fragment: Fragment) : FragmentPagerAdapter(fragment.childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+private class DetailPagerAdapter(
+    fragment: Fragment
+) : FragmentStatePagerAdapter(
+    fragment.childFragmentManager,
+    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+) {
 
     override fun getCount(): Int = NUM_FRAGMENTS
 
@@ -169,10 +174,6 @@ private class DetailPagerAdapter(fragment: Fragment) : FragmentPagerAdapter(frag
         return when(position) {
             FILES_FRAG_POS -> TorrentDetailFilesFragment.newInstance()
             INFO_FRAG_POS -> TorrentDetailInfoFragment.newInstance()
-//            STATE_FRAG_POS -> TorrentDetailStateFragment.newInstance()
-//            TRACKERS_FRAG_POS -> TorrentDetailTrackersFragment.newInstance()
-//            PEERS_FRAG_POS -> TorrentDetailPeersFragment.newInstance()
-//            PIECES_FRAG_POS -> TorrentDetailPiecesFragment.newInstance()
             else -> throw RuntimeException("Can't create fragment with position=$position.")
         }
     }

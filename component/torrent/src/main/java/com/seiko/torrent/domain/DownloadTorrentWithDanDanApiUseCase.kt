@@ -1,21 +1,20 @@
 package com.seiko.torrent.domain
 
 import com.seiko.common.data.Result
-import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
+import com.seiko.torrent.data.api.TorrentApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.libtorrent4j.TorrentInfo
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DownloadTorrentWithDanDanApiUseCase : KoinComponent {
-
-    private val dataSource: TorrentApiRemoteDataSource by inject()
-
-    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase by inject()
-
+@Singleton
+class DownloadTorrentWithDanDanApiUseCase @Inject constructor(
+    private val apiClient: TorrentApiClient,
+    private val getTorrentInfoFileUseCase: GetTorrentInfoFileUseCase
+) {
     suspend operator fun invoke(magnet: String): Result<String> {
-        val downloadResult = dataSource.downloadTorrentWithMagnet(magnet)
+        val downloadResult = apiClient.downloadTorrentWithMagnet(magnet)
         if (downloadResult is Result.Error) {
             return Result.Error(downloadResult.exception)
         }

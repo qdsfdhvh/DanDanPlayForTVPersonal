@@ -19,11 +19,13 @@ import com.seiko.torrent.R
 import com.seiko.torrent.data.db.TorrentEntity
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.ui.add.AddTorrentFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 
 
+@AndroidEntryPoint
 @Route(path = Routes.Torrent.PATH_ADD)
 class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
     , DispatchKeyEventDispatcherOwner {

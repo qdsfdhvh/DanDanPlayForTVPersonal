@@ -9,8 +9,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.seiko.common.app.AppDelegate
 import com.seiko.common.app.AppSetupDelegate
 import com.seiko.common.util.timber.NanoDebugTree
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import timber.log.Timber
 
 abstract class BaseApplication : Application(), AppDelegate by AppSetupDelegate() {
@@ -24,10 +22,6 @@ abstract class BaseApplication : Application(), AppDelegate by AppSetupDelegate(
         super.onCreate()
         setupTimber()
         setupARouter()
-        // 注解
-        startKoin {
-            androidContext(this@BaseApplication)
-        }
         setupApplication()
         setupStrictModel()
     }

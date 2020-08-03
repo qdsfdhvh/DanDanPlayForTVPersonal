@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
-import com.seiko.common.util.extensions.parentViewModel
+import com.seiko.common.util.extensions.parentViewModels
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentAddTorrentInfoBinding
 import com.seiko.torrent.vm.AddTorrentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class TorrentAddInfoFragment : Fragment() {
 
     companion object {
@@ -22,7 +24,7 @@ class TorrentAddInfoFragment : Fragment() {
         }
     }
 
-    private val viewModel: AddTorrentViewModel by parentViewModel()
+    private val viewModel: AddTorrentViewModel by parentViewModels()
 
     private lateinit var binding: TorrentAddTorrentInfoBinding
 
@@ -54,11 +56,11 @@ class TorrentAddInfoFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.downloadDir.observe(this) { downloadDir ->
+        viewModel.downloadDir.observe(viewLifecycleOwner) { downloadDir ->
             binding.uploadTorrentInto.text = downloadDir.absolutePath
         }
         // 磁力信息
-        viewModel.magnetInfo.observe(this) { info ->
+        viewModel.magnetInfo.observe(viewLifecycleOwner) { info ->
             binding.torrentName.setText(if (viewModel.customName.isEmpty()) info.name else viewModel.customName)
             binding.torrentHashSum.text = info.sha1hash
 
@@ -68,7 +70,7 @@ class TorrentAddInfoFragment : Fragment() {
             binding.layoutTorrentCreatedInProgram.visibility = View.GONE
         }
         // 种子信息
-        viewModel.torrentMetaInfo.observe(this) { info ->
+        viewModel.torrentMetaInfo.observe(viewLifecycleOwner) { info ->
             binding.torrentName.setText(if (viewModel.customName.isEmpty()) info.torrentName else viewModel.customName)
             binding.torrentHashSum.text = info.sha1Hash
 

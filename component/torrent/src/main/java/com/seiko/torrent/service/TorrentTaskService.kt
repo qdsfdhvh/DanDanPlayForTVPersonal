@@ -11,11 +11,13 @@ import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import com.seiko.torrent.download.Downloader
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import org.koin.android.ext.android.inject
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+@AndroidEntryPoint
 class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
 
     companion object {
@@ -104,14 +106,14 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
         }
     }
 
-    private val downloader: Downloader by inject()
+    @Inject lateinit var downloader: Downloader
+    @Inject lateinit var options: TorrentEngineOptions
+    @Inject lateinit var getTorrentTrackers: GetTorrentTrackersUseCase
 
     /**
      * 加载Tracker跟踪器
      */
     private fun loadTrackers() = runBlocking(coroutineContext) {
-        val options: TorrentEngineOptions by inject()
-        val getTorrentTrackers: GetTorrentTrackersUseCase by inject()
         when(val result = getTorrentTrackers.invoke()) {
             is Result.Success -> options.trackers.addAll(result.data)
             is Result.Error -> Timber.e(result.exception)

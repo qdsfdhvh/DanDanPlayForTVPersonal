@@ -1,5 +1,6 @@
 package com.seiko.torrent.vm
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.data.comments.TorrentRepository
@@ -8,7 +9,7 @@ import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 
-class MainViewModel(
+class MainViewModel @ViewModelInject constructor(
     private val downloader: Downloader,
     private val torrentRepo: TorrentRepository
 ) : ViewModel() {

@@ -1,16 +1,29 @@
 package com.seiko.torrent.di
 
-import android.content.Context
-import androidx.room.Room
-import com.seiko.torrent.util.constants.DB_NAME_DEFAULT
+import android.app.Application
+import com.seiko.torrent.data.db.TorrentDao
 import com.seiko.torrent.data.db.TorrentDatabase
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import com.seiko.torrent.util.constants.DB_NAME_DEFAULT
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-internal val dbModule = module {
-    single { createTorrentDatabase(androidContext()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object DbModule {
 
-private fun createTorrentDatabase(context: Context): TorrentDatabase {
-    return Room.databaseBuilder(context, TorrentDatabase::class.java, DB_NAME_DEFAULT).build()
+    @Provides
+    @Singleton
+    fun provideTorrentDatabase(application: Application): TorrentDatabase {
+        return TorrentDatabase.create(application, DB_NAME_DEFAULT)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTorrentDao(database: TorrentDatabase): TorrentDao {
+        return database.torrentDao()
+    }
+
 }

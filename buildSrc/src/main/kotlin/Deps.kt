@@ -28,11 +28,6 @@ object Deps {
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
     const val kotlin_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
-    const val koin_scope = "org.koin:koin-androidx-scope:${Versions.koin}"
-    const val koin_viewModel = "org.koin:koin-androidx-viewmodel:${Versions.koin}"
-    const val koin_fragment = "org.koin:koin-androidx-fragment:${Versions.koin}"
-    const val koin_ext = "org.koin:koin-androidx-ext:${Versions.koin}"
-
     const val mmkv_runtime = "com.tencent:mmkv-static:${Versions.mmkv}"
 
     const val network_retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"

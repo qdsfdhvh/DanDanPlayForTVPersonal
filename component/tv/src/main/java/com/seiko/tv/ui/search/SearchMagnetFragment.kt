@@ -13,14 +13,11 @@ import androidx.lifecycle.observe
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
-import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.util.diff.ResMagnetItemDiffCallback
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class SearchMagnetFragment : SearchSupportFragment(),

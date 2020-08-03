@@ -16,7 +16,6 @@ import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class BangumiHistoryFragment : VerticalGridSupportFragment()

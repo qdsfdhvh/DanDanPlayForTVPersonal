@@ -13,7 +13,6 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {

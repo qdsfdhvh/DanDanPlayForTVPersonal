@@ -7,7 +7,6 @@ import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
-import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
@@ -16,7 +15,6 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class BangumiFavoriteFragment : VerticalGridSupportFragment()

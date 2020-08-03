@@ -7,7 +7,7 @@ import retrofit2.http.*
 /**
  * 下载种子
  */
-internal interface TorrentApiService {
+interface TorrentApiService {
 
     @POST("/Magnet/Parse")
     @Streaming

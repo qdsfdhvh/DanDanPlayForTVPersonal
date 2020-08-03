@@ -21,7 +21,13 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled = false
+            // 是否进行混淆
+            minifyEnabled true
+            // 开启zipAlign可以让安装包中的资源按4字节对齐，这样可以减少应用在运行时的内存消耗
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            // 需要注意的是目前资源压缩器目前不会移除values/文件夹中定义的资源（例如字符串、尺寸、样式和颜色）
+            shrinkResources true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

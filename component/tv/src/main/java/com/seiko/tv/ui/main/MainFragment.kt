@@ -29,7 +29,6 @@ import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.yield
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class MainFragment : BrowseSupportFragment()

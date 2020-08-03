@@ -1,55 +1,16 @@
 ext.mainApp = true  // 设置为true，表示此module为主app module，一直以application方式编译
 apply from: rootProject.file(".buildscript/configure-android-defaults.gradle")
-
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-} else {
-    throw new GradleException("Could not find key.properties!")
-}
+apply from: rootProject.file(".buildscript/configure-setting-keystore.gradle")
 
 android {
     // VLC 需要
-//    dataBinding {
-//        enabled = true
-//    }
-    // 签名配置信息
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
+    dataBinding {
+        enabled = true
     }
     defaultConfig {
         applicationId Build.applicationId
         versionCode Build.versionCode
         versionName Build.versionName
-    }
-    buildTypes {
-        debug {
-            minifyEnabled false
-            signingConfig signingConfigs.release
-            resValue("string", "PORT_NUMBER", "8080")
-        }
-        release {
-            // 是否进行混淆
-            minifyEnabled true
-            // 开启zipAlign可以让安装包中的资源按4字节对齐，这样可以减少应用在运行时的内存消耗
-            zipAlignEnabled true
-            // 移除无用的resource文件
-            // 需要注意的是目前资源压缩器目前不会移除values/文件夹中定义的资源（例如字符串、尺寸、样式和颜色）
-            shrinkResources true
-            // 混淆文件的位置，其中 proguard-android.txt 为sdk默认的混淆配置，
-            // 它的位置位于android-sdk/tools/proguard/proguard-android.txt，
-            // 此外，proguard-android-optimize.txt 也为sdk默认的混淆配置，
-            // 但    是它默认打开了优化开关，我们可在配置混淆文件将android.util.Log置为无效代码，
-            // 以去除apk中打印日志的代码。而 proguard-rules.pro 是该模块下的混淆配置。
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
     }
     // 自定义输出apk名字
     def abiCodes = ['x86': 5, 'x86_64': 8, 'armeabi-v7a': 4, 'arm64-v8a': 7]
@@ -71,12 +32,12 @@ android {
         pickFirst 'lib/x86/libc++_shared.so'
         pickFirst 'lib/x86_64/libc++_shared.so'
     }
-    testOptions {
-        unitTests {
-            // Fix unit test resources not included with AS3
-            includeAndroidResources = true
-        }
-    }
+//    testOptions {
+//        unitTests {
+//            // Fix unit test resources not included with AS3
+//            includeAndroidResources = true
+//        }
+//    }
     splits {
         abi {
             enable = true
@@ -85,10 +46,10 @@ android {
             universalApk = false
         }
     }
-    dexOptions {
-        jumboMode true
-        javaMaxHeapSize "4g"
-    }
+//    dexOptions {
+//        jumboMode true
+//        javaMaxHeapSize "4g"
+//    }
     aaptOptions {
         // 在Android的构建流程中，AAPT会使用内置的
         // 压缩算法来优化res/drawable/目录下的PNG图片，
@@ -101,5 +62,5 @@ android {
 dependencies {
     addComponent 'component_tv', project(":component:tv")
     addComponent 'component_torrent', project(":component:torrent")
-//    addComponent 'component_player', project(":component:player")
+    addComponent 'component_player', project(":component:player")
 }

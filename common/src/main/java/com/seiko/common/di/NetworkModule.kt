@@ -1,25 +1,36 @@
 package com.seiko.common.di
 
+import com.seiko.common.BuildConfig
+import com.seiko.common.util.okhttp.TrafficStatsRequestInterceptor
 import com.squareup.moshi.Moshi
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.OkHttpClient
-import org.koin.dsl.module
-import retrofit2.Converter
+import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-internal val networkModule = module {
-    single { createSingleHttpClient() }
-    single { createConverterFactory(get()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object NetworkModule {
 
-private fun createSingleHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
-        .build()
-}
+    @Provides
+    fun provideRetrofitBuilder(moshi: Moshi): Retrofit.Builder {
+        return Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+    }
 
-private fun createConverterFactory(moshi: Moshi): Converter.Factory {
-    return MoshiConverterFactory.create(moshi)
+    @Provides
+    fun provideCommonClientBuilder(): OkHttpClient.Builder {
+        val builder = OkHttpClient.Builder()
+            .connectTimeout(10L, TimeUnit.SECONDS)
+            .readTimeout(10L, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(TrafficStatsRequestInterceptor())
+        }
+        return builder
+    }
 }

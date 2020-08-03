@@ -76,11 +76,6 @@ dependencies {
     implementation(Deps.glideOkhttp)
     kapt(Deps.glideCompiler)
 
-
-    // Koin注入 待移除
-    api(Deps.koin_scope)
-    api(Deps.koin_viewModel)
-
     // Dagger
     api(Deps.daggerHiltAndroid)
     api(Deps.hiltCommon)

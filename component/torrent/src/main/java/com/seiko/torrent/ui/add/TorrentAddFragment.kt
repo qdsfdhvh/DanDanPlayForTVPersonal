@@ -8,6 +8,7 @@ import android.view.*
 import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.seiko.common.ui.dialog.setLoadFragment
@@ -20,7 +21,7 @@ import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentAddBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.vm.AddTorrentViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 private const val PERMISSION_REQUEST = 1
@@ -29,6 +30,7 @@ private val PERMISSIONS = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 
+@AndroidEntryPoint
 class AddTorrentFragment : Fragment()
     , OnItemClickListener
     , View.OnClickListener {
@@ -48,10 +50,10 @@ class AddTorrentFragment : Fragment()
     }
 
     private val uri by lazyAndroid {
-        arguments!!.getParcelable<Uri>(ARGS_TORRENT_URI)!!
+        requireArguments().getParcelable<Uri>(ARGS_TORRENT_URI)!!
     }
 
-    private val viewModel by viewModel<AddTorrentViewModel>()
+    private val viewModel: AddTorrentViewModel by viewModels()
 
     private lateinit var binding: TorrentFragmentAddBinding
 
@@ -91,7 +93,7 @@ class AddTorrentFragment : Fragment()
     }
 
     private fun bindViewModel() {
-        viewModel.state.observe(this) { result ->
+        viewModel.state.observe(viewLifecycleOwner) { result ->
             when(result) {
                 is Result.Success -> updateStateUI(result.data)
                 is Result.Error -> handleException(result.exception)

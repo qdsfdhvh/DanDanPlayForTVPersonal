@@ -3,12 +3,9 @@ package com.seiko.common.app
 import android.app.Application
 import android.content.res.Configuration
 import com.seiko.autosize.AutoSizeConfig
-import com.seiko.common.di.moshiModule
-import com.seiko.common.di.networkModule
 import com.seiko.common.util.helper.AutoAdaptStrategyFactory
 import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
-import org.koin.core.context.loadKoinModules
 import timber.log.Timber
 
 /**
@@ -18,13 +15,6 @@ class ProviderApplication : InitComponent {
 
     override fun onCreate(application: Application) {
         Timber.tag("Provider").d("start register common.")
-
-        loadKoinModules( listOf(
-            // JSON
-            moshiModule,
-            // 本地存储、网络请求
-            networkModule
-        ))
 
         // AutoSize
         val autoAdaptStrategyFactory = AutoAdaptStrategyFactory.get()

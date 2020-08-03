@@ -2,30 +2,29 @@ package com.seiko.torrent.domain
 
 import com.seiko.common.util.writeInputStream
 import com.seiko.common.data.Result
-import com.seiko.torrent.util.constants.TORRENT_TEMP_DIR
-import com.seiko.torrent.data.comments.TorrentApiRemoteDataSource
+import com.seiko.torrent.data.api.TorrentApiClient
+import com.seiko.torrent.di.TorrentTempDir
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import org.koin.core.inject
-import org.koin.core.qualifier.named
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DownloadTorrentWithNetUseCase : KoinComponent {
-
-    private val tempDir: File by inject(named(TORRENT_TEMP_DIR))
-
-    private val dataSource: TorrentApiRemoteDataSource by inject()
+@Singleton
+class DownloadTorrentWithNetUseCase @Inject constructor(
+    @TorrentTempDir private val tempDir: File,
+    private val apiClient: TorrentApiClient
+) {
 
     suspend operator fun invoke(url: String): Result<String> {
         if (!tempDir.exists() && !tempDir.mkdirs()) {
             return Result.Error(FileNotFoundException("Temp dir not found"))
         }
 
-        val downloadResult = dataSource.downloadTorrentWithUrl(url)
+        val downloadResult = apiClient.downloadTorrentWithUrl(url)
         if (downloadResult is Result.Error) {
             return Result.Error(downloadResult.exception)
         }

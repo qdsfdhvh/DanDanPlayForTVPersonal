@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +17,10 @@ import com.seiko.torrent.data.model.torrent.TorrentListItem
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class TorrentListFragment : Fragment()
     , OnItemClickListener {
 
@@ -29,7 +31,7 @@ class TorrentListFragment : Fragment()
     /* Save state scrolling */
     private var torrentsListState: Parcelable? = null
 
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentListBinding
     private lateinit var adapter: TorrentListAdapter
@@ -89,7 +91,7 @@ class TorrentListFragment : Fragment()
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItems.observe(this, adapter::submitList)
+        viewModel.torrentItems.observe(viewLifecycleOwner, adapter::submitList)
     }
 
     private fun unBindViewModel() {

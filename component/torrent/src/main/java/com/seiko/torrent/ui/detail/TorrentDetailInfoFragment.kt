@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class TorrentDetailInfoFragment : Fragment() {
 
     companion object {
@@ -23,7 +25,7 @@ class TorrentDetailInfoFragment : Fragment() {
         }
     }
 
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentDetailInfoBinding
 
@@ -50,7 +52,7 @@ class TorrentDetailInfoFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.torrentItem.observe(this) { item ->
+        viewModel.torrentItem.observe(viewLifecycleOwner) { item ->
             if (item == null) {
                 binding.uploadTorrentInto.text = ""
                 binding.freeSpace.text = ""
@@ -64,7 +66,7 @@ class TorrentDetailInfoFragment : Fragment() {
                     .format(Date(item.dateAdded))
             }
         }
-        viewModel.torrentMetaInfo.observe(this) { info ->
+        viewModel.torrentMetaInfo.observe(viewLifecycleOwner) { info ->
             if (info == null) {
                 binding.torrentName.text = ""
                 binding.torrentHashSum.text = ""

@@ -1,13 +1,23 @@
 package com.seiko.torrent.di
 
 import com.seiko.torrent.data.comments.TorrentRepository
-import com.seiko.torrent.data.db.TorrentDatabase
-import org.koin.dsl.module
+import com.seiko.torrent.data.db.TorrentDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import javax.inject.Singleton
 
-val repositoryModule = module {
-    single { createTorrentRepository(get()) }
-}
+@Module
+@InstallIn(ApplicationComponent::class)
+object RepositoryModule {
 
-private fun createTorrentRepository(database: TorrentDatabase): TorrentRepository {
-    return TorrentRepository(database)
+    @Provides
+    @Singleton
+    fun provideTorrentRepository(
+        torrentDao: TorrentDao
+    ): TorrentRepository {
+        return TorrentRepository(torrentDao)
+    }
+
 }

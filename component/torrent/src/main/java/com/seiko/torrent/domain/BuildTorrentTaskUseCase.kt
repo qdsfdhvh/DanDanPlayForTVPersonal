@@ -4,10 +4,12 @@ import com.seiko.common.data.Result
 import com.seiko.torrent.data.db.TorrentEntity
 import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.data.model.torrent.AddTorrentParams
-import org.koin.core.KoinComponent
 import org.libtorrent4j.Priority
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BuildTorrentTaskUseCase : KoinComponent {
+@Singleton
+class BuildTorrentTaskUseCase @Inject constructor() {
 
     fun invoke(
         source: String,

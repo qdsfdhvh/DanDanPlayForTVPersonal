@@ -4,9 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply from: rootProject.file(".buildscript/configure-setting-dagger.gradle")
+apply from: rootProject.file(".buildscript/configure-setting-cc.gradle")
 apply from: rootProject.file(".buildscript/configure-setting-arouter.gradle")
 apply from: rootProject.file(".buildscript/configure-setting-room.gradle")
-apply from: rootProject.file(".buildscript/configure-setting-cc.gradle")
 
 android {
     compileSdkVersion Build.compileSdk
