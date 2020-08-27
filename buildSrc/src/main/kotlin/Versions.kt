@@ -17,7 +17,7 @@ object Versions {
     const val leanback = "1.1.0-alpha03"
     const val fragment = "1.2.5"
 
-    const val kotlin = "1.3.72"
+    const val kotlin = "1.4.0-rc"
     const val coroutines = "1.3.7" // https://github.com/Kotlin/kotlinx.coroutines
 
     const val mmkv = "1.1.1" // https://github.com/Tencent/MMKV

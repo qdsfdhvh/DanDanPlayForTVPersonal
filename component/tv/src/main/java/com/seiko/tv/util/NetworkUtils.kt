@@ -59,6 +59,7 @@ internal fun <T : JsonResultResponse, R : Any> apiFlowCall(
             Timber.w(e)
             return@flow
         }
+        response!!
 
         if (!response.success) {
             Timber.w("${response.errorCode} ${response.errorMessage}")
