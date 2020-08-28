@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.TorrentViewModel
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class TorrentDetailInfoFragment : Fragment() {
+class TorrentDetailInfoFragment : Fragment(R.layout.torrent_fragment_detail_info) {
 
     companion object {
         fun newInstance(): TorrentDetailInfoFragment {
@@ -27,22 +28,12 @@ class TorrentDetailInfoFragment : Fragment() {
 
     private val viewModel: TorrentViewModel by activityViewModels()
 
-    private lateinit var binding: TorrentFragmentDetailInfoBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = TorrentFragmentDetailInfoBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
+    private val binding: TorrentFragmentDetailInfoBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unBindViewModel()
     }
 
     private fun setupUI() {
@@ -86,11 +77,6 @@ class TorrentDetailInfoFragment : Fragment() {
                     .format(Date(info.creationDate))
             }
         }
-    }
-
-    private fun unBindViewModel() {
-        viewModel.torrentItem.removeObservers(this)
-        viewModel.torrentMetaInfo.removeObservers(this)
     }
 
 }

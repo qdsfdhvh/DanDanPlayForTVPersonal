@@ -2,15 +2,15 @@ package com.seiko.torrent.ui.detail
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
+import com.seiko.torrent.R
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
 import com.seiko.torrent.databinding.TorrentFragmentDetailFileBinding
 import com.seiko.torrent.util.FileUtils
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 @AndroidEntryPoint
-class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemClickListener {
+class TorrentDetailFilesFragment : Fragment(R.layout.torrent_fragment_detail_file), TorrentDetailFilesAdapter.OnItemClickListener {
 
     companion object {
         fun newInstance(): TorrentDetailFilesFragment {
@@ -31,18 +31,13 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
 
     private val viewModel: TorrentViewModel by activityViewModels()
 
-    private lateinit var binding: TorrentFragmentDetailFileBinding
+    private val binding: TorrentFragmentDetailFileBinding by viewBinding()
 
     private val adapter by lazyAndroid { TorrentDetailFilesAdapter() }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = TorrentFragmentDetailFileBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.dialog.BaseDialogFragment
 import com.seiko.tv.R
@@ -15,11 +16,10 @@ class DialogInputFragment : BaseDialogFragment()
 
     private var onConfirm: ((String) -> Unit)? = null
 
-    private lateinit var binding: DandanDialogInputFragmentBinding
+    private val binding: DandanDialogInputFragmentBinding by viewBinding()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DandanDialogInputFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.dandan_dialog_input_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.seiko.common.R
 import com.seiko.common.databinding.DialogLoadingFragmentBinding
 
 class DialogLoadingFragment: BaseDialogFragment() {
 
-    private lateinit var binding: DialogLoadingFragmentBinding
+    private val binding: DialogLoadingFragmentBinding by viewBinding()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogLoadingFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.dialog_loading_fragment, container ,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

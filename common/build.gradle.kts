@@ -85,4 +85,7 @@ dependencies {
     api(Deps.hiltViewModel)
     kapt(Deps.daggerHiltCompiler)
     kapt(Deps.hiltCompiler)
+
+    // viewBinding
+    api("com.kirich1409.viewbindingpropertydelegate:viewbindingpropertydelegate:1.0.0")
 }

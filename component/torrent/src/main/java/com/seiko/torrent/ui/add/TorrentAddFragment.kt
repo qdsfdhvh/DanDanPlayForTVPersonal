@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.ui.dialog.setLoadFragment
 import com.seiko.common.util.extensions.checkPermissions
 import com.seiko.common.util.extensions.lazyAndroid
@@ -31,7 +32,7 @@ private val PERMISSIONS = arrayOf(
 )
 
 @AndroidEntryPoint
-class AddTorrentFragment : Fragment()
+class AddTorrentFragment : Fragment(R.layout.torrent_fragment_add)
     , OnItemClickListener
     , View.OnClickListener {
 
@@ -55,21 +56,16 @@ class AddTorrentFragment : Fragment()
 
     private val viewModel: AddTorrentViewModel by viewModels()
 
-    private lateinit var binding: TorrentFragmentAddBinding
+    private val binding: TorrentFragmentAddBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerKeyEvent()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = TorrentFragmentAddBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
         checkPermissions()
     }

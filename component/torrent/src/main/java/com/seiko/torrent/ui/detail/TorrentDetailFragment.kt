@@ -1,15 +1,14 @@
 package com.seiko.torrent.ui.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.ui.adapter.OnItemClickListener
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
@@ -26,7 +25,7 @@ private const val FILES_FRAG_POS = 0
 private const val INFO_FRAG_POS = 1
 
 @AndroidEntryPoint
-class TorrentDetailFragment : Fragment()
+class TorrentDetailFragment : Fragment(R.layout.torrent_fragment_detail)
     , OnItemClickListener {
 
     companion object {
@@ -40,7 +39,8 @@ class TorrentDetailFragment : Fragment()
 
     private val viewModel: TorrentViewModel by activityViewModels()
 
-    private lateinit var binding: TorrentFragmentDetailBinding
+    private val binding: TorrentFragmentDetailBinding by viewBinding()
+
     private lateinit var tabAdapter: TabTitleAdapter
 
     /**
@@ -48,19 +48,11 @@ class TorrentDetailFragment : Fragment()
      */
     private var tabSelectPosition = -1
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = TorrentFragmentDetailBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkSelectPosition(savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 

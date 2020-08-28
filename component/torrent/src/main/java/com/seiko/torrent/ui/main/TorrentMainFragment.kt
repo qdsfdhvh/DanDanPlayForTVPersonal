@@ -4,54 +4,30 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.toast.toast
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentMainBinding
-import com.seiko.torrent.ui.detail.TorrentDetailFragment
 import com.seiko.torrent.ui.dialog.DialogInputFragment
 import com.seiko.torrent.util.buildTorrentUri
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import news.androidtv.filepicker.TvFilePicker
-import timber.log.Timber
 
 @AndroidEntryPoint
-class TorrentMainFragment : Fragment(), View.OnClickListener {
+class TorrentMainFragment : Fragment(R.layout.torrent_fragment_main), View.OnClickListener {
 
     companion object {
         private const val FilePickerRequestCode = 6906
     }
 
-    private lateinit var binding: TorrentFragmentMainBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.tag("Navigator").d("TorrentMainFragment - onCreate")
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        Timber.tag("Navigator").d("TorrentMainFragment - onActivityCreated")
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Timber.tag("Navigator").d("TorrentMainFragment - onCreateView")
-        binding = TorrentFragmentMainBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
+    private val binding: TorrentFragmentMainBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.tag("Navigator").d("TorrentMainFragment - onViewCreated")
+        setupUI()
         bindViewModel()
     }
 

@@ -2,11 +2,10 @@ package com.seiko.torrent.ui.add
 
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.extensions.parentViewModels
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentAddTorrentInfoBinding
@@ -16,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class TorrentAddInfoFragment : Fragment() {
+class TorrentAddInfoFragment : Fragment(R.layout.torrent_add_torrent_info) {
 
     companion object {
         fun newInstance(): TorrentAddInfoFragment {
@@ -26,16 +25,11 @@ class TorrentAddInfoFragment : Fragment() {
 
     private val viewModel: AddTorrentViewModel by parentViewModels()
 
-    private lateinit var binding: TorrentAddTorrentInfoBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = TorrentAddTorrentInfoBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
+    private val binding: TorrentAddTorrentInfoBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 

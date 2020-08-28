@@ -2,11 +2,10 @@ package com.seiko.torrent.ui.add
 
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.extensions.parentViewModels
 import com.seiko.torrent.R
@@ -17,7 +16,7 @@ import com.seiko.torrent.vm.AddTorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClickListener {
+class TorrentAddFilesFragment : Fragment(R.layout.torrent_fragment_add_files), DownloadableFilesAdapter.OnItemClickListener {
 
     companion object {
         fun newInstance(): TorrentAddFilesFragment {
@@ -27,22 +26,13 @@ class TorrentAddFilesFragment : Fragment(), DownloadableFilesAdapter.OnItemClick
 
     private val viewModel: AddTorrentViewModel by parentViewModels()
 
-    private lateinit var binding: TorrentFragmentAddFilesBinding
+    private val binding: TorrentFragmentAddFilesBinding by viewBinding()
 
     private val adapter by lazyAndroid { DownloadableFilesAdapter() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = TorrentFragmentAddFilesBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 

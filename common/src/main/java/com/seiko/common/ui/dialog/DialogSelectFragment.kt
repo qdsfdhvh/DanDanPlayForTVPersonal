@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.seiko.common.R
 import com.seiko.common.databinding.DialogSelectFragmentBinding
 
 class DialogSelectFragment : BaseDialogFragment() {
@@ -13,11 +15,14 @@ class DialogSelectFragment : BaseDialogFragment() {
     private var onConfirm: (() -> Unit)? = null
     private var onDismiss: (() -> Unit)? = null
 
-    private lateinit var binding: DialogSelectFragmentBinding
+    private val binding: DialogSelectFragmentBinding by viewBinding()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogSelectFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.dialog_select_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

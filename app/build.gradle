@@ -3,10 +3,6 @@ apply from: rootProject.file(".buildscript/configure-android-defaults.gradle")
 apply from: rootProject.file(".buildscript/configure-setting-keystore.gradle")
 
 android {
-    // VLC 需要
-    dataBinding {
-        enabled = true
-    }
     defaultConfig {
         applicationId Build.applicationId
         versionCode Build.versionCode

@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.leanback.widget.OnChildViewHolderSelectedListener
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.adapter.OnItemClickListener
@@ -18,10 +19,9 @@ import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
 import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
-class TorrentListFragment : Fragment()
+class TorrentListFragment : Fragment(R.layout.torrent_fragment_list)
     , OnItemClickListener {
 
     companion object {
@@ -33,24 +33,12 @@ class TorrentListFragment : Fragment()
 
     private val viewModel: TorrentViewModel by activityViewModels()
 
-    private lateinit var binding: TorrentFragmentListBinding
+    private val binding: TorrentFragmentListBinding by viewBinding()
     private lateinit var adapter: TorrentListAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.tag("Navigator").d("TorrentListFragment - onActivityCreated")
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Timber.tag("Navigator").d("TorrentListFragment - onCreateView")
-        binding = TorrentFragmentListBinding.inflate(inflater, container, false)
-        setupUI()
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.tag("Navigator").d("TorrentListFragment - onViewCreated")
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 
@@ -62,12 +50,6 @@ class TorrentListFragment : Fragment()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.torrentList.adapter = adapter
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Timber.tag("Navigator").d("TorrentListFragment - onStart")
-//        viewModel.loadData(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
