@@ -20,7 +20,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @DanDanClientQualifier
+    @TorrentDanDanClientQualifier
     fun provideClient(builder: OkHttpClient.Builder): OkHttpClient {
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(HttpLoggingInterceptor().apply {
@@ -32,8 +32,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @DanDanRetrofitQualifier
-    fun provideRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
+    @TorrentDanDanRetrofitQualifier
+    fun provideRetrofit(builder: Retrofit.Builder, @TorrentDanDanClientQualifier client: OkHttpClient): Retrofit {
         return builder.callFactory(client)
             .baseUrl(DOWNLOAD_BASE_URL)
             .build()
@@ -41,7 +41,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTorrentApiService(@DanDanRetrofitQualifier retrofit: Retrofit): TorrentApiService {
+    fun provideTorrentApiService(@TorrentDanDanRetrofitQualifier retrofit: Retrofit): TorrentApiService {
         return retrofit.create()
     }
 

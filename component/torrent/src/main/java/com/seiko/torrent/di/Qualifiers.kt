@@ -4,11 +4,11 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class DanDanRetrofitQualifier
+annotation class TorrentDanDanRetrofitQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class DanDanClientQualifier
+annotation class TorrentDanDanClientQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
