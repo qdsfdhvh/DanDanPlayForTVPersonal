@@ -10,9 +10,9 @@ import com.alibaba.android.arouter.core.LogisticsCenter
 import com.alibaba.android.arouter.exception.NoRouteFoundException
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
-import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.facade.service.InterceptorService
 import com.alibaba.android.arouter.launcher.ARouter
+import com.seiko.common.util.VlcUtils
 import com.seiko.common.util.extensions.lazyAndroid
 import timber.log.Timber
 
@@ -71,7 +71,6 @@ object Navigator {
      * 跳转种子页面
      */
     fun navToTorrent(activity: Activity) {
-        Timber.tag("Navigator").d("navToTorrent")
         navigation(ARouter.getInstance().build(Routes.Torrent.PATH),
             doOnSuccess = { postcard ->
                 val intent = Intent(activity.baseContext, postcard.destination)
@@ -122,33 +121,21 @@ object Navigator {
      * 跳转媒体库
      */
     fun navToPlayerMedia(activity: Activity) {
-        Timber.tag("Navigator").d("navToPlayerMedia")
-        navigation(ARouter.getInstance().build(Routes.Player.PATH_MEDIA),
-            doOnSuccess = { postcard ->
-                val intent = Intent(activity.baseContext, postcard.destination)
-                intent.putExtras(postcard.extras)
-                activity.startActivity(intent)
-            }
-        )
+        if (VlcUtils.isInstall(activity)) {
+            VlcUtils.launchMedia(activity)
+        }
     }
 
     /**
      * 跳转播放
      */
     fun navToPlayer(fragment: Fragment, videoUri: Uri, videoTitle: String) {
-        navigation(ARouter.getInstance().build(Routes.Player.PATH)
-            .withParcelable(Routes.Player.ARGS_VIDEO_URI, videoUri)
-            .withString(Routes.Player.ARGS_VIDEO_TITLE, videoTitle),
-            doOnNotRoute = {
-                // 没有注册界面，调用系统播放器
-                navToSystemPlayer(fragment.requireContext(), videoUri)
-            },
-            doOnSuccess = { postcard ->
-                val intent = Intent(fragment.requireContext(), postcard.destination)
-                intent.putExtras(postcard.extras)
-                fragment.startActivity(intent)
-            }
-        )
+        val context = fragment.requireActivity()
+        if (VlcUtils.isInstall(context)) {
+            VlcUtils.launchVideo(context, videoUri, videoTitle)
+        } else {
+            navToSystemPlayer(fragment.requireContext(), videoUri)
+        }
     }
 
     /**

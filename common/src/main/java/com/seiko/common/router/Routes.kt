@@ -27,17 +27,6 @@ object Routes {
     }
 
     /**
-     * 播放器
-     */
-    object Player {
-        const val PATH = "/player/start"
-        const val PATH_MEDIA = "/player/media"
-
-        const val ARGS_VIDEO_URI = "videoUri"
-        const val ARGS_VIDEO_TITLE = "videoTitle"
-    }
-
-    /**
      * 服务
      */
     object Service {
