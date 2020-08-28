@@ -17,7 +17,7 @@ import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailBinding
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TabTitleAdapter
-import com.seiko.torrent.vm.MainViewModel
+import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val NUM_FRAGMENTS = 2
@@ -38,7 +38,7 @@ class TorrentDetailFragment : Fragment()
         }
     }
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: TorrentViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentDetailBinding
     private lateinit var tabAdapter: TabTitleAdapter

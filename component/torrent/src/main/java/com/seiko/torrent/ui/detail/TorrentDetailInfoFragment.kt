@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
-import com.seiko.torrent.vm.MainViewModel
+import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
@@ -25,7 +25,7 @@ class TorrentDetailInfoFragment : Fragment() {
         }
     }
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: TorrentViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentDetailInfoBinding
 

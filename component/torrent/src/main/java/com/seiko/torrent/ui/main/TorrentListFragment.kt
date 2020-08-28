@@ -16,7 +16,7 @@ import com.seiko.torrent.databinding.TorrentFragmentListBinding
 import com.seiko.torrent.data.model.torrent.TorrentListItem
 import com.seiko.torrent.service.TorrentTaskService
 import com.seiko.torrent.ui.adapter.TorrentListAdapter
-import com.seiko.torrent.vm.MainViewModel
+import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -31,7 +31,7 @@ class TorrentListFragment : Fragment()
     /* Save state scrolling */
     private var torrentsListState: Parcelable? = null
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: TorrentViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentListBinding
     private lateinit var adapter: TorrentListAdapter

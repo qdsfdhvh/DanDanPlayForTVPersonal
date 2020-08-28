@@ -9,7 +9,7 @@ import com.seiko.torrent.download.Downloader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 
-class MainViewModel @ViewModelInject constructor(
+class TorrentViewModel @ViewModelInject constructor(
     private val downloader: Downloader,
     private val torrentRepo: TorrentRepository
 ) : ViewModel() {

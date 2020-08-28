@@ -16,7 +16,7 @@ import com.seiko.torrent.databinding.TorrentFragmentDetailFileBinding
 import com.seiko.torrent.util.FileUtils
 import com.seiko.torrent.util.extensions.fixItemAnim
 import com.seiko.torrent.util.extensions.toFileTree
-import com.seiko.torrent.vm.MainViewModel
+import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -29,7 +29,7 @@ class TorrentDetailFilesFragment : Fragment(), TorrentDetailFilesAdapter.OnItemC
         }
     }
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: TorrentViewModel by activityViewModels()
 
     private lateinit var binding: TorrentFragmentDetailFileBinding
 
