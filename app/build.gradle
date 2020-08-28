@@ -36,5 +36,6 @@ android {
 dependencies {
     addComponent 'component_tv', project(":component:tv")
     addComponent 'component_torrent', project(":component:torrent")
-    addComponent 'component_player', project(":component:player")
+    // 不再引用，直接改vlc
+//    addComponent 'component_player', project(":component:player")
 }
