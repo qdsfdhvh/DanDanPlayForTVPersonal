@@ -1,6 +1,6 @@
 
 object Versions {
-    const val gradle = "3.6.1"
+    const val gradle = "4.0.1"
     const val ccRegister = "1.1.2" // https://github.com/luckybilly/CC
 
     const val jUnit = "4.13"
