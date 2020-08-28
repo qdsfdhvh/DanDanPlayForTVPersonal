@@ -8,7 +8,8 @@ dependencies {
     kapt Deps.moshi_compiler
 
     implementation project(':libs:file-picker')
-    implementation project(':libs:tool-torrent')
+    // 由于注入了TorrentEngineOptions，设置implementation在app的dagger编译时会报错
+    api project(':libs:tool-torrent')
 
     // UI
     implementation 'androidx.cardview:cardview:1.0.0'
