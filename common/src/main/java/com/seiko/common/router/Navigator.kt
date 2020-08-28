@@ -1,6 +1,7 @@
 package com.seiko.common.router
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -17,6 +18,14 @@ import timber.log.Timber
 
 
 object Navigator {
+
+    fun init(app: Application, debug: Boolean) {
+        if (debug) {
+            ARouter.openLog()
+            ARouter.openDebug()
+        }
+        ARouter.init(app)
+    }
 
     private val interceptorService by lazyAndroid {
         ARouter.getInstance().build("/arouter/service/interceptor").navigation() as InterceptorService

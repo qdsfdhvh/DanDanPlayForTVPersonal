@@ -92,8 +92,16 @@
                 <data android:scheme="magnet" />
             </intent-filter>
         </activity>
-
         <service
             android:name=".service.TorrentTaskService"/>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.seiko.torrent.initializer.TorrentInitializer"
+                android:value="androidx.startup" />
+        </provider>
     </application>
 </manifest>

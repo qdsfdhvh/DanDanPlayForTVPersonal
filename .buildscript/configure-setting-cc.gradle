@@ -1,9 +1,0 @@
-project.apply plugin: 'cc-register'
-
-ccregister.registerInfo.add([
-        //在自动注册组件的基础上增加：自动注册组件B的processor
-        'scanInterface'             : 'com.seiko.common.app.InitComponent'
-        , 'codeInsertToClassName'   : 'com.seiko.common.app.AppSetupDelegate'
-        , 'codeInsertToMethodName'  : 'initComponents'
-        , 'registerMethodName'      : 'add'
-])

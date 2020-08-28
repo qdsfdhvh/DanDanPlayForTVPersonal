@@ -46,6 +46,7 @@ object Deps {
     const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
 
     const val work_runtimeKtx = "androidx.work:work-runtime-ktx:${Versions.work}"
+    const val startup = "androidx.startup:startup-runtime:${Versions.startup}"
 
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
     const val glideOkhttp = "com.github.bumptech.glide:okhttp3-integration:${Versions.glide}"

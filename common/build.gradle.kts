@@ -39,6 +39,9 @@ dependencies {
     // Work
     api(Deps.work_runtimeKtx)
 
+    // 初始化
+    api(Deps.startup)
+
     // Kotlin
     api(Deps.kotlin_stdlib)
     api(Deps.kotlin_coroutines)
