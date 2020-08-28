@@ -1,4 +1,0 @@
-[submodule "libs/tool-vlc"]
-	path = libs/tool-vlc
-	url = git@github.com:qdsfdhvh/vlc-android.git
-	branch = dandan/danma
