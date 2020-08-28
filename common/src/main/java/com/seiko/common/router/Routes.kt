@@ -1,11 +1,5 @@
 package com.seiko.common.router
 
-import android.content.Intent
-import android.net.Uri
-import androidx.fragment.app.Fragment
-import com.alibaba.android.arouter.core.LogisticsCenter
-import com.alibaba.android.arouter.launcher.ARouter
-
 /**
  * 路由路径管理
  */
