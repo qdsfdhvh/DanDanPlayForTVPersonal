@@ -9,11 +9,11 @@ android {
     defaultConfig {
         minSdkVersion(Build.minSdk)
     }
-    viewBinding {
-        isEnabled = true
-    }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
