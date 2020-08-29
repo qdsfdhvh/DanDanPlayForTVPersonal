@@ -23,8 +23,10 @@ import com.seiko.torrent.di.TorrentDownloadDir
 import com.seiko.torrent.domain.BuildTorrentTaskUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
 import com.seiko.torrent.util.extensions.isMagnet
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.libtorrent4j.Priority
 import java.io.File
 
@@ -77,7 +79,7 @@ class AddTorrentViewModel @ViewModelInject constructor(
     private var source = ""
     private var fromMagnet = false
 
-    fun decodeUri(uri: Uri) = viewModelScope.launch {
+    fun decodeUri(uri: Uri) = viewModelScope.launch(Dispatchers.IO) {
         val path = uri.toString()
         when {
             path.isMagnet() -> {
@@ -88,7 +90,8 @@ class AddTorrentViewModel @ViewModelInject constructor(
                     is Result.Success -> {
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
-                        updateTorrentInfo(TorrentMetaInfo(source))
+                        val info = TorrentMetaInfo(source)
+                        updateTorrentInfo(info)
                         return@launch
                     }
                     is Result.Error -> {
@@ -114,11 +117,8 @@ class AddTorrentViewModel @ViewModelInject constructor(
                     is Result.Success -> {
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
-                        updateTorrentInfo(
-                            TorrentMetaInfo(
-                                source
-                            )
-                        )
+                        val info = TorrentMetaInfo(source)
+                        updateTorrentInfo(info)
                     }
                     is Result.Error -> {
                         handleException(result.exception)
@@ -129,11 +129,8 @@ class AddTorrentViewModel @ViewModelInject constructor(
                 updateState(State.DECODE_TORRENT_FILE)
                 delay(50)
                 source = uri.path!!
-                updateTorrentInfo(
-                    TorrentMetaInfo(
-                        source
-                    )
-                )
+                val info = TorrentMetaInfo(source)
+                updateTorrentInfo(info)
                 updateState(State.DECODE_TORRENT_COMPLETED)
             }
             URLUtil.isContentUrl(path) -> {
@@ -142,13 +139,9 @@ class AddTorrentViewModel @ViewModelInject constructor(
                 when(val result = getTorrentTempWithContentUseCase.invoke(uri)) {
                     is Result.Success -> {
                         updateState(State.DECODE_TORRENT_COMPLETED)
-
                         source = result.data
-                        updateTorrentInfo(
-                            TorrentMetaInfo(
-                                source
-                            )
-                        )
+                        val info = TorrentMetaInfo(source)
+                        updateTorrentInfo(info)
                     }
                     is Result.Error -> {
                         handleException(result.exception)
@@ -162,15 +155,15 @@ class AddTorrentViewModel @ViewModelInject constructor(
     }
 
     private fun handleException(error: Exception) {
-        _state.value = Result.Error(error)
+        _state.postValue(Result.Error(error))
     }
 
     private fun updateState(state: Int) {
-        _state.value = Result.Success(state)
+        _state.postValue(Result.Success(state))
     }
 
     private fun updateTorrentInfo(info: TorrentMetaInfo) {
-        _torrentMetaInfo.value = info
+        _torrentMetaInfo.postValue(info)
 
         val fileTree = info.fileList.toFileTree()
 
@@ -187,7 +180,7 @@ class AddTorrentViewModel @ViewModelInject constructor(
                 file.select(true)
             }
         }
-        _fileTree.value = fileTree
+        _fileTree.postValue(fileTree)
     }
 
     /**

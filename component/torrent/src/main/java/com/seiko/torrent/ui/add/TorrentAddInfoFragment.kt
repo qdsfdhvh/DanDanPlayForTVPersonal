@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.format.Formatter
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.extensions.parentViewModels
@@ -11,6 +12,9 @@ import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentAddTorrentInfoBinding
 import com.seiko.torrent.vm.AddTorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -90,9 +94,15 @@ class TorrentAddInfoFragment : Fragment(R.layout.torrent_add_torrent_info) {
                 binding.torrentSize.text = Formatter.formatFileSize(requireActivity(), info.torrentSize)
                 binding.torrentFileCount.text = "%d".format(info.fileCount)
 
-                val freeSpace = viewModel.downloadDir.value?.usableSpace ?: 0L
-                binding.freeSpace.text = getString(R.string.torrent_free_space).format(
-                    Formatter.formatFileSize(requireActivity(), freeSpace))
+                lifecycleScope.launch {
+                    val format = withContext(Dispatchers.IO) {
+                        getString(R.string.torrent_free_space).format(Formatter.formatFileSize(
+                            requireActivity(),
+                            viewModel.downloadDir.value?.usableSpace ?: 0L
+                        ))
+                    }
+                    binding.freeSpace.text = format
+                }
             }
 
             if (info.creationDate == 0L) {

@@ -14,11 +14,9 @@ import com.seiko.common.eventbus.registerEventBus
 import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
-import com.seiko.download.torrent.model.TorrentTask
 import com.seiko.torrent.R
 import com.seiko.torrent.data.db.TorrentEntity
 import com.seiko.torrent.data.model.PostEvent
-import com.seiko.torrent.ui.add.AddTorrentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -37,7 +35,6 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("onCreate")
         checkIntent()
         registerEventBus()
     }
@@ -45,7 +42,6 @@ class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
     override fun onDestroy() {
         super.onDestroy()
         unRegisterEventBus()
-        Timber.d("onDestroy")
     }
 
     override fun onNewIntent(intent: Intent?) {
