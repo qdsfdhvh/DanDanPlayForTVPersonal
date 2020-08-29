@@ -18,16 +18,6 @@ interface TorrentService : IProvider {
     }
 
     /**
-     * 获得指定hash的下载路径
-     */
-    fun findDownloadPaths(hash: String): List<String>
-
-    /**
-     * 获得指定hash集合的下载路径
-     */
-    fun findDownloadPaths(hashSet: Set<String>): List<String>
-
-    /**
      * 关闭Torrent下载
      */
     fun shutDown(context: Context)

@@ -11,6 +11,7 @@ import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.PostEvent
 import com.seiko.torrent.domain.GetTorrentTrackersUseCase
 import com.seiko.torrent.download.Downloader
+import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import timber.log.Timber
@@ -106,16 +107,16 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
         }
     }
 
-    @Inject lateinit var downloader: Downloader
-    @Inject lateinit var options: TorrentEngineOptions
-    @Inject lateinit var getTorrentTrackers: GetTorrentTrackersUseCase
+    @Inject lateinit var downloader: Lazy<Downloader>
+    @Inject lateinit var options: Lazy<TorrentEngineOptions>
+    @Inject lateinit var getTorrentTrackers: Lazy<GetTorrentTrackersUseCase>
 
     /**
      * 加载Tracker跟踪器
      */
     private fun loadTrackers() = runBlocking(coroutineContext) {
-        when(val result = getTorrentTrackers.invoke()) {
-            is Result.Success -> options.trackers.addAll(result.data)
+        when(val result = getTorrentTrackers.get().invoke()) {
+            is Result.Success -> options.get().trackers.addAll(result.data)
             is Result.Error -> Timber.e(result.exception)
         }
     }
@@ -125,13 +126,15 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
      */
     private fun addTorrent(params: AddTorrentParams) = runBlocking(coroutineContext) {
         val task = params.entity
-        when(val result = downloader.addTorrent(task, params.fromMagnet)) {
+        when(val result = downloader.get().addTorrent(task, params.fromMagnet)) {
             is Result.Success -> {
                 EventBusScope.getDefault().post(PostEvent.TorrentAdded(task))
             }
             is Result.Error -> {
                 Timber.e(result.exception)
-                toast(result.exception.message)
+                launch(Dispatchers.Main) {
+                    toast(result.exception.message)
+                }
             }
         }
     }
@@ -140,14 +143,14 @@ class TorrentTaskService : IntentService("TorrentTaskService"), CoroutineScope {
      * 删除 种子任务
      */
     private fun delTorrent(hash: String, withFile: Boolean) = runBlocking(coroutineContext) {
-        downloader.deleteTorrent(hash, withFile)
+        downloader.get().deleteTorrent(hash, withFile)
     }
 
     /**
      * 关闭种子下载引擎
      */
     private fun shutDown() {
-        downloader.release()
+        downloader.get().release()
     }
 
 }
