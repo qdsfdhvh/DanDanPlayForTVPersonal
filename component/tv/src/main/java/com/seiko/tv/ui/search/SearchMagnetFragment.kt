@@ -18,6 +18,7 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchMagnetFragment : SearchSupportFragment(),
@@ -49,6 +50,9 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     private val viewModel: SearchMagnetViewModel by viewModels()
 
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
+
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var magnetAdapter: ArrayObjectAdapter
 
@@ -72,7 +76,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val presenterSelector = BangumiPresenterSelector()
 
         magnetAdapter = ArrayObjectAdapter(presenterSelector)
         createListRow(ROW_MAGNET, "磁力链接", magnetAdapter)

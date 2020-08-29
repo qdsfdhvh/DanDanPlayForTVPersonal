@@ -15,7 +15,7 @@ class BangumiEpisodeCardView(context: Context) : AbsCardView<BangumiEpisodeEntit
         binding = ItemBangumiEpisodeBinding.inflate(inflater, parent, true)
     }
 
-    override fun bind(item: BangumiEpisodeEntity) {
+    fun bind(item: BangumiEpisodeEntity) {
         binding.chapter.text = item.episodeTitle
     }
 }

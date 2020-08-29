@@ -29,6 +29,7 @@ import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.yield
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : BrowseSupportFragment()
@@ -55,6 +56,9 @@ class MainFragment : BrowseSupportFragment()
     }
 
     private val viewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var settingAdapter: ArrayObjectAdapter
@@ -108,7 +112,6 @@ class MainFragment : BrowseSupportFragment()
      */
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter(FocusHighlight.ZOOM_FACTOR_LARGE))
-        val presenterSelector = BangumiPresenterSelector()
         val homeImageBeanDiffCallback = HomeImageBeanDiffCallback()
         // 工具中心
         settingAdapter = ArrayObjectAdapter(presenterSelector)

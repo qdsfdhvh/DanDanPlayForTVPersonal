@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.seiko.common.ui.card.AbsCardView
-import com.seiko.common.util.loadIcon
+import com.seiko.common.util.imageloader.ImageLoader
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.tv.databinding.ItemMainMyBinding
 
@@ -16,8 +16,8 @@ class MainMyCardView(context: Context) : AbsCardView<HomeSettingBean>(context) {
         binding = ItemMainMyBinding.inflate(inflater, parent, true)
     }
 
-    override fun bind(item: HomeSettingBean) {
-        binding.img.loadIcon(item.image)
+    fun bind(item: HomeSettingBean, imageLoader: ImageLoader) {
+        imageLoader.loadGridImage(binding.img, item.image)
         binding.title.text = item.name
     }
 }

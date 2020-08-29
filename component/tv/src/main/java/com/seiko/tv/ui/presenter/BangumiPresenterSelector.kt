@@ -2,14 +2,18 @@ package com.seiko.tv.ui.presenter
 
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.PresenterSelector
+import com.seiko.common.util.imageloader.ImageLoader
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.tv.data.model.api.SearchAnimeDetails
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class BangumiPresenterSelector : PresenterSelector() {
+class BangumiPresenterSelector @Inject constructor(
+    private val imageLoader: ImageLoader
+) : PresenterSelector() {
 
     private val presenterMap = HashMap<KClass<*>, Presenter>()
 
@@ -21,10 +25,10 @@ class BangumiPresenterSelector : PresenterSelector() {
         var presenter = presenterMap[item::class]
         if (presenter == null) {
             presenter = when(item) {
-                is HomeImageBean -> HomeImageBeanPresenter()
-                is HomeSettingBean -> HomeSettingBeanPresenter()
+                is HomeImageBean -> HomeImageBeanPresenter(imageLoader)
+                is HomeSettingBean -> HomeSettingBeanPresenter(imageLoader)
                 is BangumiEpisodeEntity -> BangumiEpisodePresenter()
-                is SearchAnimeDetails -> SearchBangumiPresenter()
+                is SearchAnimeDetails -> SearchBangumiPresenter(imageLoader)
                 is ResMagnetItemEntity -> SearchMagnetPresenter()
                 else -> throw RuntimeException(String.format(
                     "The PresenterSelector not supports data items of type '%s'",

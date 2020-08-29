@@ -9,8 +9,7 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.databinding.ItemMainAreaBinding
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.common.ui.card.AbsCardView
-import com.seiko.common.util.loadGridImage
-import com.seiko.common.util.loadImage
+import com.seiko.common.util.imageloader.ImageLoader
 import com.seiko.tv.R
 
 class MainAreaCardView(context: Context) : AbsCardView<HomeImageBean>(context, defStyleAttr = 0) {
@@ -26,16 +25,16 @@ class MainAreaCardView(context: Context) : AbsCardView<HomeImageBean>(context, d
 
     fun getImageView() = binding.img
 
-    override fun bind(item: HomeImageBean) {
-        binding.img.loadGridImage(item.imageUrl)
+    fun bind(item: HomeImageBean, imageLoader: ImageLoader) {
+        imageLoader.loadImage(binding.img, item.imageUrl)
         binding.title.text = item.animeTitle
         binding.chapter.text = item.status
     }
 
-    fun bind(bundle: Bundle) {
+    fun bind(bundle: Bundle, imageLoader: ImageLoader) {
         if (bundle.containsKey(HomeImageBeanDiffCallback.ARGS_ANIME_IMAGE_URL)) {
             val imageUrl = bundle.getString(HomeImageBeanDiffCallback.ARGS_ANIME_IMAGE_URL)!!
-            binding.img.loadGridImage(imageUrl)
+            imageLoader.loadGridImage(binding.img, imageUrl)
         }
         if (bundle.containsKey(HomeImageBeanDiffCallback.ARGS_ANIME_TITLE)) {
             binding.title.text = bundle.getString(HomeImageBeanDiffCallback.ARGS_ANIME_TITLE)

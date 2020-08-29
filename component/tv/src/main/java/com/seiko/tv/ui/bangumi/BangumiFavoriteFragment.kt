@@ -15,6 +15,7 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BangumiFavoriteFragment : VerticalGridSupportFragment()
@@ -29,6 +30,9 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     private val viewModel: BangumiFavoriteViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
 
     private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 
@@ -50,7 +54,6 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
 
-        val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 

@@ -46,9 +46,6 @@ dependencies {
     api(Deps.kotlin_stdlib)
     api(Deps.kotlin_coroutines)
 
-    // Prefs
-    api(Deps.mmkv_runtime)
-
     // Network
     api(Deps.network_retrofit)
     api(Deps.network_retrofit_moshi)
@@ -74,8 +71,11 @@ dependencies {
     // 屏幕自适应
     implementation("com.seiko.autosize:autosize:0.0.1")
 
+    // Prefs
+    implementation(Deps.mmkv_runtime)
+
     // 图片
-    api(Deps.glide)
+    implementation(Deps.glide)
     kapt(Deps.glideCompiler)
 
     // Dagger

@@ -20,6 +20,7 @@ import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
 import com.seiko.tv.ui.card.SearchBangumiCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchBangumiFragment : SearchSupportFragment(),
@@ -40,6 +41,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
     }
 
     private val viewModel: SearchBangumiViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var bangumiAdapter: AsyncObjectAdapter<SearchAnimeDetails>
@@ -66,7 +70,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     private fun setupRows() {
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val presenterSelector = BangumiPresenterSelector()
 
         bangumiAdapter = AsyncObjectAdapter(presenterSelector, SearchAnimeDetailsDiffCallback())
         createListRow(ROW_BANGUMI, "相关作品", bangumiAdapter)

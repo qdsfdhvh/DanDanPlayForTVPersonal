@@ -1,11 +1,9 @@
-package com.seiko.common.util
+package com.seiko.common.util.imageloader
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
@@ -13,58 +11,61 @@ import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.load.engine.cache.MemorySizeCalculator
-import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.seiko.common.R
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
-import okhttp3.OkHttpClient
-import java.io.InputStream
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-fun ImageView.loadGridImage(url: String) {
-    TvGlide.with(context).load(url)
-        .placeholder(R.drawable.picture_icon_placeholder)
-        .override(160, 200)
-        .centerCrop()
-        .into(this)
-}
+class ImageLoaderImpl @Inject constructor(
+    @ApplicationContext context: Context
+) : ImageLoader {
 
-fun ImageView.loadGridImage(@DrawableRes resourceId: Int) {
-    TvGlide.with(context).load(resourceId)
-        .placeholder(R.drawable.picture_icon_placeholder)
-        .override(160, 200)
-        .centerCrop()
-        .into(this)
-}
+    private val glide by lazy(LazyThreadSafetyMode.NONE) {
+        TvGlide.with(context)
+    }
 
-fun ImageView.loadIcon(@DrawableRes resourceId: Int) {
-    TvGlide.with(context).load(resourceId)
-        .placeholder(R.drawable.picture_icon_placeholder)
-        .override(80, 80)
-        .centerInside()
-        .into(this)
-}
+    override fun loadGridImage(view: ImageView, url: String) {
+        glide.load(url)
+            .placeholder(R.drawable.picture_icon_placeholder)
+            .override(160, 200)
+            .centerCrop()
+            .into(view)
+    }
 
-fun ImageView.loadImage(url: String) {
-    TvGlide.with(context).load(url)
-        .placeholder(R.drawable.picture_icon_placeholder)
-        .centerCrop()
-        .into(this)
-}
+    override fun loadGridImage(view: ImageView, resId: Int) {
+        glide.load(resId)
+            .placeholder(R.drawable.picture_icon_placeholder)
+            .override(80, 80)
+            .centerInside()
+            .into(view)
+    }
 
-suspend fun Context.getDrawable(url: String): Drawable {
-    return TvGlide.with(this).getDrawable(url)
-}
+    override fun loadImage(view: ImageView, url: String) {
+        glide.load(url)
+            .placeholder(R.drawable.picture_icon_placeholder)
+            .centerCrop()
+            .into(view)
+    }
 
-suspend fun Fragment.getDrawable(url: String): Drawable {
-    return TvGlide.with(this).getDrawable(url)
+    override fun loadImage(view: ImageView, resId: Int) {
+        glide.load(resId)
+            .placeholder(R.drawable.picture_icon_placeholder)
+            .centerCrop()
+            .into(view)
+    }
+
+    override suspend fun getDrawable(url: String): Drawable? {
+        return glide.getDrawable(url)
+    }
+
+    override suspend fun getBitMap(url: String): Bitmap? {
+        return glide.getBitmap(url)
+    }
 }
 
 private suspend fun GlideRequests.getDrawable(url: String): Drawable {
@@ -78,14 +79,6 @@ private suspend fun GlideRequests.getDrawable(url: String): Drawable {
             }
         })
     }
-}
-
-suspend fun Context.getBitmap(url: String): Bitmap {
-    return TvGlide.with(this).getBitmap(url)
-}
-
-suspend fun Fragment.getBitmap(url: String): Bitmap {
-    return TvGlide.with(this).getBitmap(url)
 }
 
 private suspend fun GlideRequests.getBitmap(url: String): Bitmap {
@@ -103,12 +96,6 @@ private suspend fun GlideRequests.getBitmap(url: String): Bitmap {
 
 @GlideModule(glideName = "TvGlide")
 open class TvGlideModule : AppGlideModule() {
-
-//    @InstallIn(ApplicationComponent::class)
-//    @EntryPoint
-//    interface TvGlideModuleEntryPoint {
-//        var okHttpClient: OkHttpClient
-//    }
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         builder.setDefaultRequestOptions(
@@ -128,11 +115,6 @@ open class TvGlideModule : AppGlideModule() {
 
     // 注册自定义组件
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-//        val entryPoint = EntryPointAccessors.fromApplication(context, TvGlideModuleEntryPoint::class.java)
-//        registry.replace(
-//            GlideUrl::class.java,
-//            InputStream::class.java,
-//            OkHttpUrlLoader.Factory(entryPoint.okHttpClient)
-//        )
+
     }
 }

@@ -13,6 +13,7 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListener {
@@ -24,6 +25,9 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     }
 
     private val viewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
 
@@ -60,7 +64,6 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         var areaAdapter: ArrayObjectAdapter
         var headerItem: HeaderItem
         val rows = list.map { airDay ->
-            val presenterSelector = BangumiPresenterSelector()
             areaAdapter = ArrayObjectAdapter(presenterSelector)
             headerItem = HeaderItem(airDay.id.toLong(), getWeekName(airDay.id))
             areaAdapter.addAll(0, airDay.bangumiList)

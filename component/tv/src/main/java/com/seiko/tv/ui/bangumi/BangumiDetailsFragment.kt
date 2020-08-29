@@ -9,7 +9,7 @@ import androidx.lifecycle.observe
 import androidx.lifecycle.lifecycleScope
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.common.util.getDrawable
+import com.seiko.common.util.imageloader.ImageLoader
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BangumiDetailsFragment : DetailsSupportFragment()
@@ -57,6 +58,12 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
     private val animeId: Long by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
     private val viewModel: BangumiDetailViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
 
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
@@ -116,8 +123,6 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         mAdapter = ArrayObjectAdapter(mPresenterSelector)
         mAdapter.add(detailsOverviewRow)
 
-        val presenterSelector = BangumiPresenterSelector()
-
         episodesAdapter = ArrayObjectAdapter(presenterSelector)
         mAdapter.add(EpisodesListRow(HeaderItem(0, "分集"), episodesAdapter))
 
@@ -164,7 +169,9 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
         detailsOverviewRow.item = details
         lifecycleScope.launch {
-            val drawable = withContext(Dispatchers.IO) { getDrawable(details.imageUrl) }
+            val drawable = withContext(Dispatchers.IO) {
+                imageLoader.getDrawable(details.imageUrl)
+            }
             detailsOverviewRow.imageDrawable = drawable
         }
 

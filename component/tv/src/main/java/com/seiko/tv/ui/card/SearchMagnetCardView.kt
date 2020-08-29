@@ -17,7 +17,7 @@ class SearchMagnetCardView(context: Context) : AbsCardView<ResMagnetItemEntity>(
         binding = ItemSearchMagnetBinding.inflate(inflater, parent, true)
     }
 
-    override fun bind(item: ResMagnetItemEntity) {
+    fun bind(item: ResMagnetItemEntity) {
         binding.title.text = item.title
         binding.type.text = item.typeName
         binding.subgroup.text = item.subgroupName

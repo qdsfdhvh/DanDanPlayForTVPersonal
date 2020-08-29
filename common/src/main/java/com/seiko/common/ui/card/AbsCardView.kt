@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.leanback.widget.BaseCardView
 import com.seiko.common.R
 
@@ -25,7 +24,5 @@ abstract class AbsCardView<T> @JvmOverloads constructor(
     }
 
     abstract fun onCreateView(inflater: LayoutInflater, parent: ViewGroup)
-
-    abstract fun bind(item: T)
 
 }

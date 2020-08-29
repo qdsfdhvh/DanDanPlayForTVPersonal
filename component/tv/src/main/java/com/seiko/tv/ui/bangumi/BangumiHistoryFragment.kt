@@ -16,6 +16,7 @@ import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BangumiHistoryFragment : VerticalGridSupportFragment()
@@ -30,6 +31,9 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
     }
 
     private val viewModel: BangumiHistoryViewModel by viewModels()
+
+    @Inject
+    lateinit var presenterSelector: BangumiPresenterSelector
 
     private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
 
@@ -51,7 +55,6 @@ class BangumiHistoryFragment : VerticalGridSupportFragment()
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
 
-        val presenterSelector = BangumiPresenterSelector()
         arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 

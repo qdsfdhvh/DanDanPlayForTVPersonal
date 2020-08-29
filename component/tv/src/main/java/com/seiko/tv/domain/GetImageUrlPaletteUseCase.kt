@@ -1,9 +1,8 @@
 package com.seiko.tv.domain
 
-import android.app.Application
 import android.webkit.URLUtil
 import androidx.palette.graphics.Palette
-import com.seiko.common.util.getBitmap
+import com.seiko.common.util.imageloader.ImageLoader
 import javax.inject.Inject
 
 /**
@@ -11,12 +10,11 @@ import javax.inject.Inject
  * Fresco下载图片，Palette提取颜色
  */
 class GetImageUrlPaletteUseCase @Inject constructor(
-    private val app: Application
+    private val imageLoader: ImageLoader
 ) {
     suspend operator fun invoke(imageUrl: String): Palette? {
         if (!URLUtil.isNetworkUrl(imageUrl)) return null
-
-        val bitmap = app.getBitmap(imageUrl)
+        val bitmap = imageLoader.getBitMap(imageUrl) ?: return null
         return Palette.Builder(bitmap).generate()
     }
 }
