@@ -2,17 +2,19 @@ package com.seiko.torrent.ui.detail
 
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.torrent.R
 import com.seiko.torrent.databinding.TorrentFragmentDetailInfoBinding
 import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,11 +52,14 @@ class TorrentDetailInfoFragment : Fragment(R.layout.torrent_fragment_detail_info
                 binding.torrentAdded.text = ""
             } else {
                 binding.uploadTorrentInto.text = item.downloadPath
-                binding.freeSpace.text = getString(R.string.torrent_free_space).format(
-                    Formatter.formatFileSize(requireActivity(), File(item.downloadPath).usableSpace)
-                )
-                binding.torrentAdded.text = SimpleDateFormat.getDateTimeInstance()
-                    .format(Date(item.dateAdded))
+                lifecycleScope.launch {
+                    val usableSpaceFormat = withContext(Dispatchers.IO) {
+                        Formatter.formatFileSize(requireActivity(), File(item.downloadPath).usableSpace)
+                    }
+                    binding.freeSpace.text = getString(R.string.torrent_free_space).format(usableSpaceFormat)
+                    binding.torrentAdded.text = SimpleDateFormat.getDateTimeInstance()
+                        .format(Date(item.dateAdded))
+                }
             }
         }
         viewModel.torrentMetaInfo.observe(viewLifecycleOwner) { info ->
