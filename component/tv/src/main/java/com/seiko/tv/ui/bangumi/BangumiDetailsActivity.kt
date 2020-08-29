@@ -5,14 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
+import com.seiko.common.base.BaseActivity
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BangumiDetailsActivity : FragmentActivity(R.layout.activity_container) {
+class BangumiDetailsActivity : BaseActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

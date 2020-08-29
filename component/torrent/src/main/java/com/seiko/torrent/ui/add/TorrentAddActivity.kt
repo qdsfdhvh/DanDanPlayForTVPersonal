@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.DispatchKeyEventDispatcher
 import androidx.activity.DispatchKeyEventDispatcherOwner
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.seiko.common.base.BaseActivity
 import com.seiko.common.eventbus.registerEventBus
 import com.seiko.common.eventbus.unRegisterEventBus
 import com.seiko.common.router.Navigator
@@ -25,7 +25,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 @Route(path = Routes.Torrent.PATH_ADD)
-class TorrentAddActivity : FragmentActivity(R.layout.torrent_activiy_add)
+class TorrentAddActivity : BaseActivity(R.layout.torrent_activiy_add)
     , DispatchKeyEventDispatcherOwner {
 
     @SuppressLint("RestrictedApi")

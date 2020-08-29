@@ -1,4 +1,4 @@
-package com.seiko.common
+package com.seiko.common.base
 
 import android.app.Application
 import android.content.Context

@@ -3,13 +3,13 @@ package com.seiko.tv.ui.area
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
+import com.seiko.common.base.BaseActivity
 import com.seiko.tv.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BangumiAreaActivity : FragmentActivity(R.layout.activity_container) {
+class BangumiAreaActivity : BaseActivity(R.layout.activity_container) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
