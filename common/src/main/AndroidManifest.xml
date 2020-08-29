@@ -22,5 +22,6 @@
                 android:name="com.seiko.common.initializer.CommonInitializer"
                 android:value="androidx.startup" />
         </provider>
+        <service android:name=".initializer.InitializerService"/>
     </application>
 </manifest>

@@ -6,7 +6,6 @@ import android.os.StrictMode
 import androidx.startup.Initializer
 import com.seiko.autosize.AutoSizeConfig
 import com.seiko.common.BuildConfig
-import com.seiko.common.router.Navigator
 import com.seiko.common.util.fix.IMMLeaks
 import com.seiko.common.util.helper.AutoAdaptStrategyFactory
 import com.seiko.common.util.helper.providerAppManager
@@ -27,15 +26,15 @@ class CommonInitializer : Initializer<Unit> {
         // 初始化MMKV
         app.initMMKV()
 
-        // 初始化路由
-        Navigator.init(app, BuildConfig.DEBUG)
-
         // 修复输入法内存泄漏
         IMMLeaks.fixFocusedViewLeak(app)
 
         if (BuildConfig.DEBUG) {
             StrictMode.enableDefaults()
         }
+
+        // 初始化耗时事件
+        InitializerService.start(app)
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
