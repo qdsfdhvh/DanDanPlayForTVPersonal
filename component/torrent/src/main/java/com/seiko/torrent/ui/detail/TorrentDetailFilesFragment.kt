@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
+import com.seiko.common.util.getRealUri
 import com.seiko.common.util.toast.toast
 import com.seiko.torrent.R
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
@@ -18,6 +20,9 @@ import com.seiko.torrent.util.extensions.fixItemAnim
 import com.seiko.torrent.util.extensions.toFileTree
 import com.seiko.torrent.vm.TorrentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @AndroidEntryPoint
@@ -68,17 +73,28 @@ class TorrentDetailFilesFragment : Fragment(R.layout.torrent_fragment_detail_fil
 
     override fun onItemClicked(node: BencodeFileTree) {
         val item = viewModel.torrentItem.value ?: return
-        val file = File(item.downloadPath, node.path)
-        val filePath = file.absolutePath
-        if (!file.exists()) {
-            toast("文件不存在：${filePath}")
-            return
+        lifecycleScope.launch {
+            val file = File(item.downloadPath, node.path)
+            val filePath = file.absolutePath
+            var success = withContext(Dispatchers.IO) {
+                file.exists()
+            }
+            if (!success) {
+                toast("文件不存在：${filePath}")
+                return@launch
+            }
+            success = withContext(Dispatchers.IO) {
+                FileUtils.isMediaFile(filePath)
+            }
+            if (!success) {
+                toast("非视频文件：${filePath}")
+                return@launch
+            }
+            Navigator.navToPlayer(
+                this@TorrentDetailFilesFragment,
+                file.getRealUri(requireContext()),
+                node.name)
         }
-        if (!FileUtils.isMediaFile(filePath)) {
-            toast("非视频文件：${filePath}")
-            return
-        }
-        Navigator.navToPlayer(this, Uri.fromFile(file), node.name)
     }
 
 }

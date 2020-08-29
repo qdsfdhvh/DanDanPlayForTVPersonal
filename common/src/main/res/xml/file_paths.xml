@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--配置root-path。这样子可以读取到sd卡和一些应用分身的目录，否则就会导致
+    java.lang.IllegalArgumentException: Failed to find configured root that contains /storage/emulated/...
+    -->
+    <root-path name="root-path" path="" />
+</paths>

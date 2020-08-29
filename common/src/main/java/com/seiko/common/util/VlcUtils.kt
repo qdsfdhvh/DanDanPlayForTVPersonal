@@ -67,6 +67,7 @@ object VlcUtils {
         val intent = Intent(VLC_INTENT_ACTION_RESULT)
         intent.component = ComponentName(packageName, VLC_VIDEO_ACTIVITY)
         intent.setDataAndTypeAndNormalize(uri, VIDEO_MIME_TYPE)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.putExtra(EXTRA_TITLE, title)
         context.startActivity(intent)
     }
