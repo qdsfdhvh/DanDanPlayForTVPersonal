@@ -4,13 +4,11 @@ import android.net.Uri
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.tv.domain.SaveMagnetInfoUseCase
-import com.seiko.common.data.ResultData
 import com.seiko.tv.domain.search.SearchMagnetListUseCase
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class SearchMagnetViewModel @ViewModelInject constructor(

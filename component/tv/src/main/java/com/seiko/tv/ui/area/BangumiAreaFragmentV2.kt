@@ -26,13 +26,9 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
 
     private val viewModel: BangumiAreaViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupUI()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         bindViewModel()
     }
 
@@ -55,7 +51,6 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
                 rowsAdapter.add(SeasonPageRow(headerItem, season))
             }
             adapter = rowsAdapter
-
             startEntranceTransition()
         }
     }
