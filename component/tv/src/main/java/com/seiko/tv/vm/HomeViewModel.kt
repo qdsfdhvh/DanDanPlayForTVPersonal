@@ -45,7 +45,7 @@ class HomeViewModel @ViewModelInject constructor(
      * 今日更新
      */
     val todayBangumiList: LiveData<List<HomeImageBean>> = weekBangumiList.switchMap { data ->
-        liveData<List<HomeImageBean>>(viewModelScope.coroutineContext + Dispatchers.IO) {
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             if (data.isNotEmpty()) {
                 emit(data[0].bangumiList)
             } else {

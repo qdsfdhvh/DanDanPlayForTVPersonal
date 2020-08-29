@@ -5,6 +5,7 @@ import com.seiko.tv.data.comments.*
 import com.seiko.tv.data.db.AppDatabase
 import com.seiko.tv.data.db.dao.*
 import com.squareup.moshi.Moshi
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +19,7 @@ object RepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideDanDanApiRepository(
-        api: DanDanApiService,
+        api: Lazy<DanDanApiService>,
         httpDbCache: HttpDbCacheRepository
     ): DanDanApiRepository {
         return DanDanApiRepository(api, httpDbCache)

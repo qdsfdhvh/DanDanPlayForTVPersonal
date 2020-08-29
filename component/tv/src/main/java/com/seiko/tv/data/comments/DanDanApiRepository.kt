@@ -11,13 +11,14 @@ import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 import com.seiko.tv.util.apiCall
 import com.seiko.tv.util.apiFlowCall
+import dagger.Lazy
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DanDanApiRepository @Inject constructor(
-    private val api: DanDanApiService,
+    private val lazyApi: Lazy<DanDanApiService>,
     private val httpDbCache: HttpDbCacheRepository
 )  {
     companion object {
@@ -30,6 +31,8 @@ class DanDanApiRepository @Inject constructor(
         private const val ONE_DAY = 24 * ONE_HOUR
         private const val ONE_WEEK = 7 * ONE_DAY
     }
+
+    private val api get() = lazyApi.get()
 
     /**
      * 获取新番列表

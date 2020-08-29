@@ -5,7 +5,3 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class DanDanRetrofitQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class DanDanClientQualifier

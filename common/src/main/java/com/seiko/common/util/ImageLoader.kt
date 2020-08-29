@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import com.bumptech.glide.load.engine.cache.MemorySizeCalculator
@@ -20,6 +19,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.seiko.common.R
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
+import okhttp3.OkHttpClient
 import java.io.InputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -99,6 +103,13 @@ private suspend fun GlideRequests.getBitmap(url: String): Bitmap {
 
 @GlideModule(glideName = "TvGlide")
 open class TvGlideModule : AppGlideModule() {
+
+//    @InstallIn(ApplicationComponent::class)
+//    @EntryPoint
+//    interface TvGlideModuleEntryPoint {
+//        var okHttpClient: OkHttpClient
+//    }
+
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         builder.setDefaultRequestOptions(
             RequestOptions().format(DecodeFormat.PREFER_RGB_565)
@@ -117,10 +128,11 @@ open class TvGlideModule : AppGlideModule() {
 
     // 注册自定义组件
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        registry.replace(
-            GlideUrl::class.java,
-            InputStream::class.java,
-            OkHttpUrlLoader.Factory()
-        )
+//        val entryPoint = EntryPointAccessors.fromApplication(context, TvGlideModuleEntryPoint::class.java)
+//        registry.replace(
+//            GlideUrl::class.java,
+//            InputStream::class.java,
+//            OkHttpUrlLoader.Factory(entryPoint.okHttpClient)
+//        )
     }
 }

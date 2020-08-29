@@ -75,8 +75,7 @@ dependencies {
     implementation("com.seiko.autosize:autosize:0.0.1")
 
     // 图片
-    implementation(Deps.glide)
-    implementation(Deps.glideOkhttp)
+    api(Deps.glide)
     kapt(Deps.glideCompiler)
 
     // Dagger

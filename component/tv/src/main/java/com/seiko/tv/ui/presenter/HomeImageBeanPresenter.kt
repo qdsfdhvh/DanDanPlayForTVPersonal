@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
-import timber.log.Timber
 
 class HomeImageBeanPresenter : BasePresenter() {
 

@@ -1,6 +1,5 @@
 package com.seiko.tv.di
 
-import com.seiko.tv.BuildConfig
 import com.seiko.tv.data.api.DanDanApiService
 import com.seiko.tv.util.constants.DANDAN_API_BASE_URL
 import com.seiko.tv.util.http.cookie.CookiesManager
@@ -10,7 +9,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Singleton
@@ -27,20 +25,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @DanDanClientQualifier
-    fun provideClient(builder: OkHttpClient.Builder): OkHttpClient {
-        if (BuildConfig.DEBUG) {
-            builder.addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-        }
-        return builder.build()
-    }
-
-    @Provides
-    @Singleton
     @DanDanRetrofitQualifier
-    fun provideRetrofit(builder: Retrofit.Builder, @DanDanClientQualifier client: OkHttpClient): Retrofit {
+    fun provideRetrofit(builder: Retrofit.Builder, client: OkHttpClient): Retrofit {
         return builder.callFactory(client)
             .baseUrl(DANDAN_API_BASE_URL)
             .build()
