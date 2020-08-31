@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="DanDanTvTextStyle">
         <item name="android:textSize">14sp</item>
     </style>
@@ -10,7 +9,6 @@
     <style name="DanDanTvTextStyle.Min" parent="DanDanTvTextStyle">
         <item name="android:textSize">12sp</item>
     </style>
-
     <style name="DanDanTvTextStyle.Title" parent="DanDanTvTextStyle.Rather">
         <item name="android:lines">2</item>
         <item name="android:paddingStart">8dp</item>
@@ -24,5 +22,4 @@
         <item name="android:padding">4dp</item>
         <item name="android:lines">1</item>
     </style>
-
 </resources>
