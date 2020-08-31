@@ -25,7 +25,6 @@ object Routes {
      */
     object Service {
         const val TORRENT_INFO = "/torrent/service"
-        const val APP_TV_INFO = "/app_tv/service"
     }
 
 
