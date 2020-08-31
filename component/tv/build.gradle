@@ -6,10 +6,6 @@ android {
 
 dependencies {
     kapt Deps.moshi_compiler
-
     // 图片取色
     implementation 'androidx.palette:palette:1.0.0'
-
-    // @see https://stackoverflow.com/questions/58630667/rejecting-re-init-on-previously-failed-class-in-okhttp
-    implementation 'org.conscrypt:conscrypt-android:2.4.0'
 }
