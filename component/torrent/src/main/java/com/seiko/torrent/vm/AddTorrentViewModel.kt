@@ -26,7 +26,6 @@ import com.seiko.torrent.util.extensions.isMagnet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.libtorrent4j.Priority
 import java.io.File
 
@@ -104,10 +103,10 @@ class AddTorrentViewModel @ViewModelInject constructor(
                 // 引擎下载磁力，比较慢
                 fromMagnet = true
                 source = uri.toString()
-                _magnetInfo.value = downloader.fetchMagnet(source) { info ->
+                updateMagnetInfo(downloader.fetchMagnet(source) { info ->
                     updateState(State.FETCHING_MAGNET_COMPLETED)
                     updateTorrentInfo(info)
-                }
+                })
                 updateState(State.FETCHING_MAGNET)
             }
             URLUtil.isContentUrl(path) -> {
@@ -160,6 +159,10 @@ class AddTorrentViewModel @ViewModelInject constructor(
 
     private fun updateState(state: Int) {
         _state.postValue(Result.Success(state))
+    }
+
+    private fun updateMagnetInfo(info: MagnetInfo) {
+        _magnetInfo.postValue(info)
     }
 
     private fun updateTorrentInfo(info: TorrentMetaInfo) {
