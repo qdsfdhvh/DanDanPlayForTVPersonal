@@ -59,9 +59,6 @@ dependencies {
     // 路由
     api(Deps.arouter_api)
 
-    // EventBus
-    api("org.greenrobot:eventbus:3.1.1")
-
     // Log
     api("com.jakewharton.timber:timber:4.7.1")
 

@@ -12,5 +12,8 @@ dependencies {
     api project(':libs:tool-torrent')
 
     // UI
-    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation('androidx.cardview:cardview:1.0.0')
+
+    // EventBus
+    implementation("org.greenrobot:eventbus:3.1.1")
 }

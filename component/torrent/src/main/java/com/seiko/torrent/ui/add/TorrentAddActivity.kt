@@ -10,8 +10,8 @@ import androidx.activity.DispatchKeyEventDispatcherOwner
 import androidx.fragment.app.commit
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.seiko.common.base.BaseActivity
-import com.seiko.common.eventbus.registerEventBus
-import com.seiko.common.eventbus.unRegisterEventBus
+import com.seiko.torrent.util.eventbus.registerEventBus
+import com.seiko.torrent.util.eventbus.unRegisterEventBus
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.torrent.R

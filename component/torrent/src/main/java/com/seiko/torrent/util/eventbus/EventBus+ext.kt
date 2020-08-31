@@ -1,4 +1,4 @@
-package com.seiko.common.eventbus
+package com.seiko.torrent.util.eventbus
 
 import android.app.Activity
 import androidx.fragment.app.Fragment

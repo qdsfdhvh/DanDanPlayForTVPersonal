@@ -3,7 +3,7 @@ package com.seiko.torrent.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
-import com.seiko.common.eventbus.EventBusScope
+import com.seiko.torrent.util.eventbus.EventBusScope
 import com.seiko.common.util.toast.toast
 import com.seiko.common.data.Result
 import com.seiko.download.torrent.TorrentEngineOptions

@@ -1,14 +1,6 @@
-package com.seiko.common.eventbus
+package com.seiko.torrent.util.eventbus
 
-import android.app.Activity
-import android.app.Application
-import android.content.Context
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import org.greenrobot.eventbus.EventBus
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicBoolean
 
 object EventBusScope {
 
