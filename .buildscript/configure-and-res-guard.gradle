@@ -11,8 +11,10 @@ andResGuard {
     // 设置这个值，会把arsc name列混淆成相同的名字，减少string常量池的大小
     fixedResName = "arg"
     whiteList = [
-        //白名单
+        "R.mipmap.ic_dandan_launcher",
+        // https://docs.fabric.io/android/crashlytics/build-tools.html
         "R.string.com.crashlytics.*",
+        "R.id.*",
         "R.drawable.ic_*",
         // google-services.json
         "R.string.google_app_id",
@@ -42,15 +44,19 @@ andResGuard {
         "R.drawable.jpush_notification_icon"
     ]
     compressFilePattern = [
-            "*.png",
-            "*.jpg",
-            "*.jpeg",
-            "*.gif",
-            "resources.arsc"
+        "*.png",
+        "*.jpg",
+        "*.jpeg",
+        "*.gif",
+        "resources.arsc"
     ]
     sevenzip {
         artifact = 'com.tencent.mm:SevenZip:1.2.17'
         path = "/usr/local/bin/7za"
     }
-//    digestalg = "SHA-256"
+    /**
+     * 可选: 指定v1签名时生成jar文件的摘要算法
+     * 默认值为“SHA-1”
+     **/
+    // digestalg = "SHA-256"
 }

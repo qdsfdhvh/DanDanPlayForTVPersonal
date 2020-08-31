@@ -29,7 +29,12 @@ android {
             // 移除无用的resource文件
             // 需要注意的是目前资源压缩器目前不会移除values/文件夹中定义的资源（例如字符串、尺寸、样式和颜色）
             shrinkResources true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // 混淆文件的位置，其中 proguard-android.txt 为sdk默认的混淆配置，
+            // 它的位置位于android-sdk/tools/proguard/proguard-android.txt，
+            // 此外，proguard-android-optimize.txt 也为sdk默认的混淆配置，
+            // 但    是它默认打开了优化开关，我们可在配置混淆文件将android.util.Log置为无效代码，
+            // 以去除apk中打印日志的代码。而 proguard-rules.pro 是该模块下的混淆配置。
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     buildFeatures {
