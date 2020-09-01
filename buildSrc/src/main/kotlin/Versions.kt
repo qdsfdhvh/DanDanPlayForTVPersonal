@@ -36,6 +36,8 @@ object Versions {
 
     const val dagger = "2.28.3-alpha"   // https://github.com/google/dagger
     const val hilt = "1.0.0-alpha02" // https://maven.google.com/web/index.html?q=hilt#androidx.hilt:hilt-common
+
+    const val navigation = "2.3.0"  // https://maven.google.com/web/index.html?q=navigation#androidx.navigation:navigation-common-ktx
 }
 
 object Build {

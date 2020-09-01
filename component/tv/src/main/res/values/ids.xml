@@ -19,4 +19,6 @@
     <item name="grid_bangumi" type="id"/>
 
     <item name="dandan_edit" type="id"/>
+
+    <item name="tv_main_container" type="id"/>
 </resources>

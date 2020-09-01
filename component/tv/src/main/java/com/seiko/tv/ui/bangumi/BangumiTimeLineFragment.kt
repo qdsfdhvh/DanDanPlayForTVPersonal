@@ -7,11 +7,13 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
+import com.seiko.common.util.extensions.doOnIdle
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.navigateTo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -56,7 +58,9 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
     private fun bindViewModel() {
         viewModel.weekBangumiList.observe(viewLifecycleOwner) { bangumiList ->
             updateAirDayBangumiList(bangumiList)
-            startEntranceTransition()
+            view?.doOnIdle {
+                startEntranceTransition()
+            }
         }
     }
 
@@ -78,7 +82,8 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         when(item) {
             is HomeImageBean -> {
                 val cardView = holder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigateTo(BangumiTimeLineFragmentDirections.actionToDetails(
+                    item.animeId, item.imageUrl), cardView.getImageView())
             }
         }
     }

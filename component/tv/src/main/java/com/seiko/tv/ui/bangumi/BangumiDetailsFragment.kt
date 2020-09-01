@@ -7,7 +7,10 @@ import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
+import com.seiko.common.util.extensions.doOnIdle
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.imageloader.ImageLoader
 import com.seiko.tv.R
@@ -22,10 +25,10 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
 import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
 import com.seiko.tv.ui.presenter.DetailsOverviewLogoPresenter
-import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.util.extensions.getDrawable
 import com.seiko.tv.util.extensions.hasFragment
+import com.seiko.tv.util.navigateTo
 import com.seiko.tv.vm.BangumiDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -40,24 +43,14 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     , OnActionClickedListener {
 
     companion object {
-        const val TAG = "BangumiDetailsFragment"
-        const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
-        const val ARGS_ANIME_IMAGE_URL = "ARGS_ANIME_IMAGE_URL"
-        const val TRANSITION_NAME = "t_for_transition"
-
         private const val ID_RATING = 1L
         private const val ID_FAVOURITE = 2L
         private const val ID_KEYBOARD = 3L
-
-        fun newInstance(bundle: Bundle): BangumiDetailsFragment {
-            val fragment = BangumiDetailsFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
     }
 
-    private val animeId: Long by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
     private val viewModel: BangumiDetailViewModel by viewModels()
+
+    private val args: BangumiDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenterSelector: BangumiPresenterSelector
@@ -81,8 +74,16 @@ class BangumiDetailsFragment : DetailsSupportFragment()
 
     private var mDetailsOverviewPrevState = -1
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.tv_details_enter_transition)
+        returnTransition = inflater.inflateTransition(R.transition.tv_details_return_transition)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
         setupUI()
         bindViewModel()
         onItemViewClickedListener = this
@@ -104,14 +105,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
         mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
 
-        val helper = FullWidthDetailsOverviewSharedElementHelper()
-        helper.setSharedElementEnterTransition(requireActivity(), TRANSITION_NAME)
-        mDescriptionRowPresenter.setListener(helper)
-        mDescriptionRowPresenter.isParticipatingEntranceTransition = false
-        prepareEntranceTransition()
-
-        val imageUrl = requireArguments().getString(ARGS_ANIME_IMAGE_URL, "")
-        detailsOverviewRow = DetailsOverviewRow(BangumiDetailBean.empty(imageUrl = imageUrl))
+        detailsOverviewRow = DetailsOverviewRow(BangumiDetailBean.empty(imageUrl = args.imageUrl))
         detailsOverviewRow.isImageScaleUpAllowed = true
 
         mPresenterSelector = ClassPresenterSelector()
@@ -140,7 +134,15 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     private fun bindViewModel() {
         viewModel.details.observe(viewLifecycleOwner) { details ->
             updateDetailsOverviewRow(details)
-            startEntranceTransition()
+
+            lifecycleScope.launch {
+                detailsOverviewRow.imageDrawable = withContext(Dispatchers.IO) {
+                    imageLoader.getDrawable(details.imageUrl)
+                }
+                view?.doOnIdle {
+                    startPostponedEnterTransition()
+                }
+            }
         }
         viewModel.episodesList.observe(viewLifecycleOwner) { episodes ->
             episodesAdapter.setItems(episodes, null)
@@ -153,7 +155,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             mAdapter.showHideListRow(similarListRow, similars)
             similarAdapter.submitList(similars)
         }
-        viewModel.animeId.value = animeId
+        viewModel.animeId.value = args.animeId
     }
 
     /**
@@ -168,12 +170,6 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         }
 
         detailsOverviewRow.item = details
-        lifecycleScope.launch {
-            val drawable = withContext(Dispatchers.IO) {
-                imageLoader.getDrawable(details.imageUrl)
-            }
-            detailsOverviewRow.imageDrawable = drawable
-        }
 
         mActionAdapter = ArrayObjectAdapter()
         mActionAdapter.add(
@@ -240,12 +236,14 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         when(item) {
             is BangumiEpisodeEntity -> {
                 val keyword = viewModel.getSearchKey(item)
-                SearchActivity.launchMagnet(requireActivity(), keyword, animeId, item.episodeId)
+                navigateTo(BangumiDetailsFragmentDirections.actionToSearchMagnet(
+                    keyword, args.animeId, item.episodeId))
             }
             is HomeImageBean -> {
                 val card = holder.view
                 card as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, card.getImageView())
+                navigateTo(BangumiDetailsFragmentDirections.actionToDetails(
+                    item.animeId, item.imageUrl), card.getImageView())
             }
         }
     }

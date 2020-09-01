@@ -1,4 +1,5 @@
 apply from: rootProject.file('.buildscript/configure-component-defaults.gradle')
+apply from: rootProject.file(".buildscript/configure-setting-navigation.gradle")
 
 android {
 //    resourcePrefix "app_"

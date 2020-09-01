@@ -10,6 +10,7 @@ import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRowPresenter
 import androidx.lifecycle.observe
+import com.seiko.common.util.extensions.doOnIdle
 import com.seiko.tv.R
 import com.seiko.tv.data.model.SeasonPageRow
 import com.seiko.tv.vm.BangumiAreaViewModel
@@ -17,12 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BangumiAreaFragmentV2 : BrowseSupportFragment() {
-
-    companion object {
-        fun newInstance(): BangumiAreaFragmentV2 {
-            return BangumiAreaFragmentV2()
-        }
-    }
 
     private val viewModel: BangumiAreaViewModel by viewModels()
 
@@ -51,7 +46,10 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
                 rowsAdapter.add(SeasonPageRow(headerItem, season))
             }
             adapter = rowsAdapter
-            startEntranceTransition()
+
+            view?.doOnIdle {
+                startEntranceTransition()
+            }
         }
     }
 

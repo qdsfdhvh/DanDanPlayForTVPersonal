@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.navArgs
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
@@ -27,28 +28,17 @@ class SearchMagnetFragment : SearchSupportFragment(),
     OnItemViewClickedListener {
 
     companion object {
-        const val ARGS_KEYWORD = "ARGS_KEYWORD"
-        const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
-        const val ARGS_EPISODE_ID = "ARGS_EPISODE_ID"
         private const val ROW_MAGNET = 200
 
         private const val REQUEST_ID_AUDIO = 1122
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
-
-        fun newInstance(bundle: Bundle): SearchMagnetFragment {
-            val fragment = SearchMagnetFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
     }
 
-    private val keyword by lazyAndroid { requireArguments().getString(ARGS_KEYWORD)!! }
-    private val animeId by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
-    private val episodeId by lazyAndroid { requireArguments().getInt(ARGS_EPISODE_ID) }
-
     private val viewModel: SearchMagnetViewModel by viewModels()
+
+    private val args: SearchMagnetFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenterSelector: BangumiPresenterSelector
@@ -60,7 +50,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
         super.onCreate(savedInstanceState)
         setupUI()
         setupRows()
-        setSearchQuery(keyword, true)
+        setSearchQuery(args.keyword, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -176,7 +166,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
                     if (success) {
                         val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
                         if (hash != null) {
-                            viewModel.saveMagnetInfoUseCase(hash, animeId, episodeId)
+                            viewModel.saveMagnetInfoUseCase(hash, args.animeId, args.episodeId)
                         }
                     }
                 }

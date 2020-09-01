@@ -20,4 +20,6 @@
     <string name="txt_download">下载</string>
     <string name="txt_play">播放</string>
     <string name="txt_cancel">取消</string>
+
+    <string name="transition_name">t_for_transition</string>
 </resources>

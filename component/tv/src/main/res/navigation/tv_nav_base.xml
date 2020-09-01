@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tv_nav_base"
+    app:startDestination="@id/tv_main_fragment">
+    <fragment
+        android:id="@+id/tv_main_fragment"
+        android:name="com.seiko.tv.ui.main.MainFragment"
+        android:label="MainFragment">
+        <action android:id="@+id/action_to_search"
+            app:destination="@id/search_bangumi_fragment"/>
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+        <action android:id="@+id/action_to_area"
+            app:destination="@id/bangumi_area_fragment"/>
+        <action android:id="@+id/action_to_favorite"
+            app:destination="@id/bangumi_favorite_fragment"/>
+        <action android:id="@+id/action_to_time_line"
+            app:destination="@id/bangumi_time_line_fragment"/>
+        <action android:id="@+id/action_to_history"
+            app:destination="@id/bangumi_history_fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/search_bangumi_fragment"
+        android:name="com.seiko.tv.ui.search.SearchBangumiFragment"
+        android:label="SearchBangumiFragment">
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/search_magnet_fragment"
+        android:name="com.seiko.tv.ui.search.SearchMagnetFragment"
+        android:label="SearchMagnetFragment">
+        <argument android:name="keyword"
+            app:argType="string"/>
+        <argument android:name="animeId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+        <argument android:name="episodeId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bangumi_details_Fragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiDetailsFragment"
+        android:label="BangumiDetailsFragment">
+        <argument android:name="animeId"
+            app:argType="long"/>
+        <argument android:name="imageUrl"
+            app:argType="string"/>
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+        <action android:id="@+id/action_to_search_magnet"
+            app:destination="@id/search_magnet_fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bangumi_area_fragment"
+        android:name="com.seiko.tv.ui.area.BangumiAreaFragmentV2"
+        android:label="BangumiAreaFragment">
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/bangumi_area_page_fragment"-->
+<!--        android:name="com.seiko.tv.ui.area.BangumiAreaPageFragment"-->
+<!--        android:label="BangumiAreaPageFragment">-->
+<!--    </fragment>-->
+    <fragment
+        android:id="@+id/bangumi_favorite_fragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiFavoriteFragment"
+        android:label="BangumiFavoriteFragment">
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bangumi_time_line_fragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiTimeLineFragment"
+        android:label="BangumiTimeLineFragment">
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bangumi_history_fragment"
+        android:name="com.seiko.tv.ui.bangumi.BangumiHistoryFragment"
+        android:label="BangumiHistoryFragment">
+        <action android:id="@+id/action_to_details"
+            app:destination="@id/bangumi_details_Fragment"/>
+    </fragment>
+</navigation>

@@ -16,9 +16,9 @@ import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
 import com.seiko.tv.ui.card.SearchBangumiCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.navigateTo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,10 +34,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
         private const val REQUEST_SPEECH = 2222
         private const val REQUEST_TORRENT = 2223
-
-        fun newInstance(): SearchBangumiFragment {
-            return SearchBangumiFragment()
-        }
     }
 
     private val viewModel: SearchBangumiViewModel by viewModels()
@@ -126,12 +122,8 @@ class SearchBangumiFragment : SearchSupportFragment(),
         when(item) {
             is SearchAnimeDetails -> {
                 val cardView = holder.view as SearchBangumiCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, item.imageUrl, cardView.getImageView())
-//                findNavController().navigate(
-//                    SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(
-//                        item.animeId
-//                    )
-//                )
+                navigateTo(SearchBangumiFragmentDirections.actionToDetails(
+                    item.animeId, item.imageUrl), cardView.getImageView())
             }
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)

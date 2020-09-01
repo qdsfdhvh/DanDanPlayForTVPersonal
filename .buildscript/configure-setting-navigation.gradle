@@ -1,0 +1,7 @@
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
+dependencies {
+    implementation(Deps.navigation)
+    implementation(Deps.navigationUi)
+    implementation(Deps.navigationFragment)
+}

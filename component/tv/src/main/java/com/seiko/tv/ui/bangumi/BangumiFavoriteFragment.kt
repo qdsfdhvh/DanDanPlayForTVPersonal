@@ -7,12 +7,14 @@ import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.observe
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
+import com.seiko.common.util.extensions.doOnIdle
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
+import com.seiko.tv.util.navigateTo
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,10 +25,6 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
 
     companion object {
         private const val COLUMNS = 5
-
-        fun newInstance(): BangumiFavoriteFragment {
-            return BangumiFavoriteFragment()
-        }
     }
 
     private val viewModel: BangumiFavoriteViewModel by viewModels()
@@ -64,7 +62,9 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         viewModel.favoriteBangumiList.observe(viewLifecycleOwner) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
             title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
-            startEntranceTransition()
+            view?.doOnIdle {
+                startEntranceTransition()
+            }
         }
     }
 
@@ -77,7 +77,8 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigateTo(BangumiFavoriteFragmentDirections.actionToDetails(
+                    item.animeId, item.imageUrl), cardView.getImageView())
             }
         }
     }

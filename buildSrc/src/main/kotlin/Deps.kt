@@ -58,4 +58,9 @@ object Deps {
     const val hiltCommon = "androidx.hilt:hilt-common:${Versions.hilt}"
     const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hilt}"
     const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hilt}"
+
+    const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+    const val navigation = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+    const val navigationUi = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
+    const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
 }

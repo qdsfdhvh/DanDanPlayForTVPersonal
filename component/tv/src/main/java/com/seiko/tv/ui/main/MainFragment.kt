@@ -9,26 +9,21 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
-import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.HomeSettingBean
-import com.seiko.tv.ui.area.BangumiAreaActivity
-import com.seiko.tv.ui.bangumi.*
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
+import com.seiko.tv.util.navigateTo
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -160,9 +155,7 @@ class MainFragment : BrowseSupportFragment()
      */
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.title_orb -> {
-                SearchActivity.launchBangumi(requireActivity())
-            }
+            R.id.title_orb -> navigateTo(MainFragmentDirections.actionToSearch())
         }
     }
 
@@ -174,31 +167,18 @@ class MainFragment : BrowseSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 val cardView = holder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigateTo(MainFragmentDirections.actionToDetails(
+                    item.animeId, item.imageUrl), cardView.getImageView())
             }
             is HomeSettingBean -> {
                 when(item.id) {
-                    ID_AREA -> {
-                        BangumiAreaActivity.launch(requireActivity())
-                    }
-                    ID_FAVOURITE -> {
-                        BangumiFavoriteActivity.launch(requireActivity())
-                    }
-                    ID_TIME -> {
-                        BangumiTimeLineActivity.launch(requireActivity())
-                    }
-                    ID_HISTORY -> {
-                        BangumiHistoryActivity.launch(requireActivity())
-                    }
-                    ID_MEDIA -> {
-                        Navigator.navToPlayerMedia(requireActivity())
-                    }
-                    ID_DOWNLOAD -> {
-                        Navigator.navToTorrent(requireActivity())
-                    }
-                    ID_SETTING -> {
-                        toast("待施工")
-                    }
+                    ID_AREA -> navigateTo(MainFragmentDirections.actionToArea())
+                    ID_FAVOURITE -> navigateTo(MainFragmentDirections.actionToFavorite())
+                    ID_TIME -> navigateTo(MainFragmentDirections.actionToTimeLine())
+                    ID_HISTORY -> navigateTo(MainFragmentDirections.actionToHistory())
+                    ID_MEDIA -> Navigator.navToPlayerMedia(requireActivity())
+                    ID_DOWNLOAD -> Navigator.navToTorrent(requireActivity())
+                    ID_SETTING -> toast("待施工")
                 }
             }
         }

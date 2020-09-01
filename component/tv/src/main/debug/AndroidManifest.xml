@@ -25,9 +25,9 @@
         tools:ignore="GoogleAppIndexingWarning">
         <!--主界面-->
         <activity android:name=".ui.main.MainActivity"
+            android:theme="@style/DanDanTvTheme.Browse"
             android:launchMode="singleTask"
             android:exported="true"
-            android:theme="@style/DanDanTvTheme.Browse"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -39,42 +39,6 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.search.SearchActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.Search"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <activity android:name=".ui.area.BangumiAreaActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.Browse"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <activity android:name=".ui.bangumi.BangumiFavoriteActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.VerticalGrid"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <activity android:name=".ui.bangumi.BangumiHistoryActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.VerticalGrid"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <activity android:name=".ui.bangumi.BangumiTimeLineActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.Browse"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
-
-        <activity android:name=".ui.bangumi.BangumiDetailsActivity"
-            android:exported="true"
-            android:theme="@style/DanDanTvTheme.Details"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>

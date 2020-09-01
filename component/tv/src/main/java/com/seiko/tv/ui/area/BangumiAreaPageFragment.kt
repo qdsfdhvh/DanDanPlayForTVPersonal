@@ -11,11 +11,11 @@ import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
 import com.seiko.tv.ui.card.MainAreaCardView
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
+import com.seiko.tv.util.navigateTo
 import com.seiko.tv.vm.BangumiAreaPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -89,7 +89,8 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         when(item) {
             is HomeImageBean -> {
                 val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigateTo(BangumiAreaFragmentV2Directions.actionToDetails(
+                    item.animeId, item.imageUrl), cardView.getImageView())
             }
         }
     }
