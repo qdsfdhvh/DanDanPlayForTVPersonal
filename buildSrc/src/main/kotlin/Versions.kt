@@ -14,7 +14,7 @@ object Versions {
     const val preference = "1.1.0"
     const val lifecycle = "2.2.0"
     const val paging = "2.1.2"
-    const val leanback = "1.1.0-alpha03"
+    const val leanback = "1.1.0-alpha04"
     const val fragment = "1.2.5"
 
     const val kotlin = "1.4.0-rc"
