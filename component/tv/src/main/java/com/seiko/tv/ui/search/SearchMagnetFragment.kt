@@ -9,7 +9,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator

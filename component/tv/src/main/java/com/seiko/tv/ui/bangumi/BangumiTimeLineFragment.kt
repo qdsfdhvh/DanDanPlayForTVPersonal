@@ -6,7 +6,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.observe
 import com.seiko.common.util.extensions.doOnIdle
 import com.seiko.tv.vm.HomeViewModel
 import com.seiko.tv.data.model.AirDayBangumiBean
