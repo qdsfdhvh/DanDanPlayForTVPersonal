@@ -11,7 +11,6 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
-import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
@@ -26,7 +25,6 @@ import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -133,7 +131,6 @@ class MainFragment : BrowseSupportFragment()
     private fun  createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
         val headerItem = HeaderItem(id.toLong(), title)
         val listRow = ListRow(headerItem, objectAdapter)
-        R.layout.lb_rows_fragment
         rowsAdapter.add(listRow)
     }
 

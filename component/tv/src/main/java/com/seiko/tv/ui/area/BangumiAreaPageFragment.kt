@@ -37,7 +37,9 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         }
     }
 
-    private val season by lazyAndroid { requireArguments().getParcelable<BangumiSeason>(ARGS_SEASON)!! }
+    private val season by lazyAndroid {
+        requireArguments().getParcelable<BangumiSeason>(ARGS_SEASON)!!
+    }
 
     private val viewModel: BangumiAreaPageViewModel by viewModels()
 
@@ -58,7 +60,8 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     }
 
     private fun setupUI() {
-        val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_SMALL, false)
+        val verticalGridPresenter = SpacingVerticalGridPresenter(
+            FocusHighlight.ZOOM_FACTOR_SMALL, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
         verticalGridPresenter.setItemSpacing(40)
 

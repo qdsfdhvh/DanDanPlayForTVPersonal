@@ -45,7 +45,7 @@ class BangumiAreaFragmentV2 : BrowseSupportFragment() {
     private fun bindViewModel() {
         viewModel.bangumiSeasons.observe(viewLifecycleOwner) { seasonList ->
             val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-            seasonList.mapIndexed { i, season ->
+            seasonList.forEachIndexed { i, season ->
                 val headerItem = HeaderItem(i.toLong(), season.seasonName)
                 rowsAdapter.add(SeasonPageRow(headerItem, season))
             }
