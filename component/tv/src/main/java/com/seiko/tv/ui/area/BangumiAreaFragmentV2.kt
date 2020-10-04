@@ -9,7 +9,6 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRowPresenter
-import androidx.lifecycle.observe
 import com.seiko.tv.R
 import com.seiko.tv.data.model.SeasonPageRow
 import com.seiko.tv.vm.BangumiAreaViewModel

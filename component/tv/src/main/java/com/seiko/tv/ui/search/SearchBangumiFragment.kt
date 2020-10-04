@@ -8,7 +8,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.observe
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
 import com.seiko.common.router.Navigator
