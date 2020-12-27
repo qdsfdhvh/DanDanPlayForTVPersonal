@@ -39,9 +39,6 @@ object Deps {
     const val moshi_core = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val moshi_compiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
 
-    const val arouter_api = "com.alibaba:arouter-api:${Versions.arouter_api}"
-    const val arouterCompiler = "com.alibaba:arouter-compiler:${Versions.arouter_compiler}"
-
     const val room_ktx = "androidx.room:room-ktx:${Versions.room}"
     const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
 
@@ -58,4 +55,6 @@ object Deps {
     const val hiltCommon = "androidx.hilt:hilt-common:${Versions.hilt}"
     const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hilt}"
     const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hilt}"
+
+    const val routerPlugin = "com.chenenyu.router:gradle-plugin:${Versions.router}"
 }

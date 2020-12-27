@@ -57,7 +57,7 @@ dependencies {
     api(Deps.moshi_adapters)
 
     // 路由
-    api(Deps.arouter_api)
+    implementation("com.chenenyu.router:router:${Versions.router}")
 
     // Log
     api("com.jakewharton.timber:timber:4.7.1")

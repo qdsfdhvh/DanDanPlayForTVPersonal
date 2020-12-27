@@ -2,6 +2,8 @@ ext.mainApp = true  // 设置为true，表示此module为主app module，一直�
 apply from: rootProject.file(".buildscript/configure-android-defaults.gradle")
 apply from: rootProject.file(".buildscript/configure-setting-keystore.gradle")
 
+apply plugin: 'com.chenenyu.router'
+
 android {
     defaultConfig {
         applicationId Build.applicationId

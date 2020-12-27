@@ -3,8 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+// 路由
+apply plugin: 'com.chenenyu.router'
+
 apply from: rootProject.file(".buildscript/configure-setting-dagger.gradle")
-apply from: rootProject.file(".buildscript/configure-setting-arouter.gradle")
 apply from: rootProject.file(".buildscript/configure-setting-room.gradle")
 
 android {

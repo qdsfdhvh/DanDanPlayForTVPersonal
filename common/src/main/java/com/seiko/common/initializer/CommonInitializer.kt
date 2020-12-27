@@ -32,9 +32,6 @@ class CommonInitializer : Initializer<Unit> {
         if (BuildConfig.DEBUG) {
             StrictMode.enableDefaults()
         }
-
-        // 初始化耗时事件
-        InitializerService.start(app)
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {

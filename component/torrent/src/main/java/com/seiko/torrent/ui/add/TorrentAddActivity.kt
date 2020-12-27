@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import androidx.activity.DispatchKeyEventDispatcher
 import androidx.activity.DispatchKeyEventDispatcherOwner
 import androidx.fragment.app.commit
-import com.alibaba.android.arouter.facade.annotation.Route
+import com.chenenyu.router.annotation.Route
 import com.seiko.common.base.BaseActivity
 import com.seiko.torrent.util.eventbus.registerEventBus
 import com.seiko.torrent.util.eventbus.unRegisterEventBus
@@ -24,7 +24,7 @@ import timber.log.Timber
 
 
 @AndroidEntryPoint
-@Route(path = Routes.Torrent.PATH_ADD)
+@Route(Routes.Torrent.PATH_ADD)
 class TorrentAddActivity : BaseActivity(R.layout.torrent_activiy_add)
     , DispatchKeyEventDispatcherOwner {
 
