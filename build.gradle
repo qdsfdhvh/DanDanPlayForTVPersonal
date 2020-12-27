@@ -15,7 +15,7 @@ buildscript {
 
         classpath("com.smallsoho.mobcase:McImage:1.5.1")
         classpath("com.mogujie.gradle:tinyPicPlugin:1.1.4")
-        classpath("com.tencent.mm:AndResGuard-gradle-plugin:1.2.18")
+        classpath("com.tencent.mm:AndResGuard-gradle-plugin:1.2.20")
     }
 }
 
