@@ -8,6 +8,7 @@ import com.seiko.common.router.Routes
 import com.seiko.common.service.TorrentService
 import com.seiko.tv.R
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @Route(Routes.DanDanPlay.PATH_TV)
@@ -16,6 +17,9 @@ class MainActivity : BaseActivity(R.layout.activity_container) {
     companion object {
         private const val FRAGMENT_TAG = "FRAGMENT_TAG"
     }
+
+    @Inject
+    lateinit var torrentService: TorrentService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +33,7 @@ class MainActivity : BaseActivity(R.layout.activity_container) {
 
     override fun onDestroy() {
         super.onDestroy()
-        TorrentService.get()?.shutDown(this)
+        torrentService.shutDown(this)
     }
 
 }

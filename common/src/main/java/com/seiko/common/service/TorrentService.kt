@@ -7,13 +7,6 @@ import android.content.Context
  */
 interface TorrentService {
 
-    companion object {
-        fun get(): TorrentService? {
-            // TODO 使用dagger注入
-            return null
-        }
-    }
-
     /**
      * 关闭Torrent下载
      */
