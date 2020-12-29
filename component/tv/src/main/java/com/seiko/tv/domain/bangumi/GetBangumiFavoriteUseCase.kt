@@ -1,11 +1,13 @@
 package com.seiko.tv.domain.bangumi
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
-import com.seiko.tv.data.model.HomeImageBean
+import androidx.paging.PagingData
+import com.seiko.common.util.extensions.asFlow
+import com.seiko.common.util.extensions.dataMap
 import com.seiko.tv.data.comments.BangumiDetailsRepository
+import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.util.toHomeImageBean
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -15,9 +17,9 @@ import javax.inject.Inject
 class GetBangumiFavoriteUseCase @Inject constructor(
     private val detailsRepo: BangumiDetailsRepository
 ) {
-    operator fun invoke(count: Int): LiveData<List<HomeImageBean>> {
-        return detailsRepo.getBangumiDetailsList(count).map { list ->
-            list.map { it.toHomeImageBean() }
-        }
+    fun execute(count: Int = 0): Flow<PagingData<HomeImageBean>> {
+        return detailsRepo.getBangumiDetailsList(count)
+            .asFlow()
+            .dataMap { it.toHomeImageBean() }
     }
 }

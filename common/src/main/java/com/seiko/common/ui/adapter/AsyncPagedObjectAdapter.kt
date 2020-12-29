@@ -4,10 +4,13 @@ import androidx.leanback.widget.DiffCallback
 import androidx.leanback.widget.ObjectAdapter
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.PresenterSelector
+import androidx.lifecycle.Lifecycle
 import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.CombinedLoadStates
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
+import kotlinx.coroutines.flow.Flow
 
 class AsyncPagedObjectAdapter<T : Any> : ObjectAdapter {
 
@@ -58,8 +61,14 @@ class AsyncPagedObjectAdapter<T : Any> : ObjectAdapter {
         )
     }
 
+    val loadStateFlow: Flow<CombinedLoadStates> get() = differ.loadStateFlow
+
     suspend fun submitData(pagingData: PagingData<T>) {
         differ.submitData(pagingData)
+    }
+
+    fun submitData(lifecycle: Lifecycle, pagingData: PagingData<T>) {
+        differ.submitData(lifecycle, pagingData)
     }
 
     override fun size(): Int {

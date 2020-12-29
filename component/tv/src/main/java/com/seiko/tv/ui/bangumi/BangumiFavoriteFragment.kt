@@ -5,7 +5,9 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
-import com.seiko.common.ui.adapter.AsyncObjectAdapter
+import androidx.paging.LoadState
+import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
+import com.seiko.common.util.extensions.viewLifecycleScope
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.ui.card.MainAreaCardView
@@ -14,6 +16,11 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,7 +40,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     @Inject
     lateinit var presenterSelector: BangumiPresenterSelector
 
-    private lateinit var arrayAdapter: AsyncObjectAdapter<HomeImageBean>
+    private lateinit var arrayAdapter: AsyncPagedObjectAdapter<HomeImageBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,18 +60,31 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         onItemViewClickedListener = this
         gridPresenter = verticalGridPresenter
 
-        arrayAdapter = AsyncObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
+        arrayAdapter = AsyncPagedObjectAdapter(presenterSelector, HomeImageBeanDiffCallback())
         adapter = arrayAdapter
 
         prepareEntranceTransition()
     }
 
     private fun bindViewModel() {
-        viewModel.favoriteBangumiList.observe(viewLifecycleOwner) { bangumiList ->
-            arrayAdapter.submitList(bangumiList)
-            title = "%s (%d)".format(getString(R.string.bangumi_favorite), bangumiList.size)
-            startEntranceTransition()
+        viewModel.bangumiCount.observe(viewLifecycleOwner) {
+            title = "%s (%d)".format(getString(R.string.bangumi_favorite), it)
         }
+        viewLifecycleScope.launch {
+            arrayAdapter.loadStateFlow.collectLatest { loadStates ->
+                if (loadStates.refresh !is LoadState.Loading) {
+                    delay(200)
+                    startEntranceTransition()
+                }
+            }
+        }
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModel.loadData()
+            .onEach { arrayAdapter.submitData(it) }
+            .launchIn(viewLifecycleScope)
     }
 
     override fun onItemClicked(

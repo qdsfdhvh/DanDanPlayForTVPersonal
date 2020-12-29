@@ -1,7 +1,6 @@
 package com.seiko.tv.data.db.dao
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,10 +12,10 @@ import com.seiko.tv.data.db.model.BangumiDetailsEntity
 interface BangumiDetailsDao {
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC LIMIT :count")
-    fun allLimit(count: Int): LiveData<List<BangumiDetailsEntity>>
+    fun all(count: Int): PagingSource<Int, BangumiDetailsEntity>
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC")
-    fun all(): LiveData<List<BangumiDetailsEntity>>
+    fun all(): PagingSource<Int, BangumiDetailsEntity>
 
     @Query("UPDATE BangumiDetails SET updateDate=:updateDate WHERE animeId=:animeId")
     suspend fun update(animeId: Long, updateDate: Long)
@@ -27,6 +26,9 @@ interface BangumiDetailsDao {
     @Query("DELETE FROM BangumiDetails WHERE animeId=:animeId")
     suspend fun delete(animeId: Long): Int
 
-    @Query("SELECT COUNT(animeId) FROM BangumiDetails WHERE animeId=:animeId")
+    @Query("SELECT COUNT(1) FROM BangumiDetails")
+    suspend fun count(): Int
+
+    @Query("SELECT COUNT(1) FROM BangumiDetails WHERE animeId=:animeId LIMIT 1")
     suspend fun count(animeId: Long): Int
 }

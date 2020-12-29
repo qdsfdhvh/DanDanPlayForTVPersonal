@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 
 fun Fragment.checkPermissions(permissions: Array<String>): Boolean {
     for (permission in permissions) {
@@ -23,3 +25,6 @@ fun Fragment.hasFragment(tag: String): Boolean {
 fun Fragment.getDrawable(@DrawableRes drawableResId: Int): Drawable? {
     return ContextCompat.getDrawable(requireActivity(), drawableResId)
 }
+
+inline val Fragment.viewLifecycleScope: LifecycleCoroutineScope
+    get() = viewLifecycleOwner.lifecycleScope

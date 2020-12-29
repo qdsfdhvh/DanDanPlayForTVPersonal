@@ -3,6 +3,7 @@ package com.seiko.tv.vm
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import androidx.paging.cachedIn
 import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
 import com.seiko.tv.data.model.AirDayBangumiBean
@@ -49,7 +50,7 @@ class HomeViewModel @ViewModelInject constructor(
             if (data.isNotEmpty()) {
                 emit(data[0].bangumiList)
             } else {
-                emit(emptyList())
+                emit(emptyList<HomeImageBean>())
             }
         }
     }
@@ -57,10 +58,7 @@ class HomeViewModel @ViewModelInject constructor(
     /**
      * 我的收藏（动态）
      */
-    val favoriteBangumiList: LiveData<List<HomeImageBean>> =
-        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            emitSource(getFavoriteBangumiList.invoke(10))
-        }
+    fun loadFavoriteList() = getFavoriteBangumiList.execute(10).cachedIn(viewModelScope)
 
     /**
      * 我的历史（动态），前20条

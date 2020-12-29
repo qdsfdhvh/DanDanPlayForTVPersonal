@@ -1,10 +1,5 @@
 package com.seiko.tv.data.comments
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import com.seiko.tv.data.db.AppDatabase
 import com.seiko.tv.data.db.dao.BangumiDetailsDao
 import com.seiko.tv.data.db.dao.BangumiEpisodeDao
 import com.seiko.tv.data.db.dao.BangumiIntroDao
@@ -31,10 +26,19 @@ class BangumiDetailsRepository @Inject constructor(
     }
 
     /**
+     * 本地收藏的动漫数量
+     */
+    suspend fun count(): Int {
+        return bangumiDetailsDao.count()
+    }
+
+    /**
      * 获得本地收藏的全部动漫
      */
-    fun getBangumiDetailsList(count: Int): LiveData<List<BangumiDetailsEntity>> {
-        return if (count <= 0) bangumiDetailsDao.all() else bangumiDetailsDao.allLimit(count)
+    fun getBangumiDetailsList(count: Int) = if (count <= 0) {
+        bangumiDetailsDao.all()
+    } else {
+        bangumiDetailsDao.all(count)
     }
 
     /**
