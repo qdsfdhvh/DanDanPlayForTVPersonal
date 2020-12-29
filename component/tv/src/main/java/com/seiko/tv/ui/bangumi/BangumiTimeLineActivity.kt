@@ -2,28 +2,18 @@ package com.seiko.tv.ui.bangumi
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
-import androidx.fragment.app.commit
-import com.seiko.common.base.BaseActivity
-import com.seiko.tv.R
+import androidx.fragment.app.Fragment
+import com.seiko.common.base.BaseOneFragmentActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BangumiTimeLineActivity : BaseActivity(R.layout.activity_container) {
+class BangumiTimeLineActivity : BaseOneFragmentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
-            val fragment = BangumiTimeLineFragment.newInstance()
-            supportFragmentManager.commit {
-                add(R.id.container, fragment, FRAGMENT_TAG)
-            }
-        }
+    override fun onCreateFragment(): Fragment {
+        return BangumiTimeLineFragment.newInstance()
     }
 
     companion object {
-        private const val FRAGMENT_TAG = "FRAGMENT_TAG"
-
         fun launch(activity: Activity) {
             val intent = Intent(activity, BangumiTimeLineActivity::class.java)
             activity.startActivity(intent)

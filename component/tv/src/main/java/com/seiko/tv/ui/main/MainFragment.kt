@@ -12,6 +12,7 @@ import androidx.leanback.widget.*
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.dialog.DialogSelectFragment
+import com.seiko.common.util.extensions.hasFragment
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.R
@@ -28,9 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainFragment : BrowseSupportFragment()
-    , OnItemViewClickedListener
-    , View.OnClickListener {
+class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.OnClickListener {
 
     companion object {
         private const val ROW_AREA = 0
@@ -66,11 +65,31 @@ class MainFragment : BrowseSupportFragment()
         listOf(
             HomeSettingBean(ID_AREA, getString(R.string.bangumi_area), R.drawable.ic_bangumi_area),
             HomeSettingBean(ID_TIME, getString(R.string.bangumi_time), R.drawable.ic_bangumi_time),
-            HomeSettingBean(ID_FAVOURITE, getString(R.string.bangumi_favorite), R.drawable.ic_bangumi_favourite),
-            HomeSettingBean(ID_HISTORY, getString(R.string.bangumi_history), R.drawable.ic_bangumi_history),
-            HomeSettingBean(ID_MEDIA, getString(R.string.bangumi_media), R.drawable.ic_bangumi_media),
-            HomeSettingBean(ID_DOWNLOAD, getString(R.string.bangumi_download), R.drawable.ic_bangumi_download),
-            HomeSettingBean(ID_SETTING, getString(R.string.bangumi_setting), R.drawable.ic_bangumi_setting)
+            HomeSettingBean(
+                ID_FAVOURITE,
+                getString(R.string.bangumi_favorite),
+                R.drawable.ic_bangumi_favourite
+            ),
+            HomeSettingBean(
+                ID_HISTORY,
+                getString(R.string.bangumi_history),
+                R.drawable.ic_bangumi_history
+            ),
+            HomeSettingBean(
+                ID_MEDIA,
+                getString(R.string.bangumi_media),
+                R.drawable.ic_bangumi_media
+            ),
+            HomeSettingBean(
+                ID_DOWNLOAD,
+                getString(R.string.bangumi_download),
+                R.drawable.ic_bangumi_download
+            ),
+            HomeSettingBean(
+                ID_SETTING,
+                getString(R.string.bangumi_setting),
+                R.drawable.ic_bangumi_setting
+            )
         )
     }
 
@@ -128,7 +147,7 @@ class MainFragment : BrowseSupportFragment()
         prepareEntranceTransition()
     }
 
-    private fun  createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
+    private fun createListRow(id: Int, title: String, objectAdapter: ObjectAdapter) {
         val headerItem = HeaderItem(id.toLong(), title)
         val listRow = ListRow(headerItem, objectAdapter)
         rowsAdapter.add(listRow)
@@ -154,7 +173,7 @@ class MainFragment : BrowseSupportFragment()
      * PS: 控件id查看 {@link [androidx.leanback.widget.TitleView]}
      */
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.title_orb -> {
                 SearchActivity.launchBangumi(requireActivity())
             }
@@ -164,15 +183,17 @@ class MainFragment : BrowseSupportFragment()
     /**
      * 点击：新番、个人中心
      */
-    override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
-                               rowHolder: RowPresenter.ViewHolder?, row: Row?) {
-        when(item) {
+    override fun onItemClicked(
+        holder: Presenter.ViewHolder, item: Any?,
+        rowHolder: RowPresenter.ViewHolder?, row: Row?
+    ) {
+        when (item) {
             is HomeImageBean -> {
                 val cardView = holder.view as MainAreaCardView
                 BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
             }
             is HomeSettingBean -> {
-                when(item.id) {
+                when (item.id) {
                     ID_AREA -> {
                         BangumiAreaActivity.launch(requireActivity())
                     }
@@ -203,7 +224,7 @@ class MainFragment : BrowseSupportFragment()
      * 退出
      */
     private fun onBackPressed() {
-        if (childFragmentManager.findFragmentByTag(DialogSelectFragment.TAG) == null) {
+        if (!hasFragment(DialogSelectFragment.TAG)) {
             DialogSelectFragment.Builder()
                 .setTitle(getString(R.string.msg_exit_app))
                 .setConfirmText(getString(R.string.exit))

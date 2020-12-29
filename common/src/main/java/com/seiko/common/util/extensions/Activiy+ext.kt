@@ -1,18 +1,9 @@
 package com.seiko.common.util.extensions
 
 import android.app.Activity
-import android.util.DisplayMetrics
+import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
-
-fun Activity.getScreenWidth() : Int {
-    val dm = DisplayMetrics().also { windowManager.defaultDisplay.getMetrics(it) }
-    return dm.widthPixels
-}
-
-fun Activity.getScreenHeight(): Int {
-    val dm = DisplayMetrics().also { windowManager.defaultDisplay.getMetrics(it) }
-    return dm.heightPixels
-}
+import androidx.fragment.app.FragmentActivity
 
 fun Activity.checkPermissions(permissions: Array<String>): Boolean {
     for (permission in permissions) {
@@ -22,4 +13,12 @@ fun Activity.checkPermissions(permissions: Array<String>): Boolean {
         }
     }
     return true
+}
+
+fun FragmentActivity.hasFragment(tag: String): Boolean {
+    return supportFragmentManager.findFragmentByTag(tag) != null
+}
+
+fun FragmentActivity.hasFragment(@IdRes id: Int): Boolean {
+    return supportFragmentManager.findFragmentById(id) != null
 }

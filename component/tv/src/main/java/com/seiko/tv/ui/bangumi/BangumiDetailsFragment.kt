@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.imageloader.ImageLoader
+import com.seiko.common.util.extensions.getDrawable
+import com.seiko.common.util.extensions.hasFragment
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
@@ -23,8 +25,6 @@ import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
 import com.seiko.tv.ui.presenter.DetailsOverviewLogoPresenter
 import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
-import com.seiko.tv.util.extensions.getDrawable
-import com.seiko.tv.util.extensions.hasFragment
 import com.seiko.tv.vm.BangumiDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

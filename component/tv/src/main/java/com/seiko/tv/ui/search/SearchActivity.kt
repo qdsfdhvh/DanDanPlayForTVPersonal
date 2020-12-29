@@ -2,31 +2,21 @@ package com.seiko.tv.ui.search
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import com.seiko.common.base.BaseActivity
-import com.seiko.tv.R
+import com.seiko.common.base.BaseOneFragmentActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchActivity : BaseActivity(R.layout.activity_container) {
+class SearchActivity : BaseOneFragmentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (supportFragmentManager.findFragmentByTag(TAG) == null) {
-            val fragment: Fragment = when(intent.getIntExtra(ARGS_TYPE, TYPE_BANGUMI)) {
-                TYPE_MAGNET -> SearchMagnetFragment.newInstance(intent.extras!!)
-                else -> SearchBangumiFragment.newInstance()
-            }
-            supportFragmentManager.commit {
-                add(R.id.container, fragment, TAG)
-            }
+    override fun onCreateFragment(): Fragment {
+        return when (intent.getIntExtra(ARGS_TYPE, TYPE_BANGUMI)) {
+            TYPE_MAGNET -> SearchMagnetFragment.newInstance(intent.extras!!)
+            else -> SearchBangumiFragment.newInstance()
         }
     }
 
     companion object {
-        private const val TAG = "SearchActivity"
         private const val ARGS_TYPE = "ARGS_TYPE"
 
         private const val TYPE_MAGNET = 11
