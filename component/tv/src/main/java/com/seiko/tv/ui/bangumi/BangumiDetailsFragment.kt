@@ -8,7 +8,7 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean

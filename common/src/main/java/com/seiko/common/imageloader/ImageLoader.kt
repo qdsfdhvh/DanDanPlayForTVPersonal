@@ -1,4 +1,4 @@
-package com.seiko.common.util.imageloader
+package com.seiko.common.imageloader
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

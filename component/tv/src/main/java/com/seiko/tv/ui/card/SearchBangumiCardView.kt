@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.seiko.tv.databinding.ItemMainAreaBinding
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.common.ui.card.AbsCardView
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.data.model.api.SearchAnimeDetails
 
 @SuppressLint("SetTextI18n")

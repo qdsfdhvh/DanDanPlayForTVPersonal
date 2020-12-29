@@ -29,7 +29,6 @@ object NetworkModule {
         val builder = OkHttpClient.Builder()
             .connectTimeout(10L, TimeUnit.SECONDS)
             .readTimeout(10L, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(TrafficStatsRequestInterceptor())
         }

@@ -2,7 +2,7 @@ package com.seiko.tv.ui.presenter
 
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.PresenterSelector
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.HomeImageBean

@@ -28,7 +28,6 @@ object Versions {
 
     const val room = "2.2.5"
     const val work = "2.3.4"
-    const val glide = "4.11.0" // https://github.com/bumptech/glide
 
     const val dagger = "2.28.3-alpha"   // https://github.com/google/dagger
     const val hilt = "1.0.0-alpha02" // https://maven.google.com/web/index.html?q=hilt#androidx.hilt:hilt-common

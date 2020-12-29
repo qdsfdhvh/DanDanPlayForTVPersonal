@@ -2,7 +2,7 @@ package com.seiko.tv.domain
 
 import android.webkit.URLUtil
 import androidx.palette.graphics.Palette
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import javax.inject.Inject
 
 /**

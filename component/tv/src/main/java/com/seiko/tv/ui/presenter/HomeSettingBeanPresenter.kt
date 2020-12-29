@@ -2,7 +2,7 @@ package com.seiko.tv.ui.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.data.model.HomeSettingBean
 import com.seiko.tv.ui.card.MainMyCardView
 

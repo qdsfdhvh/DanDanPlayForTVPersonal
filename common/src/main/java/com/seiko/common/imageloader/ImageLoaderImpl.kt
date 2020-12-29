@@ -1,4 +1,4 @@
-package com.seiko.common.util.imageloader
+package com.seiko.common.imageloader
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -91,30 +91,5 @@ private suspend fun GlideRequests.getBitmap(url: String): Bitmap {
 
             }
         })
-    }
-}
-
-@GlideModule(glideName = "TvGlide")
-open class TvGlideModule : AppGlideModule() {
-
-    override fun applyOptions(context: Context, builder: GlideBuilder) {
-        builder.setDefaultRequestOptions(
-            RequestOptions().format(DecodeFormat.PREFER_RGB_565)
-        )
-
-        val calculator = MemorySizeCalculator.Builder(context)
-            .setMemoryCacheScreens(2f)
-            .build()
-        builder.setMemoryCache(LruResourceCache(calculator.memoryCacheSize.toLong()))
-    }
-
-    // 禁止解析Manifest文件,提升初始化速度，避免一些潜在错误
-    override fun isManifestParsingEnabled(): Boolean {
-        return false
-    }
-
-    // 注册自定义组件
-    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-
     }
 }

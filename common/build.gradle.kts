@@ -68,10 +68,6 @@ dependencies {
     // Prefs
     implementation(Deps.mmkv_runtime)
 
-    // 图片
-    implementation(Deps.glide)
-    kapt(Deps.glideCompiler)
-
     // Dagger
     api(Deps.daggerHiltAndroid)
     api(Deps.hiltCommon)
@@ -84,5 +80,10 @@ dependencies {
 
     // 初始化 https://github.com/NoEndToLF/AppStartFaster
     api("com.github.NoEndToLF:AppStartFaster:1.0.3")
+
+    // 图片加载库 - Glide https://github.com/bumptech/glide
+    val glideVersion = "4.11.0"
+    implementation("com.github.bumptech.glide:glide:${glideVersion}")
+    kapt("com.github.bumptech.glide:compiler:${glideVersion}")
 
 }

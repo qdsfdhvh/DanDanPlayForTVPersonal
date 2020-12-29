@@ -9,7 +9,7 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.databinding.ItemMainAreaBinding
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.common.ui.card.AbsCardView
-import com.seiko.common.util.imageloader.ImageLoader
+import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.R
 
 class MainAreaCardView(context: Context) : AbsCardView<HomeImageBean>(context, defStyleAttr = 0) {
