@@ -63,7 +63,7 @@ class ImageLoaderImpl @Inject constructor(
         return glide.getDrawable(url)
     }
 
-    override suspend fun getBitMap(url: String): Bitmap? {
+    override suspend fun getBitmap(url: String): Bitmap? {
         return glide.getBitmap(url)
     }
 }
