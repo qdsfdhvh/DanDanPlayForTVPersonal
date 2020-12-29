@@ -4,13 +4,12 @@ import androidx.leanback.widget.DiffCallback
 import androidx.leanback.widget.ObjectAdapter
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.PresenterSelector
-import androidx.paging.AsyncPagedListDiffer
-import androidx.paging.PagedList
-import androidx.recyclerview.widget.AsyncDifferConfig
+import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 
-class AsyncPagedObjectAdapter<T : Any>: ObjectAdapter {
+class AsyncPagedObjectAdapter<T : Any> : ObjectAdapter {
 
     private val updateCallback = object : ListUpdateCallback {
         override fun onInserted(position: Int, count: Int) {
@@ -30,26 +29,37 @@ class AsyncPagedObjectAdapter<T : Any>: ObjectAdapter {
         }
     }
 
-    private val differ: AsyncPagedListDiffer<T>
+    private val differ: AsyncPagingDataDiffer<T>
 
-    constructor(presenter: Presenter, diffCallback: DiffCallback<T>) : this(presenter, diffCallback.toItemCallback())
-    constructor(presenter: Presenter, diffCallback: DiffUtil.ItemCallback<T>) : this(presenter, AsyncDifferConfig.Builder(diffCallback).build())
-    constructor(presenter: Presenter, config: AsyncDifferConfig<T>) : super(presenter) {
-        differ = AsyncPagedListDiffer(updateCallback, config)
+    constructor(presenter: Presenter, diffCallback: DiffCallback<T>) : this(
+        presenter,
+        diffCallback.toItemCallback()
+    )
+
+    constructor(presenter: Presenter, diffCallback: DiffUtil.ItemCallback<T>) : super(presenter) {
+        differ = AsyncPagingDataDiffer(
+            diffCallback = diffCallback,
+            updateCallback = updateCallback
+        )
     }
 
-    constructor(presenterSelector: PresenterSelector, diffCallback: DiffCallback<T>) : this(presenterSelector, diffCallback.toItemCallback())
-    constructor(presenterSelector: PresenterSelector, diffCallback: DiffUtil.ItemCallback<T>) : this(presenterSelector, AsyncDifferConfig.Builder(diffCallback).build())
-    constructor(presenterSelector: PresenterSelector, config: AsyncDifferConfig<T>) :super(presenterSelector) {
-        differ = AsyncPagedListDiffer(updateCallback, config)
+    constructor(presenterSelector: PresenterSelector, diffCallback: DiffCallback<T>) : this(
+        presenterSelector,
+        diffCallback.toItemCallback()
+    )
+
+    constructor(
+        presenterSelector: PresenterSelector,
+        diffCallback: DiffUtil.ItemCallback<T>
+    ) : super(presenterSelector) {
+        differ = AsyncPagingDataDiffer(
+            diffCallback = diffCallback,
+            updateCallback = updateCallback
+        )
     }
 
-    fun submitList(list: PagedList<T>) {
-        differ.submitList(list)
-    }
-
-    fun submitList(list: PagedList<T>, commitCallback: () -> Unit?) {
-        differ.submitList(list) { commitCallback.invoke() }
+    suspend fun submitData(pagingData: PagingData<T>) {
+        differ.submitData(pagingData)
     }
 
     override fun size(): Int {

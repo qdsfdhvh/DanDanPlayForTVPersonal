@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 
-class AsyncObjectAdapter<T : Any>: ObjectAdapter {
+class AsyncObjectAdapter<T : Any> : ObjectAdapter {
 
     private val updateCallback = object : ListUpdateCallback {
 
@@ -32,25 +32,39 @@ class AsyncObjectAdapter<T : Any>: ObjectAdapter {
 
     private val differ: AsyncListDiffer<T>
 
-    constructor(presenter: Presenter, diffCallback: DiffCallback<T>) : this(presenter, diffCallback.toItemCallback())
-    constructor(presenter: Presenter, diffCallback: DiffUtil.ItemCallback<T>) : this(presenter, AsyncDifferConfig.Builder(diffCallback).build())
+    constructor(presenter: Presenter, diffCallback: DiffCallback<T>) : this(
+        presenter,
+        diffCallback.toItemCallback()
+    )
+
+    constructor(presenter: Presenter, diffCallback: DiffUtil.ItemCallback<T>) : this(
+        presenter,
+        AsyncDifferConfig.Builder(diffCallback).build()
+    )
+
     constructor(presenter: Presenter, config: AsyncDifferConfig<T>) : super(presenter) {
         differ = AsyncListDiffer(updateCallback, config)
     }
 
-    constructor(presenterSelector: PresenterSelector, diffCallback: DiffCallback<T>) : this(presenterSelector, diffCallback.toItemCallback())
-    constructor(presenterSelector: PresenterSelector, diffCallback: DiffUtil.ItemCallback<T>) : this(presenterSelector, AsyncDifferConfig.Builder(diffCallback).build())
-    constructor(presenterSelector: PresenterSelector, config: AsyncDifferConfig<T>) :super(presenterSelector) {
+    constructor(presenterSelector: PresenterSelector, diffCallback: DiffCallback<T>) : this(
+        presenterSelector,
+        diffCallback.toItemCallback()
+    )
+
+    constructor(
+        presenterSelector: PresenterSelector,
+        diffCallback: DiffUtil.ItemCallback<T>
+    ) : this(presenterSelector, AsyncDifferConfig.Builder(diffCallback).build())
+
+    constructor(presenterSelector: PresenterSelector, config: AsyncDifferConfig<T>) : super(
+        presenterSelector
+    ) {
         differ = AsyncListDiffer(updateCallback, config)
     }
 
     fun submitList(list: List<T>) {
         differ.submitList(list)
     }
-
-//    fun submitList(list: List<T>, commitCallback: () -> Unit?) {
-//        differ.submitList(list) { commitCallback.invoke() }
-//    }
 
     override fun size(): Int {
         return differ.currentList.size

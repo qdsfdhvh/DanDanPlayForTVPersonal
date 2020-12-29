@@ -13,8 +13,10 @@ object Versions {
     const val constraintLayout = "1.1.3"
     const val preference = "1.1.0"
     const val lifecycle = "2.2.0"
-    const val paging = "2.1.2"
-    const val leanback = "1.1.0-alpha03"
+    const val paging = "3.0.0-alpha11"
+    const val room = "2.2.6"
+    const val work = "2.3.4"
+    const val leanback = "1.1.0-beta01"
     const val fragment = "1.2.5"
 
     const val kotlin = "1.4.0-rc"
@@ -25,9 +27,6 @@ object Versions {
     const val retrofit = "2.8.1" // https://github.com/square/retrofit
     const val okhttp = "4.6.0" // https://github.com/square/okhttp
     const val moshi = "1.9.2" // https://github.com/square/moshi
-
-    const val room = "2.2.5"
-    const val work = "2.3.4"
 
     const val dagger = "2.28.3-alpha"   // https://github.com/google/dagger
     const val hilt = "1.0.0-alpha02" // https://maven.google.com/web/index.html?q=hilt#androidx.hilt:hilt-common
