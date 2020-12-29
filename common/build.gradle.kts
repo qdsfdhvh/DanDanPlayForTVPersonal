@@ -39,9 +39,6 @@ dependencies {
     // Work
     api(Deps.work_runtimeKtx)
 
-    // 初始化
-    api(Deps.startup)
-
     // Kotlin
     api(Deps.kotlin_stdlib)
     api(Deps.kotlin_coroutines)
@@ -84,4 +81,8 @@ dependencies {
 
     // viewBinding
     api("com.kirich1409.viewbindingpropertydelegate:viewbindingpropertydelegate:1.0.0")
+
+    // 初始化 https://github.com/NoEndToLF/AppStartFaster
+    api("com.github.NoEndToLF:AppStartFaster:1.0.3")
+
 }

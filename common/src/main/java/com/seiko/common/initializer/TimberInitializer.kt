@@ -1,20 +1,24 @@
 package com.seiko.common.initializer
 
-import android.content.Context
-import androidx.startup.Initializer
 import com.seiko.common.BuildConfig
 import com.seiko.common.util.timber.NanoDebugTree
+import com.wxy.appstartfaster.task.AppStartTask
 import timber.log.Timber
+import javax.inject.Inject
 
-class TimberInitializer : Initializer<Unit> {
+/**
+ * 初始化日志
+ */
+class TimberInitializer @Inject constructor() : AppInitializer() {
 
-    override fun create(context: Context) {
+    override fun run() {
         if (BuildConfig.DEBUG) {
             Timber.plant(NanoDebugTree())
         }
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
+    override fun getDependsTaskList(): List<Class<out AppStartTask>>? {
+        return null
     }
+
 }

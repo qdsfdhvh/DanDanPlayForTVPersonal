@@ -1,16 +1,17 @@
 package com.seiko.torrent.initializer
 
 import android.content.Context
-import androidx.startup.Initializer
+import com.seiko.common.initializer.AppInitializer
 import com.seiko.torrent.service.TorrentTaskService
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class TorrentInitializer : Initializer<Unit> {
+class TorrentInitializer @Inject constructor(
+    @ApplicationContext private val context: Context
+) : AppInitializer() {
 
-    override fun create(context: Context) {
+    override fun run() {
         TorrentTaskService.loadTrackers(context)
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
-    }
 }

@@ -1,21 +1,18 @@
 package com.seiko.common.initializer
 
 import android.app.Application
-import android.content.Context
-import android.os.StrictMode
-import androidx.startup.Initializer
 import com.seiko.autosize.AutoSizeConfig
-import com.seiko.common.BuildConfig
 import com.seiko.common.util.fix.IMMLeaks
 import com.seiko.common.util.helper.AutoAdaptStrategyFactory
 import com.seiko.common.util.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
+import javax.inject.Inject
 
-class CommonInitializer : Initializer<Unit> {
+class CommonInitializer @Inject constructor(
+    private val app: Application
+) : AppInitializer() {
 
-    override fun create(context: Context) {
-        val app = context as Application
-
+    override fun run() {
         // AutoSize
         val autoAdaptStrategyFactory = AutoAdaptStrategyFactory.get()
         AutoSizeConfig.init(app, strategy = autoAdaptStrategyFactory.create())
@@ -28,15 +25,5 @@ class CommonInitializer : Initializer<Unit> {
 
         // 修复输入法内存泄漏
         IMMLeaks.fixFocusedViewLeak(app)
-
-        if (BuildConfig.DEBUG) {
-            StrictMode.enableDefaults()
-        }
-    }
-
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return listOf(
-            TimberInitializer::class.java
-        )
     }
 }
