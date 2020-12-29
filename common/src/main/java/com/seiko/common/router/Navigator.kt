@@ -8,14 +8,13 @@ import androidx.fragment.app.Fragment
 import com.chenenyu.router.Router
 import com.seiko.common.util.VlcUtils
 
-
 object Navigator {
 
     /**
      * 跳转到DanDan数据展示页面
      */
-    fun navToPlayTV(activity: Activity) {
-        Router.build(Routes.DanDanPlay.PATH_TV).go(activity)
+    fun navToPlayTV(context: Context) {
+        Router.build(Routes.DanDanPlay.PATH_TV).go(context)
     }
 
     /**
