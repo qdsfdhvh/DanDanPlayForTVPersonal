@@ -1,26 +1,25 @@
 package com.seiko.tv.vm
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.domain.bangumi.GetBangumiHistoryFixedUseCase
-import com.seiko.tv.util.constants.MAX_BANGUMI_HISTORY_SIZE
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import androidx.lifecycle.*
+import androidx.paging.cachedIn
+import com.seiko.tv.domain.bangumi.GetBangumiHistoryCountUseCase
+import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
 
 class BangumiHistoryViewModel @ViewModelInject constructor(
-    private val getBangumiHistoryList: GetBangumiHistoryFixedUseCase
+    private val getBangumiHistoryCount: GetBangumiHistoryCountUseCase,
+    private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ) : ViewModel() {
 
     /**
-     * 我的历史，前20条
+     * 历史收藏的动漫数量
      */
-    val historyBangumiList: LiveData<List<HomeImageBean>> =
-        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            delay(250)
-            emit(getBangumiHistoryList.invoke(MAX_BANGUMI_HISTORY_SIZE))
-        }
+    val bangumiCount: LiveData<Int> = liveData {
+        emitSource(getBangumiHistoryCount.execute(200).asLiveData())
+    }
+
+    /**
+     * 我的历史
+     */
+    fun loadData() = getBangumiHistoryList.execute(200).cachedIn(viewModelScope)
 }

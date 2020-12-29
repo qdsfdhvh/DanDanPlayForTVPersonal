@@ -11,19 +11,21 @@ class BangumiHistoryRepository @Inject constructor(
 ) {
 
     /**
-     * 获得本地动漫前x条浏览历史，按浏览时间排序
-     * PS：插入新数据时，会动态变化
+     * 本地浏览的动漫数量
+     */
+    suspend fun countOrMax(max: Int): Int = bangumiHistoryDao.countOrMax(max)
+
+    /**
+     * 获得本地动漫前x条浏览历史，按浏览时间排序 - 分页
      * @param count 前多少条
      */
     fun getBangumiDetailsList(count: Int) = bangumiHistoryDao.all(count)
 
     /**
-     * 获得本地动漫前x条浏览历史，按浏览时间排序
+     * 获得本地动漫前x条浏览历史，按浏览时间排序 - liveData
      * @param count 前多少条
      */
-    suspend fun getBangumiDetailsListFixed(count: Int): List<BangumiHistoryEntity> {
-        return bangumiHistoryDao.allFixed(count)
-    }
+    fun getBangumiDetailsListLiveData(count: Int) = bangumiHistoryDao.allLiveData(count)
 
     suspend fun saveBangumiDetails(details: BangumiDetailsEntity): Result<Boolean> {
         val isExit = bangumiHistoryDao.count(details.animeId) > 0

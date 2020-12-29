@@ -20,7 +20,7 @@ class BangumiFavoriteViewModel @ViewModelInject constructor(
 
 
     /**
-     * 我的历史
+     * 我的收藏
      */
     fun loadData() = getBangumiFavoriteUseCase.execute().cachedIn(viewModelScope)
 }

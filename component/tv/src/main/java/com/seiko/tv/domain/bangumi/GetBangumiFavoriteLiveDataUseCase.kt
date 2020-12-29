@@ -13,7 +13,8 @@ import javax.inject.Inject
 class GetBangumiFavoriteLiveDataUseCase @Inject constructor(
     private val detailsRepo: BangumiDetailsRepository
 ) {
-    fun execute(count: Int) = detailsRepo.getBangumiDetailsListLiveData(count).map { list ->
-        list.map { it.toHomeImageBean() }
-    }
+    fun execute(count: Int) = detailsRepo.getBangumiDetailsListLiveData(count)
+        .map { list ->
+            list.map { it.toHomeImageBean() }
+        }
 }

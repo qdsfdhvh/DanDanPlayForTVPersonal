@@ -16,16 +16,15 @@ import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BangumiFavoriteFragment : VerticalGridSupportFragment()
-    , OnItemViewClickedListener {
+class BangumiFavoriteFragment : VerticalGridSupportFragment(), OnItemViewClickedListener {
 
     companion object {
         private const val COLUMNS = 5
@@ -53,7 +52,8 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
     }
 
     private fun setupRowAdapter() {
-        val verticalGridPresenter = SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
+        val verticalGridPresenter =
+            SpacingVerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false)
         verticalGridPresenter.numberOfColumns = COLUMNS
         verticalGridPresenter.setItemSpacing(40)
 
@@ -78,10 +78,6 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
                 }
             }
         }
-        loadData()
-    }
-
-    private fun loadData() {
         viewModel.loadData()
             .onEach { arrayAdapter.submitData(it) }
             .launchIn(viewLifecycleScope)
@@ -93,7 +89,7 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment()
         rowViewHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
-        when(item) {
+        when (item) {
             is HomeImageBean -> {
                 val cardView = itemViewHolder.view as MainAreaCardView
                 BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
