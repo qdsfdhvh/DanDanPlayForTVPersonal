@@ -2,26 +2,21 @@ package com.seiko.tv.vm
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import androidx.paging.PagedList
-import androidx.paging.cachedIn
-import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
-import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
+import com.seiko.common.data.Result
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.common.data.Result
+import com.seiko.tv.domain.bangumi.GetBangumiFavoriteLiveDataUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
+import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.*
 
 class HomeViewModel @ViewModelInject constructor(
     getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
-    private val getFavoriteBangumiList: GetBangumiFavoriteUseCase,
+    private val getFavoriteBangumiList: GetBangumiFavoriteLiveDataUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ): ViewModel() {
 
@@ -58,7 +53,7 @@ class HomeViewModel @ViewModelInject constructor(
     /**
      * 我的收藏（动态）
      */
-    fun loadFavoriteList() = getFavoriteBangumiList.execute(10).cachedIn(viewModelScope)
+    val favoriteList = liveData { emitSource(getFavoriteBangumiList.execute(20)) }
 
     /**
      * 我的历史（动态），前20条

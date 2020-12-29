@@ -17,8 +17,8 @@ import javax.inject.Inject
 class GetBangumiFavoriteUseCase @Inject constructor(
     private val detailsRepo: BangumiDetailsRepository
 ) {
-    fun execute(count: Int = 0): Flow<PagingData<HomeImageBean>> {
-        return detailsRepo.getBangumiDetailsList(count)
+    fun execute(): Flow<PagingData<HomeImageBean>> {
+        return detailsRepo.getBangumiDetailsList()
             .asFlow()
             .dataMap { it.toHomeImageBean() }
     }

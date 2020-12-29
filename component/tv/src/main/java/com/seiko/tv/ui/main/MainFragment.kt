@@ -11,11 +11,9 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
-import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.common.ui.dialog.DialogSelectFragment
 import com.seiko.common.util.extensions.hasFragment
 import com.seiko.common.util.extensions.lazyAndroid
-import com.seiko.common.util.extensions.viewLifecycleScope
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
@@ -31,8 +29,6 @@ import com.seiko.tv.ui.search.SearchActivity
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,7 +61,7 @@ class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var settingAdapter: ArrayObjectAdapter
     private lateinit var areaAdapter: AsyncObjectAdapter<HomeImageBean>
-    private lateinit var favoriteAdapter: AsyncPagedObjectAdapter<HomeImageBean>
+    private lateinit var favoriteAdapter: AsyncObjectAdapter<HomeImageBean>
     private lateinit var historyAdapter: AsyncObjectAdapter<HomeImageBean>
 
     private val leftItems by lazyAndroid {
@@ -143,7 +139,7 @@ class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
         areaAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_AREA, getString(R.string.title_area), areaAdapter)
         // 我的收藏
-        favoriteAdapter = AsyncPagedObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
+        favoriteAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
         createListRow(ROW_FAVORITE, getString(R.string.title_favorite), favoriteAdapter)
         // 浏览历史
         historyAdapter = AsyncObjectAdapter(presenterSelector, homeImageBeanDiffCallback)
@@ -168,9 +164,9 @@ class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
             areaAdapter.submitList(list)
             startEntranceTransition()
         }
-        viewModel.loadFavoriteList()
-            .onEach { favoriteAdapter.submitData(it) }
-            .launchIn(viewLifecycleScope)
+        viewModel.favoriteList.observe(viewLifecycleOwner) {
+            favoriteAdapter.submitList(it)
+        }
         viewModel.historyBangumiList.observe(viewLifecycleOwner) { list ->
             historyAdapter.submitList(list)
         }

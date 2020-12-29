@@ -33,13 +33,14 @@ class BangumiDetailsRepository @Inject constructor(
     }
 
     /**
-     * 获得本地收藏的全部动漫
+     * 获得本地收藏的全部动漫 - 分页
      */
-    fun getBangumiDetailsList(count: Int) = if (count <= 0) {
-        bangumiDetailsDao.all()
-    } else {
-        bangumiDetailsDao.all(count)
-    }
+    fun getBangumiDetailsList() = bangumiDetailsDao.all()
+
+    /**
+     * 获得本地收藏的前x不动漫 - liveData
+     */
+    fun getBangumiDetailsListLiveData(count: Int) = bangumiDetailsDao.allLiveData(count)
 
     /**
      * 尝试更新收藏的动漫的浏览时间

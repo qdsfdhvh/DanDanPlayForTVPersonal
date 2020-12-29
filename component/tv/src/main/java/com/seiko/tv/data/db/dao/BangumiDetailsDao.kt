@@ -1,5 +1,6 @@
 package com.seiko.tv.data.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,7 +13,7 @@ import com.seiko.tv.data.db.model.BangumiDetailsEntity
 interface BangumiDetailsDao {
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC LIMIT :count")
-    fun all(count: Int): PagingSource<Int, BangumiDetailsEntity>
+    fun allLiveData(count: Int): LiveData<List<BangumiDetailsEntity>>
 
     @Query("SELECT * FROM BangumiDetails ORDER BY addedDate DESC")
     fun all(): PagingSource<Int, BangumiDetailsEntity>
