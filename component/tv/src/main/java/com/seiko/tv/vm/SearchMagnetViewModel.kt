@@ -3,17 +3,14 @@ package com.seiko.tv.vm
 import android.net.Uri
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.seiko.tv.domain.SaveMagnetInfoUseCase
 import com.seiko.tv.domain.search.SearchMagnetListUseCase
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.common.data.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SearchMagnetViewModel @ViewModelInject constructor(
-    private val searchMagnetList: SearchMagnetListUseCase,
-    private val saveMagnetInfo: SaveMagnetInfoUseCase
+    private val searchMagnetList: SearchMagnetListUseCase
 ) : ViewModel() {
 
     /**
@@ -50,15 +47,5 @@ class SearchMagnetViewModel @ViewModelInject constructor(
     fun getCurrentMagnetUri(): Uri? {
         val item = currentMagnetItem ?: return null
         return Uri.parse(item.magnet)
-    }
-
-    /**
-     * 保存种子信息，尝试关联动漫与集数
-     */
-    fun saveMagnetInfoUseCase(hash: String, animeId: Long, episodeId: Int) = viewModelScope.launch {
-        Timber.d("添加种子完成...")
-        val item = currentMagnetItem ?: return@launch
-        saveMagnetInfo.invoke(item, hash, animeId, episodeId)
-        Timber.d("添加种子完成：hash=$hash, animeId=$animeId, episodeId=$episodeId")
     }
 }

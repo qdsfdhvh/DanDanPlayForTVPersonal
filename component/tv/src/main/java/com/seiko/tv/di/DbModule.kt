@@ -58,18 +58,6 @@ object DbModule {
 
     @Provides
     @Singleton
-    fun provideResMagnetItemDao(database: AppDatabase): ResMagnetItemDao {
-        return database.resMagnetItemDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideEpisodeTorrentDao(database: AppDatabase): EpisodeTorrentDao {
-        return database.episodeTorrentDao()
-    }
-
-    @Provides
-    @Singleton
     fun provideHttpDbCacheDao(database: AppDatabase): HttpDbCacheDao {
         return database.httpDbCacheDao()
     }

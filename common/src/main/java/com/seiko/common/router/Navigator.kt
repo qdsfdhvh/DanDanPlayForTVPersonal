@@ -37,10 +37,9 @@ object Navigator {
      * 跳转种子信息页面
      * PS: ARouter默认的navigation不支持fragment
      */
-    fun navToAddTorrent(fragment: Fragment, magnetUri: Uri, requestCode: Int) {
+    fun navToAddTorrent(fragment: Fragment, torrentUri: Uri) {
         Router.build(Routes.Torrent.PATH_ADD)
-            .setData(magnetUri)
-            .requestCode(requestCode)
+            .setData(torrentUri)
             .go(fragment)
     }
 

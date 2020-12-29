@@ -15,7 +15,6 @@ import com.seiko.torrent.util.eventbus.unRegisterEventBus
 import com.seiko.common.router.Navigator
 import com.seiko.common.router.Routes
 import com.seiko.torrent.R
-import com.seiko.torrent.data.db.TorrentEntity
 import com.seiko.torrent.data.model.PostEvent
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -85,18 +84,10 @@ class TorrentAddActivity : BaseActivity(R.layout.torrent_activiy_add)
     fun onReceive(event: PostEvent) {
         when(event) {
             is PostEvent.TorrentAdded -> {
-                setTorrentResult(event.torrent)
                 Navigator.navToTorrent(this)
                 finish()
             }
         }
-    }
-
-    private fun setTorrentResult(task: TorrentEntity) {
-        val data = Intent()
-        data.putExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, true)
-        data.putExtra(Routes.Torrent.RESULT_KEY_ADD_HASH, task.hash)
-        setResult(RESULT_OK, data)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {

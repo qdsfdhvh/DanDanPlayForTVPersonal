@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.seiko.tv.data.db.dao.*
 import com.seiko.tv.data.db.model.*
-import com.seiko.tv.util.constants.DB_NAME_DEFAULT
 
 @Database(entities = [
     BangumiDetailsEntity::class,
@@ -45,10 +44,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bangumiHistoryDao(): BangumiHistoryDao
 
     abstract fun bangumiKeyboardDao(): BangumiKeyBoardDao
-
-    abstract fun resMagnetItemDao(): ResMagnetItemDao
-
-    abstract fun episodeTorrentDao(): EpisodeTorrentDao
 
     abstract fun httpDbCacheDao(): HttpDbCacheDao
 

@@ -11,7 +11,6 @@ import androidx.leanback.widget.*
 import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
 import com.seiko.tv.vm.SearchBangumiViewModel
 import com.seiko.common.router.Navigator
-import com.seiko.common.router.Routes
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
@@ -32,7 +31,6 @@ class SearchBangumiFragment : SearchSupportFragment(),
         private const val ROW_MAGNET = 200
 
         private const val REQUEST_SPEECH = 2222
-        private const val REQUEST_TORRENT = 2223
 
         fun newInstance(): SearchBangumiFragment {
             return SearchBangumiFragment()
@@ -92,7 +90,8 @@ class SearchBangumiFragment : SearchSupportFragment(),
 
     override fun recognizeSpeech() {
         try {
-            startActivityForResult(recognizerIntent,
+            startActivityForResult(
+                recognizerIntent,
                 REQUEST_SPEECH
             )
         } catch (e: ActivityNotFoundException) {
@@ -118,19 +117,19 @@ class SearchBangumiFragment : SearchSupportFragment(),
      */
     override fun onItemClicked(
         holder: Presenter.ViewHolder,
-       item: Any?,
-       rowHolder: RowPresenter.ViewHolder?,
-       row: Row?
+        item: Any?,
+        rowHolder: RowPresenter.ViewHolder?,
+        row: Row?
     ) {
-        when(item) {
+        when (item) {
             is SearchAnimeDetails -> {
                 val cardView = holder.view as SearchBangumiCardView
-                BangumiDetailsActivity.launch(requireActivity(), item.animeId, item.imageUrl, cardView.getImageView())
-//                findNavController().navigate(
-//                    SearchBangumiFragmentDirections.actionSearchBangumiFragmentToBangumiDetailsFragment(
-//                        item.animeId
-//                    )
-//                )
+                BangumiDetailsActivity.launch(
+                    requireActivity(),
+                    item.animeId,
+                    item.imageUrl,
+                    cardView.getImageView()
+                )
             }
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)
@@ -144,32 +143,18 @@ class SearchBangumiFragment : SearchSupportFragment(),
      */
     private fun downloadMagnet() {
         val uri = viewModel.getCurrentMagnetUri() ?: return
-        Navigator.navToAddTorrent(this, uri,
-            REQUEST_TORRENT
-        )
+        Navigator.navToAddTorrent(this, uri)
     }
 
     /**
      * Activity退栈回调
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_SPEECH -> {
-                when(resultCode) {
+                when (resultCode) {
                     Activity.RESULT_OK -> {
                         setSearchQuery(data, true)
-                    }
-                }
-            }
-            REQUEST_TORRENT -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val success = data.getBooleanExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, false)
-                    if (success) {
-                        val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
-                        if (hash != null) {
-                            // 这里不存在animeId与episodeId，都是-1
-                            viewModel.saveMagnetInfoUseCase(hash, -1, -1)
-                        }
                     }
                 }
             }

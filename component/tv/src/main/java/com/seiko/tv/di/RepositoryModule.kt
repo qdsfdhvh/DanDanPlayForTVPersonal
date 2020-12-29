@@ -73,24 +73,4 @@ object RepositoryModule {
         )
     }
 
-    @Provides
-    @ActivityRetainedScoped
-    fun provideResMagnetItemRepository(
-        resMagnetItemDao: ResMagnetItemDao
-    ): ResMagnetItemRepository {
-        return ResMagnetItemRepository(
-            resMagnetItemDao
-        )
-    }
-
-    @Provides
-    @ActivityRetainedScoped
-    fun provideEpisodeTorrentRepository(
-        episodeTorrentDao: EpisodeTorrentDao
-    ): EpisodeTorrentRepository {
-        return EpisodeTorrentRepository(
-            episodeTorrentDao
-        )
-    }
-
 }

@@ -34,7 +34,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
         private const val REQUEST_ID_AUDIO = 1122
 
         private const val REQUEST_SPEECH = 2222
-        private const val REQUEST_TORRENT = 2223
 
         fun newInstance(bundle: Bundle): SearchMagnetFragment {
             val fragment = SearchMagnetFragment()
@@ -44,8 +43,6 @@ class SearchMagnetFragment : SearchSupportFragment(),
     }
 
     private val keyword by lazyAndroid { requireArguments().getString(ARGS_KEYWORD)!! }
-    private val animeId by lazyAndroid { requireArguments().getLong(ARGS_ANIME_ID) }
-    private val episodeId by lazyAndroid { requireArguments().getInt(ARGS_EPISODE_ID) }
 
     private val viewModel: SearchMagnetViewModel by viewModels()
 
@@ -94,7 +91,8 @@ class SearchMagnetFragment : SearchSupportFragment(),
 
     override fun recognizeSpeech() {
         try {
-            startActivityForResult(recognizerIntent,
+            startActivityForResult(
+                recognizerIntent,
                 REQUEST_SPEECH
             )
         } catch (e: ActivityNotFoundException) {
@@ -124,7 +122,7 @@ class SearchMagnetFragment : SearchSupportFragment(),
         rowHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
-        when(item) {
+        when (item) {
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)
                 downloadMagnet()
@@ -137,20 +135,19 @@ class SearchMagnetFragment : SearchSupportFragment(),
      */
     private fun downloadMagnet() {
         val uri = viewModel.getCurrentMagnetUri() ?: return
-        Navigator.navToAddTorrent(this, uri,
-            REQUEST_TORRENT
-        )
+        Navigator.navToAddTorrent(this, uri)
     }
 
     /**
      * 权限请求回调
      */
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<out String>,
-                                            grantResults: IntArray
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_ID_AUDIO -> {
                 if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                     toast("没有语音权限。")
@@ -163,21 +160,10 @@ class SearchMagnetFragment : SearchSupportFragment(),
      * Activity退栈回调
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_SPEECH -> {
                 if (resultCode == Activity.RESULT_OK) {
                     setSearchQuery(data, false)
-                }
-            }
-            REQUEST_TORRENT -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val success = data.getBooleanExtra(Routes.Torrent.RESULT_KEY_ADD_SUCCESS, false)
-                    if (success) {
-                        val hash = data.getStringExtra(Routes.Torrent.RESULT_KEY_ADD_HASH)
-                        if (hash != null) {
-                            viewModel.saveMagnetInfoUseCase(hash, animeId, episodeId)
-                        }
-                    }
                 }
             }
         }
