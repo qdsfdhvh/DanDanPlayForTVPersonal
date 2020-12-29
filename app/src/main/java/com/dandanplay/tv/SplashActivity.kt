@@ -3,7 +3,7 @@ package com.dandanplay.tv
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.seiko.common.router.Navigator
-import com.seiko.common.util.helper.AutoAdaptStrategyIgnore
+import com.seiko.common.helper.AutoAdaptStrategyIgnore
 
 class SplashActivity : FragmentActivity()
     , AutoAdaptStrategyIgnore {

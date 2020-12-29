@@ -1,4 +1,4 @@
-package com.seiko.common.util.helper
+package com.seiko.common.helper
 
 import androidx.core.content.FileProvider
 

@@ -19,11 +19,6 @@
         android:icon="@mipmap/ic_dandan_launcher"
         android:banner="@mipmap/ic_dandan_launcher"
         android:fullBackupContent="@xml/backup_content"
-        android:supportsRtl="true"
-        android:hardwareAccelerated="true"
-        android:usesCleartextTraffic="true"
-        android:largeHeap="true"
-        android:extractNativeLibs="false"
         android:requestLegacyExternalStorage="true"
         tools:targetApi="q"
         tools:ignore="GoogleAppIndexingWarning">

@@ -1,4 +1,4 @@
-package com.seiko.common.util.helper
+package com.seiko.common.helper
 
 import android.app.Activity
 import android.content.res.Configuration

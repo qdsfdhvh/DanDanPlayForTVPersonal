@@ -12,5 +12,15 @@
     <application
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="n">
+        <!-- 适配 Android 7.0 文件意图 -->
+        <provider
+            android:name=".helper.AppFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

@@ -1,7 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <!--配置root-path。这样子可以读取到sd卡和一些应用分身的目录，否则就会导致
-    java.lang.IllegalArgumentException: Failed to find configured root that contains /storage/emulated/...
-    -->
-    <root-path name="root-path" path="" />
+    <!-- 代表设备的根目录 new File("/") -->
+    <!-- content://${applicationId}/root/ -->
+    <!-- file:///example/ -->
+<!--    <root-path-->
+<!--        name="root"-->
+<!--        path="" />-->
+
+    <!-- 代表 context.getFileDir() -->
+    <!-- content://${applicationId}/files/ -->
+    <!-- file:///data/user/0/${applicationId}/files/example/ -->
+    <files-path
+        name="files"
+        path="${applicationId}/files" />
+
+    <!-- 代表 context.getCacheDir() -->
+    <!-- content://${applicationId}/cache/ -->
+    <!-- file:///data/user/0/${applicationId}/cache/example/ -->
+    <cache-path
+        name="cache"
+        path="${applicationId}/cache" />
+
+    <!-- 代表 Environment.getExternalStorageDirectory() -->
+    <!-- content://${applicationId}/external/ -->
+    <!-- file:///storage/emulated/0/example/ -->
+    <external-path
+        name="external"
+        path="Android/data/${applicationId}" />
+
+    <!-- 代表 context.getExternalFilesDirs() -->
+    <!-- content://${applicationId}/external_files/ -->
+    <!-- file:///storage/emulated/0/Android/data/${applicationId}/files/example/ -->
+    <external-files-path
+        name="external_files"
+        path="Android/data/${applicationId}/files" />
+
+    <!-- 代表 getExternalCacheDirs() -->
+    <!-- content://${applicationId}/external_cache/ -->
+    <!-- file:///storage/emulated/0/Android/data/${applicationId}/cache/example/ -->
+    <external-cache-path
+        name="external_cache"
+        path="Android/data/${applicationId}/cache" />
 </paths>

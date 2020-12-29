@@ -3,8 +3,8 @@ package com.seiko.common.initializer
 import android.app.Application
 import com.seiko.autosize.AutoSizeConfig
 import com.seiko.common.util.fix.IMMLeaks
-import com.seiko.common.util.helper.AutoAdaptStrategyFactory
-import com.seiko.common.util.helper.providerAppManager
+import com.seiko.common.helper.AutoAdaptStrategyFactory
+import com.seiko.common.helper.providerAppManager
 import com.seiko.common.util.prefs.initMMKV
 import javax.inject.Inject
 
