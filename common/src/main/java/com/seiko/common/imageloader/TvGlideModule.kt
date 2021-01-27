@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -84,7 +84,7 @@ open class TvGlideModule : AppGlideModule() {
     }
 }
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @EntryPoint
 interface TvGlideModuleEntryPoint {
     val builder: OkHttpClient.Builder

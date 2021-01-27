@@ -9,15 +9,15 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ViewModelComponent::class)
 object RepositoryModule {
 
     @Provides
-    @ActivityRetainedScoped
+    @ViewModelScoped
     fun provideDanDanApiRepository(
         api: Lazy<DanDanApiService>,
         httpDbCache: HttpDbCacheRepository
@@ -26,7 +26,7 @@ object RepositoryModule {
     }
 
     @Provides
-    @ActivityRetainedScoped
+    @ViewModelScoped
     fun provideHttpDbCacheRepository(
         httpDbCachedDao: HttpDbCacheDao,
         moshi: Moshi
@@ -38,7 +38,7 @@ object RepositoryModule {
     }
 
     @Provides
-    @ActivityRetainedScoped
+    @ViewModelScoped
     fun provideBangumiDetailsRepository(
         bangumiDetailsDao: BangumiDetailsDao,
         bangumiEpisodeDao: BangumiEpisodeDao,
@@ -54,7 +54,7 @@ object RepositoryModule {
     }
 
     @Provides
-    @ActivityRetainedScoped
+    @ViewModelScoped
     fun provideBangumiHistoryRepository(
         database: AppDatabase
     ): BangumiHistoryRepository {
@@ -64,7 +64,7 @@ object RepositoryModule {
     }
 
     @Provides
-    @ActivityRetainedScoped
+    @ViewModelScoped
     fun provideBangumiKeyboardRepository(
         bangumiKeyBoardDao: BangumiKeyBoardDao
     ): BangumiKeyboardRepository {

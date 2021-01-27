@@ -6,14 +6,14 @@ import com.seiko.torrent.util.constants.DOWNLOAD_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
@@ -26,7 +26,10 @@ object NetworkModule {
     @Provides
     @Singleton
     @TorrentDanDanRetrofitQualifier
-    fun provideRetrofit(builder: Retrofit.Builder, @TorrentDanDanClientQualifier client: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        builder: Retrofit.Builder,
+        @TorrentDanDanClientQualifier client: OkHttpClient
+    ): Retrofit {
         return builder.callFactory(client)
             .baseUrl(DOWNLOAD_BASE_URL)
             .build()

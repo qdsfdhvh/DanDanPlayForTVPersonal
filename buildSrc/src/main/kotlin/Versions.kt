@@ -28,7 +28,7 @@ object Versions {
     const val okhttp = "4.6.0" // https://github.com/square/okhttp
     const val moshi = "1.9.2" // https://github.com/square/moshi
 
-    const val dagger = "2.28.3-alpha"   // https://github.com/google/dagger
+    const val dagger = "2.31-alpha"      // https://github.com/google/dagger
     const val hilt = "1.0.0-alpha02" // https://maven.google.com/web/index.html?q=hilt#androidx.hilt:hilt-common
 
     const val router = "1.7.5"
