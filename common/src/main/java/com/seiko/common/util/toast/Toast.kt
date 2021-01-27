@@ -8,16 +8,16 @@ import androidx.fragment.app.Fragment
 import com.dovar.dtoast.DToast
 import com.seiko.common.R
 
-fun Activity.toast(msg: String) {
-    makeToast(this, msg)
+fun Activity.toast(msg: String?) {
+    makeToast(applicationContext, msg)
 }
 
 fun Fragment.toast(msg: String?) {
-    makeToast(requireActivity(), msg)
+    requireActivity().toast(msg)
 }
 
 fun Service.toast(msg: String?) {
-    makeToast(this, msg)
+    makeToast(applicationContext, msg)
 }
 
 fun makeToast(context: Context, msg: String?) {
