@@ -2,7 +2,8 @@ package com.seiko.torrent.data.model.torrent
 
 import android.os.Parcelable
 import com.seiko.torrent.data.db.TorrentEntity
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
+
 
 @Parcelize
 data class AddTorrentParams(

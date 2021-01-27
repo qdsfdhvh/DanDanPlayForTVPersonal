@@ -2,7 +2,7 @@ package com.seiko.tv.data.model.api
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 //BangumiSeason {
 //    year (integer): 年份 ,

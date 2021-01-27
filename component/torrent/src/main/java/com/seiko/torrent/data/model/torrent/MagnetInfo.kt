@@ -2,7 +2,7 @@ package com.seiko.torrent.data.model.torrent
 
 import android.os.Parcelable
 import android.text.TextUtils
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.libtorrent4j.AddTorrentParams
 import org.libtorrent4j.Priority
 

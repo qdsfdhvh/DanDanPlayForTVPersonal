@@ -2,7 +2,7 @@ package com.seiko.torrent.data.db
 
 import android.os.Parcelable
 import androidx.room.*
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.libtorrent4j.Priority
 
 @Entity(

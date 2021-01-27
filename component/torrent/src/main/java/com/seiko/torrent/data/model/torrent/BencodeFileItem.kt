@@ -1,7 +1,7 @@
 package com.seiko.torrent.data.model.torrent
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class BencodeFileItem(
