@@ -1,12 +1,14 @@
 package com.seiko.tv.vm
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryCountUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BangumiHistoryViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BangumiHistoryViewModel @Inject constructor(
     private val getBangumiHistoryCount: GetBangumiHistoryCountUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryUseCase
 ) : ViewModel() {

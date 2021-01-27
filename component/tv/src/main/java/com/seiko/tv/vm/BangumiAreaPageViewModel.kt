@@ -1,17 +1,19 @@
 package com.seiko.tv.vm
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.seiko.tv.domain.bangumi.GetBangumiListWithSeasonUseCase
-import com.seiko.tv.data.model.api.BangumiSeason
 import com.seiko.common.data.Result
 import com.seiko.tv.data.model.HomeImageBean
-import kotlinx.coroutines.*
+import com.seiko.tv.data.model.api.BangumiSeason
+import com.seiko.tv.domain.bangumi.GetBangumiListWithSeasonUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
+import javax.inject.Inject
 
-class BangumiAreaPageViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BangumiAreaPageViewModel @Inject constructor(
     private val getBangumiListWithSeason: GetBangumiListWithSeasonUseCase
 ) : ViewModel() {
 

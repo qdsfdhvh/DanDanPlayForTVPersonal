@@ -1,17 +1,19 @@
 package com.seiko.tv.vm
 
 import android.net.Uri
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.seiko.tv.domain.search.SearchBangumiListUseCase
-import com.seiko.tv.domain.search.SearchMagnetListUseCase
+import com.seiko.common.data.Result
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
-import com.seiko.common.data.Result
+import com.seiko.tv.domain.search.SearchBangumiListUseCase
+import com.seiko.tv.domain.search.SearchMagnetListUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
+import javax.inject.Inject
 
-class SearchBangumiViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SearchBangumiViewModel @Inject constructor(
     private val searchBangumiList: SearchBangumiListUseCase,
     private val searchMagnetList: SearchMagnetListUseCase
 ) : ViewModel() {
@@ -27,9 +29,9 @@ class SearchBangumiViewModel @ViewModelInject constructor(
      */
     val bangumiList: LiveData<List<SearchAnimeDetails>> = changeKeyword.switchMap { keyword ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            when(val result = searchBangumiList.invoke(keyword, "")) {
+            when (val result = searchBangumiList.invoke(keyword, "")) {
                 is Result.Error -> Timber.e(result.exception)
-                is Result.Success ->  emit(result.data)
+                is Result.Success -> emit(result.data)
             }
         }
     }
@@ -39,9 +41,9 @@ class SearchBangumiViewModel @ViewModelInject constructor(
      */
     val magnetList: LiveData<List<ResMagnetItemEntity>> = changeKeyword.switchMap { keyword ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            when(val result = searchMagnetList.invoke(keyword, -1, -1)) {
+            when (val result = searchMagnetList.invoke(keyword, -1, -1)) {
                 is Result.Error -> Timber.e(result.exception)
-                is Result.Success ->  emit(result.data)
+                is Result.Success -> emit(result.data)
             }
         }
     }

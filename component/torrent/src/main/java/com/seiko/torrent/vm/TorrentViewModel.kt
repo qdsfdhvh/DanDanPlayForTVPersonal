@@ -1,15 +1,17 @@
 package com.seiko.torrent.vm
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.data.comments.TorrentRepository
 import com.seiko.torrent.data.model.torrent.TorrentListItem
+import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.download.Downloader
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TorrentViewModel @ViewModelInject constructor(
+@HiltViewModel
+class TorrentViewModel @Inject constructor(
     private val downloader: Downloader,
     private val torrentRepo: TorrentRepository
 ) : ViewModel() {
@@ -33,11 +35,13 @@ class TorrentViewModel @ViewModelInject constructor(
     val torrentItem: LiveData<TorrentListItem?> = _torrentItem
     val torrentMetaInfo: LiveData<TorrentMetaInfo?> = torrentItem.switchMap { item ->
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(if (item != null) {
-                downloader.getTorrentMetaInfo(item.hash)
-            } else {
-                null
-            })
+            emit(
+                if (item != null) {
+                    downloader.getTorrentMetaInfo(item.hash)
+                } else {
+                    null
+                }
+            )
         }
     }
 

@@ -2,34 +2,36 @@ package com.seiko.torrent.vm
 
 import android.net.Uri
 import android.webkit.URLUtil
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
-import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
 import com.seiko.common.data.Result
-import com.seiko.torrent.util.extensions.find
-import com.seiko.torrent.util.extensions.getLeaves
-import com.seiko.torrent.util.extensions.toFileTree
-import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.filetree.BencodeFileTree
-import com.seiko.torrent.download.Downloader
-import com.seiko.torrent.ui.add.State
+import com.seiko.torrent.data.model.torrent.AddTorrentParams
 import com.seiko.torrent.data.model.torrent.MagnetInfo
 import com.seiko.torrent.data.model.torrent.TorrentMetaInfo
 import com.seiko.torrent.di.TorrentDownloadDir
 import com.seiko.torrent.domain.BuildTorrentTaskUseCase
 import com.seiko.torrent.domain.DownloadTorrentWithDanDanApiUseCase
+import com.seiko.torrent.domain.DownloadTorrentWithNetUseCase
+import com.seiko.torrent.domain.GetTorrentTempWithContentUseCase
+import com.seiko.torrent.download.Downloader
+import com.seiko.torrent.ui.add.State
+import com.seiko.torrent.util.extensions.find
+import com.seiko.torrent.util.extensions.getLeaves
 import com.seiko.torrent.util.extensions.isMagnet
+import com.seiko.torrent.util.extensions.toFileTree
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.libtorrent4j.Priority
 import java.io.File
+import javax.inject.Inject
 
-class AddTorrentViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddTorrentViewModel @Inject constructor(
     private val downloader: Downloader,
     @TorrentDownloadDir private val torrentDownloadDir: File,
     private val downloadTorrentWithDanDanApi: DownloadTorrentWithDanDanApiUseCase,
@@ -70,8 +72,10 @@ class AddTorrentViewModel @ViewModelInject constructor(
 
     // 自动下载
     var autoStart = true
+
     // 顺序下载
     var isSequentialDownload = false
+
     // 自定义名称
     var customName = ""
 
@@ -85,7 +89,7 @@ class AddTorrentViewModel @ViewModelInject constructor(
                 // 弹弹接口下载，较快
                 updateState(State.FETCHING_HTTP)
                 delay(50)
-                when(val result = downloadTorrentWithDanDanApi.invoke(path)) {
+                when (val result = downloadTorrentWithDanDanApi.invoke(path)) {
                     is Result.Success -> {
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
@@ -112,7 +116,7 @@ class AddTorrentViewModel @ViewModelInject constructor(
             URLUtil.isContentUrl(path) -> {
                 updateState(State.FETCHING_HTTP)
                 delay(50)
-                when(val result = getTorrentTempWithNetUseCase.invoke(path)) {
+                when (val result = getTorrentTempWithNetUseCase.invoke(path)) {
                     is Result.Success -> {
                         updateState(State.FETCHING_HTTP_COMPLETED)
                         source = result.data
@@ -135,7 +139,7 @@ class AddTorrentViewModel @ViewModelInject constructor(
             URLUtil.isContentUrl(path) -> {
                 updateState(State.DECODE_TORRENT_FILE)
                 delay(50)
-                when(val result = getTorrentTempWithContentUseCase.invoke(uri)) {
+                when (val result = getTorrentTempWithContentUseCase.invoke(uri)) {
                     is Result.Success -> {
                         updateState(State.DECODE_TORRENT_COMPLETED)
                         source = result.data
@@ -225,7 +229,8 @@ class AddTorrentViewModel @ViewModelInject constructor(
             name = name,
             downloadPath = downloadPath,
             isSequentialDownload = isSequentialDownload,
-            autoStart = autoStart)
+            autoStart = autoStart
+        )
     }
 
     override fun onCleared() {

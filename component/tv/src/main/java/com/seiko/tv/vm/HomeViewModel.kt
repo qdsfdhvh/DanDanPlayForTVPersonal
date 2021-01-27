@@ -1,6 +1,5 @@
 package com.seiko.tv.vm
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.seiko.common.data.Result
 import com.seiko.tv.data.model.AirDayBangumiBean
@@ -8,13 +7,16 @@ import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.domain.bangumi.GetBangumiFavoriteLiveDataUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiHistoryLiveDataUseCase
 import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     getWeekBangumiList: GetSeriesBangumiAirDayBeansUseCase,
     private val getBangumiFavoriteList: GetBangumiFavoriteLiveDataUseCase,
     private val getBangumiHistoryList: GetBangumiHistoryLiveDataUseCase

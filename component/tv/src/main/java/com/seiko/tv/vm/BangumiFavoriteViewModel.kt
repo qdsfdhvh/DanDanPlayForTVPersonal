@@ -1,12 +1,14 @@
 package com.seiko.tv.vm
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.seiko.tv.domain.bangumi.GetBangumiFavoriteCountUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiFavoriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BangumiFavoriteViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BangumiFavoriteViewModel @Inject constructor(
     private val getBangumiFavoriteCountUseCase: GetBangumiFavoriteCountUseCase,
     private val getBangumiFavoriteUseCase: GetBangumiFavoriteUseCase
 ) : ViewModel() {

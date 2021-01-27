@@ -1,24 +1,26 @@
 package com.seiko.tv.vm
 
 import android.graphics.Color
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.seiko.tv.domain.GetImageUrlPaletteUseCase
-import com.seiko.tv.data.db.model.BangumiDetailsEntity
-import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.common.data.Result
 import com.seiko.tv.data.comments.BangumiKeyboardRepository
+import com.seiko.tv.data.db.model.BangumiDetailsEntity
+import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
+import com.seiko.tv.domain.GetImageUrlPaletteUseCase
 import com.seiko.tv.domain.bangumi.GetBangumiDetailsUseCase
+import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
 import com.seiko.tv.util.toHomeImageBean
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
+import javax.inject.Inject
 
-class BangumiDetailViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BangumiDetailViewModel @Inject constructor(
     private val getBangumiDetails: GetBangumiDetailsUseCase,
     private val getImageUrlPalette: GetImageUrlPaletteUseCase,
     private val saveBangumiFavorite: SaveBangumiFavoriteUseCase,
@@ -33,18 +35,19 @@ class BangumiDetailViewModel @ViewModelInject constructor(
     /**
      * 番剧信息
      */
-    private val bangumiDetails: LiveData<BangumiDetailsEntity> = animeId.distinctUntilChanged().switchMap { animeId ->
-        getBangumiDetails.invoke(animeId)
-            .flatMapConcat { result ->
-                flow {
-                    when(result) {
-                        is Result.Success -> emit(result.data)
-                        is Result.Error -> Timber.w(result.exception)
+    private val bangumiDetails: LiveData<BangumiDetailsEntity> =
+        animeId.distinctUntilChanged().switchMap { animeId ->
+            getBangumiDetails.invoke(animeId)
+                .flatMapConcat { result ->
+                    flow {
+                        when (result) {
+                            is Result.Success -> emit(result.data)
+                            is Result.Error -> Timber.w(result.exception)
+                        }
                     }
                 }
-            }
-            .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
-    }
+                .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
+        }
 
     /**
      * 番剧信息 与 logo色调解析数据
@@ -78,20 +81,22 @@ class BangumiDetailViewModel @ViewModelInject constructor(
             var keyboard = bangumiKeyboardRepo.getKeyboard(details.animeId)
             if (keyboard.isNullOrBlank()) keyboard = details.searchKeyword
 
-            emit(BangumiDetailBean(
-                animeTitle = details.animeTitle,
-                imageUrl = details.imageUrl,
-                tags = details.tags.joinToString { it.tagName },
-                description = details.summary,
-                rating = details.rating,
-                isFavorited = details.isFavorited,
-                keyboard = keyboard,
+            emit(
+                BangumiDetailBean(
+                    animeTitle = details.animeTitle,
+                    imageUrl = details.imageUrl,
+                    tags = details.tags.joinToString { it.tagName },
+                    description = details.summary,
+                    rating = details.rating,
+                    isFavorited = details.isFavorited,
+                    keyboard = keyboard,
 
-                titleColor = titleColor,
-                bodyColor = bodyColor,
-                overviewRowBackgroundColor = overviewRowBackgroundColor,
-                actionBackgroundColor = actionBackgroundColor
-            ))
+                    titleColor = titleColor,
+                    bodyColor = bodyColor,
+                    overviewRowBackgroundColor = overviewRowBackgroundColor,
+                    actionBackgroundColor = actionBackgroundColor
+                )
+            )
         }
     }
 
