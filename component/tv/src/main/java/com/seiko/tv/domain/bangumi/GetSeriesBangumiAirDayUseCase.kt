@@ -1,10 +1,10 @@
 package com.seiko.tv.domain.bangumi
 
 
+import com.seiko.common.data.Result
+import com.seiko.tv.data.db.model.BangumiIntroEntity
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.util.toHomeImageBean
-import com.seiko.tv.data.db.model.BangumiIntroEntity
-import com.seiko.common.data.Result
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +27,7 @@ class GetSeriesBangumiAirDayBeansUseCase @Inject constructor(
      */
     operator fun invoke(weekDay: Int): Flow<Result<List<AirDayBangumiBean>>> {
         return getBangumiList.invoke().map { result ->
-            when(result) {
+            when (result) {
                 is Result.Success -> Result.Success(getAirDayBangumiBeans(weekDay, result.data))
                 is Result.Error -> result
             }
@@ -36,7 +36,10 @@ class GetSeriesBangumiAirDayBeansUseCase @Inject constructor(
 
 }
 
-private suspend fun getAirDayBangumiBeans(weekDay: Int, intros: List<BangumiIntroEntity>): List<AirDayBangumiBean> {
+private suspend fun getAirDayBangumiBeans(
+    weekDay: Int,
+    intros: List<BangumiIntroEntity>
+): List<AirDayBangumiBean> {
     return withContext(Dispatchers.Default) {
         // 按顺序生成 周日 ~ 周六 数据
         val weekDays = listOf(

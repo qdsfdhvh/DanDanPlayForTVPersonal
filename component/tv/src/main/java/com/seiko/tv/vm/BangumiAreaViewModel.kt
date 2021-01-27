@@ -9,8 +9,7 @@ import com.seiko.tv.data.model.api.BangumiSeason
 import com.seiko.tv.domain.bangumi.GetBangumiSeasonsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,11 +19,12 @@ class BangumiAreaViewModel @Inject constructor(
 ) : ViewModel() {
 
     val bangumiSeasons: LiveData<List<BangumiSeason>> = getBangumiSeasons.invoke()
-        .flatMapConcat { result ->
-            flow {
-                when (result) {
-                    is Result.Success -> emit(result.data)
-                    is Result.Error -> Timber.e(result.exception)
+        .map { result ->
+            when (result) {
+                is Result.Success -> result.data
+                is Result.Error -> {
+                    Timber.w(result.exception)
+                    emptyList()
                 }
             }
         }

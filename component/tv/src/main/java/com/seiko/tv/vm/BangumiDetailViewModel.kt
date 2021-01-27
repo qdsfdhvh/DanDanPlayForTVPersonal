@@ -14,9 +14,8 @@ import com.seiko.tv.domain.bangumi.SaveBangumiFavoriteUseCase
 import com.seiko.tv.util.toHomeImageBean
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
-import timber.log.Timber
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,14 +37,8 @@ class BangumiDetailViewModel @Inject constructor(
     private val bangumiDetails: LiveData<BangumiDetailsEntity> =
         animeId.distinctUntilChanged().switchMap { animeId ->
             getBangumiDetails.invoke(animeId)
-                .flatMapConcat { result ->
-                    flow {
-                        when (result) {
-                            is Result.Success -> emit(result.data)
-                            is Result.Error -> Timber.w(result.exception)
-                        }
-                    }
-                }
+                .filter { it is Result.Success }
+                .map { (it as Result.Success).data }
                 .asLiveData(viewModelScope.coroutineContext + Dispatchers.IO)
         }
 

@@ -9,8 +9,7 @@ import com.seiko.tv.domain.bangumi.GetBangumiHistoryLiveDataUseCase
 import com.seiko.tv.domain.bangumi.GetSeriesBangumiAirDayBeansUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -28,11 +27,12 @@ class HomeViewModel @Inject constructor(
     val weekBangumiList: LiveData<List<AirDayBangumiBean>> =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(getWeekBangumiList.invoke(getDayOfWeek())
-                .flatMapConcat { result ->
-                    flow {
-                        when (result) {
-                            is Result.Success -> emit(result.data)
-                            is Result.Error -> Timber.e(result.exception)
+                .map { result ->
+                    when(result) {
+                        is Result.Success -> result.data
+                        is Result.Error -> {
+                            Timber.w(result.exception)
+                            emptyList()
                         }
                     }
                 }
