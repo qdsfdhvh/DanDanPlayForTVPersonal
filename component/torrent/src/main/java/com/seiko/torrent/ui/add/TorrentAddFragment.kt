@@ -9,7 +9,6 @@ import androidx.activity.addCallback
 import androidx.activity.requireDispatchKeyEventDispatcher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.ui.dialog.setLoadFragment

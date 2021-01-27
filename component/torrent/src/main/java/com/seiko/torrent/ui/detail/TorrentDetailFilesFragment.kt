@@ -1,12 +1,10 @@
 package com.seiko.torrent.ui.detail
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
@@ -26,7 +24,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 @AndroidEntryPoint
-class TorrentDetailFilesFragment : Fragment(R.layout.torrent_fragment_detail_file), TorrentDetailFilesAdapter.OnItemClickListener {
+class TorrentDetailFilesFragment : Fragment(R.layout.torrent_fragment_detail_file),
+    TorrentDetailFilesAdapter.OnItemClickListener {
 
     companion object {
         fun newInstance(): TorrentDetailFilesFragment {
@@ -93,7 +92,8 @@ class TorrentDetailFilesFragment : Fragment(R.layout.torrent_fragment_detail_fil
             Navigator.navToPlayer(
                 this@TorrentDetailFilesFragment,
                 file.getRealUri(requireContext()),
-                node.name)
+                node.name
+            )
         }
     }
 

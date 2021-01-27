@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.format.Formatter
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.extensions.parentViewModels
