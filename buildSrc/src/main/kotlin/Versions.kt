@@ -12,7 +12,7 @@ object Versions {
     const val appCompat = "1.1.0"
     const val constraintLayout = "1.1.3"
     const val preference = "1.1.0"
-    const val lifecycle = "2.2.0"
+    const val lifecycle = "2.3.0-rc01"
     const val paging = "3.0.0-alpha11"
     const val room = "2.3.0-alpha04"
     const val work = "2.3.4"
