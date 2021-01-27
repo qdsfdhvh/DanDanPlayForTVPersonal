@@ -9,16 +9,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import com.seiko.tv.vm.SearchMagnetViewModel
 import com.seiko.common.router.Navigator
-import com.seiko.common.router.Routes
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.vm.SearchMagnetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class SearchMagnetFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,

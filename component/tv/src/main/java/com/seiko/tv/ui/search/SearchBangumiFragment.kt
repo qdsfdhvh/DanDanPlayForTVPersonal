@@ -20,6 +20,7 @@ import com.seiko.tv.ui.presenter.BangumiPresenterSelector
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class SearchBangumiFragment : SearchSupportFragment(),
     SearchSupportFragment.SearchResultProvider,

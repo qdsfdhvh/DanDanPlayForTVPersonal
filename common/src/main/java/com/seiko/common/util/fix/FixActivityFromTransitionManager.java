@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class FixActivityFromTransitionManager {
 
+    @SuppressWarnings("rawtypes")
     public static void removeActivityFromTransitionManager(Activity activity) {
 //        if (Build.VERSION.SDK_INT < 21) {
 //            return;
