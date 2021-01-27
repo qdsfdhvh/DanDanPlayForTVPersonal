@@ -1,4 +1,4 @@
-rootProject.name="DanDanPlayForTV"
+rootProject.name = "DanDanPlayForTV"
 include(
     ":app",
     ":component",
@@ -7,7 +7,8 @@ include(
     ":common",
     ":libs",
     ":libs:file-picker",
-    ":libs:tool-torrent")
+    ":libs:tool-torrent"
+)
 
 val beginOfSetting = System.currentTimeMillis()
 var beginOfConfig: Long = 0
@@ -21,8 +22,8 @@ gradle.projectsLoaded {
 
 gradle.beforeProject {
     if (!configHasBegin) {
-            configHasBegin = true
-            beginOfConfig = System.currentTimeMillis()
+        configHasBegin = true
+        beginOfConfig = System.currentTimeMillis()
     }
     beginOfProjectConfig[this] = System.currentTimeMillis()
 }
