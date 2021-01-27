@@ -157,7 +157,7 @@ class TorrentDetailFilesAdapter : RecyclerView.Adapter<TorrentDetailFilesAdapter
         }
 
         override fun onClick(v: View) {
-            val position = adapterPosition
+            val position = bindingAdapterPosition
             if (position < 0) return
 
             val node = files[position]

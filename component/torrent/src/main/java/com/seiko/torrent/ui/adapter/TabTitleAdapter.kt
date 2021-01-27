@@ -73,7 +73,7 @@ class TabTitleAdapter(
         override fun onClick(v: View?) {
             when(v?.id) {
                 R.id.container -> {
-                    val position = adapterPosition
+                    val position = bindingAdapterPosition
                     if (position <= 0) {
                         return
                     }
@@ -84,7 +84,7 @@ class TabTitleAdapter(
 
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (v == null) return
-            bind(adapterPosition)
+            bind(bindingAdapterPosition)
         }
 
         fun bind(position: Int) {

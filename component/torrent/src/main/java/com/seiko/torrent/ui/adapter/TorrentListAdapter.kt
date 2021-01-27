@@ -177,7 +177,7 @@ class TorrentListAdapter : BaseListAdapter<TorrentListItem, TorrentListAdapter.I
 
         override fun onClick(v: View?) {
             if (v == null) return
-            val position = adapterPosition
+            val position = bindingAdapterPosition
             if (position < 0) return
             listener?.onClick(this, getItem(position), position)
         }
