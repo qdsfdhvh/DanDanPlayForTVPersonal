@@ -4,8 +4,6 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 apply from: rootProject.file(".buildscript/configure-setting-dagger.gradle")
-apply from: rootProject.file('.buildscript/configure-mc-image.gradle')
-apply from: rootProject.file('.buildscript/configure-and-res-guard.gradle')
 
 android {
     compileSdkVersion Build.compileSdk
