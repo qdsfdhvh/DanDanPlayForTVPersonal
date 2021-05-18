@@ -18,27 +18,27 @@ class ImageLoaderImpl @Inject constructor(
     private val imageLoader = coil.ImageLoader(context)
 
     override fun loadGridImage(view: ImageView, url: String) {
-        view.load(url) {
+        view.load(url, imageLoader) {
             placeholder(R.drawable.picture_icon_placeholder)
             size(160, 200)
         }
     }
 
     override fun loadGridImage(view: ImageView, resId: Int) {
-        view.load(resId) {
+        view.load(resId, imageLoader) {
             placeholder(R.drawable.picture_icon_placeholder)
             size(80, 80)
         }
     }
 
     override fun loadImage(view: ImageView, url: String) {
-        view.load(url) {
+        view.load(url, imageLoader) {
             placeholder(R.drawable.picture_icon_placeholder)
         }
     }
 
     override fun loadImage(view: ImageView, resId: Int) {
-        view.load(resId) {
+        view.load(resId, imageLoader) {
             placeholder(R.drawable.picture_icon_placeholder)
         }
     }
