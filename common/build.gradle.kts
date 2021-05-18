@@ -81,8 +81,5 @@ dependencies {
     api("com.github.NoEndToLF:AppStartFaster:1.0.3")
 
     // 图片加载库 - Glide https://github.com/bumptech/glide
-    val glideVersion = "4.11.0"
-    implementation("com.github.bumptech.glide:glide:${glideVersion}")
-    kapt("com.github.bumptech.glide:compiler:${glideVersion}")
-
+    implementation("io.coil-kt:coil:1.2.1")
 }
