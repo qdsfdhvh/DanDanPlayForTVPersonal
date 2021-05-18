@@ -48,7 +48,6 @@ object Deps {
     const val daggerHiltAndroid = "com.google.dagger:hilt-android:${Versions.dagger}"
     const val daggerHiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.dagger}"
     const val hiltCommon = "androidx.hilt:hilt-common:${Versions.hilt}"
-    const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hilt}"
     const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hilt}"
 
     const val routerPlugin = "com.chenenyu.router:gradle-plugin:${Versions.router}"

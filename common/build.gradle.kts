@@ -71,7 +71,6 @@ dependencies {
     // Dagger
     api(Deps.daggerHiltAndroid)
     api(Deps.hiltCommon)
-    api(Deps.hiltViewModel)
     kapt(Deps.daggerHiltCompiler)
     kapt(Deps.hiltCompiler)
 
