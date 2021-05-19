@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
@@ -13,7 +14,7 @@ import com.seiko.common.router.Navigator
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.common.util.toast.toast
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
 import com.seiko.tv.vm.SearchMagnetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,19 +27,16 @@ class SearchMagnetFragment : SearchSupportFragment(),
     OnItemViewClickedListener {
 
     companion object {
-        const val ARGS_KEYWORD = "ARGS_KEYWORD"
-        const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
-        const val ARGS_EPISODE_ID = "ARGS_EPISODE_ID"
+        private const val ARGS_KEYWORD = "ARGS_KEYWORD"
+
         private const val ROW_MAGNET = 200
-
         private const val REQUEST_ID_AUDIO = 1122
-
         private const val REQUEST_SPEECH = 2222
 
-        fun newInstance(bundle: Bundle): SearchMagnetFragment {
-            val fragment = SearchMagnetFragment()
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(keyword: String): SearchMagnetFragment {
+            return SearchMagnetFragment().apply {
+                arguments = bundleOf(ARGS_KEYWORD to keyword)
+            }
         }
     }
 

@@ -1,10 +1,10 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import android.os.Bundle
 import android.view.ViewGroup
 import com.seiko.common.ui.presenter.BasePresenter
-import com.seiko.tv.ui.card.SearchMagnetCardView
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
+import com.seiko.tv.ui.widget.card.SearchMagnetCardView
 
 class SearchMagnetPresenter : BasePresenter() {
 

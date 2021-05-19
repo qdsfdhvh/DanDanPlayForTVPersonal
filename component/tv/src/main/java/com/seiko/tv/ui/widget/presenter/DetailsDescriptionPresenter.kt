@@ -12,7 +12,7 @@
  * the License.
  *
  */
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -42,7 +42,8 @@ class DetailsDescriptionItemViewHolder(
     companion object {
         fun create(parent: ViewGroup): DetailsDescriptionItemViewHolder {
             val binding = DetailViewContentBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false)
+                LayoutInflater.from(parent.context), parent, false
+            )
             return DetailsDescriptionItemViewHolder(binding)
         }
     }

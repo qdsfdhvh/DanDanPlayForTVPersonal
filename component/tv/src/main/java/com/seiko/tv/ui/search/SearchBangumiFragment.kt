@@ -8,15 +8,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.SearchSupportFragment
 import androidx.leanback.widget.*
-import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
-import com.seiko.tv.vm.SearchBangumiViewModel
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.tv.data.db.model.ResMagnetItemEntity
 import com.seiko.tv.data.model.api.SearchAnimeDetails
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
-import com.seiko.tv.ui.card.SearchBangumiCardView
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.bangumi.BangumiDetailsFragment
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
+import com.seiko.tv.util.diff.SearchAnimeDetailsDiffCallback
+import com.seiko.tv.vm.SearchBangumiViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -124,13 +125,9 @@ class SearchBangumiFragment : SearchSupportFragment(),
     ) {
         when (item) {
             is SearchAnimeDetails -> {
-                val cardView = holder.view as SearchBangumiCardView
-                BangumiDetailsActivity.launch(
-                    requireActivity(),
-                    item.animeId,
-                    item.imageUrl,
-                    cardView.getImageView()
-                )
+                navigator.push {
+                    BangumiDetailsFragment.newInstance(item.animeId, item.imageUrl)
+                }
             }
             is ResMagnetItemEntity -> {
                 viewModel.setCurrentMagnetItem(item)

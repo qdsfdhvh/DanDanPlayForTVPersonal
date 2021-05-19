@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.common.router.Navigator
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.ui.dialog.DialogSelectFragment
@@ -18,14 +20,10 @@ import com.seiko.common.util.toast.toast
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.HomeSettingBean
-import com.seiko.tv.ui.area.BangumiAreaActivity
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
-import com.seiko.tv.ui.bangumi.BangumiFavoriteActivity
-import com.seiko.tv.ui.bangumi.BangumiHistoryActivity
-import com.seiko.tv.ui.bangumi.BangumiTimeLineActivity
-import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.ui.search.SearchActivity
+import com.seiko.tv.ui.area.BangumiAreaFragmentV2
+import com.seiko.tv.ui.bangumi.*
+import com.seiko.tv.ui.search.SearchBangumiFragment
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -178,7 +176,9 @@ class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.title_orb -> {
-                SearchActivity.launchBangumi(requireActivity())
+                navigator.push {
+                    SearchBangumiFragment.newInstance()
+                }
             }
         }
     }
@@ -192,22 +192,31 @@ class MainFragment : BrowseSupportFragment(), OnItemViewClickedListener, View.On
     ) {
         when (item) {
             is HomeImageBean -> {
-                val cardView = holder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigator.push() {
+                    BangumiDetailsFragment.newInstance(item.animeId, item.imageUrl)
+                }
             }
             is HomeSettingBean -> {
                 when (item.id) {
                     ID_AREA -> {
-                        BangumiAreaActivity.launch(requireActivity())
+                        navigator.push {
+                            BangumiAreaFragmentV2.newInstance()
+                        }
                     }
                     ID_FAVOURITE -> {
-                        BangumiFavoriteActivity.launch(requireActivity())
+                        navigator.push {
+                            BangumiFavoriteFragment.newInstance()
+                        }
                     }
                     ID_TIME -> {
-                        BangumiTimeLineActivity.launch(requireActivity())
+                        navigator.push {
+                            BangumiTimeLineFragment.newInstance()
+                        }
                     }
                     ID_HISTORY -> {
-                        BangumiHistoryActivity.launch(requireActivity())
+                        navigator.push {
+                            BangumiHistoryFragment.newInstance()
+                        }
                     }
                     ID_MEDIA -> {
                         Navigator.navToPlayerMedia(requireActivity())

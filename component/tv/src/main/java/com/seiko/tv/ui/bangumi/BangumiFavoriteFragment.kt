@@ -6,13 +6,14 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
 import androidx.paging.LoadState
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.common.ui.adapter.AsyncPagedObjectAdapter
 import com.seiko.common.util.extensions.viewLifecycleScope
 import com.seiko.tv.R
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.widget.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiFavoriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -91,8 +92,9 @@ class BangumiFavoriteFragment : VerticalGridSupportFragment(), OnItemViewClicked
     ) {
         when (item) {
             is HomeImageBean -> {
-                val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigator.push {
+                    BangumiDetailsFragment.newInstance(item.animeId, item.imageUrl)
+                }
             }
         }
     }

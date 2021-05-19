@@ -1,10 +1,10 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.seiko.common.imageloader.ImageLoader
 import com.seiko.tv.data.model.HomeSettingBean
-import com.seiko.tv.ui.card.MainMyCardView
+import com.seiko.tv.ui.widget.card.MainMyCardView
 
 class HomeSettingBeanPresenter(
     private val imageLoader: ImageLoader
@@ -24,5 +24,4 @@ class HomeSettingBeanPresenter(
     override fun onUnbindViewHolder(holder: ViewHolder) {
 
     }
-
 }

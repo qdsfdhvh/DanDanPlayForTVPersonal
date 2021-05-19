@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.dialog
+package com.seiko.tv.ui.widget.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,19 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.seiko.common.util.toast.toast
 import com.seiko.common.ui.dialog.BaseDialogFragment
 import com.seiko.tv.R
 import com.seiko.tv.databinding.DandanDialogInputFragmentBinding
 
-class DialogInputFragment : BaseDialogFragment()
-    , View.OnClickListener {
+class DialogInputFragment : BaseDialogFragment(), View.OnClickListener {
 
     private var onConfirm: ((String) -> Unit)? = null
 
     private val binding: DandanDialogInputFragmentBinding by viewBinding()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.dandan_dialog_input_fragment, container, false)
     }
 
@@ -47,7 +49,7 @@ class DialogInputFragment : BaseDialogFragment()
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.btn_confirm -> {
                 val text = binding.dandanEdit.text.toString()
                 dismissDialog()

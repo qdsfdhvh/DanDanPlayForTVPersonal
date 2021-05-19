@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.card
+package com.seiko.tv.ui.widget.card
 
 import android.annotation.SuppressLint
 import android.content.Context

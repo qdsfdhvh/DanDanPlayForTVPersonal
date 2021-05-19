@@ -82,4 +82,9 @@ dependencies {
 
     // 图片加载库 - Glide https://github.com/bumptech/glide
     implementation("io.coil-kt:coil:1.2.1")
+
+    // Fragment导航 https://github.com/vitaviva/fragivity
+    api("com.github.vitaviva.fragivity:core:0.2.5")
+    api("androidx.navigation:navigation-ui-ktx:2.3.5")
+    api("androidx.navigation:navigation-fragment-ktx:2.3.5")
 }

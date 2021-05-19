@@ -6,11 +6,12 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.seiko.tv.vm.HomeViewModel
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.tv.data.model.AirDayBangumiBean
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
+import com.seiko.tv.vm.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -72,18 +73,21 @@ class BangumiTimeLineFragment : BrowseSupportFragment(), OnItemViewClickedListen
         rowsAdapter.addAll(0, rows)
     }
 
-    override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
-                               rowHolder: RowPresenter.ViewHolder?, row: Row?) {
-        when(item) {
+    override fun onItemClicked(
+        holder: Presenter.ViewHolder, item: Any?,
+        rowHolder: RowPresenter.ViewHolder?, row: Row?
+    ) {
+        when (item) {
             is HomeImageBean -> {
-                val cardView = holder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigator.push {
+                    BangumiDetailsFragment.newInstance(item.animeId, item.imageUrl)
+                }
             }
         }
     }
 }
 
-private fun getWeekName(id: Int) = when(id) {
+private fun getWeekName(id: Int) = when (id) {
     0 -> "周日"
     1 -> "周一"
     2 -> "周二"

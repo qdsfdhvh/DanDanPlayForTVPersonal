@@ -6,23 +6,23 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.VerticalGridSupportFragment
 import androidx.leanback.widget.*
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.api.BangumiSeason
-import com.seiko.tv.ui.bangumi.BangumiDetailsActivity
-import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.ui.presenter.SpacingVerticalGridPresenter
+import com.seiko.tv.ui.bangumi.BangumiDetailsFragment
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.widget.presenter.SpacingVerticalGridPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiAreaPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BangumiAreaPageFragment : VerticalGridSupportFragment()
-    , BrowseSupportFragment.MainFragmentAdapterProvider
-    , OnItemViewClickedListener {
+class BangumiAreaPageFragment : VerticalGridSupportFragment(),
+    BrowseSupportFragment.MainFragmentAdapterProvider, OnItemViewClickedListener {
 
     companion object {
         private const val COLUMNS = 5
@@ -61,7 +61,8 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
 
     private fun setupUI() {
         val verticalGridPresenter = SpacingVerticalGridPresenter(
-            FocusHighlight.ZOOM_FACTOR_SMALL, false)
+            FocusHighlight.ZOOM_FACTOR_SMALL, false
+        )
         verticalGridPresenter.numberOfColumns = COLUMNS
         verticalGridPresenter.setItemSpacing(40)
 
@@ -76,7 +77,6 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
     private fun bindViewModel() {
         viewModel.bangumiList.observe(viewLifecycleOwner) { bangumiList ->
             arrayAdapter.submitList(bangumiList)
-
             getMainFragmentAdapter().fragmentHost.notifyDataReady(mainFragmentAdapter)
         }
         viewModel.season.value = season
@@ -88,10 +88,11 @@ class BangumiAreaPageFragment : VerticalGridSupportFragment()
         rowViewHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
-        when(item) {
+        when (item) {
             is HomeImageBean -> {
-                val cardView = itemViewHolder.view as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, cardView.getImageView())
+                navigator.push {
+                    BangumiDetailsFragment.newInstance(item.animeId, item.imageUrl)
+                }
             }
         }
     }

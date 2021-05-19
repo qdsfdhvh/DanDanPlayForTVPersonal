@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.PresenterSelector
@@ -24,16 +24,18 @@ class BangumiPresenterSelector @Inject constructor(
 
         var presenter = presenterMap[item::class]
         if (presenter == null) {
-            presenter = when(item) {
+            presenter = when (item) {
                 is HomeImageBean -> HomeImageBeanPresenter(imageLoader)
                 is HomeSettingBean -> HomeSettingBeanPresenter(imageLoader)
                 is BangumiEpisodeEntity -> BangumiEpisodePresenter()
                 is SearchAnimeDetails -> SearchBangumiPresenter(imageLoader)
                 is ResMagnetItemEntity -> SearchMagnetPresenter()
-                else -> throw RuntimeException(String.format(
-                    "The PresenterSelector not supports data items of type '%s'",
-                    item.javaClass.name
-                ))
+                else -> throw RuntimeException(
+                    String.format(
+                        "The PresenterSelector not supports data items of type '%s'",
+                        item.javaClass.name
+                    )
+                )
             }
             presenterMap[item::class] = presenter
         }

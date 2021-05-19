@@ -1,4 +1,4 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import android.view.LayoutInflater
 import android.view.View

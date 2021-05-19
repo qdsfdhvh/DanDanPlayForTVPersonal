@@ -2,28 +2,30 @@ package com.seiko.tv.ui.bangumi
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
-import com.seiko.common.ui.adapter.AsyncObjectAdapter
-import com.seiko.common.util.extensions.lazyAndroid
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 import com.seiko.common.imageloader.ImageLoader
+import com.seiko.common.ui.adapter.AsyncObjectAdapter
 import com.seiko.common.util.extensions.getDrawable
 import com.seiko.common.util.extensions.hasFragment
+import com.seiko.common.util.extensions.lazyAndroid
 import com.seiko.tv.R
 import com.seiko.tv.data.db.model.BangumiEpisodeEntity
 import com.seiko.tv.data.model.BangumiDetailBean
 import com.seiko.tv.data.model.EpisodesListRow
 import com.seiko.tv.data.model.HomeImageBean
 import com.seiko.tv.data.model.RelatesListRow
-import com.seiko.tv.ui.card.MainAreaCardView
-import com.seiko.tv.ui.dialog.DialogInputFragment
-import com.seiko.tv.ui.presenter.BangumiPresenterSelector
-import com.seiko.tv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter
-import com.seiko.tv.ui.presenter.DetailsDescriptionPresenter
-import com.seiko.tv.ui.presenter.DetailsOverviewLogoPresenter
-import com.seiko.tv.ui.search.SearchActivity
+import com.seiko.tv.ui.search.SearchMagnetFragment
+import com.seiko.tv.ui.widget.dialog.DialogInputFragment
+import com.seiko.tv.ui.widget.presenter.BangumiPresenterSelector
+import com.seiko.tv.ui.widget.presenter.CustomFullWidthDetailsOverviewRowPresenter
+import com.seiko.tv.ui.widget.presenter.DetailsDescriptionPresenter
+import com.seiko.tv.ui.widget.presenter.DetailsOverviewLogoPresenter
 import com.seiko.tv.util.diff.HomeImageBeanDiffCallback
 import com.seiko.tv.vm.BangumiDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,24 +36,24 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BangumiDetailsFragment : DetailsSupportFragment()
-    , OnItemViewClickedListener
-    , OnActionClickedListener {
+class BangumiDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener,
+    OnActionClickedListener {
 
     companion object {
-        const val TAG = "BangumiDetailsFragment"
         const val ARGS_ANIME_ID = "ARGS_ANIME_ID"
         const val ARGS_ANIME_IMAGE_URL = "ARGS_ANIME_IMAGE_URL"
-        const val TRANSITION_NAME = "t_for_transition"
 
         private const val ID_RATING = 1L
         private const val ID_FAVOURITE = 2L
         private const val ID_KEYBOARD = 3L
 
-        fun newInstance(bundle: Bundle): BangumiDetailsFragment {
-            val fragment = BangumiDetailsFragment()
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(animeId: Long, imageUrl: String): BangumiDetailsFragment {
+            return BangumiDetailsFragment().apply {
+                arguments = bundleOf(
+                    ARGS_ANIME_ID to animeId,
+                    ARGS_ANIME_IMAGE_URL to imageUrl
+                )
+            }
         }
     }
 
@@ -84,6 +86,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         bindViewModel()
+        prepareEntranceTransition()
         onItemViewClickedListener = this
     }
 
@@ -99,22 +102,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     private fun setupUI() {
         val logoPresenter = DetailsOverviewLogoPresenter()
         val descriptionPresenter = DetailsDescriptionPresenter()
-        mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(descriptionPresenter, logoPresenter)
+        mDescriptionRowPresenter = CustomFullWidthDetailsOverviewRowPresenter(
+            descriptionPresenter, logoPresenter
+        )
         mDescriptionRowPresenter.setViewHolderState(mDetailsOverviewPrevState)
         mDescriptionRowPresenter.onActionClickedListener = this@BangumiDetailsFragment
-
-        val helper = FullWidthDetailsOverviewSharedElementHelper()
-        helper.setSharedElementEnterTransition(requireActivity(), TRANSITION_NAME)
-        mDescriptionRowPresenter.setListener(helper)
-        mDescriptionRowPresenter.isParticipatingEntranceTransition = false
-        prepareEntranceTransition()
 
         val imageUrl = requireArguments().getString(ARGS_ANIME_IMAGE_URL, "")
         detailsOverviewRow = DetailsOverviewRow(BangumiDetailBean.empty(imageUrl = imageUrl))
         detailsOverviewRow.isImageScaleUpAllowed = true
 
         mPresenterSelector = ClassPresenterSelector()
-        mPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, mDescriptionRowPresenter)
+        mPresenterSelector.addClassPresenter(
+            DetailsOverviewRow::class.java,
+            mDescriptionRowPresenter
+        )
         mPresenterSelector.addClassPresenter(EpisodesListRow::class.java, ListRowPresenter())
         mPresenterSelector.addClassPresenter(RelatesListRow::class.java, ListRowPresenter())
         mPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
@@ -186,7 +188,12 @@ class BangumiDetailsFragment : DetailsSupportFragment()
             }
         )
         mActionAdapter.add(
-            Action(ID_KEYBOARD, "搜索关键字：", details.keyboard, getDrawable(R.drawable.ic_keyboard_24dp))
+            Action(
+                ID_KEYBOARD,
+                "搜索关键字：",
+                details.keyboard,
+                getDrawable(R.drawable.ic_keyboard_24dp)
+            )
         )
         detailsOverviewRow.actionsAdapter = mActionAdapter
     }
@@ -195,7 +202,7 @@ class BangumiDetailsFragment : DetailsSupportFragment()
      * 点击：收藏
      */
     override fun onActionClicked(action: Action?) {
-        when(action?.id) {
+        when (action?.id) {
             ID_FAVOURITE -> {
                 lifecycleScope.launch {
                     if (viewModel.setFavourite()) {
@@ -234,17 +241,21 @@ class BangumiDetailsFragment : DetailsSupportFragment()
     /**
      * 点击：集数、相关工作
      */
-    override fun onItemClicked(holder: Presenter.ViewHolder, item: Any?,
-                               rowHolder: RowPresenter.ViewHolder?, row: Row?) {
-        when(item) {
+    override fun onItemClicked(
+        holder: Presenter.ViewHolder, item: Any?,
+        rowHolder: RowPresenter.ViewHolder?, row: Row?
+    ) {
+        when (item) {
             is BangumiEpisodeEntity -> {
                 val keyword = viewModel.getSearchKey(item)
-                SearchActivity.launchMagnet(requireActivity(), keyword, animeId, item.episodeId)
+                navigator.push {
+                    SearchMagnetFragment.newInstance(keyword)
+                }
             }
             is HomeImageBean -> {
-                val card = holder.view
-                card as MainAreaCardView
-                BangumiDetailsActivity.launch(requireActivity(), item, card.getImageView())
+                navigator.push {
+                    newInstance(item.animeId, item.imageUrl)
+                }
             }
         }
     }

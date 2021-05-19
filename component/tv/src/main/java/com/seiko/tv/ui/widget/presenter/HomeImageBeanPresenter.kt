@@ -1,11 +1,11 @@
-package com.seiko.tv.ui.presenter
+package com.seiko.tv.ui.widget.presenter
 
 import android.os.Bundle
 import android.view.ViewGroup
-import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.common.imageloader.ImageLoader
+import com.seiko.common.ui.presenter.BasePresenter
 import com.seiko.tv.data.model.HomeImageBean
-import com.seiko.tv.ui.card.MainAreaCardView
+import com.seiko.tv.ui.widget.card.MainAreaCardView
 
 class HomeImageBeanPresenter(
     private val imageLoader: ImageLoader
